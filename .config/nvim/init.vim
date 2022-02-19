@@ -50,7 +50,6 @@ call plug#begin()
   Plug 'voldikss/vim-translator'
   Plug 'aperezdc/vim-template'
   Plug 'liuchengxu/graphviz.vim'
-  " Plug 'vim-scripts/gtags.vim'
 call plug#end()
 
 
@@ -72,11 +71,6 @@ let g:graphviz_output_format='jpg'
 
 let g:templates_no_autocmd=1
 let g:templates_directory='~/.vim/template'
-
-" let g:Gtags_OpenQuickfixWindow = 0
-" autocmd FileType c,cc,cpp,h,hpp nnoremap <C-j> <cmd>GtagsCursor<cr><cmd>Telescope quickfix<cr>
-" autocmd FileType c,cc,cpp,h,hpp nnoremap <C-k> <cmd>Gtags -r<cr><cr><cmd>Telescope quickfix<cr>
-" autocmd FileType c,cc,cpp,h,hpp nnoremap <space>h <cmd>Gtags -f %<cr><cmd>Telescope quickfix<cr>
 
 
 lua << EOF
@@ -111,7 +105,6 @@ vim.api.nvim_set_keymap('n', '<space>f', '<cmd>lua telescope_builtin.find_files(
 vim.api.nvim_set_keymap('n', '<space>b', '<cmd>lua telescope_builtin.buffers()<cr>', opts)
 vim.api.nvim_set_keymap('n', '<space>r', '<cmd>lua telescope_builtin.registers()<cr>', opts)
 vim.api.nvim_set_keymap('n', '<space>g', '<cmd>lua telescope_builtin.live_grep()<cr>', opts)
-vim.api.nvim_set_keymap('n', '<space>c', '<cmd>lua telescope_builtin.git_commits()<cr>', opts)
 vim.api.nvim_set_keymap('n', '<C-s>', '<cmd>lua telescope_builtin.grep_string()<cr>', opts)
 
 local on_attach = function(client, bufnr)
