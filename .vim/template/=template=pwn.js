@@ -15,7 +15,7 @@ class Helpers {
 
   ftoi(f) {
     this.f64[0] = f;
-    return [this.u32[0], this.u32[1]];
+    return this.u32;
   }
 
   itof(i) {
