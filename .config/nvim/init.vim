@@ -45,10 +45,11 @@ call plug#begin()
   Plug 'deris/vim-shot-f'
   Plug 't9md/vim-quickhl'
   Plug 'junegunn/vim-easy-align'
+  Plug 'tpope/vim-surround'
   Plug 'tpope/vim-commentary'
+  Plug 'aperezdc/vim-template'
   Plug 'rhysd/git-messenger.vim'
   Plug 'voldikss/vim-translator'
-  Plug 'aperezdc/vim-template'
   Plug 'liuchengxu/graphviz.vim'
 call plug#end()
 
@@ -136,26 +137,31 @@ cmp.setup({
   })
 })
 
-local nvim_lsp = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local lspconfig = require('lspconfig')
 
-nvim_lsp.clangd.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  filetypes = { 'c', 'cc', 'cpp' }
-}
-
-nvim_lsp.pylsp.setup {
+lspconfig.clangd.setup {
   on_attach = on_attach,
   capabilities = capabilities
 }
 
--- nvim_lsp.pyright.setup {
---   on_attach = on_attach,
---   capabilities = capabilities
--- }
+lspconfig.pylsp.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
 
--- nvim_lsp.rust_analyzer.setup {
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+
+lspconfig.tsserver.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  root_dir = vim.loop.cwd
+}
+
+-- lspconfig.pyright.setup {
 --   on_attach = on_attach,
 --   capabilities = capabilities
 -- }
