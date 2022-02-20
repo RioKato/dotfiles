@@ -33,9 +33,22 @@ class Helpers {
     return this.f64[0];
   }
 
+  major_gc() {
+    new ArrayBuffer(0x80000000);
+  }
+
+  minor_gc() {
+    var a = [];
+    for (var i = 0; i < 100000; i++) {
+      a[i] = new String("");
+    }
+  }
+
   debug(val) {
     console.log('0x' + val.toString(16));
   }
 }
 
+var helpers = new Helpers();
+helpers.major_gc();
 
