@@ -27,7 +27,7 @@ autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
-let g:loaded_matchparen=1
+autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
 
 
 call plug#begin()
@@ -64,14 +64,15 @@ xmap <space>m <plug>(quickhl-manual-reset)
 nmap ga <plug>(EasyAlign)
 xmap ga <plug>(EasyAlign)
 
+let g:templates_no_autocmd=1
+let g:templates_directory='~/.vim/template'
+
 let g:git_messenger_no_default_mappings=1
 nmap <C-g> <plug>(git-messenger)
 
 let g:translator_target_lang='ja'
-let g:graphviz_output_format='jpg'
 
-let g:templates_no_autocmd=1
-let g:templates_directory='~/.vim/template'
+let g:graphviz_output_format='jpg'
 
 
 lua << EOF
