@@ -1,5 +1,4 @@
 set encoding=utf-8
-set number
 set autoindent
 set expandtab
 set tabstop=2
@@ -16,11 +15,14 @@ set hlsearch
 set virtualedit=block
 set foldmethod=marker
 set completeopt=menu,menuone,noselect
+set number
 set cursorline
 set cursorlineopt=number
 set termguicolors
 nnoremap j gj
 nnoremap k gk
+nnoremap gj j
+nnoremap gk k
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE
