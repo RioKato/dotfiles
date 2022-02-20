@@ -13,8 +13,10 @@ set wrapscan
 set incsearch
 set hlsearch
 set virtualedit=block
-set foldmethod=marker
 set completeopt=menu,menuone,noselect
+set showmatch
+set matchtime=1
+set foldmethod=marker
 set number
 set cursorline
 set cursorlineopt=number
