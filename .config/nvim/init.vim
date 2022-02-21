@@ -81,6 +81,7 @@ let g:graphviz_output_format='jpg'
 
 lua << EOF
 
+vim.o.jumpoptions = 'stack'
 vim.cmd [[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]]
 
 local telescope = require('telescope')
