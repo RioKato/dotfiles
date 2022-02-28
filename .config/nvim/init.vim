@@ -80,7 +80,7 @@ let g:translator_target_lang='ja'
 let g:graphviz_output_format='jpg'
 
 let g:Gtags_OpenQuickfixWindow=0
-autocmd FileType c,cc,cpp,h,hpp nnoremap g<C-j> <cmd>GtagsCursor<cr><cmd>Telescope quickfix<cr>
+autocmd FileType c,cc,cpp,h,hpp nnoremap g<C-j> <cmd>GtagsCursor<cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap g<C-k> <cmd>Gtags -r<cr><cr><cmd>Telescope quickfix<cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap g<space>h <cmd>Gtags -f %<cr><cmd>Telescope quickfix<cr>
 
