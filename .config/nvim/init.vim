@@ -36,6 +36,7 @@ autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse
 
 call plug#begin()
   Plug 'neovim/nvim-lspconfig'
+  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
   Plug 'nvim-lua/plenary.nvim'
   Plug 'nvim-telescope/telescope.nvim'
   Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
@@ -148,7 +149,8 @@ cmp.setup({
   })
 })
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
 local lspconfig = require('lspconfig')
 
 lspconfig.clangd.setup {
@@ -181,5 +183,13 @@ lspconfig.tsserver.setup {
 --   on_attach = on_attach,
 --   capabilities = capabilities
 -- }
+
+local nvim_treesitter = require('nvim-treesitter.configs')
+
+nvim_treesitter.setup {
+  highlight = {
+    enable = true
+  }
+}
 
 EOF
