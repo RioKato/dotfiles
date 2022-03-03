@@ -81,10 +81,10 @@ let g:translator_target_lang='ja'
 
 let g:graphviz_output_format='jpg'
 
-let g:Gtags_OpenQuickfixWindow=0
-autocmd FileType c,cc,cpp,h,hpp nnoremap g<C-j> <cmd>GtagsCursor<cr>
-autocmd FileType c,cc,cpp,h,hpp nnoremap g<C-k> <cmd>Gtags -r<cr><cr><cmd>Telescope quickfix<cr>
-autocmd FileType c,cc,cpp,h,hpp nnoremap g<space>h <cmd>Gtags -f %<cr><cmd>Telescope quickfix<cr>
+autocmd FileType c,cc,cpp,h,hpp nnoremap gtj <cmd>GtagsCursor<cr>
+autocmd FileType c,cc,cpp,h,hpp nnoremap gtk <cmd>Gtags -r<cr><cr>
+autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
+
 
 lua << EOF
 
@@ -181,11 +181,6 @@ lspconfig.tsserver.setup {
   capabilities = capabilities,
   root_dir = vim.loop.cwd
 }
-
--- lspconfig.pyright.setup {
---   on_attach = on_attach,
---   capabilities = capabilities
--- }
 
 local nvim_treesitter = require('nvim-treesitter.configs')
 
