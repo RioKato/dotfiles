@@ -46,6 +46,7 @@ call plug#begin()
   Plug 'hrsh7th/cmp-vsnip'
   Plug 'hrsh7th/vim-vsnip'
   Plug 'xiyaowong/nvim-cursorword'
+  Plug 'lukas-reineke/indent-blankline.nvim'
   Plug 'ellisonleao/glow.nvim'
   Plug 'w0ng/vim-hybrid'
   Plug 'deris/vim-shot-f'
@@ -90,6 +91,23 @@ lua << EOF
 
 vim.o.jumpoptions = 'stack'
 vim.cmd [[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]]
+
+local nvim_treesitter = require('nvim-treesitter.configs')
+
+nvim_treesitter.setup {
+  highlight = {
+    enable = true
+  },
+  indent = {
+    enable = true
+  }
+}
+
+local indent_blankline = require('indent_blankline')
+
+indent_blankline.setup {
+  use_treesitter = true
+}
 
 local telescope = require('telescope')
 telescope.load_extension('fzf')
@@ -179,14 +197,6 @@ lspconfig.tsserver.setup {
   on_attach = on_attach,
   capabilities = capabilities,
   root_dir = vim.loop.cwd
-}
-
-local nvim_treesitter = require('nvim-treesitter.configs')
-
-nvim_treesitter.setup {
-  highlight = {
-    enable = true
-  }
 }
 
 EOF
