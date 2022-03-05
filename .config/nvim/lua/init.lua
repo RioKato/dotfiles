@@ -7,7 +7,10 @@ packer.startup(function()
   use 'neovim/nvim-lspconfig'
   use {
     'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
+    run = ':TSUpdate',
+    requires = {
+      {'nvim-treesitter/nvim-treesitter-textobjects'}
+    }
   }
   use {
     'nvim-telescope/telescope.nvim',
@@ -37,12 +40,23 @@ nvim_treesitter.setup {
   },
   indent = {
     enable = true
+  },
+  textobjects = {
+    select = {
+      enable = true,
+      keymaps = {
+        ['af'] = '@function.outer',
+        ['if'] = '@function.inner',
+        ['ac'] = '@class.outer',
+        ['ic'] = '@class.inner'
+      }
+    }
   }
 }
 
 local indent_blankline = require('indent_blankline')
 indent_blankline.setup {
-  use_treesitter = true
+  show_current_context = true
 }
 
 local telescope = require('telescope')
