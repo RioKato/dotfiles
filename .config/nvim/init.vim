@@ -35,19 +35,7 @@ autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse
 
 
 call plug#begin()
-  Plug 'neovim/nvim-lspconfig'
-  Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-  Plug 'nvim-lua/plenary.nvim'
-  Plug 'nvim-telescope/telescope.nvim'
-  Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
-  Plug 'hrsh7th/nvim-cmp'
-  Plug 'hrsh7th/cmp-nvim-lsp'
-  Plug 'hrsh7th/cmp-buffer'
-  Plug 'hrsh7th/cmp-vsnip'
-  Plug 'hrsh7th/vim-vsnip'
-  Plug 'xiyaowong/nvim-cursorword'
-  Plug 'lukas-reineke/indent-blankline.nvim'
-  Plug 'ellisonleao/glow.nvim'
+  Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
   Plug 'w0ng/vim-hybrid'
   Plug 'deris/vim-shot-f'
   Plug 't9md/vim-quickhl'
@@ -61,6 +49,8 @@ call plug#begin()
   Plug 'vim-scripts/gtags.vim'
 call plug#end()
 
+
+lua require('init')
 
 colorscheme hybrid
 
@@ -85,118 +75,3 @@ let g:graphviz_output_format='jpg'
 autocmd FileType c,cc,cpp,h,hpp nnoremap gtj <cmd>GtagsCursor<cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap gtk <cmd>Gtags -r<cr><cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
-
-
-lua << EOF
-
-vim.o.jumpoptions = 'stack'
-vim.cmd [[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]]
-
-local nvim_treesitter = require('nvim-treesitter.configs')
-
-nvim_treesitter.setup {
-  highlight = {
-    enable = true
-  },
-  indent = {
-    enable = true
-  }
-}
-
-local indent_blankline = require('indent_blankline')
-
-indent_blankline.setup {
-  use_treesitter = true
-}
-
-local telescope = require('telescope')
-telescope.load_extension('fzf')
-
-telescope.setup {
-  defaults = {
-    layout_config = {
-      width = 0.99,
-      height = 0.99
-    }
-  },
-  extensions = {
-    fzf = {
-      fuzzy = true,
-      override_generic_sorter = true,
-      override_file_sorter = true,
-      case_mode = 'smart_case'
-    }
-  }
-}
-
-telescope_builtin = require('telescope.builtin')
-local opts = { noremap = true, silent = true }
-
-vim.api.nvim_set_keymap('n', '<space>f', '<cmd>lua telescope_builtin.find_files()<cr>', opts)
-vim.api.nvim_set_keymap('n', '<space>b', '<cmd>lua telescope_builtin.buffers()<cr>', opts)
-vim.api.nvim_set_keymap('n', '<space>r', '<cmd>lua telescope_builtin.registers()<cr>', opts)
-vim.api.nvim_set_keymap('n', '<space>g', '<cmd>lua telescope_builtin.live_grep()<cr>', opts)
-vim.api.nvim_set_keymap('n', '<C-s>', '<cmd>lua telescope_builtin.grep_string()<cr>', opts)
-
-local on_attach = function(client, bufnr)
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-j>', '<cmd>lua telescope_builtin.lsp_definitions()<cr>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua telescope_builtin.lsp_references()<cr>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-h>', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>h', '<cmd>lua telescope_builtin.lsp_document_symbols()<cr>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space><space>', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-end
-
-local cmp = require('cmp')
-
-cmp.setup({
-  snippet = {
-    expand = function(args)
-      vim.fn['vsnip#anonymous'](args.body)
-    end
-  },
-  mapping = {
-    ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
-    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
-    ['<cr>'] = cmp.mapping.confirm({ select = true }),
-    ['<tab>'] = cmp.mapping.confirm({ select = true })
-  },
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' }
-  }, {
-    { name = 'buffer' }
-  })
-})
-
-local cmp_nvim_lsp = require('cmp_nvim_lsp')
-local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
-local lspconfig = require('lspconfig')
-
-lspconfig.clangd.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.pylsp.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.rust_analyzer.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.gopls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities
-}
-
-lspconfig.tsserver.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-  root_dir = vim.loop.cwd
-}
-
-EOF

@@ -1,0 +1,135 @@
+vim.o.jumpoptions = 'stack'
+vim.cmd [[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]]
+
+local packer = require('packer')
+packer.startup(function()
+  use 'wbthomason/packer.nvim'
+  use 'neovim/nvim-lspconfig'
+  use {
+    'nvim-treesitter/nvim-treesitter',
+    run = ':TSUpdate'
+  }
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = {
+      {'nvim-lua/plenary.nvim'},
+      {'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
+    }
+  }
+  use {
+    'hrsh7th/nvim-cmp',
+    requires = {
+      {'hrsh7th/cmp-nvim-lsp'},
+      {'hrsh7th/cmp-buffer'},
+      {'hrsh7th/cmp-vsnip'},
+      {'hrsh7th/vim-vsnip'}
+    }
+  }
+  use 'xiyaowong/nvim-cursorword'
+  use 'lukas-reineke/indent-blankline.nvim'
+  use 'ellisonleao/glow.nvim'
+end)
+
+local nvim_treesitter = require('nvim-treesitter.configs')
+nvim_treesitter.setup {
+  highlight = {
+    enable = true
+  },
+  indent = {
+    enable = true
+  }
+}
+
+local indent_blankline = require('indent_blankline')
+indent_blankline.setup {
+  use_treesitter = true
+}
+
+local telescope = require('telescope')
+telescope.load_extension('fzf')
+
+telescope.setup {
+  defaults = {
+    layout_config = {
+      width = 0.99,
+      height = 0.99
+    }
+  },
+  extensions = {
+    fzf = {
+      fuzzy = true,
+      override_generic_sorter = true,
+      override_file_sorter = true,
+      case_mode = 'smart_case'
+    }
+  }
+}
+
+telescope_builtin = require('telescope.builtin')
+local opts = { noremap = true, silent = true }
+
+vim.api.nvim_set_keymap('n', '<space>f', '<cmd>lua telescope_builtin.find_files()<cr>', opts)
+vim.api.nvim_set_keymap('n', '<space>b', '<cmd>lua telescope_builtin.buffers()<cr>', opts)
+vim.api.nvim_set_keymap('n', '<space>r', '<cmd>lua telescope_builtin.registers()<cr>', opts)
+vim.api.nvim_set_keymap('n', '<space>g', '<cmd>lua telescope_builtin.live_grep()<cr>', opts)
+vim.api.nvim_set_keymap('n', '<C-s>', '<cmd>lua telescope_builtin.grep_string()<cr>', opts)
+
+local on_attach = function(client, bufnr)
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-j>', '<cmd>lua telescope_builtin.lsp_definitions()<cr>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-k>', '<cmd>lua telescope_builtin.lsp_references()<cr>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<C-h>', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space>h', '<cmd>lua telescope_builtin.lsp_document_symbols()<cr>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<space><space>', '<cmd>lua vim.lsp.buf.formatting()<cr>', opts)
+end
+
+local cmp = require('cmp')
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn['vsnip#anonymous'](args.body)
+    end
+  },
+  mapping = {
+    ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+    ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+    ['<cr>'] = cmp.mapping.confirm({ select = true }),
+    ['<tab>'] = cmp.mapping.confirm({ select = true })
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' }
+  }, {
+    { name = 'buffer' }
+  })
+})
+
+local cmp_nvim_lsp = require('cmp_nvim_lsp')
+local capabilities = cmp_nvim_lsp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local lspconfig = require('lspconfig')
+
+lspconfig.clangd.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+
+lspconfig.pylsp.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+
+lspconfig.rust_analyzer.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+
+lspconfig.gopls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
+}
+
+lspconfig.tsserver.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  root_dir = vim.loop.cwd
+}
