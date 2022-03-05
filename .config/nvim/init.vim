@@ -40,7 +40,7 @@ call plug#begin()
   Plug 'deris/vim-shot-f'
   Plug 't9md/vim-quickhl'
   Plug 'junegunn/vim-easy-align'
-  Plug 'tpope/vim-surround'
+  Plug 'machakann/vim-sandwich'
   Plug 'tpope/vim-commentary'
   Plug 'aperezdc/vim-template'
   Plug 'rhysd/git-messenger.vim'
