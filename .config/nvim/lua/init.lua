@@ -35,6 +35,9 @@ end)
 
 local nvim_treesitter = require('nvim-treesitter.configs')
 nvim_treesitter.setup {
+  ensure_installed = 'maintained',
+  sync_install = true,
+
   highlight = {
     enable = true
   },
