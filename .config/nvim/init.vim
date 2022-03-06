@@ -38,6 +38,7 @@ call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
   Plug 'w0ng/vim-hybrid'
   Plug 'deris/vim-shot-f'
+  Plug 'jiangmiao/auto-pairs'
   Plug 't9md/vim-quickhl'
   Plug 'junegunn/vim-easy-align'
   Plug 'machakann/vim-sandwich'
