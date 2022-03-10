@@ -7,15 +7,15 @@ var main = instance.exports.main;
 class Helpers {
   constructor() {
     this.buf = new ArrayBuffer(8);
-    this.f64 = new Float64Array(this.buf);
     this.f32 = new Float32Array(this.buf);
+    this.f64 = new Float64Array(this.buf);
     this.u32 = new Uint32Array(this.buf);
     this.u64 = new BigUint64Array(this.buf);
   }
 
   ftoi(f) {
-    this.f64[0] = f;
-    return this.u32;
+    this.f32[0] = f;
+    return this.u32[0];
   }
 
   itof(i) {
@@ -44,11 +44,9 @@ class Helpers {
     }
   }
 
-  debug(val) {
-    console.log('0x' + val.toString(16));
+  debug(sym, val) {
+    console.log(sym + '= 0x' + val.toString(16));
   }
 }
 
 var helpers = new Helpers();
-helpers.major_gc();
-
