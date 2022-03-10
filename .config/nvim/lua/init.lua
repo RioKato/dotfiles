@@ -158,3 +158,6 @@ lspconfig.tsserver.setup {
   capabilities = capabilities,
   root_dir = vim.loop.cwd
 }
+
+local codeql = require('codeql')
+codeql.setup {}
