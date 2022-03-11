@@ -21,6 +21,7 @@ set number
 set cursorline
 set cursorlineopt=number
 set termguicolors
+set clipboard+=unnamedplus
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
