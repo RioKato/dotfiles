@@ -7,9 +7,9 @@ packer.startup(function()
 	use("ckipp01/stylua-nvim")
 
 	use("neovim/nvim-lspconfig")
+	use("williamboman/nvim-lsp-installer")
 	use({
 		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
 		requires = {
 			{ "nvim-treesitter/nvim-treesitter-textobjects" },
 		},
@@ -50,7 +50,6 @@ local nvim_treesitter = require("nvim-treesitter.configs")
 nvim_treesitter.setup({
 	ensure_installed = "maintained",
 	sync_install = false,
-
 	highlight = {
 		enable = true,
 	},
