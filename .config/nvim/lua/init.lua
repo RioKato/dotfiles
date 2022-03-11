@@ -31,20 +31,12 @@ packer.startup(function()
   use 'xiyaowong/nvim-cursorword'
   use 'lukas-reineke/indent-blankline.nvim'
   use 'ellisonleao/glow.nvim'
-  use {
-    'pwntester/codeql.nvim',
-    requires = {
-      {'MunifTanjim/nui.nvim'},
-      {'nvim-lua/telescope.nvim'},
-      {'kyazdani42/nvim-web-devicons'}
-    }
-  }
 end)
 
 local nvim_treesitter = require('nvim-treesitter.configs')
 nvim_treesitter.setup {
   ensure_installed = 'maintained',
-  sync_install = true,
+  sync_install = false,
 
   highlight = {
     enable = true
@@ -159,5 +151,6 @@ lspconfig.tsserver.setup {
   root_dir = vim.loop.cwd
 }
 
-local codeql = require('codeql')
-codeql.setup {}
+lspconfig.codeqlls.setup {
+}
+
