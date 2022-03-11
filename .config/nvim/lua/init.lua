@@ -152,5 +152,7 @@ lspconfig.tsserver.setup {
 }
 
 lspconfig.codeqlls.setup {
+  on_attach = on_attach,
+  capabilities = capabilities
 }
 
