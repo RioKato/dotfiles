@@ -31,6 +31,13 @@ packer.startup(function()
   use 'xiyaowong/nvim-cursorword'
   use 'lukas-reineke/indent-blankline.nvim'
   use 'ellisonleao/glow.nvim'
+  use {
+    'pwntester/codeql.nvim',
+    requires = {
+      {'MunifTanjim/nui.nvim'},
+      {'kyazdani42/nvim-web-devicons'}
+    }
+  }
 end)
 
 local nvim_treesitter = require('nvim-treesitter.configs')
@@ -156,3 +163,5 @@ lspconfig.codeqlls.setup {
   capabilities = capabilities
 }
 
+codeql = require('codeql')
+codeql.setup {}
