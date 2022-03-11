@@ -35,6 +35,7 @@ packer.startup(function()
     'pwntester/codeql.nvim',
     requires = {
       {'MunifTanjim/nui.nvim'},
+      {'nvim-lua/telescope.nvim'},
       {'kyazdani42/nvim-web-devicons'}
     }
   }
