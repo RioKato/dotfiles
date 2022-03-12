@@ -34,6 +34,7 @@ autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
 autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
+autocmd Colorscheme * highlight LineNr ctermfg=Grey guifg=Grey
 
 
 call plug#begin()
