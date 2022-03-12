@@ -32,6 +32,7 @@ packer.startup(function()
 	})
 	use("xiyaowong/nvim-cursorword")
 	use("lukas-reineke/indent-blankline.nvim")
+	use("tversteeg/registers.nvim")
 	use("ellisonleao/glow.nvim")
 	use({
 		"pwntester/codeql.nvim",
