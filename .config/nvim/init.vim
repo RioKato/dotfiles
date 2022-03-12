@@ -17,7 +17,7 @@ set completeopt=menu,menuone,noselect
 set showmatch
 set matchtime=1
 set foldmethod=marker
-set number
+set relativenumber
 set cursorline
 set cursorlineopt=number
 set termguicolors
@@ -26,6 +26,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap gj j
 nnoremap gk k
+nnoremap <esc><esc> <cmd>nohlsearch<cr>
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE
@@ -48,6 +49,7 @@ call plug#begin()
   Plug 'rhysd/git-messenger.vim'
   Plug 'voldikss/vim-translator'
   Plug 'liuchengxu/graphviz.vim'
+  Plug 'tyru/capture.vim'
   Plug 'vim-scripts/gtags.vim'
 call plug#end()
 
