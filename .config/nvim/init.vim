@@ -39,7 +39,7 @@ autocmd Colorscheme * highlight LineNr ctermfg=Grey guifg=Grey
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
-  Plug 'w0ng/vim-hybrid'
+  Plug 'mhartington/oceanic-next'
   Plug 'deris/vim-shot-f'
   Plug 'jiangmiao/auto-pairs'
   Plug 't9md/vim-quickhl'
@@ -57,7 +57,8 @@ call plug#end()
 
 lua require('init')
 
-colorscheme hybrid
+syntax on
+colorscheme OceanicNext
 
 nmap <C-t> <plug>(quickhl-manual-this)
 xmap <C-t> <plug>(quickhl-manual-this)
