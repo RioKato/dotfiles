@@ -1,6 +1,10 @@
 vim.o.inccommand = "split"
 vim.o.jumpoptions = "stack"
 vim.cmd([[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]])
+vim.diagnostic.config({
+	virtual_text = false,
+	underline = true,
+})
 
 local packer = require("packer")
 packer.startup(function()
@@ -112,6 +116,7 @@ local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>lua telescope_builtin.lsp_references()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-h>", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>h", "<cmd>lua telescope_builtin.lsp_document_symbols()<cr>", opts)
+	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>d", "<cmd>lua telescope_builtin.diagnostics()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space><space>", "<cmd>lua vim.lsp.buf.formatting()<cr>", opts)
 end
 
