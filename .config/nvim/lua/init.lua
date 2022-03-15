@@ -3,6 +3,7 @@ vim.o.jumpoptions = "stack"
 vim.cmd([[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]])
 vim.diagnostic.config({
 	virtual_text = false,
+	signs = false,
 	underline = true,
 })
 
