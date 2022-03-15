@@ -1,3 +1,4 @@
+vim.o.inccommand = "split"
 vim.o.jumpoptions = "stack"
 vim.cmd([[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]])
 
@@ -19,6 +20,7 @@ packer.startup(function()
 		requires = {
 			{ "nvim-lua/plenary.nvim" },
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
+			{ "kyazdani42/nvim-web-devicons" },
 		},
 	})
 	use({
