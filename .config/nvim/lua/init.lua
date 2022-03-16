@@ -38,6 +38,7 @@ packer.startup(function()
 		},
 	})
 	use("xiyaowong/nvim-cursorword")
+	use("lukas-reineke/indent-blankline.nvim")
 	use("tversteeg/registers.nvim")
 	use("ellisonleao/glow.nvim")
 	use({
@@ -74,6 +75,11 @@ nvim_treesitter.setup({
 			},
 		},
 	},
+})
+
+local indent_blankline = require("indent_blankline")
+indent_blankline.setup({
+	show_current_context = true,
 })
 
 local telescope = require("telescope")
