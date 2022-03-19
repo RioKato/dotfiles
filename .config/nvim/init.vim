@@ -12,6 +12,7 @@ set smartcase
 set wrapscan
 set incsearch
 set hlsearch
+set hidden
 set virtualedit=block
 set completeopt=menu,menuone,noselect
 set showmatch
