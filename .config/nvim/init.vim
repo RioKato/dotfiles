@@ -26,6 +26,7 @@ nnoremap j gj
 nnoremap k gk
 nnoremap gj j
 nnoremap gk k
+nnoremap Y y$
 nnoremap x "_x
 nnoremap <esc><esc> <cmd>nohlsearch<cr>
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
