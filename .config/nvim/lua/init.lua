@@ -119,7 +119,7 @@ local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-n>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>h", "<cmd>lua telescope_builtin.lsp_document_symbols()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>d", "<cmd>lua telescope_builtin.diagnostics()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space><space>", "<cmd>lua vim.lsp.buf.formatting()<cr>", opts)
+	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space><space>", "<cmd>lua vim.lsp.buf.format { async = true }<cr>", opts)
 end
 
 local cmp = require("cmp")
