@@ -134,7 +134,13 @@ cmp.setup({
 		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<cr>"] = cmp.mapping.confirm({ select = true }),
-		["<tab>"] = cmp.mapping.confirm({ select = true }),
+		["<tab>"] = function(fallback)
+			if cmp.visible() then
+				cmp.select_next_item()
+			else
+				fallback()
+			end
+		end,
 	},
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp" },
