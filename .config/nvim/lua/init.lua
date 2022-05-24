@@ -56,7 +56,7 @@ vim.cmd([[ autocmd BufWritePre init.lua silent! lua stylua.format_file() ]])
 
 local nvim_treesitter = require("nvim-treesitter.configs")
 nvim_treesitter.setup({
-	ensure_installed = "maintained",
+	ensure_installed = { "c", "rust", "python" },
 	sync_install = false,
 	highlight = {
 		enable = true,
@@ -129,9 +129,10 @@ cmp.setup({
 			vim.fn["vsnip#anonymous"](args.body)
 		end,
 	},
+	window = {},
 	mapping = {
-		["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-		["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+		["<C-b>"] = cmp.mapping.scroll_docs(-4),
+		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<cr>"] = cmp.mapping.confirm({ select = true }),
 		["<tab>"] = cmp.mapping.confirm({ select = true }),
 	},
