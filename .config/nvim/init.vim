@@ -37,6 +37,9 @@ autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
 autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guifg=Grey
 autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
 
+if has('win32') || has('win64')
+  let g:python3_host_prog='python'
+endif
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
