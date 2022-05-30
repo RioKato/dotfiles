@@ -29,6 +29,7 @@ nnoremap gk k
 nnoremap Y y$
 nnoremap x "_x
 nnoremap <esc><esc> <cmd>nohlsearch<cr>
+tnoremap <esc> <C-\><C-n>
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
@@ -69,9 +70,6 @@ xmap <space>m <plug>(quickhl-manual-reset)
 
 nmap ga <plug>(EasyAlign)
 xmap ga <plug>(EasyAlign)
-
-let g:templates_no_autocmd=1
-let g:templates_directory='~/.vim/template'
 
 let g:git_messenger_no_default_mappings=1
 nmap <C-g> <plug>(git-messenger)
