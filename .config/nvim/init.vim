@@ -46,6 +46,8 @@ if has('win32') || has('win64')
   tnoremap <C-b> <left>
   tnoremap <C-a> <home>
   tnoremap <C-e> <end>
+  tnoremap <C-h> <bs>
+  tnoremap <C-d> <del>
 endif
 
 call plug#begin()
