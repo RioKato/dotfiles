@@ -40,6 +40,12 @@ autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse
 
 if has('win32') || has('win64')
   let g:python3_host_prog='python'
+  tnoremap <C-p> <up>
+  tnoremap <C-n> <down>
+  tnoremap <C-f> <right>
+  tnoremap <C-b> <left>
+  tnoremap <C-a> <home>
+  tnoremap <C-e> <end>
 endif
 
 call plug#begin()
