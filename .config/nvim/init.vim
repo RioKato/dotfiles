@@ -30,6 +30,9 @@ nnoremap Y y$
 nnoremap x "_x
 nnoremap <esc><esc> <cmd>nohlsearch<cr>
 tnoremap <esc> <C-\><C-n>
+autocmd BufNewFile,BufRead *.md set filetype=markdown
+autocmd FileType make setlocal noexpandtab
+autocmd FileType markdown setlocal noexpandtab
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
