@@ -4,6 +4,6 @@ set follow-fork-mode parent
 set pagination off
 set print demangle
 set print asm-demangle
+directory ./glibc
 
-# source ~/.peda/peda.py
 source ~/.gef.py
