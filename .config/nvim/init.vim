@@ -6,7 +6,9 @@ set shiftwidth=2
 set noswapfile
 set nobackup
 set noundofile
+set autoread
 set wildmenu
+set gdefault
 set ignorecase
 set smartcase
 set wrapscan
