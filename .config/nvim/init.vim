@@ -34,6 +34,7 @@ nnoremap <esc><esc> <cmd>nohlsearch<cr>
 nnoremap <C-w>z <C-w>\|<C-w>_
 nnoremap <C-w>o <nop>
 nnoremap <C-w><C-o> <nop>
+xnoremap = "*c<C-r>=printf('0x%x', eval(@*))<cr><esc>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd FileType make setlocal noexpandtab
