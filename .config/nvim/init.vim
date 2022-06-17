@@ -82,6 +82,7 @@ endfunction
 
 command! -range GithubLink <line1>,<line2>call s:github_link()
 nnoremap <C-l> <cmd>GithubLink<cr>
+vnoremap <C-l> :GithubLink<cr>
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
