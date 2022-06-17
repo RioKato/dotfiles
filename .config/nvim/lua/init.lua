@@ -72,6 +72,8 @@ nvim_treesitter.setup({
 				["if"] = "@function.inner",
 				["ac"] = "@class.outer",
 				["ic"] = "@class.inner",
+				["ap"] = "@parameter.outer",
+				["ip"] = "@parameter.inner",
 			},
 		},
 	},
