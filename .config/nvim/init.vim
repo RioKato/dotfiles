@@ -19,7 +19,7 @@ set virtualedit=block
 set completeopt=menu,menuone,noselect
 set showmatch
 set matchtime=1
-set relativenumber
+set number
 set cursorline
 set cursorlineopt=number
 set termguicolors
@@ -39,7 +39,7 @@ tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd FileType make setlocal noexpandtab
 autocmd FileType markdown setlocal noexpandtab
-autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(expand(@%), 1)<cr>
+autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<cr>
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
@@ -60,29 +60,26 @@ if has('win32') || has('win64')
   tnoremap <C-d> <del>
 endif
 
-function! s:github_link() range
+function! s:gitlink_create() range
   let s:url = trim(system('git ls-remote --get-url origin'))
-  let s:hash = trim(system('git rev-list -1 HEAD -- ' . shellescape(expand('%'), 1)))
-  let s:path = trim(system('git ls-files --full-name ' . shellescape(expand('%'), 1)))
-  let s:link = s:url . '/blob/' . s:hash . '/' . s:path . '#L' . a:firstline
+  let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
+  let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
+  let s:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
+  let s:path = trim(system(printf('git ls-files --full-name %s', shellescape(@%, 1))))
 
-  if a:firstline != a:lastline
-    let s:link = s:link . '-L'. a:lastline
+  if a:firstline == a:lastline
+    let s:link = printf('%s/blob/%s/%s#L%d', s:url, s:hash, s:path, a:firstline)
+  else
+    let s:link = printf('%s/blob/%s/%s#L%d-L%d', s:url, s:hash, s:path, a:firstline, a:lastline)
   endif
 
-  if s:link =~ '^git@github.com:'
-    let s:link = substitute(s:link, '^git@github.com:\(.*\).git', 'https://github.com/\1', '')
-  elseif s:link =~ '^https://github.com/'
-    let s:link = substitute(s:link, '^https://github.com/\(.*\)/\(.*\).git', 'https://github.com/\1/\2', '')
-  endif
-
-  echo s:link
   let @+ = s:link
+  echo s:link
 endfunction
 
-command! -range GithubLink <line1>,<line2>call s:github_link()
-nnoremap <C-l> <cmd>GithubLink<cr>
-vnoremap <C-l> :GithubLink<cr>
+command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
+nnoremap <C-l> <cmd>GitLinkCreate<cr>
+vnoremap <C-l> :GitLinkCreate<cr>
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
