@@ -60,26 +60,6 @@ if has('win32') || has('win64')
   tnoremap <C-d> <del>
 endif
 
-function! s:gitlink_create() range
-  let s:url = trim(system('git ls-remote --get-url origin'))
-  let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
-  let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
-  let s:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
-  let s:path = trim(system(printf('git ls-files --full-name %s', shellescape(@%, 1))))
-
-  if a:firstline == a:lastline
-    let s:link = printf('%s/blob/%s/%s#L%d', s:url, s:hash, s:path, a:firstline)
-  else
-    let s:link = printf('%s/blob/%s/%s#L%d-L%d', s:url, s:hash, s:path, a:firstline, a:lastline)
-  endif
-
-  let @+ = s:link
-  echo s:link
-endfunction
-
-command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
-nnoremap <C-l> <cmd>GitLinkCreate<cr>
-vnoremap <C-l> :GitLinkCreate<cr>
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
@@ -120,3 +100,63 @@ let g:graphviz_output_format='jpg'
 autocmd FileType c,cc,cpp,h,hpp nnoremap gtj <cmd>GtagsCursor<cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap gtk <cmd>Gtags -r<cr><cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
+
+
+
+
+"""""""""""""""""""""""""
+"""""""" GITLINK """"""""
+"""""""""""""""""""""""""
+
+function! s:gitlink_create() range
+  let s:url = trim(system('git ls-remote --get-url origin'))
+  let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
+  let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
+  let s:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
+  let s:path = trim(system(printf('git ls-files --full-name %s', shellescape(@%, 1))))
+
+  if a:firstline == a:lastline
+    let s:link = printf('%s/blob/%s/%s#L%d', s:url, s:hash, s:path, a:firstline)
+  else
+    let s:link = printf('%s/blob/%s/%s#L%d-L%d', s:url, s:hash, s:path, a:firstline, a:lastline)
+  endif
+
+  let @+ = s:link
+  echo s:link
+endfunction
+
+function! s:gitlink_jump() abort
+  let s:line = getline('.')
+  let s:pattern = '/blob/\(\x\+\)/\([^#]*\)\(#L\(\d\+\)\)\?'
+  let s:params = matchlist(s:line, s:pattern)
+  if s:params == []
+    echo 'Invalid URL'
+    return
+  endif
+
+  let s:hash = s:params[1]
+  let s:path = s:params[2]
+  let s:firstline = s:params[4]
+
+  let s:root = trim(system('git rev-parse --show-toplevel'))
+  let s:path = printf('%s/%s', s:root, s:path)
+  let s:current_hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(s:path, 1))))
+
+  if s:hash != s:current_hash
+    let s:message = printf('checkout: %s => %s', s:current_hash, s:hash)
+    if confirm(s:message, "&Yes\n&No", 1) == 1
+      echo system(printf('git checkout %s', s:hash))
+    else
+      return
+    endif
+  endif
+
+  execute printf(':edit +%d %s', s:firstline, s:path)
+
+endfunction
+
+command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
+command! GitLinkJump call s:gitlink_jump()
+nnoremap <C-n> <cmd>GitLinkCreate<cr>
+nnoremap <C-m> <cmd>GitLinkJump<cr>
+vnoremap <C-n> :GitLinkCreate<cr>
