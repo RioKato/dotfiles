@@ -152,7 +152,6 @@ function! s:gitlink_jump() abort
   endif
 
   execute printf(':edit +%d %s', s:firstline, s:path)
-
 endfunction
 
 command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
