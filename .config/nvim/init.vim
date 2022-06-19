@@ -137,13 +137,14 @@ function! s:gitlink_jump() abort
   let s:hash = s:params[1]
   let s:path = s:params[2]
   let s:firstline = s:params[4]
+  let s:firstline = str2nr(s:firstline)
 
   let s:root = trim(system('git rev-parse --show-toplevel'))
   let s:path = printf('%s/%s', s:root, s:path)
   let s:current_hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(s:path, 1))))
 
   if s:hash != s:current_hash
-    let s:message = printf('checkout: %s => %s', s:current_hash, s:hash)
+    let s:message = printf('git checkout %s', s:hash)
     if confirm(s:message, "&Yes\n&No", 1) == 1
       echo system(printf('git checkout %s', s:hash))
     else
@@ -156,6 +157,6 @@ endfunction
 
 command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
 command! GitLinkJump call s:gitlink_jump()
-nnoremap <C-n> <cmd>GitLinkCreate<cr>
+nnoremap <C-l> <cmd>GitLinkCreate<cr>
 nnoremap <C-m> <cmd>GitLinkJump<cr>
-vnoremap <C-n> :GitLinkCreate<cr>
+vnoremap <C-l> :GitLinkCreate<cr>
