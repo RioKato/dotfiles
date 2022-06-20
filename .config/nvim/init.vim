@@ -164,7 +164,7 @@ function! s:gitlink_jump() abort
   let s:path = printf('%s/%s', s:root, s:path)
 
   let s:current_hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(s:path, 1))))
-  if v:shell_error != 0 || s:hash == ''
+  if v:shell_error != 0 || s:current_hash == ''
     echo 'Git Error'
     return
   endif
