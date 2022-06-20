@@ -108,6 +108,15 @@ autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
 """""""" GITLINK """"""""
 """""""""""""""""""""""""
 
+function! s:gitlink_normalize_url(url) abort
+  let s:url = a:url
+  let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
+  let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
+  let s:url = substitute(s:url, '^origin$', 'https://origin', '')
+
+  return s:url
+endfunction
+
 function! s:gitlink_create() range abort
   let s:url = trim(system('git ls-remote --get-url origin'))
   if v:shell_error != 0
@@ -115,10 +124,7 @@ function! s:gitlink_create() range abort
     return
   endif
 
-  let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
-  let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
-  let s:url = substitute(s:url, '^origin$', 'https://origin', '')
-
+  let s:url = s:gitlink_normalize_url(s:url)
   let s:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
   if v:shell_error != 0 || s:hash == ''
     echo 'Git Error'
@@ -142,9 +148,15 @@ function! s:gitlink_create() range abort
 endfunction
 
 function! s:gitlink_jump() abort
-  let s:line = getline('.')
-  let s:pattern = '/blob/\(\x\+\)/\([^#]*\)\(#L\(\d\+\)\)\?'
-  let s:params = matchlist(s:line, s:pattern)
+  let s:url = trim(system('git ls-remote --get-url origin'))
+  if v:shell_error != 0
+    echo 'Git Error'
+    return
+  endif
+
+  let s:url = s:gitlink_normalize_url(s:url)
+  let s:pattern = printf('%s/blob/\(\x\+\)/\([^#]*\)\(#L\(\d\+\)\)\?', s:url)
+  let s:params = matchlist(getline('.'), s:pattern)
   if s:params == []
     echo 'URL Error'
     return
@@ -162,7 +174,6 @@ function! s:gitlink_jump() abort
   endif
 
   let s:path = printf('%s/%s', s:root, s:path)
-
   let s:current_hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(s:path, 1))))
   if v:shell_error != 0 || s:current_hash == ''
     echo 'Git Error'
