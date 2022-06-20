@@ -74,6 +74,7 @@ call plug#begin()
   Plug 'liuchengxu/graphviz.vim'
   Plug 'tyru/capture.vim'
   Plug 'vim-scripts/gtags.vim'
+  Plug 'dhruvasagar/vim-table-mode'
 call plug#end()
 
 
@@ -101,7 +102,7 @@ autocmd FileType c,cc,cpp,h,hpp nnoremap gtj <cmd>GtagsCursor<cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap gtk <cmd>Gtags -r<cr><cr>
 autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
 
-
+autocmd FileType markdown :TableModeToggle
 
 
 """""""""""""""""""""""""
