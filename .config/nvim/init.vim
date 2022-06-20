@@ -162,7 +162,7 @@ function! s:gitlink_jump() abort
     return
   endif
 
-  let s:hash = s:params[1]
+  let s:target_hash = s:params[1]
   let s:path = s:params[2]
   let s:firstline = s:params[4]
   let s:firstline = str2nr(s:firstline)
@@ -180,10 +180,10 @@ function! s:gitlink_jump() abort
     return
   endif
 
-  if s:hash != s:current_hash
-    let s:message = printf('git checkout %s', s:hash)
+  if s:target_hash != s:current_hash
+    let s:message = printf('git checkout %s', s:target_hash)
     if confirm(s:message, "&Yes\n&No", 1) == 1
-      echo system(printf('git checkout %s', s:hash))
+      echo system(printf('git checkout %s', s:target_hash))
       if v:shell_error != 0
         echo 'Git Error'
         return
