@@ -156,7 +156,7 @@ function! s:gitlink_jump() abort
   endif
 
   let s:url = s:gitlink_normalize_url(s:url)
-  let s:pattern = printf('%s/blob/\(\x\+\)/\([^#]*\)\(#L\(\d\+\)\)\?', s:url)
+  let s:pattern = printf('%s/blob/\(\x\+\)/\([^#]\+\)\(#L\(\d\+\)\)\?', s:url)
   let s:params = matchlist(getline('.'), s:pattern)
   if s:params == []
     echo 'URL Error'
