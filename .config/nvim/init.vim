@@ -120,7 +120,7 @@ function! s:gitlink_create() range abort
   let s:url = substitute(s:url, '^origin$', 'https://origin', '')
 
   let s:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
-  if v:shell_error != 0
+  if v:shell_error != 0 || s:hash == ''
     echo 'Git Error'
     return
   endif
@@ -164,7 +164,7 @@ function! s:gitlink_jump() abort
   let s:path = printf('%s/%s', s:root, s:path)
 
   let s:current_hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(s:path, 1))))
-  if v:shell_error != 0
+  if v:shell_error != 0 || s:hash == ''
     echo 'Git Error'
     return
   endif
