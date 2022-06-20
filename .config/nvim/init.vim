@@ -108,12 +108,28 @@ autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
 """""""" GITLINK """"""""
 """""""""""""""""""""""""
 
-function! s:gitlink_create() range
+function! s:gitlink_create() range abort
   let s:url = trim(system('git ls-remote --get-url origin'))
+  if v:shell_error != 0
+    echo 'Git Error'
+    return
+  endif
+
   let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
   let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
+  let s:url = substitute(s:url, '^origin$', 'https://origin', '')
+
   let s:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
+  if v:shell_error != 0
+    echo 'Git Error'
+    return
+  endif
+
   let s:path = trim(system(printf('git ls-files --full-name %s', shellescape(@%, 1))))
+  if v:shell_error != 0
+    echo 'Git Error'
+    return
+  endif
 
   if a:firstline == a:lastline
     let s:link = printf('%s/blob/%s/%s#L%d', s:url, s:hash, s:path, a:firstline)
@@ -130,7 +146,7 @@ function! s:gitlink_jump() abort
   let s:pattern = '/blob/\(\x\+\)/\([^#]*\)\(#L\(\d\+\)\)\?'
   let s:params = matchlist(s:line, s:pattern)
   if s:params == []
-    echo 'Invalid URL'
+    echo 'URL Error'
     return
   endif
 
@@ -140,13 +156,27 @@ function! s:gitlink_jump() abort
   let s:firstline = str2nr(s:firstline)
 
   let s:root = trim(system('git rev-parse --show-toplevel'))
+  if v:shell_error != 0
+    echo 'Git Error'
+    return
+  endif
+
   let s:path = printf('%s/%s', s:root, s:path)
+
   let s:current_hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(s:path, 1))))
+  if v:shell_error != 0
+    echo 'Git Error'
+    return
+  endif
 
   if s:hash != s:current_hash
     let s:message = printf('git checkout %s', s:hash)
     if confirm(s:message, "&Yes\n&No", 1) == 1
       echo system(printf('git checkout %s', s:hash))
+      if v:shell_error != 0
+        echo 'Git Error'
+        return
+      endif
     else
       return
     endif
