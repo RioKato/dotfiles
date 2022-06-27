@@ -68,12 +68,12 @@ nvim_treesitter.setup({
 		select = {
 			enable = true,
 			keymaps = {
-				["af"] = "@function.outer",
-				["if"] = "@function.inner",
-				["ac"] = "@class.outer",
-				["ic"] = "@class.inner",
-				["ap"] = "@parameter.outer",
-				["ip"] = "@parameter.inner",
+				["aF"] = "@function.outer",
+				["iF"] = "@function.inner",
+				["aC"] = "@class.outer",
+				["iC"] = "@class.inner",
+				["aP"] = "@parameter.outer",
+				["iP"] = "@parameter.inner",
 			},
 		},
 	},
