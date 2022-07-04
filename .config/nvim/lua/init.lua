@@ -35,6 +35,7 @@ packer.startup(function()
 			{ "hrsh7th/cmp-buffer" },
 			{ "hrsh7th/cmp-vsnip" },
 			{ "hrsh7th/vim-vsnip" },
+			{ "rafamadriz/friendly-snippets" },
 		},
 	})
 	use("xiyaowong/nvim-cursorword")
