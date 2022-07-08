@@ -25,6 +25,7 @@ set cursorlineopt=number
 set termguicolors
 set clipboard+=unnamedplus
 set pastetoggle=<F3>
+set splitright
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
@@ -196,7 +197,12 @@ function! s:gitlink_jump() abort
     endif
   endif
 
-  execute printf(':edit +%d %s', s:firstline, s:path)
+  if winnr('l') == 1
+    execute printf(':vsplit +%d %s', s:firstline, s:path)
+  else
+    execute ':wincmd l'
+    execute printf(':edit +%d %s', s:firstline, s:path)
+  endif
 endfunction
 
 command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
