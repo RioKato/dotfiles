@@ -3,6 +3,7 @@ set autoindent
 set expandtab
 set tabstop=2
 set shiftwidth=2
+set nowrap
 set noswapfile
 set nobackup
 set noundofile
