@@ -102,10 +102,6 @@ let g:translator_target_lang='ja'
 
 let g:graphviz_output_format='jpg'
 
-autocmd FileType c,cc,cpp,h,hpp nnoremap gtj <cmd>GtagsCursor<cr>
-autocmd FileType c,cc,cpp,h,hpp nnoremap gtk <cmd>Gtags -r<cr><cr>
-autocmd FileType c,cc,cpp,h,hpp nnoremap gth <cmd>Gtags -f %<cr>
-
 autocmd FileType markdown :TableModeToggle
 
 
