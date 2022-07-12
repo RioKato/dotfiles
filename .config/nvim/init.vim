@@ -77,7 +77,6 @@ call plug#begin()
   Plug 'voldikss/vim-translator'
   Plug 'liuchengxu/graphviz.vim'
   Plug 'tyru/capture.vim'
-  Plug 'vim-scripts/gtags.vim'
   Plug 'dhruvasagar/vim-table-mode'
 call plug#end()
 
