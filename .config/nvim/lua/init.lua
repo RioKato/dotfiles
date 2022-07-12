@@ -118,6 +118,7 @@ vim.api.nvim_set_keymap("n", "<C-s>", "<cmd>lua telescope_builtin.grep_string()<
 
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-j>", "<cmd>lua telescope_builtin.lsp_definitions()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>lua telescope_builtin.lsp_references()<cr>", opts)
 	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-h>", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
