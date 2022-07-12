@@ -18,6 +18,7 @@ set hlsearch
 set hidden
 set virtualedit=block
 set completeopt=menu,menuone,noselect
+set tags=./tags;$HOME
 set showmatch
 set matchtime=1
 set number
