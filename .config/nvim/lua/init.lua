@@ -113,6 +113,7 @@ vim.api.nvim_set_keymap("n", "<space>f", "<cmd>lua telescope_builtin.find_files(
 vim.api.nvim_set_keymap("n", "<space>b", "<cmd>lua telescope_builtin.buffers()<cr>", opts)
 vim.api.nvim_set_keymap("n", "<space>r", "<cmd>lua telescope_builtin.registers()<cr>", opts)
 vim.api.nvim_set_keymap("n", "<space>g", "<cmd>lua telescope_builtin.live_grep()<cr>", opts)
+vim.api.nvim_set_keymap("n", "<space>G", "<cmd>lua telescope_builtin.current_buffer_fuzzy_find()<cr>", opts)
 vim.api.nvim_set_keymap("n", "<C-s>", "<cmd>lua telescope_builtin.grep_string()<cr>", opts)
 
 local on_attach = function(client, bufnr)

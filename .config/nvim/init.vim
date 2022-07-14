@@ -44,13 +44,13 @@ autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd FileType make setlocal noexpandtab
 autocmd FileType markdown setlocal noexpandtab
 autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<cr>
-autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
-autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
-autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
-autocmd Colorscheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE
-autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
-autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guifg=Grey
-autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
+" autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
+" autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
+" autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
+" autocmd Colorscheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE
+" autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
+" autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guifg=Grey
+" autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
 
 if has('win32') || has('win64')
   let g:python3_host_prog='python'
