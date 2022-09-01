@@ -113,6 +113,7 @@ function! s:gitlink_normalize_url(url) abort
   let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
   let s:url = substitute(s:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
   let s:url = substitute(s:url, '^https://chromium.googlesource.com/v8/v8.git$', 'https://github.com/v8/v8', '')
+  let s:url = substitute(s:url, '^https://sourceware.org/git/glibc.git$', 'https://github.com/bminor/glibc', '')
   let s:url = substitute(s:url, '^origin$', 'https://origin', '')
 
   return s:url
