@@ -23,7 +23,10 @@ packer.startup(function()
 		"nvim-telescope/telescope.nvim",
 		requires = {
 			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-telescope/telescope-fzf-native.nvim", run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build" },
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+			},
 			{ "kyazdani42/nvim-web-devicons" },
 		},
 	})
@@ -109,25 +112,26 @@ telescope.setup({
 telescope_builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
 
-vim.api.nvim_set_keymap("n", "<space>f", "<cmd>lua telescope_builtin.find_files()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<space>b", "<cmd>lua telescope_builtin.buffers()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<space>r", "<cmd>lua telescope_builtin.registers()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<space>g", "<cmd>lua telescope_builtin.live_grep()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<space>G", "<cmd>lua telescope_builtin.current_buffer_fuzzy_find()<cr>", opts)
-vim.api.nvim_set_keymap("n", "<C-s>", "<cmd>lua telescope_builtin.grep_string()<cr>", opts)
+vim.keymap.set("n", "<space>f", telescope_builtin.find_files, opts)
+vim.keymap.set("n", "<space>b", telescope_builtin.buffers, opts)
+vim.keymap.set("n", "<space>r", telescope_builtin.registers, opts)
+vim.keymap.set("n", "<space>g", telescope_builtin.live_grep, opts)
+vim.keymap.set("n", "<space>G", telescope_builtin.current_buffer_fuzzy_find, opts)
+vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
 
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-j>", "g<C-]>", opts)
-	-- vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-j>", "<cmd>lua telescope_builtin.lsp_definitions()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-k>", "<cmd>lua telescope_builtin.lsp_references()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-h>", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<C-n>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>h", "<cmd>lua telescope_builtin.lsp_document_symbols()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>t", "<cmd>lua telescope_builtin.tagstack()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space>d", "<cmd>lua telescope_builtin.diagnostics()<cr>", opts)
-	vim.api.nvim_buf_set_keymap(bufnr, "n", "<space><space>", "<cmd>lua vim.lsp.buf.format { async = true }<cr>", opts)
+
+	local bufopts = { noremap = true, silent = true, buffer = bufnr }
+	vim.keymap.set("n", "<C-j>", telescope_builtin.lsp_definitions, bufopts)
+	vim.keymap.set("n", "<C-k>", telescope_builtin.lsp_references, bufopts)
+	vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, bufopts)
+	vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, bufopts)
+	vim.keymap.set("n", "<space>h", telescope_builtin.lsp_document_symbols, bufopts)
+	vim.keymap.set("n", "<space>t", telescope_builtin.tagstack, bufopts)
+	vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, bufopts)
+	vim.keymap.set("n", "<space><space>", vim.lsp.buf.formatting, bufopts)
 end
 
 local cmp = require("cmp")
