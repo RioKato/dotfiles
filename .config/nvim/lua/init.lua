@@ -1,5 +1,11 @@
 vim.o.inccommand = "split"
-vim.cmd([[ autocmd TextYankPost * silent! lua vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 } ]])
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function()
+		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+	end,
+})
+
 vim.diagnostic.config({
 	virtual_text = false,
 	signs = false,
@@ -57,7 +63,11 @@ packer.startup(function()
 end)
 
 stylua = require("stylua-nvim")
-vim.cmd([[ autocmd BufWritePre init.lua silent! lua stylua.format_file() ]])
+vim.api.nvim_create_autocmd("BufWritePre", {
+	callback = function()
+		stylua.format_file()
+	end,
+})
 
 local nvim_treesitter = require("nvim-treesitter.configs")
 nvim_treesitter.setup({
