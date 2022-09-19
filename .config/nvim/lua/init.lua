@@ -62,9 +62,9 @@ packer.startup(function()
 	})
 end)
 
-stylua = require("stylua-nvim")
 vim.api.nvim_create_autocmd("BufWritePre", {
 	callback = function()
+		local stylua = require("stylua-nvim")
 		stylua.format_file()
 	end,
 })
@@ -119,7 +119,7 @@ telescope.setup({
 	},
 })
 
-telescope_builtin = require("telescope.builtin")
+local telescope_builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "<space>f", telescope_builtin.find_files, opts)
