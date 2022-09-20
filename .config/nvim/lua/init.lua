@@ -63,6 +63,7 @@ packer.startup(function()
 end)
 
 vim.api.nvim_create_autocmd("BufWritePre", {
+	pattern = { "*.lua" },
 	callback = function()
 		local stylua = require("stylua-nvim")
 		stylua.format_file()
