@@ -10,7 +10,6 @@ ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
 
 mkdir -p ~/dotfiles/.idapro
 ln -s ~/dotfiles/.idapro/cfg ~/.idapro/cfg
-ln -s ~/dotfiles/.idapro/plugins ~/.idapro/plugins
 ln -s ~/dotfiles/.idapro/themes ~/.idapro/themes
 
 mkdir -p ~/.local/share/applications
