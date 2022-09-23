@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Application
-Encoding=UTF-8
+Terminal=false
 Name=IDA Pro 64
-Commend=IDA Pro 64
 Exec=/opt/idapro-8.0/ida64
 Icon=/opt/idapro-8.0/appico64.png
