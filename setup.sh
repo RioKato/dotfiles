@@ -12,3 +12,4 @@ ln -s ~/dotfiles/.idapro/cfg ~/.idapro/cfg
 
 mkdir -p ~/.local/share/applications
 ln -s ~/dotfiles/.local/share/applications/ida64.desktop ~/.local/share/applications/ida64.desktop 
+ln -s ~/dotfiles/.local/share/applications/ida.desktop ~/.local/share/applications/ida.desktop 
