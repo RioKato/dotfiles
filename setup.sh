@@ -7,6 +7,8 @@ ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/dotfiles/.gdbinit ~/.gdbinit
 ln -s ~/dotfiles/.docker/ ~/.docker 
 ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
+ln -s ~/dotfiles/.bash_environs ~/.bash_environs
+echo 'source ~/.bash_environs' >> ~/.bashrc
 
 mkdir -p ~/dotfiles/.idapro
 ln -s ~/dotfiles/.idapro/cfg ~/.idapro/cfg
