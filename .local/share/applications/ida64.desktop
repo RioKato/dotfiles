@@ -2,5 +2,5 @@
 Type=Application
 Terminal=false
 Name=IDA Pro 64
-Exec=/opt/idapro-8.0/ida64
-Icon=/opt/idapro-8.0/appico64.png
+Exec=/opt/idapro-8.1/ida64
+Icon=/opt/idapro-8.1/appico64.png
