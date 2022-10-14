@@ -16,7 +16,11 @@ syms_r() {
   find $1 -type f -exec bu -s {} \; 2> /dev/null
 }
 
-while getopts "d:e:s:t:" OPTION; do
+strings_r() {
+  find $1 -type f -exec strings -f {} \; 2> /dev/null
+}
+
+while getopts "d:e:s:t:x:" OPTION; do
   case $OPTION in
     d)
       deps $OPTARG
@@ -34,9 +38,13 @@ while getopts "d:e:s:t:" OPTION; do
       syms_r $OPTARG
       exit 0
       ;;
+    x)
+      strings_r $OPTARG
+      exit 0
+      ;;
   esac
 done
 
 CMDNAME=`basename $0`
-echo "Usage: $CMDNAME [-d bin] [-e dir] [-s bin] [-t dir]" 1>&2
+echo "Usage: $CMDNAME [-d bin] [-e dir] [-s bin] [-t dir] [-x dir]" 1>&2
 exit 1
