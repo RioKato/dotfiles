@@ -17,3 +17,6 @@ ln -s ~/dotfiles/.idapro/themes ~/.idapro/themes
 mkdir -p ~/.local/share/applications
 ln -s ~/dotfiles/.local/share/applications/ida64.desktop ~/.local/share/applications/ida64.desktop 
 ln -s ~/dotfiles/.local/share/applications/ida.desktop ~/.local/share/applications/ida.desktop 
+
+mkdir -p ~/bin
+ln -s ~/dotfiles/bin/bu ~/bin/bu

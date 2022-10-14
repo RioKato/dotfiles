@@ -1,0 +1,34 @@
+#!/bin/bash
+
+deps() {
+  readelf -d $1 | awk -v bin=`basename $1` '{if ($2 == "(NEEDED)") print bin, substr($5, 2, length($5) - 2);}'
+}
+
+deps_r() {
+  find -L $1 -type f -exec bu -d {} \; 2> /dev/null
+}
+
+syms() {
+  nm -CD --defined-only $1 | cut -d ' ' -f 3- | awk -v bin=$1 '{print bin,$0}'
+}
+
+while getopts "d:e:s:" OPTION; do
+  case $OPTION in
+    d)
+      deps $OPTARG
+      exit 0
+      ;;
+    e)
+      deps_r $OPTARG
+      exit 0
+      ;;
+    s)
+      syms $OPTARG
+      exit 0
+      ;;
+  esac
+done
+
+CMDNAME=`basename $0`
+echo "Usage: $CMDNAME [-d bin] [-e dir] [-s bin]" 1>&2
+exit 1
