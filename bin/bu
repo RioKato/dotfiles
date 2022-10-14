@@ -12,7 +12,11 @@ syms() {
   nm -CD --defined-only $1 | cut -d ' ' -f 3- | awk -v bin=$1 '{print bin,$0}'
 }
 
-while getopts "d:e:s:" OPTION; do
+syms_r() {
+  find $1 -type f -exec bu -s {} \; 2> /dev/null
+}
+
+while getopts "d:e:s:t:" OPTION; do
   case $OPTION in
     d)
       deps $OPTARG
@@ -24,6 +28,10 @@ while getopts "d:e:s:" OPTION; do
       ;;
     s)
       syms $OPTARG
+      exit 0
+      ;;
+    t)
+      syms_r $OPTARG
       exit 0
       ;;
   esac
