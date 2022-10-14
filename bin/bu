@@ -38,5 +38,5 @@ while getopts "d:e:s:t:" OPTION; do
 done
 
 CMDNAME=`basename $0`
-echo "Usage: $CMDNAME [-d bin] [-e dir] [-s bin]" 1>&2
+echo "Usage: $CMDNAME [-d bin] [-e dir] [-s bin] [-t dir]" 1>&2
 exit 1
