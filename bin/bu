@@ -9,7 +9,8 @@ deps_r() {
 }
 
 syms() {
-  nm -CD --defined-only $1 | cut -d ' ' -f 3- | awk -v bin=$1 '{print bin,$0}'
+  nm -D --defined-only $1 | awk -v bin=$1 '{print bin, "defined", $3}'
+  nm -D -u $1 | awk -v bin=$1 '{print bin, "undefined", $2}'
 }
 
 syms_r() {
