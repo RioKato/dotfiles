@@ -10,4 +10,5 @@ set print demangle
 set print asm-demangle
 directory ./glibc
 
-source ~/.gef.py
+# source ~/.gef.py
+source ~/.pwndbg/gdbinit.py
