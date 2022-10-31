@@ -207,4 +207,4 @@ command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
 command! GitLinkJump call s:gitlink_jump()
 nnoremap <C-l> <cmd>GitLinkCreate<cr>
 nnoremap <C-n> <cmd>GitLinkJump<cr>
-vnoremap <C-;> <cmd>GitLinkCreate<cr>
+vnoremap <C-l> <cmd>GitLinkCreate<cr>
