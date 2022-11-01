@@ -78,6 +78,8 @@ call plug#begin()
   Plug 'liuchengxu/graphviz.vim'
   Plug 'tyru/capture.vim'
   Plug 'dhruvasagar/vim-table-mode'
+  Plug 'skanehira/denops-silicon.vim'
+  Plug 'vim-denops/denops.vim'
 call plug#end()
 
 
@@ -207,4 +209,4 @@ command! -range GitLinkCreate <line1>,<line2>call s:gitlink_create()
 command! GitLinkJump call s:gitlink_jump()
 nnoremap <C-l> <cmd>GitLinkCreate<cr>
 nnoremap <C-n> <cmd>GitLinkJump<cr>
-vnoremap <C-l> <cmd>GitLinkCreate<cr>
+vnoremap <C-l> :GitLinkCreate<cr>
