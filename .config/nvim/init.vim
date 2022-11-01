@@ -105,6 +105,23 @@ let g:graphviz_output_format='jpg'
 
 autocmd FileType markdown :TableModeToggle
 
+let g:silicon_options = {
+      \  'font': 'Cica',
+      \  'no_line_number': v:false,
+      \  'no_round_corner': v:true,
+      \  'no_window_controls': v:true,
+      \  'background_color': '#aaaaff',
+      \  'line_offset': 1,
+      \  'line_pad': 2,
+      \  'pad_horiz': 0,
+      \  'pad_vert': 0,
+      \  'shadow_blur_radius': 0,
+      \  'shadow_color': '#555555',
+      \  'shadow_offset_x': 0,
+      \  'shadow_offset_y': 0,
+      \  'tab_width': 4,
+      \  'theme': 'GitHub',
+      \ }
 
 """""""""""""""""""""""""
 """""""" GITLINK """"""""
