@@ -5,6 +5,7 @@ set follow-fork-mode parent
 set pagination off
 set logging file gdb.log
 set logging on
+set confirm off
 set print pretty on
 set print demangle
 set print asm-demangle
