@@ -12,5 +12,5 @@ set print asm-demangle
 handle SIGALRM ignore
 directory ./glibc
 
-# source ~/.gef.py
-source ~/.pwndbg/gdbinit.py
+source ~/.gef.py
+# source ~/.pwndbg/gdbinit.py

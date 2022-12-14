@@ -10,7 +10,7 @@ ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
 ln -s ~/dotfiles/.bash_environs ~/.bash_environs
 echo 'source ~/.bash_environs' >> ~/.bashrc
 
-mkdir -p ~/dotfiles/.idapro
+mkdir -p ~/.idapro
 ln -s ~/dotfiles/.idapro/cfg ~/.idapro/cfg
 ln -s ~/dotfiles/.idapro/themes ~/.idapro/themes
 
