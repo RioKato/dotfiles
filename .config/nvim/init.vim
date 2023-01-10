@@ -107,7 +107,7 @@ autocmd FileType markdown :TableModeToggle
 
 let g:silicon_options = {
       \  'font': 'Cica',
-      \  'no_line_number': v:false,
+      \  'no_line_number': v:true,
       \  'no_round_corner': v:true,
       \  'no_window_controls': v:true,
       \  'background_color': '#aaaaff',
