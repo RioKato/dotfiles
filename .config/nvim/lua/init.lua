@@ -52,14 +52,6 @@ packer.startup(function()
 	use("lukas-reineke/indent-blankline.nvim")
 	use("tversteeg/registers.nvim")
 	use("ellisonleao/glow.nvim")
-	use({
-		"pwntester/codeql.nvim",
-		requires = {
-			{ "MunifTanjim/nui.nvim" },
-			{ "nvim-lua/telescope.nvim" },
-			{ "kyazdani42/nvim-web-devicons" },
-		},
-	})
 end)
 
 vim.api.nvim_create_autocmd("BufWritePre", {
@@ -142,7 +134,9 @@ local on_attach = function(client, bufnr)
 	vim.keymap.set("n", "<space>h", telescope_builtin.lsp_document_symbols, bufopts)
 	vim.keymap.set("n", "<space>t", telescope_builtin.tagstack, bufopts)
 	vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, bufopts)
-	vim.keymap.set("n", "<space><space>", vim.lsp.buf.formatting, bufopts)
+	vim.keymap.set("n", "<space><space>", function()
+		vim.lsp.buf.format({ async = true })
+	end, bufopts)
 end
 
 local cmp = require("cmp")
@@ -203,11 +197,3 @@ lspconfig.tsserver.setup({
 	capabilities = capabilities,
 	root_dir = vim.loop.cwd,
 })
-
-lspconfig.codeqlls.setup({
-	on_attach = on_attach,
-	capabilities = capabilities,
-})
-
-local codeql = require("codeql")
-codeql.setup({})
