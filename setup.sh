@@ -19,4 +19,3 @@ ln -s ~/dotfiles/.local/share/applications/ida64.desktop ~/.local/share/applicat
 ln -s ~/dotfiles/.local/share/applications/ida.desktop ~/.local/share/applications/ida.desktop 
 
 mkdir -p ~/bin
-ln -s ~/dotfiles/bin/bu ~/bin/bu
