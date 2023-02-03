@@ -28,6 +28,7 @@ set termguicolors
 set clipboard+=unnamedplus
 set pastetoggle=<F3>
 set splitright
+set mouse=
 nnoremap j gj
 nnoremap k gk
 nnoremap gj j
