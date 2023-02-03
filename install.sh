@@ -2,16 +2,16 @@
 
 # packages
 apt update
-apg install -y tmux git curl p7zip-full vim
-apg install -y gcc gdb make cmake clang clangd
-apg install -y python3 python3-pip nodejs php ruby
-apg install -y nmap smbclient nfs-common ldap-utils hydra
-apg install -y mysql-server
-apg install -y proxychains4
-apg install -y ripgrep fzf
-apg install -y openvpn
-apg install -y wireshark
-apg install -y gnome-tweaks
+apt install -y tmux git curl p7zip-full vim
+apt install -y gcc gdb make cmake clang clangd
+apt install -y python3 python3-pip nodejs php ruby
+apt install -y nmap smbclient nfs-common ldap-utils hydra
+apt install -y mysql-server
+apt install -y proxychains4
+apt install -y ripgrep fzf
+apt install -y openvpn
+apt install -y wireshark
+apt install -y gnome-tweaks
 
 # neovim
 add-apt-repository ppa:neovim-ppa/unstable
@@ -90,8 +90,8 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/metas
   tee /etc/apt/sources.list.d/metasploit-framework.list > /dev/null
 
 apt update
-apg install -y neovim docker-ce google-chrome-stable code
-apg install -y --allow-downgrades metasploit-framework
+apt install -y neovim docker-ce google-chrome-stable code
+apt install -y --allow-downgrades metasploit-framework
 
 # services
 systemctl disable mysql
