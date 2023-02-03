@@ -1,38 +1,38 @@
 #!/bin/sh
 
 # packages
-sudo apt update
-sudo apt install tmux git curl p7zip-full vim
-sudo apt install gcc gdb make cmake clang clangd
-sudo apt install python3 python3-pip nodejs php ruby
-sudo apt install nmap smbclient nfs-common ldap-utils hydra
-sudo apt install mysql-server
-sudo apt install proxychains4
-sudo apt install ripgrep fzf
-sudo apt install openvpn
-sudo apt install wireshark
-sudo apt install gnome-tweaks
+apt update
+apg install -y tmux git curl p7zip-full vim
+apg install -y gcc gdb make cmake clang clangd
+apg install -y python3 python3-pip nodejs php ruby
+apg install -y nmap smbclient nfs-common ldap-utils hydra
+apg install -y mysql-server
+apg install -y proxychains4
+apg install -y ripgrep fzf
+apg install -y openvpn
+apg install -y wireshark
+apg install -y gnome-tweaks
 
 # neovim
-sudo add-apt-repository ppa:neovim-ppa/unstable
+add-apt-repository ppa:neovim-ppa/unstable
 
 # docker
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 # chrome
-curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmour -o /usr/share/keyrings/google_linux_signing_key.gpg
+curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmour -o /usr/share/keyrings/google_linux_signing_key.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/google_linux_signing_key.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | \
-  sudo tee /etc/apt/sources.list.d/chrome.list > /dev/null
+  tee /etc/apt/sources.list.d/chrome.list > /dev/null
 
 # vscode
-curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | sudo gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
+curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
 echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | \
-  sudo tee /etc/apt/sources.list.d/vscode.list
+  tee /etc/apt/sources.list.d/vscode.list
 
 # metasploit
-cat - <<EOF | sudo gpg --dearmour -o /usr/share/keyrings/metasploit_signing_key.gpg
+cat - <<EOF | gpg --dearmour -o /usr/share/keyrings/metasploit_signing_key.gpg
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 
 mQINBFDAy/0BEAC8I5bw5gLQqHKx5JCacYcXFL6AZowl3qIOTxo5yfBl8CepNpWY
@@ -87,11 +87,11 @@ qCU0JkA1rVqS6PXZabKb9DOqYa4pr9thGS5rU+Gn3GWiSq2PtVW6Hh83WOFcEsMk
 -----END PGP PUBLIC KEY BLOCK-----
 EOF
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/metasploit_signing_key.gpg] http://downloads.metasploit.com/data/releases/metasploit-framework/apt lucid main" | \
-  sudo tee /etc/apt/sources.list.d/metasploit-framework.list > /dev/null
+  tee /etc/apt/sources.list.d/metasploit-framework.list > /dev/null
 
-sudo apt update
-sudo apt install neovim docker-ce google-chrome-stable code
-sudo apt install --allow-downgrades metasploit-framework
+apt update
+apg install -y neovim docker-ce google-chrome-stable code
+apg install -y --allow-downgrades metasploit-framework
 
 # services
-sudo systemctl disable mysql
+systemctl disable mysql
