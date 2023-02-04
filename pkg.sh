@@ -1,11 +1,16 @@
 #!/bin/sh
 
+###############################################################################################################################################################
+# APT 
+###############################################################################################################################################################
+
 # packages
 apt update
 apt install -y tmux git curl p7zip-full vim
 apt install -y gcc gdb make cmake clang clangd
-apt install -y python3 python3-pip nodejs php ruby
-apt install -y nmap smbclient nfs-common ldap-utils hydra
+apt install -y python3 python3-pip nodejs php ruby ruby-dev
+apt install -y nmap smbclient ldap-utils nfs-common hydra dnsenum smbmap
+apt install -y cewl
 apt install -y mysql-server
 apt install -y proxychains4
 apt install -y ripgrep fzf
@@ -94,8 +99,9 @@ apt update
 apt install -y neovim docker-ce google-chrome-stable code
 apt install -y --allow-downgrades metasploit-framework
 
-# services
-systemctl disable mysql
-systemctl disable apache2
 
+###############################################################################################################################################################
+# SNAP
+###############################################################################################################################################################
 
+snap install john-the-ripper impacket sqlmap crackmapexec
