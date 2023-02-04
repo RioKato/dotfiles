@@ -24,12 +24,12 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docke
 # chrome
 curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmour -o /usr/share/keyrings/google_linux_signing_key.gpg
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/google_linux_signing_key.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | \
-  tee /etc/apt/sources.list.d/chrome.list > /dev/null
+  tee /etc/apt/sources.list.d/google-chrome.list > /dev/null
 
 # vscode
 curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
 echo "deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" | \
-  tee /etc/apt/sources.list.d/vscode.list
+  tee /etc/apt/sources.list.d/vscode.list > /dev/null 
 
 # metasploit
 cat - <<EOF | gpg --dearmour -o /usr/share/keyrings/metasploit_signing_key.gpg
