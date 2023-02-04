@@ -6,6 +6,7 @@ wget -P ~/Documents/PETool https://github.com/carlospolop/PEASS-ng/releases/late
 wget -P ~/Documents/PETool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
 wget -P ~/Documents/PETool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
 wget -P ~/Documents/PETool https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64
+wget -P ~/Documents/PETool https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip
 git clone https://github.com/danielmiessler/SecLists.git ~/Documents/SecLists.git
 git clone https://github.com/samratashok/nishang.git ~/Documents/nishang.git
 git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
