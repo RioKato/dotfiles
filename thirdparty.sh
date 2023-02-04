@@ -9,9 +9,9 @@ wget -P ~/Documents/PETool https://github.com/DominicBreuker/pspy/releases/downl
 git clone https://github.com/danielmiessler/SecLists.git ~/Documents/SecLists.git
 git clone https://github.com/samratashok/nishang.git ~/Documents/nishang.git
 git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
-git clone https://github.com/lgandx/Responder.git ~/bin/Responder.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
+sudo git clone https://github.com/lgandx/Responder.git /opt/Responder.git
 sudo gem install evil-winrm
