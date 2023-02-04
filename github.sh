@@ -24,3 +24,5 @@ git clone https://github.com/samratashok/nishang.git
 # PEAS
 # pspy64
 # kerbrute
+# jhon
+# dnsmap

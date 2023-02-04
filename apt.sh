@@ -12,6 +12,7 @@ apt install -y ripgrep fzf
 apt install -y openvpn
 apt install -y wireshark
 apt install -y gnome-tweaks
+apt install -y libssl-dev libbz2-dev libpcap-dev libgmp-dev
 
 # neovim
 add-apt-repository ppa:neovim-ppa/unstable
@@ -95,3 +96,6 @@ apt install -y --allow-downgrades metasploit-framework
 
 # services
 systemctl disable mysql
+systemctl disable apache2
+
+
