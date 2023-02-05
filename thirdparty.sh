@@ -16,3 +16,4 @@ go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
 sudo git clone https://github.com/lgandx/Responder.git /opt/Responder.git
 sudo gem install evil-winrm
+sudo gem install wpscan

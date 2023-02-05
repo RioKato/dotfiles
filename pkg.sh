@@ -6,7 +6,7 @@
 
 # packages
 apt update
-apt install -y tmux git curl p7zip-full vim
+apt install -y tmux git curl p7zip-full vim rlwrap
 apt install -y gcc gdb make cmake clang clangd
 apt install -y python3 python3-pip nodejs php ruby ruby-dev
 apt install -y nmap smbclient ldap-utils nfs-common hydra dnsenum smbmap
