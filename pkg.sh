@@ -6,18 +6,20 @@
 
 # packages
 apt update
-apt install -y tmux git curl p7zip-full vim rlwrap
-apt install -y gcc gdb make cmake clang clangd
-apt install -y python3 python3-pip nodejs php ruby ruby-dev
-apt install -y nmap smbclient ldap-utils nfs-common hydra dnsenum smbmap
-apt install -y cewl
-apt install -y mysql-server
-apt install -y proxychains4
-apt install -y ripgrep fzf
-apt install -y openvpn
-apt install -y wireshark
-apt install -y gnome-tweaks
-apt install -y libssl-dev libbz2-dev libpcap-dev libgmp-dev
+apt install -y \
+  curl vim p7zip-full git \
+  ripgrep fzf \
+  tmux rlwrap \
+  gcc gdb make cmake clang clangd \
+  python3 python3-pip nodejs php ruby ruby-dev \
+  smbclient ldap-utils nfs-common mysql-server \
+  nmap hydra dnsenum smbmap proxychains4 \
+  cewl \
+  openvpn \
+  wireshark gnome-tweaks \
+  libssl-dev libbz2-dev libpcap-dev libgmp-dev \
+  libimage-exiftool-perl \
+  libemail-outlook-message-perl libemail-sender-perl
 
 # neovim
 add-apt-repository ppa:neovim-ppa/unstable
