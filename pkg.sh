@@ -7,7 +7,7 @@
 # packages
 apt update
 apt install -y \
-  curl vim p7zip-full plocate git \
+  curl vim p7zip-full plocate git jq \
   ripgrep fzf \
   tmux rlwrap \
   gcc gdb make cmake clang clangd \
