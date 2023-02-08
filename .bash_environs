@@ -1,5 +1,6 @@
-export FZF_CTRL_T_COMMAND="find / -type f 2> /dev/null"
-export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
+export FZF_DEFAULT_COMMAND="rg --files --hidden"
+export FZF_CTRL_T_COMMAND="rg --files --hidden"
+export FZF_CTRL_T_OPTS="--height 50% --layout=reverse --border --inline-info --preview 'head -100 {}'"
 
 export PATH=$PATH:/opt/idapro-8.0/
 export PATH=$PATH:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
