@@ -107,6 +107,6 @@ apt install -y --allow-downgrades metasploit-framework
 ###############################################################################################################################################################
 
 snap install \
-  john-the-ripper \
+  john-the-ripper hash-id \
   impacket crackmapexe \
   sqlmap
