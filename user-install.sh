@@ -16,8 +16,6 @@ git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
-sudo git clone https://github.com/lgandx/Responder.git /opt/Responder.git
-sudo gem install evil-winrm
-sudo gem install wpscan
+gem install --user-install evil-winrm
+gem install --user-install wpscan
 pip install git-dumper
-pip install python-evtx

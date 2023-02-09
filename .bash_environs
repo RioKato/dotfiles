@@ -1,7 +1,0 @@
-export FZF_CTRL_T_COMMAND="rg --files --hidden / 2> /dev/null"
-export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
-export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
-
-export PATH=$PATH:/opt/idapro-8.0/
-export PATH=$PATH:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
-export PATH=$PATH:/usr/local/go/bin:~/go/bin
