@@ -7,5 +7,6 @@ export FZF_CTRL_T_OPTS="--preview 'head -100 {}'"
 
 export PATH=$PATH:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
 export PATH=$PATH:/usr/local/go/bin:~/go/bin
+export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
 
 source /usr/share/doc/fzf/examples/key-bindings.bash
