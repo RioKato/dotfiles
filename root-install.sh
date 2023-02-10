@@ -16,7 +16,7 @@ apt install -y \
   nmap hydra dnsenum smbmap proxychains4 \
   cewl \
   openvpn \
-  wireshark gnome-tweaks \
+  wireshark gnome-tweaks tilix \
   libssl-dev libbz2-dev libpcap-dev libgmp-dev \
   libimage-exiftool-perl \
   libemail-outlook-message-perl libemail-sender-perl
