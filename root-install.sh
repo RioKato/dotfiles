@@ -11,7 +11,7 @@ apt install -y \
   ripgrep fzf \
   tmux rlwrap \
   gcc gdb make cmake clang clangd \
-  python3 python3-pip nodejs php php-curl ruby ruby-dev \
+  python3 python3-pip nodejs npm php php-curl ruby ruby-dev \
   smbclient ldap-utils nfs-common mysql-server \
   nmap hydra dnsenum smbmap proxychains4 \
   cewl \
