@@ -1,5 +1,10 @@
 #!/bin/sh
 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+cargo install deno --locked
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+
 wget -P ~/Documents/PETool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/PETool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
 wget -P ~/Documents/PETool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
@@ -25,7 +30,4 @@ pip install pwntools
 gem install --user-install one_gadget
 npm install --prefix ~/bin/js-beautify.npm js-beautify
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
