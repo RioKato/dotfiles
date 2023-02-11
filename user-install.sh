@@ -24,3 +24,8 @@ pip install git-dumper
 pip install pwntools
 gem install --user-install one_gadget
 npm install --prefix ~/bin/js-beautify.npm js-beautify
+
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
