@@ -11,3 +11,5 @@ set print demangle
 set print asm-demangle
 handle SIGALRM ignore
 directory ./glibc
+
+source ~/.gef.py
