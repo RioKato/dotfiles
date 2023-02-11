@@ -1,7 +1,10 @@
 #!/bin/sh
 
-# rust
+# lang
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+rustup component add rust-analyzer-x86_64-unknown-linux-gnu
+go install golang.org/x/tools/gopls@latest
+pip install python-lsp-server
 
 # neovim
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
@@ -10,7 +13,7 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 # gdb
 bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
 
-# Documents
+# documents
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat

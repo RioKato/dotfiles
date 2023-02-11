@@ -117,6 +117,9 @@ snap install \
 # go
 curl https://dl.google.com/go/go1.20.linux-amd64.tar.gz | tar -C /usr/local -xzf -
 
+# (java|type)script
+npm -g install typescript
+
 # etc
 git clone https://github.com/lgandx/Responder.git /opt/Responder.git
 git clone https://github.com/dirkjanm/krbrelayx.git /opt/krbrelayx.git
