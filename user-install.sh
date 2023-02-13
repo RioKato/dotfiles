@@ -1,19 +1,20 @@
 #!/bin/sh
 
-# lang
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-rustup component add rust-analyzer-x86_64-unknown-linux-gnu
-go install golang.org/x/tools/gopls@latest
-pip install python-lsp-server
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// setup
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-# neovim
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 
-# gdb
 bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
 
-# documents
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// documents
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
@@ -26,13 +27,20 @@ wget -P ~/Documents/petools https://github.com/antonioCoco/RoguePotato/releases/
 wget -P ~/Documents/petools https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
 wget -P ~/Documents/petools https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
 git clone https://github.com/danielmiessler/SecLists.git ~/Documents/SecLists.git
+git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git ~/Documents/PayloadsAllTheThings.git
 git clone https://github.com/samratashok/nishang.git ~/Documents/nishang.git
 git clone https://github.com/PowerShellMafia/PowerSploit.git ~/Documents/PowerSploit.git
 git clone https://github.com/FuzzySecurity/PowerShell-Suite.git ~/Documents/PowerShell-Suite.git
 git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git ~/Documents/windows-kernel-exploits.git
 git clone https://github.com/andrew-d/static-binaries.git ~/Documents/static-binaries.git
 
-# bin
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// tools
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+rustup component add rust-analyzer-x86_64-unknown-linux-gnu
+go install golang.org/x/tools/gopls@latest
+pip install python-lsp-server
 git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
 git clone https://github.com/synacktiv/php_filter_chain_generator.git ~/bin/php_filter_chain_generator.git

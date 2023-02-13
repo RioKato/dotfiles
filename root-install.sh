@@ -15,11 +15,9 @@ apt install -y \
   smbclient ldap-utils nfs-common mysql-server \
   nmap hydra dnsenum smbmap proxychains4 \
   cewl \
-  openvpn \
-  wireshark gnome-tweaks tilix \
-  libssl-dev libcurl4-openssl-dev libbz2-dev libpcap-dev libgmp-dev \
   libimage-exiftool-perl \
-  libemail-outlook-message-perl libemail-sender-perl
+  openvpn \
+  wireshark gnome-tweaks tilix
 
 # neovim
 add-apt-repository ppa:neovim-ppa/unstable
@@ -111,16 +109,16 @@ snap install \
   sqlmap
 
 ###############################################################################################################################################################
+# NPM
+###############################################################################################################################################################
+
+npm -g install typescript
+
+###############################################################################################################################################################
 # MANUAL
 ###############################################################################################################################################################
 
-# go
 curl https://dl.google.com/go/go1.20.linux-amd64.tar.gz | tar -C /usr/local -xzf -
-
-# (java|type)script
-npm -g install typescript
-
-# etc
 git clone https://github.com/lgandx/Responder.git /opt/Responder.git
 git clone https://github.com/dirkjanm/krbrelayx.git /opt/krbrelayx.git
 
