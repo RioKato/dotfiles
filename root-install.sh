@@ -7,7 +7,7 @@
 # packages
 apt update
 apt install -y \
-  curl vim p7zip-full plocate git jq \
+  curl vim p7zip-full plocate git jq nkf \
   ripgrep fzf \
   tmux rlwrap \
   gcc gdb make cmake clang clangd \
@@ -17,7 +17,7 @@ apt install -y \
   cewl \
   openvpn \
   wireshark gnome-tweaks tilix \
-  libssl-dev libbz2-dev libpcap-dev libgmp-dev \
+  libssl-dev libcurl4-openssl-dev libbz2-dev libpcap-dev libgmp-dev \
   libimage-exiftool-perl \
   libemail-outlook-message-perl libemail-sender-perl
 
