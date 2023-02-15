@@ -15,7 +15,7 @@ apt install -y \
   smbclient ldap-utils nfs-common mysql-server \
   nmap hydra dnsenum smbmap proxychains4 \
   cewl \
-  libimage-exiftool-perl \
+  libimage-exiftool-perl imagemagick \
   openvpn \
   wireshark gnome-tweaks tilix
 
