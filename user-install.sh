@@ -1,7 +1,7 @@
 #!/bin/sh
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// setup
+// SETUP
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -12,7 +12,7 @@ sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.
 bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// documents
+// DOCUMENTS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
@@ -28,6 +28,7 @@ wget -P ~/Documents/petools https://github.com/gentilkiwi/mimikatz/releases/down
 wget -P ~/Documents/petools https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
 git clone https://github.com/danielmiessler/SecLists.git ~/Documents/SecLists.git
 git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git ~/Documents/PayloadsAllTheThings.git
+git clone https://github.com/pentestmonkey/php-reverse-shell.git ~/Documents/php-reverse-shell.git
 git clone https://github.com/samratashok/nishang.git ~/Documents/nishang.git
 git clone https://github.com/PowerShellMafia/PowerSploit.git ~/Documents/PowerSploit.git
 git clone https://github.com/FuzzySecurity/PowerShell-Suite.git ~/Documents/PowerShell-Suite.git
@@ -35,7 +36,7 @@ git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git ~/Docume
 git clone https://github.com/andrew-d/static-binaries.git ~/Documents/static-binaries.git
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// tools
+// TOOLS
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 rustup component add rust-analyzer-x86_64-unknown-linux-gnu
@@ -48,6 +49,7 @@ git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
 git clone https://github.com/urbanadventurer/username-anarchy.git ~/bin/username-anarchy.git
 git clone https://github.com/GerbenJavado/LinkFinder.git ~/bin/LinkFinder.git
 git clone https://github.com/micahvandeusen/gMSADumper.git ~/bin/gMSADumper.git
+wget -P ~/bin https://raw.githubusercontent.com/openwall/john/bleeding-jumbo/run/ssh2john.py
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
