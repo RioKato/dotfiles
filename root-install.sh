@@ -17,7 +17,8 @@ apt install -y \
   cewl \
   libimage-exiftool-perl imagemagick \
   openvpn \
-  wireshark gnome-tweaks tilix
+  wireshark gnome-tweaks tilix \
+  virtualbox
 
 # neovim
 add-apt-repository ppa:neovim-ppa/unstable
