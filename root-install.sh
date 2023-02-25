@@ -12,6 +12,7 @@ apt install -y \
   tmux rlwrap \
   gcc gdb make cmake clang clangd \
   python3 python3-pip nodejs npm php php-curl ruby ruby-dev \
+  openjdk-17-jdk \
   smbclient ldap-utils nfs-common mysql-server \
   nmap hydra dnsenum smbmap proxychains4 \
   cewl \
