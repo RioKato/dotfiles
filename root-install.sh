@@ -18,7 +18,7 @@ apt install -y \
   libimage-exiftool-perl imagemagick \
   openvpn \
   wireshark gnome-tweaks tilix \
-  virtualbox
+  qemu-kvm libvirt-daemon libvirt-daemon-system virt-manager
 
 # neovim
 add-apt-repository ppa:neovim-ppa/unstable
