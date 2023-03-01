@@ -4,6 +4,7 @@ gcc
 clang
 cmake
 gdb
+gef
 python-pip
 rustup
 go

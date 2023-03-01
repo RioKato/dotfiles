@@ -1,8 +1,5 @@
 #!/bin/sh
 
-cd $(dirname $0)
-bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
-
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
