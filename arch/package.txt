@@ -35,6 +35,7 @@ openvpn
 
 ghidra
 nmap
+gnu-netcat
 hydra
 proxychains-ng
 john
