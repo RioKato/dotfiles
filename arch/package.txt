@@ -40,4 +40,3 @@ proxychains-ng
 john
 metasploit
 wireshark-qt
-sqlmap
