@@ -2,7 +2,6 @@
 
 paru nkf
 paru dnsenum
-paru smbmap
 paru cewl
 paru responder
 
@@ -32,12 +31,13 @@ go install golang.org/x/tools/gopls@latest
 pip install python-lsp-server
 git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
+git clone https://github.com/ShawnDEvans/smbmap.git ~/bin/smbmap.git
+git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
 git clone https://github.com/synacktiv/php_filter_chain_generator.git ~/bin/php_filter_chain_generator.git
 git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
 git clone https://github.com/urbanadventurer/username-anarchy.git ~/bin/username-anarchy.git
 git clone https://github.com/GerbenJavado/LinkFinder.git ~/bin/LinkFinder.git
 git clone https://github.com/micahvandeusen/gMSADumper.git ~/bin/gMSADumper.git
-git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
