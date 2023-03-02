@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 sudo pacman -Syy
-sudo pacman -S - < pacman.txt
+sudo pacman -S --noconfirm - < pacman.txt
 
 paru -S --noconfirm snapd
 paru -S --noconfirm nkf
