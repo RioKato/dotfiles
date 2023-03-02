@@ -1,9 +1,18 @@
 #!/bin/sh
 
+cd $(dirname $0)
+sudo pacman -Syy
+sudo pacman -S - < pacman.txt
+
+paru snapd
 paru nkf
 paru dnsenum
 paru cewl
 paru responder
+
+sudo systemctl start snapd
+sudo systemctl enable snapd
+sudo snap install impacket crackmapexec metasploit-framework
 
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
