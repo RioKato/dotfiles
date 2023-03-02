@@ -47,6 +47,7 @@ pip install sqlmap
 pip install hash-id
 pip install git-dumper
 pip install pwntools
+pip install ROPGadget
 gem install --user-install one_gadget
 npm install --prefix ~/bin/js-beautify.npm js-beautify
 cargo install urlencode
