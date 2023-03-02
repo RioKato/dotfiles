@@ -38,6 +38,7 @@ openvpn
 
 docker
 qemu-base
+swtpm
 libvirt
 virt-manager
 
