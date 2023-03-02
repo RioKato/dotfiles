@@ -6,7 +6,9 @@ ln -s ~/dotfiles/.config/nvim ~/.config/nvim
 ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/dotfiles/.gdbinit ~/.gdbinit
 ln -s ~/dotfiles/.docker/ ~/.docker 
-ln -s ~/dotfiles/.bash_aliases ~/.bash_aliases
+ln -s ~/dotfiles/.bash_addon ~/.bash_addon
+echo 'source ~/.bash_addon' >> ~/.bashrc
+ln -s ~/dotfiles/.xprofile ~/.xprofile
 
 mkdir -p ~/.idapro
 ln -s ~/dotfiles/.idapro/cfg ~/.idapro/cfg

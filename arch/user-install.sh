@@ -1,5 +1,11 @@
 #!/bin/sh
 
+paru nkf
+paru dnsenum
+paru smbmap
+paru cewl
+paru responder
+
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
@@ -31,7 +37,7 @@ git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
 git clone https://github.com/urbanadventurer/username-anarchy.git ~/bin/username-anarchy.git
 git clone https://github.com/GerbenJavado/LinkFinder.git ~/bin/LinkFinder.git
 git clone https://github.com/micahvandeusen/gMSADumper.git ~/bin/gMSADumper.git
-wget -P ~/bin https://raw.githubusercontent.com/openwall/john/bleeding-jumbo/run/ssh2john.py
+git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
