@@ -9,6 +9,7 @@ ln -s ~/dotfiles/.docker/ ~/.docker
 ln -s ~/dotfiles/.bash_addon ~/.bash_addon
 echo 'source ~/.bash_addon' >> ~/.bashrc
 ln -s ~/dotfiles/.xprofile ~/.xprofile
+ln -s ~/dotfiles/.Xmodmap ~/.Xmodmap
 
 mkdir -p ~/.idapro
 ln -s ~/dotfiles/.idapro/cfg ~/.idapro/cfg
