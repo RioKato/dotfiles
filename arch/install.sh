@@ -4,11 +4,11 @@ cd $(dirname $0)
 sudo pacman -Syy
 sudo pacman -S - < pacman.txt
 
-paru snapd
-paru nkf
-paru dnsenum
-paru cewl
-paru responder
+paru -S --noconfirm snapd
+paru -S --noconfirm nkf
+paru -S --noconfirm dnsenum
+paru -S --noconfirm cewl
+paru -S --noconfirm responder
 
 sudo systemctl start snapd
 sudo systemctl enable snapd
