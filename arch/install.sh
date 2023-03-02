@@ -61,3 +61,5 @@ pip install ROPGadget
 gem install --user-install one_gadget
 npm install --prefix ~/bin/js-beautify.npm js-beautify
 cargo install urlencode
+
+exit 0
