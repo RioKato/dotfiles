@@ -1,6 +1,7 @@
 alias vi='nvim'
 alias vim='nvim'
 
+export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
 export PATH=$PATH:~/go/bin

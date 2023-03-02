@@ -1,10 +1,14 @@
+fcitx5-im
+fcitx5-mozc
 chromium
+paru
 
 gcc
 clang
 cmake
 gdb
 gef
+jdk-openjdk
 python-pip
 rustup
 go
@@ -24,20 +28,22 @@ p7zip
 perl-image-exiftool
 imagemagick
 
-mariadb
+smbclient
 openldap
+nfs-utils
+mariadb
+openvpn
 
 docker
 qemu-base
 libvirt
 virt-manager
-openvpn
 
-ghidra
 nmap
 gnu-netcat
 hydra
 proxychains-ng
 john
+ghidra
 metasploit
 wireshark-qt

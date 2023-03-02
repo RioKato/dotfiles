@@ -38,6 +38,7 @@ go install github.com/ropnop/kerbrute@latest
 gem install --user-install evil-winrm
 gem install --user-install wpscan
 pip install sqlmap
+pip install hash-id
 pip install git-dumper
 pip install pwntools
 gem install --user-install one_gadget
