@@ -12,11 +12,9 @@ paru -S --noconfirm responder
 
 sudo systemctl start snapd
 sudo systemctl enable snapd
-sudo systemctl start docker
 sleep 10
 
 sudo snap install impacket crackmapexec metasploit-framework
-sudo docker pull belane/bloodhound
 
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
