@@ -13,7 +13,6 @@ paru -S --noconfirm responder
 sudo systemctl start snapd
 sudo systemctl enable snapd
 sleep 10
-
 sudo snap install impacket crackmapexec metasploit-framework
 
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
