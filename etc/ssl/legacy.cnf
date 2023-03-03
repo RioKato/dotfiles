@@ -1,0 +1,12 @@
+# echo ".include /etc/ssl/legacy.cnf" >> /etc/ssl/openssl.cnf
+# cp legacy.cnf /etc/ssl
+
+[provider_sect]
+default = default_sect
+legacy = legacy_sect
+
+[default_sect]
+activate = 1
+
+[legacy_sect]
+activate = 1

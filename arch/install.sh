@@ -43,6 +43,7 @@ git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
 git clone https://github.com/ShawnDEvans/smbmap.git ~/bin/smbmap.git
 git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
+git clone https://github.com/fox-it/BloodHound.py.git ~/bin/BloodHound.py.git
 git clone https://github.com/synacktiv/php_filter_chain_generator.git ~/bin/php_filter_chain_generator.git
 git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
 git clone https://github.com/urbanadventurer/username-anarchy.git ~/bin/username-anarchy.git
