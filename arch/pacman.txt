@@ -20,6 +20,7 @@ php
 ruby
 
 tmux
+vim
 neovim
 fzf
 ripgrep
