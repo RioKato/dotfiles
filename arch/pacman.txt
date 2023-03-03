@@ -19,6 +19,7 @@ nodejs
 npm
 php
 ruby
+mono
 
 tmux
 vim
