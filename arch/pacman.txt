@@ -2,6 +2,7 @@ xorg-xmodmap
 xorg-xhost
 fcitx5-im
 fcitx5-mozc
+plank
 paru
 chromium
 
