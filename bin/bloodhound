@@ -7,5 +7,5 @@ docker run -it --rm \
   -e DISPLAY=unix$DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   --device=/dev/dri:/dev/dri \
-  -v $(pwd)/bh-data:/data \
+  -v $(pwd):/data \
   --name bloodhound belane/bloodhound
