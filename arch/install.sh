@@ -35,6 +35,7 @@ git clone https://github.com/PowerShellMafia/PowerSploit.git ~/Documents/PowerSp
 git clone https://github.com/FuzzySecurity/PowerShell-Suite.git ~/Documents/PowerShell-Suite.git
 git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git ~/Documents/windows-kernel-exploits.git
 git clone https://github.com/andrew-d/static-binaries.git ~/Documents/static-binaries.git
+git clone https://github.com/Flangvik/SharpCollection.git ~/Documents/SharpCollection.git
 
 rustup default stable
 rustup component add rust-analyzer
