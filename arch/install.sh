@@ -9,6 +9,7 @@ paru -S --noconfirm nkf
 paru -S --noconfirm dnsenum
 paru -S --noconfirm cewl
 paru -S --noconfirm responder
+paru -S --noconfirm avaloniailspy
 
 sudo systemctl start snapd
 sudo systemctl enable snapd
