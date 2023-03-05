@@ -6,6 +6,7 @@ plank
 paper-icon-theme
 paru
 chromium
+code
 
 gcc
 clang
