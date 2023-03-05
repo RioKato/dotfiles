@@ -33,6 +33,7 @@ git clone https://github.com/pentestmonkey/php-reverse-shell.git ~/Documents/php
 git clone https://github.com/samratashok/nishang.git ~/Documents/nishang.git
 git clone https://github.com/PowerShellMafia/PowerSploit.git ~/Documents/PowerSploit.git
 git clone https://github.com/FuzzySecurity/PowerShell-Suite.git ~/Documents/PowerShell-Suite.git
+git clone https://github.com/Kevin-Robertson/Powermad.git ~/Documents/Powermad.git
 git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git ~/Documents/windows-kernel-exploits.git
 git clone https://github.com/andrew-d/static-binaries.git ~/Documents/static-binaries.git
 git clone https://github.com/Flangvik/SharpCollection.git ~/Documents/SharpCollection.git
