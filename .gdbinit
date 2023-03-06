@@ -10,6 +10,6 @@ set print pretty on
 set print demangle
 set print asm-demangle
 handle SIGALRM ignore
-directory ./glibc
 
+set debuginfod enabled on
 source /usr/share/gef/gef.py

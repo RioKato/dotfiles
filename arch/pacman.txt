@@ -12,6 +12,7 @@ gcc
 clang
 cmake
 gdb
+debuginfod
 gef
 jdk-openjdk
 python-pip
