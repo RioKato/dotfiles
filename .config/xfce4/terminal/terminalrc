@@ -27,7 +27,7 @@ MiscNewTabAdjacent=FALSE
 MiscSearchDialogOpacity=100
 MiscShowUnsafePasteDialog=TRUE
 MiscRightClickAction=TERMINAL_RIGHT_CLICK_ACTION_CONTEXT_MENU
-FontName=Liberation Mono 12
+FontName=Source Code Pro 12
 BackgroundDarkness=0.950000
 BackgroundMode=TERMINAL_BACKGROUND_TRANSPARENT
 ColorForeground=White
@@ -48,3 +48,4 @@ ColorPalette13=#72729f9fcfcf
 ColorPalette14=#adad7f7fa8a8
 ColorPalette15=#3434e2e2e2e2
 ColorPalette16=#eeeeeeeeecec
+

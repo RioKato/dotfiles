@@ -3,7 +3,7 @@ xorg-xhost
 fcitx5-im
 fcitx5-mozc
 plank
-paper-icon-theme
+cutefish-icons
 paru
 chromium
 code
