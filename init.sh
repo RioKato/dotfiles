@@ -2,6 +2,7 @@
 
 mkdir -p ~/.config
 ln -s ~/dotfiles/.config/nvim ~/.config/nvim
+ln -s ~/dotfiles/.config/picom.conf ~/.config/picom.conf
 
 mkdir -p ~/.config/xfce4/terminal
 ln -s ~/dotfiles/.config/xfce4/terminal/terminalrc ~/.config/xfce4/terminal/terminalrc

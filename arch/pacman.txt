@@ -3,6 +3,7 @@ xorg-xhost
 fcitx5-im
 fcitx5-mozc
 plank
+picom
 cutefish-icons
 paru
 chromium
