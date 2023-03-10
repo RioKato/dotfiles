@@ -5,6 +5,7 @@ sudo pacman -Syy
 sudo pacman -S --noconfirm - < pacman.txt
 
 paru -S --noconfirm snapd
+paru -S --noconfirm google-chrome
 paru -S --noconfirm nkf
 paru -S --noconfirm dnsenum
 paru -S --noconfirm cewl
