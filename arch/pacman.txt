@@ -6,7 +6,6 @@ plank
 picom
 cutefish-icons
 paru
-code
 
 gcc
 clang
