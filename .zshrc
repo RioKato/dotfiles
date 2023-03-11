@@ -1,5 +1,5 @@
 SUGGESTIONS_PATH=/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-FZF_PATH=/usr/share/fzf/key-bindings.zsh
+FZF_DIR_PATH=/usr/share/fzf
 
 if [ -e $SUGGESTIONS_PATH ]
 then
@@ -7,9 +7,11 @@ then
   export ZSH_AUTOSUGGEST_STRATEGY=(completion)
 fi
 
-if [ -e $FZF_PATH ]
+if [ -d $FZF_DIR_PATH ]
 then
-  source $FZF_PATH
+  source $FZF_DIR_PATH/key-bindings.zsh
+  source $FZF_DIR_PATH/completion.zsh
+  export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
   export FZF_CTRL_T_COMMAND="locate -A /"
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
