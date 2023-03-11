@@ -1,5 +1,8 @@
-# echo ".include /etc/ssl/legacy.cnf" >> /etc/ssl/openssl.cnf
-# cp legacy.cnf /etc/ssl
+#!/bin/sh
+
+cp /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf.bak
+
+cat - <<EOF >> /etc/ssl/openssl.cnf
 
 [provider_sect]
 default = default_sect
@@ -10,3 +13,4 @@ activate = 1
 
 [legacy_sect]
 activate = 1
+EOF
