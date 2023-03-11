@@ -13,7 +13,7 @@ then
   source $FZF_DIR_PATH/completion.zsh
   export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
-  export FZF_CTRL_T_COMMAND="locate -A ~/"
+  export FZF_CTRL_T_COMMAND="locate -A ~"
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 fi
 
