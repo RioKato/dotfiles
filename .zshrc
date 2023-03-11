@@ -1,6 +1,5 @@
 SUGGESTIONS_PATH=/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 HIGHLIGHTING_PATH=/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-POWERLEVEL10K_PATH=/usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 FZF_PATH=/usr/share/fzf/key-bindings.zsh
 
 if [ -e $SUGGESTIONS_PATH ]
@@ -12,12 +11,6 @@ fi
 if [ -e $HIGHLIGHTING_PATH ]
 then
   source $HIGHLIGHTING_PATH
-fi
-
-if [ -e $POWERLEVEL10K_PATH ]
-then
-  source $POWERLEVEL10K_PATH
-  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 
 if [ -e $FZF_PATH ]
@@ -35,12 +28,19 @@ colors
 
 setopt print_eight_bit
 setopt no_beep
+unsetopt auto_menu
+setopt no_flow_control
 
 export HISTFILE=${HOME}/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=100000
 setopt share_history
 setopt hist_ignore_dups
+
+PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
+%B%F{green}❯%f%b "
+
+###############################################################################################
 
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
