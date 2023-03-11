@@ -33,6 +33,9 @@ setopt hist_ignore_dups
 PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
 %B%F{green}❯%f%b "
 
+setopt promptsubst
+PS1=$'${(r:$COLUMNS::\u2500:)}'$PS1
+
 ###############################################################################################
 
 export PATH=$PATH:/var/lib/snapd/snap/bin
