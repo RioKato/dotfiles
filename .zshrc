@@ -47,5 +47,6 @@ export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
 export DEBUGINFOD_URLS=https://debuginfod.archlinux.org
 
 alias ls='ls --color=auto'
+alias ll='ls -alt --color=auto'
 alias vi='nvim'
 alias vim='nvim'
