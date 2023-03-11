@@ -1,13 +1,13 @@
 SUGGESTIONS_PATH=/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 FZF_DIR_PATH=/usr/share/fzf
 
-if [ -e $SUGGESTIONS_PATH ]
+if [ -e "$SUGGESTIONS_PATH" ]
 then
   source $SUGGESTIONS_PATH
   export ZSH_AUTOSUGGEST_STRATEGY=(completion)
 fi
 
-if [ -d $FZF_DIR_PATH ]
+if [ -d "$FZF_DIR_PATH" ]
 then
   source $FZF_DIR_PATH/key-bindings.zsh
   source $FZF_DIR_PATH/completion.zsh
@@ -26,7 +26,7 @@ setopt no_beep
 unsetopt auto_menu
 setopt no_flow_control
 
-export HISTFILE=${HOME}/.zsh_history
+export HISTFILE=~/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=100000
 setopt share_history
