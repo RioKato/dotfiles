@@ -39,6 +39,11 @@ precmd() { print "" }
 
 ###############################################################################################
 
+alias ls='ls --color=auto'
+alias ll='ls -al --time-style long-iso --color=auto'
+alias vi='nvim'
+alias vim='nvim'
+
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
@@ -48,10 +53,7 @@ export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
 
 export DEBUGINFOD_URLS=https://debuginfod.archlinux.org
 
-alias ls='ls --color=auto'
-alias ll='ls -alt --color=auto'
-alias vi='nvim'
-alias vim='nvim'
+###############################################################################################
 
 if which tmux &> /dev/null && [ -z "$TMUX" ]
 then
