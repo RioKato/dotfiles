@@ -32,7 +32,7 @@ export SAVEHIST=100000
 setopt share_history
 setopt hist_ignore_dups
 
-PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
+export PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
 %B%F{green}❯%f%b "
 
 precmd() { print "" }
