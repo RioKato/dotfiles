@@ -1,16 +1,10 @@
 SUGGESTIONS_PATH=/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-HIGHLIGHTING_PATH=/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 FZF_PATH=/usr/share/fzf/key-bindings.zsh
 
 if [ -e $SUGGESTIONS_PATH ]
 then
   source $SUGGESTIONS_PATH
   export ZSH_AUTOSUGGEST_STRATEGY=(completion)
-fi
-
-if [ -e $HIGHLIGHTING_PATH ]
-then
-  source $HIGHLIGHTING_PATH
 fi
 
 if [ -e $FZF_PATH ]
@@ -21,10 +15,9 @@ then
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 fi
 
-autoload -Uz compinit promptinit colors
+autoload -Uz compinit promptinit
 compinit
 promptinit
-colors
 
 setopt print_eight_bit
 setopt no_beep
@@ -51,5 +44,6 @@ export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
 
 export DEBUGINFOD_URLS=https://debuginfod.archlinux.org
 
+alias ls='ls --color=auto'
 alias vi='nvim'
 alias vim='nvim'
