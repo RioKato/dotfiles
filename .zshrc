@@ -52,3 +52,9 @@ alias ls='ls --color=auto'
 alias ll='ls -alt --color=auto'
 alias vi='nvim'
 alias vim='nvim'
+
+if which tmux &> /dev/null && [ -z "$TMUX" ]
+then
+  tmux attach || tmux new-session
+  exit 0
+fi
