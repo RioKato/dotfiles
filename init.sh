@@ -10,8 +10,6 @@ ln -s ~/dotfiles/.config/xfce4/terminal/terminalrc ~/.config/xfce4/terminal/term
 ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
 ln -s ~/dotfiles/.gdbinit ~/.gdbinit
 ln -s ~/dotfiles/.docker/ ~/.docker 
-ln -s ~/dotfiles/.bash_addon ~/.bash_addon
-echo 'source ~/.bash_addon' >> ~/.bashrc
 ln -s ~/dotfiles/.zshrc ~/.zshrc
 ln -s ~/dotfiles/.xprofile ~/.xprofile
 ln -s ~/dotfiles/.Xmodmap ~/.Xmodmap
