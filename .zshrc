@@ -23,7 +23,6 @@ fi
 if [ -e $FZF_PATH ]
 then
   source $FZF_PATH
-
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
   export FZF_CTRL_T_COMMAND="locate -A /"
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
@@ -37,8 +36,8 @@ colors
 setopt print_eight_bit
 setopt no_beep
 
-export PATH=$PATH:~/bin
 export PATH=$PATH:/var/lib/snapd/snap/bin
+export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
 export PATH=$PATH:~/go/bin
