@@ -24,6 +24,11 @@ php
 ruby
 mono
 
+zsh
+zsh-completions
+zsh-autosuggestions
+zsh-syntax-highlighting
+zsh-theme-powerlevel10k
 tmux
 vim
 neovim
