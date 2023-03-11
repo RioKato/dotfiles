@@ -39,6 +39,7 @@ setopt no_beep
 export HISTFILE=${HOME}/.zsh_history
 export HISTSIZE=1000
 export SAVEHIST=100000
+setopt share_history
 setopt hist_ignore_dups
 
 export PATH=$PATH:/var/lib/snapd/snap/bin
