@@ -1,5 +1,6 @@
 xorg-xmodmap
 xorg-xhost
+gnome-keyring
 fcitx5-im
 fcitx5-mozc
 plank
