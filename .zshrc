@@ -41,6 +41,7 @@ precmd() { print "" }
 
 alias ls='ls --color=auto'
 alias ll='ls -al --time-style long-iso --color=auto'
+alias open='xdg-open'
 alias vi='nvim'
 alias vim='nvim'
 
