@@ -24,7 +24,6 @@ npm
 php
 ruby
 mono
-deno
 
 zsh
 zsh-completions
