@@ -13,7 +13,6 @@ paru -S --noconfirm responder
 paru -S --noconfirm avaloniailspy
 
 sudo systemctl start snapd
-sudo systemctl enable snapd
 sleep 10
 sudo snap install impacket crackmapexec metasploit-framework
 
