@@ -24,6 +24,7 @@ promptinit
 setopt print_eight_bit
 setopt no_beep
 unsetopt auto_menu
+setopt ignore_eof
 setopt no_flow_control
 
 export HISTFILE=~/.zsh_history
