@@ -7,8 +7,6 @@ sudo pacman -S --noconfirm - < pacman.txt
 paru -S --noconfirm snapd
 paru -S --noconfirm google-chrome
 paru -S --noconfirm nkf
-paru -S --noconfirm dnsenum
-paru -S --noconfirm cewl
 paru -S --noconfirm avaloniailspy
 
 sudo systemctl start snapd
@@ -45,6 +43,7 @@ git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
 git clone https://gitlab.com/kalilinux/packages/dnsenum.git ~/bin/dnsenum.git
 git clone https://github.com/ShawnDEvans/smbmap.git ~/bin/smbmap.git
+git clone https://gitlab.com/kalilinux/packages/cewl.git ~/bin/cewl.git
 git clone https://gitlab.com/kalilinux/packages/responder.git ~/bin/responder.git
 git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
 git clone https://github.com/fox-it/BloodHound.py.git ~/bin/BloodHound.py.git
