@@ -3,6 +3,7 @@ compinit
 promptinit
 
 setopt noautomenu
+setopt noautoremoveslash
 setopt print_eight_bit
 setopt no_beep
 setopt ignore_eof
