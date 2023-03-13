@@ -43,6 +43,7 @@ go install golang.org/x/tools/gopls@latest
 pip install python-lsp-server
 git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
+git clone https://gitlab.com/kalilinux/packages/dnsenum.git ~/bin/dnsenum.git
 git clone https://github.com/ShawnDEvans/smbmap.git ~/bin/smbmap.git
 git clone https://gitlab.com/kalilinux/packages/responder.git ~/bin/responder.git
 git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
