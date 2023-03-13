@@ -44,6 +44,7 @@ pip install python-lsp-server
 git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
 git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
 git clone https://github.com/ShawnDEvans/smbmap.git ~/bin/smbmap.git
+git clone https://gitlab.com/kalilinux/packages/responder.git ~/bin/responder.git
 git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
 git clone https://github.com/fox-it/BloodHound.py.git ~/bin/BloodHound.py.git
 git clone https://github.com/synacktiv/php_filter_chain_generator.git ~/bin/php_filter_chain_generator.git
@@ -60,7 +61,6 @@ pip install sqlmap
 pip install hash-id
 pip install git-dumper
 pip install impacket
-pip install responder
 pip install pwntools
 pip install ROPGadget
 gem install --user-install one_gadget
