@@ -9,7 +9,6 @@ paru -S --noconfirm google-chrome
 paru -S --noconfirm nkf
 paru -S --noconfirm dnsenum
 paru -S --noconfirm cewl
-paru -S --noconfirm responder
 paru -S --noconfirm avaloniailspy
 
 sudo systemctl start snapd
@@ -60,6 +59,7 @@ gem install --user-install wpscan
 pip install sqlmap
 pip install hash-id
 pip install git-dumper
+pip install responder
 pip install pwntools
 pip install ROPGadget
 gem install --user-install one_gadget

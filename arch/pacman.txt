@@ -39,17 +39,17 @@ p7zip
 perl-image-exiftool
 imagemagick
 
-smbclient
-openldap
-nfs-utils
-mariadb
-openvpn
-
 docker
 qemu-base
 swtpm
 libvirt
 virt-manager
+
+smbclient
+openldap
+nfs-utils
+mariadb
+openvpn
 
 nmap
 gnu-netcat
