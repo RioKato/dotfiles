@@ -4,6 +4,8 @@ promptinit
 
 setopt noautomenu
 setopt noautoremoveslash
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
 setopt print_eight_bit
 setopt no_beep
 setopt ignore_eof
@@ -19,6 +21,16 @@ export PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
 %B%F{green}❯%f%b "
 
 precmd() { print "" }
+
+if which dircolors >& /dev/null
+then
+  eval $(dircolors)
+fi
+
+if [ -n "$LS_COLORS" ]
+then
+  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+fi
 
 ###############################################################################################
 
