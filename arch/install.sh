@@ -13,7 +13,7 @@ paru -S --noconfirm avaloniailspy
 
 sudo systemctl start snapd
 sleep 10
-sudo snap install impacket crackmapexec metasploit-framework
+sudo snap install crackmapexec metasploit-framework
 
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
@@ -59,6 +59,7 @@ gem install --user-install wpscan
 pip install sqlmap
 pip install hash-id
 pip install git-dumper
+pip install impacket
 pip install responder
 pip install pwntools
 pip install ROPGadget
