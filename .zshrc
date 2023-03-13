@@ -34,12 +34,12 @@ fi
 
 ###############################################################################################
 
-FZF_DIR_PATH=/usr/share/fzf
+FZF_PLUGIN=/usr/share/fzf
 
-if [ -d $FZF_DIR_PATH ]
+if [ -d $FZF_PLUGIN ]
 then
-  source $FZF_DIR_PATH/key-bindings.zsh
-  source $FZF_DIR_PATH/completion.zsh
+  source $FZF_PLUGIN/key-bindings.zsh
+  source $FZF_PLUGIN/completion.zsh
   export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
   export FZF_CTRL_T_COMMAND="locate -A ~"
