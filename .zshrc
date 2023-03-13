@@ -1,29 +1,10 @@
-SUGGESTIONS_PATH=/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-FZF_DIR_PATH=/usr/share/fzf
-
-if [ -e "$SUGGESTIONS_PATH" ]
-then
-  source $SUGGESTIONS_PATH
-  export ZSH_AUTOSUGGEST_STRATEGY=(completion)
-fi
-
-if [ -d "$FZF_DIR_PATH" ]
-then
-  source $FZF_DIR_PATH/key-bindings.zsh
-  source $FZF_DIR_PATH/completion.zsh
-  export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
-  export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
-  export FZF_CTRL_T_COMMAND="locate -A ~"
-  export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
-fi
-
 autoload -Uz compinit promptinit
 compinit
 promptinit
 
+setopt noautomenu
 setopt print_eight_bit
 setopt no_beep
-unsetopt auto_menu
 setopt ignore_eof
 setopt no_flow_control
 
@@ -37,6 +18,20 @@ export PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
 %B%F{green}❯%f%b "
 
 precmd() { print "" }
+
+###############################################################################################
+
+FZF_DIR_PATH=/usr/share/fzf
+
+if [ -d $FZF_DIR_PATH ]
+then
+  source $FZF_DIR_PATH/key-bindings.zsh
+  source $FZF_DIR_PATH/completion.zsh
+  export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
+  export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
+  export FZF_CTRL_T_COMMAND="locate -A ~"
+  export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
+fi
 
 ###############################################################################################
 

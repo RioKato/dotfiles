@@ -27,7 +27,6 @@ mono
 
 zsh
 zsh-completions
-zsh-autosuggestions
 tmux
 vim
 neovim
