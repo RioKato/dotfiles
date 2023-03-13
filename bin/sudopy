@@ -1,0 +1,4 @@
+#!/bin/sh
+
+PYTHONPATH=$(python -c 'import sys;print(":".join(sys.path), end="")')
+sudo -E PYTHONPATH="$PYTHONPATH" "$@"
