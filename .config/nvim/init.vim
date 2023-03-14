@@ -79,8 +79,8 @@ call plug#begin()
   Plug 'liuchengxu/graphviz.vim'
   Plug 'tyru/capture.vim'
   Plug 'dhruvasagar/vim-table-mode'
-  Plug 'skanehira/denops-silicon.vim'
-  Plug 'vim-denops/denops.vim'
+  " Plug 'skanehira/denops-silicon.vim'
+  " Plug 'vim-denops/denops.vim'
 call plug#end()
 
 
