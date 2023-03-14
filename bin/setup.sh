@@ -2,7 +2,7 @@
 
 cd $(dirname $0)
 
-for EXEC in $(find . -maxdepth 2 -type f -executable)
+for EXEC in $(find . -type f -executable)
 do
   if [ $0 == $EXEC ]
   then
