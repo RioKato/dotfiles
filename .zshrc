@@ -50,10 +50,20 @@ fi
 
 alias ls='ls --color'
 alias ll='ls -al --time-style long-iso --color'
-alias less='less -R'
-alias open='xdg-open'
-alias vi='nvim'
-alias vim='nvim'
+export LESS='-R'
+
+if which nvim &> /dev/null
+then
+  alias vi='nvim'
+  alias vim='nvim'
+fi
+
+if which xdg-open &> /dev/null
+then
+  alias open='xdg-open'
+fi
+
+###############################################################################################
 
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
