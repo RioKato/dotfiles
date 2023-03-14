@@ -19,20 +19,13 @@ packer.startup(function()
 
 	use("neovim/nvim-lspconfig")
 	use("williamboman/nvim-lsp-installer")
-	use({
-		"nvim-treesitter/nvim-treesitter",
-		requires = {
-			{ "nvim-treesitter/nvim-treesitter-textobjects" },
-		},
-	})
+	use("nvim-treesitter/nvim-treesitter")
 	use({
 		"nvim-telescope/telescope.nvim",
+		tag = "0.1.1",
 		requires = {
 			{ "nvim-lua/plenary.nvim" },
-			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				run = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-			},
+			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 			{ "kyazdani42/nvim-web-devicons" },
 		},
 	})
@@ -60,31 +53,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		local stylua = require("stylua-nvim")
 		stylua.format_file()
 	end,
-})
-
-local nvim_treesitter = require("nvim-treesitter.configs")
-nvim_treesitter.setup({
-	ensure_installed = { "c", "rust", "python" },
-	sync_install = false,
-	highlight = {
-		enable = true,
-	},
-	indent = {
-		enable = true,
-	},
-	textobjects = {
-		select = {
-			enable = true,
-			keymaps = {
-				["aF"] = "@function.outer",
-				["iF"] = "@function.inner",
-				["aC"] = "@class.outer",
-				["iC"] = "@class.inner",
-				["aP"] = "@parameter.outer",
-				["iP"] = "@parameter.inner",
-			},
-		},
-	},
 })
 
 local indent_blankline = require("indent_blankline")

@@ -10,7 +10,6 @@ paru
 
 gcc
 clang
-cmake
 gdb
 debuginfod
 gef
