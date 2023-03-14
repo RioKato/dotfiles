@@ -48,8 +48,9 @@ fi
 
 ###############################################################################################
 
-alias ls='ls --color=auto'
-alias ll='ls -al --time-style long-iso --color=auto'
+alias ls='ls --color'
+alias ll='ls -al --time-style long-iso --color'
+alias less='less -R'
 alias open='xdg-open'
 alias vi='nvim'
 alias vim='nvim'
