@@ -11,4 +11,4 @@ set print asm-demangle
 handle SIGALRM ignore
 
 set debuginfod enabled on
-source /usr/share/gef/gef.py
+source ~/.gef.git/gef.py

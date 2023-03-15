@@ -12,7 +12,6 @@ gcc
 clang
 gdb
 debuginfod
-gef
 jdk-openjdk
 python-pip
 python-setuptools
@@ -51,6 +50,7 @@ openvpn
 
 nmap
 gnu-netcat
+tcpdump
 hydra
 proxychains-ng
 john
