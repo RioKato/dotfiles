@@ -60,7 +60,7 @@ then
 
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 
-  if which fzf-tmux &> /dev/null
+  if which tmux &> /dev/null
   then
     export FZF_TMUX=1
     export FZF_TMUX_OPTS="-p 80%"
