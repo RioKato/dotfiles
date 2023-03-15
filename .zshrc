@@ -34,7 +34,8 @@ fi
 
 ###############################################################################################
 
-FZF_PLUGIN=/usr/share/fzf
+[ -d /usr/share/fzf ] && FZF_PLUGIN=/usr/share/fzf
+[ -d /usr/share/doc/fzf/examples ] && FZF_PLUGIN=/usr/share/doc/fzf/examples
 
 if [ -d $FZF_PLUGIN ]
 then
