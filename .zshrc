@@ -41,9 +41,23 @@ if [ -n "$FZF_PLUGIN" ]
 then
   source $FZF_PLUGIN/key-bindings.zsh
   source $FZF_PLUGIN/completion.zsh
-  export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
+
+  if which rg &> /dev/null
+  then
+    export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
+  else
+    export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
+  fi
+
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
-  export FZF_CTRL_T_COMMAND="locate -A ~"
+
+  if which locate &> /dev/null
+  then
+    export FZF_CTRL_T_COMMAND="locate -A ~"
+  else
+    export FZF_CTRL_T_COMMAND="find ~"
+  fi
+
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 
   if which fzf-tmux &> /dev/null
