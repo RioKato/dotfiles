@@ -34,8 +34,7 @@ git clone https://github.com/Kevin-Robertson/Powermad.git ~/Documents/Powermad.g
 git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git ~/Documents/windows-kernel-exploits.git
 git clone https://github.com/andrew-d/static-binaries.git ~/Documents/static-binaries.git
 git clone https://github.com/Flangvik/SharpCollection.git ~/Documents/SharpCollection.git
-
-git clone https://github.com/hugsy/gef.git ~/.gef.git
+git clone https://github.com/hugsy/gef.git ~/Documents/gef.git
 
 rustup default stable
 rustup component add rust-analyzer
