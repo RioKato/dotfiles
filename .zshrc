@@ -37,7 +37,7 @@ fi
 [ -d /usr/share/fzf ] && FZF_PLUGIN=/usr/share/fzf
 [ -d /usr/share/doc/fzf/examples ] && FZF_PLUGIN=/usr/share/doc/fzf/examples
 
-if [ -d $FZF_PLUGIN ]
+if [ -n "$FZF_PLUGIN" ]
 then
   source $FZF_PLUGIN/key-bindings.zsh
   source $FZF_PLUGIN/completion.zsh
