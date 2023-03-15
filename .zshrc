@@ -45,6 +45,12 @@ then
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
   export FZF_CTRL_T_COMMAND="locate -A ~"
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
+
+  if which fzf-tmux &> /dev/null
+  then
+    export FZF_TMUX=1
+    export FZF_TMUX_OPTS="-p 80%"
+  fi
 fi
 
 ###############################################################################################
