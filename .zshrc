@@ -55,7 +55,7 @@ then
   then
     export FZF_CTRL_T_COMMAND="locate -A ~"
   else
-    export FZF_CTRL_T_COMMAND="find ~"
+    export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
   fi
 
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
