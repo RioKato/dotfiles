@@ -53,6 +53,7 @@ git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
 git clone https://github.com/urbanadventurer/username-anarchy.git ~/bin/username-anarchy.git
 git clone https://github.com/GerbenJavado/LinkFinder.git ~/bin/LinkFinder.git
 git clone https://github.com/micahvandeusen/gMSADumper.git ~/bin/gMSADumper.git
+git clone https://github.com/cytopia/smtp-user-enum.git ~/bin/smtp-user-enum.git
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
