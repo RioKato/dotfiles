@@ -81,6 +81,10 @@ telescope.setup({
 })
 
 local telescope_builtin = require("telescope.builtin")
+vim.api.nvim_create_user_command("Tman", function()
+	telescope_builtin.man_pages({ sections = { "1", "2", "3", "4", "5", "6", "7", "8", "9" } })
+end, {})
+
 local opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "<space>f", telescope_builtin.find_files, opts)
