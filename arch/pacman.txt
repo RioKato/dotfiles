@@ -6,6 +6,7 @@ fcitx5-mozc
 plank
 picom
 cutefish-icons
+xsel
 paru
 
 gcc
