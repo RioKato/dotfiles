@@ -1,3 +1,8 @@
+if exists('g:loaded_gitlink')
+  finish
+endif
+let g:loaded_gitlink = 1
+
 function! s:gitlink_normalize_url(url) abort
   let s:url = a:url
   let s:url = substitute(s:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
