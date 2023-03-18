@@ -1,0 +1,13 @@
+#!/bin/sh -eu
+
+if [ $# -ne 1 ]
+then
+  echo "[usage] $0 interface"
+  echo
+  ls /sys/class/net/
+  exit 1
+fi
+
+IP=$(ip -o -4 addr list $1 | awk '{print $4}' | cut -d/ -f1)
+echo -n $IP | xsel -pi && xsel -po | xsel -bi
+echo $IP
