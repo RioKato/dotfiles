@@ -11,7 +11,7 @@ OUTPUT="$2"
 
 if [ -z "$OUTPUT" ]
 then
-  OUTPUT="$TARGET".c
+  OUTPUT="$TARGET.c"
 fi
 
 ida64 -Ohexrays:"$OUTPUT":ALL -A "$TARGET"
