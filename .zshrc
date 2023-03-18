@@ -61,7 +61,7 @@ then
   if [ -n "$TMUX" ]
   then
     export FZF_TMUX=1
-    export FZF_TMUX_OPTS="-p 80%"
+    export FZF_TMUX_OPTS="-p 90%"
   fi
 fi
 
