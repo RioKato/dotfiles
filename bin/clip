@@ -1,0 +1,15 @@
+#!/bin/sh -eu
+
+if [ $# -ne 1 ]
+then
+  echo "[usage] $0 interface"
+  IF=$(ip -br l | awk '$1 !~ "lo" { print $1}' | tr -s '\n' ',')
+  echo "interfaces ... $IF"
+  exit 1
+fi
+
+IF=$1
+IP=$(ip -o -4 addr list $IF | awk '{print $4}' | cut -d/ -f1)
+
+echo -n $IP | xsel -pi && xsel -po | xsel -bi
+echo $IP
