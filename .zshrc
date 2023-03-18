@@ -69,17 +69,22 @@ fi
 
 alias ls='ls --color'
 alias ll='ls -al --time-style long-iso --color'
-export LESS='-R'
+export LESS=-R
+
+export EDITOR=vim
 
 if which nvim &> /dev/null
 then
-  alias vi='nvim'
-  alias vim='nvim'
+  export EDITOR=nvim
+  alias vi=nvim
+  alias vim=nvim
 fi
+
+bindkey -e
 
 if which xdg-open &> /dev/null
 then
-  alias open='xdg-open'
+  alias open=xdg-open
 fi
 
 ###############################################################################################
