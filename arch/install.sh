@@ -39,7 +39,7 @@ pip install impacket
 pip install pwntools
 pip install ROPGadget
 gem install --user-install one_gadget
-npm install --prefix ~/bin/js-beautify.npm js-beautify
+npm install --prefix ~/Documents/js-beautify.npm js-beautify
 cargo install urlencode
 cargo install weggli
 
