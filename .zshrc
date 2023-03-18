@@ -76,7 +76,6 @@ export EDITOR=vim
 if which nvim &> /dev/null
 then
   export EDITOR=nvim
-  alias vi=nvim
   alias vim=nvim
 fi
 
