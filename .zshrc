@@ -42,7 +42,6 @@ if [ -n "$FZF_PLUGIN" ]
 then
   source $FZF_PLUGIN/key-bindings.zsh
   source $FZF_PLUGIN/completion.zsh
-
   export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
   export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
@@ -67,10 +66,9 @@ fi
 
 ###############################################################################################
 
-alias ls='ls --color'
-alias ll='ls -al --time-style long-iso --color'
-export LESS=-R
-
+alias ls="ls --color"
+alias ll="ls -al --time-style long-iso --color"
+export LESS="-R"
 export EDITOR=vim
 
 if which nvim &> /dev/null
