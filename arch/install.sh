@@ -18,17 +18,10 @@ do
   git clone $URL ~/Documents/$(basename $URL)
 done
 
-wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
-wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
-wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
-wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
-wget -P ~/Documents/petools https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64
-wget -P ~/Documents/petools https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip
-wget -P ~/Documents/petools https://raw.githubusercontent.com/stealthcopter/deepce/main/deepce.sh
-wget -P ~/Documents/petools https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
-wget -P ~/Documents/petools https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
-wget -P ~/Documents/petools https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
-wget -P ~/Documents/petools https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
+for URL in $(cat tool.txt)
+do
+  wget -P ~/Documents/tool $URL
+done
 
 rustup default stable
 rustup component add rust-analyzer

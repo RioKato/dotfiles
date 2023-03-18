@@ -1,0 +1,11 @@
+https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
+https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
+https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
+https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
+https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64
+https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip
+https://raw.githubusercontent.com/stealthcopter/deepce/main/deepce.sh
+https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
+https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
+https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
+https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
