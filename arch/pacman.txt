@@ -1,12 +1,12 @@
 xorg-xmodmap
 xorg-xhost
+xsel
 gnome-keyring
 fcitx5-im
 fcitx5-mozc
 plank
 picom
 cutefish-icons
-xsel
 paru
 
 gcc
