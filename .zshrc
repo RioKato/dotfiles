@@ -12,10 +12,11 @@ setopt ignore_eof
 setopt no_flow_control
 
 export HISTFILE=~/.zsh_history
-export HISTSIZE=1000
+export HISTSIZE=100000
 export SAVEHIST=100000
 setopt share_history
-setopt hist_ignore_dups
+setopt hist_ignore_all_dups
+setopt hist_reduce_blanks
 
 export PROMPT="%B%F{green}%n❯❯%f%b %B%F{blue}%~%f%b
 %B%F{green}❯%f%b "
