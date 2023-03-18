@@ -13,6 +13,11 @@ sudo systemctl start snapd
 sleep 10
 sudo snap install crackmapexec metasploit-framework
 
+for URL in $(cat repo.txt)
+do
+  git clone $URL ~/Documents/$(basename $URL)
+done
+
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
 wget -P ~/Documents/petools https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
@@ -24,36 +29,11 @@ wget -P ~/Documents/petools https://github.com/ohpe/juicy-potato/releases/downlo
 wget -P ~/Documents/petools https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
 wget -P ~/Documents/petools https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
 wget -P ~/Documents/petools https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
-git clone https://github.com/danielmiessler/SecLists.git ~/Documents/SecLists.git
-git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git ~/Documents/PayloadsAllTheThings.git
-git clone https://github.com/pentestmonkey/php-reverse-shell.git ~/Documents/php-reverse-shell.git
-git clone https://github.com/samratashok/nishang.git ~/Documents/nishang.git
-git clone https://github.com/PowerShellMafia/PowerSploit.git ~/Documents/PowerSploit.git
-git clone https://github.com/FuzzySecurity/PowerShell-Suite.git ~/Documents/PowerShell-Suite.git
-git clone https://github.com/Kevin-Robertson/Powermad.git ~/Documents/Powermad.git
-git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git ~/Documents/windows-kernel-exploits.git
-git clone https://github.com/andrew-d/static-binaries.git ~/Documents/static-binaries.git
-git clone https://github.com/Flangvik/SharpCollection.git ~/Documents/SharpCollection.git
-git clone https://github.com/hugsy/gef.git ~/Documents/gef.git
 
 rustup default stable
 rustup component add rust-analyzer
 go install golang.org/x/tools/gopls@latest
 pip install python-lsp-server
-git clone https://gitlab.com/exploit-database/exploitdb.git ~/bin/exploitdb.git
-git clone https://github.com/maurosoria/dirsearch.git ~/bin/dirsearch.git
-git clone https://gitlab.com/kalilinux/packages/dnsenum.git ~/bin/dnsenum.git
-git clone https://github.com/ShawnDEvans/smbmap.git ~/bin/smbmap.git
-git clone https://gitlab.com/kalilinux/packages/cewl.git ~/bin/cewl.git
-git clone https://gitlab.com/kalilinux/packages/responder.git ~/bin/responder.git
-git clone https://github.com/dirkjanm/krbrelayx.git ~/bin/krbrelayx.git
-git clone https://github.com/fox-it/BloodHound.py.git ~/bin/BloodHound.py.git
-git clone https://github.com/synacktiv/php_filter_chain_generator.git ~/bin/php_filter_chain_generator.git
-git clone https://github.com/ticarpi/jwt_tool.git ~/bin/jwt_tool.git
-git clone https://github.com/urbanadventurer/username-anarchy.git ~/bin/username-anarchy.git
-git clone https://github.com/GerbenJavado/LinkFinder.git ~/bin/LinkFinder.git
-git clone https://github.com/micahvandeusen/gMSADumper.git ~/bin/gMSADumper.git
-git clone https://github.com/cytopia/smtp-user-enum.git ~/bin/smtp-user-enum.git
 go install github.com/OJ/gobuster/v3@latest
 go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
