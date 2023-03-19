@@ -1,0 +1,6 @@
+#!/bin/sh
+
+{ ip -o -4 address show | awk '{print $2": "substr($4, 0, index($4, "/")-1)}'; getent hosts | awk '{print $2": "$1}'; } | \
+  sort -u | \
+  fzf-tmux "$FZF_TMUX_OPTS" --bind 'enter:become(tmux send {2})'
+
