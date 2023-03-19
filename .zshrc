@@ -19,10 +19,9 @@ setopt share_history
 setopt hist_ignore_all_dups
 setopt hist_reduce_blanks
 
-export PROMPT="%B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b
+export PROMPT="
+%B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b
 %B%F{green}╰╴$%f%b "
-
-precmd() { print "" }
 
 if which dircolors >& /dev/null
 then
