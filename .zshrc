@@ -56,12 +56,6 @@ then
   then
     export FZF_CTRL_T_COMMAND="locate -A ~"
   fi
-
-  if [ -n "$TMUX" ]
-  then
-    export FZF_TMUX=1
-    export FZF_TMUX_OPTS="-p 90%"
-  fi
 fi
 
 ###############################################################################################
