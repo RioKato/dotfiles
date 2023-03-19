@@ -1,6 +1,6 @@
 #!/bin/sh
 
-[ -z "$TMUX" ] && exit 1
+{ [ -z "$TMUX" ] || [ "$FZF_TMUX" -eq 0 ]; } && exit 1
 
 __fzfcmd() {
   echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- "
