@@ -8,10 +8,6 @@ fi
 
 TARGET="$1"
 OUTPUT="$2"
-
-if [ -z "$OUTPUT" ]
-then
-  OUTPUT="$TARGET.c"
-fi
+[ -z "$OUTPUT" ] && OUTPUT="$TARGET.c"
 
 ida64 -Ohexrays:"$OUTPUT":ALL -A "$TARGET"
