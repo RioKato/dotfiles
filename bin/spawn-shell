@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ -z "$TMUX" ]
+then
+  exit 1
+fi
+
 tmux \
   send "`which python python3 python2 | head -n 1` -c 'import pty;pty.spawn(\"/bin/bash\")'" Enter \;\
   run "sleep 0.5" \;\
