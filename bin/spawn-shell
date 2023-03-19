@@ -1,9 +1,6 @@
 #!/bin/sh
 
-if [ -z "$TMUX" ]
-then
-  exit 1
-fi
+[ -z "$TMUX" ] && exit 1
 
 tmux \
   send "`which python python3 python2 | head -n 1` -c 'import pty;pty.spawn(\"/bin/bash\")'" Enter \;\
@@ -14,3 +11,5 @@ tmux \
   send "reset" Enter \;\
   send "export TERM=xterm" Enter \;\
   run "tmux send \"stty rows #{pane_height} columns #{pane_width}\" Enter"
+
+exit 0
