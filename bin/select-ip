@@ -7,7 +7,7 @@ __fzfcmd() {
 }
 
 __select_ip() {
-  { ip -o -4 address show | awk '{print $2, substr($4, 0, index($4, "/")-1)}'; getent hosts | awk '{print $2, $1}'; } | \
+  { ip -o address show | awk '{print $2, substr($4, 0, index($4, "/")-1)}'; getent hosts | awk '{print $2, $1}'; } | \
     sort -u | \
     FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-}" $(__fzfcmd) --bind 'enter:become(echo -n {2})'
 }
