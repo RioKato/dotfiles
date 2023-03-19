@@ -3,10 +3,14 @@
 [ -z "$TMUX" ] && exit 1
 
 __fzfcmd() {
-  echo "fzf-tmux $FZF_TMUX_OPTS"
+  echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- "
 }
 
-{ ip -o -4 address show | awk '{print $2, substr($4, 0, index($4, "/")-1)}'; getent hosts | awk '{print $2, $1}'; } | \
-  sort -u | \
-  FZF_DEFAULT_OPTS="--bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-}" $(__fzfcmd) --bind 'enter:become(echo -n {2})'
+__select_ip() {
+  { ip -o -4 address show | awk '{print $2, substr($4, 0, index($4, "/")-1)}'; getent hosts | awk '{print $2, $1}'; } | \
+    sort -u | \
+    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-}" $(__fzfcmd) --bind 'enter:become(echo -n {2})'
+}
 
+tmux send $(__select_ip)
+exit 0
