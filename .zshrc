@@ -1,3 +1,4 @@
+bindkey -e
 autoload -Uz compinit promptinit
 compinit
 promptinit
@@ -76,8 +77,6 @@ then
   export EDITOR=nvim
   alias vim=nvim
 fi
-
-bindkey -e
 
 if which xdg-open &> /dev/null
 then
