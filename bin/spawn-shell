@@ -2,14 +2,17 @@
 
 [ -z "$TMUX" ] && exit 1
 
+PANE_HEIGHT=$(tmux display -p '#{pane_height}')
+PANE_WIDTH=$(tmux display -p '#{pane_width}')
+
 tmux \
-  send "`which python python3 python2 | head -n 1` -c 'import pty;pty.spawn(\"/bin/bash\")'" Enter \;\
+  send "\$(which python python3 python2 2> /dev/null | head -n 1) -c 'import pty;pty.spawn(\"/bin/sh\")'" Enter \;\
   run "sleep 0.5" \;\
   send C-z \;\
   send "stty raw -echo" Enter \;\
   send "fg" Enter \;\
   send "reset" Enter \;\
-  send "export TERM=xterm" Enter \;\
-  run "tmux send \"stty rows #{pane_height} columns #{pane_width}\" Enter"
+  send "export TERM='$TERM'" Enter \;\
+  send "stty rows $PANE_HEIGHT columns $PANE_WIDTH" Enter
 
 exit 0
