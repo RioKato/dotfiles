@@ -35,6 +35,39 @@ fi
 
 ###############################################################################################
 
+alias ls="ls --color"
+alias ll="ls -al --time-style long-iso --color"
+export LESS="-R"
+export EDITOR=vim
+
+if which nvim &> /dev/null
+then
+  export EDITOR=nvim
+  alias vim=nvim
+fi
+
+if which xdg-open &> /dev/null
+then
+  alias open=xdg-open
+fi
+
+export PATH=$PATH:/var/lib/snapd/snap/bin
+export PATH=$PATH:~/bin
+export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
+export PATH=$PATH:~/go/bin
+export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
+export PATH=$PATH:~/perl5/bin
+export PERL5LIB=~/perl5/lib/perl5
+export PERL_LOCAL_LIB_ROOT=~/perl5
+export PERL_MB_OPT="--install_base \"~/perl5\""
+export PERL_MM_OPT="INSTALL_BASE=~/perl5"
+export PATH=$PATH:/opt/idapro-8.2
+
+export DEBUGINFOD_URLS=https://debuginfod.archlinux.org
+
+###############################################################################################
+
 [ -d /usr/share/fzf ] && FZF_PLUGIN=/usr/share/fzf
 [ -d /usr/share/doc/fzf/examples ] && FZF_PLUGIN=/usr/share/doc/fzf/examples
 
@@ -57,41 +90,6 @@ then
     export FZF_CTRL_T_COMMAND="locate -A ~"
   fi
 fi
-
-###############################################################################################
-
-alias ls="ls --color"
-alias ll="ls -al --time-style long-iso --color"
-export LESS="-R"
-export EDITOR=vim
-
-if which nvim &> /dev/null
-then
-  export EDITOR=nvim
-  alias vim=nvim
-fi
-
-if which xdg-open &> /dev/null
-then
-  alias open=xdg-open
-fi
-
-###############################################################################################
-
-export PATH=$PATH:/var/lib/snapd/snap/bin
-export PATH=$PATH:~/bin
-export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
-export PATH=$PATH:~/go/bin
-export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
-export PATH=$PATH:~/perl5/bin
-export PERL5LIB=~/perl5/lib/perl5
-export PERL_LOCAL_LIB_ROOT=~/perl5
-export PERL_MB_OPT="--install_base \"~/perl5\""
-export PERL_MM_OPT="INSTALL_BASE=~/perl5"
-export PATH=$PATH:/opt/idapro-8.2
-
-export DEBUGINFOD_URLS=https://debuginfod.archlinux.org
 
 ###############################################################################################
 
