@@ -1,7 +1,5 @@
-bindkey -e
 autoload -Uz compinit promptinit
-compinit
-promptinit
+compinit && promptinit
 
 setopt noautomenu
 setopt noautoremoveslash
@@ -18,6 +16,38 @@ export SAVEHIST=100000
 setopt share_history
 setopt hist_ignore_all_dups
 setopt hist_reduce_blanks
+
+function __copy() {
+  xsel -pi && xsel -po | xsel -bi
+}
+
+function __paste() {
+  xsel -bo
+}
+
+function __kill-line() {
+  zle kill-line
+  echo -n "$CUTBUFFER" | __copy
+}
+
+function __backward-kill-line() {
+  zle backward-kill-line
+  echo -n "$CUTBUFFER" | __copy
+}
+
+function __yank() {
+  CUTBUFFER=$(__paste)
+  zle yank
+}
+
+zle -N __kill-line
+zle -N __backward-kill-line
+zle -N __yank
+
+bindkey -e
+bindkey '^k' __kill-line
+bindkey '^u' __backward-kill-line
+bindkey '^y' __yank
 
 export PROMPT="
 %B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b
