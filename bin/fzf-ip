@@ -6,7 +6,6 @@ __fzfcmd() {
     echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- " || echo "fzf"
 }
 
-
 __fix_fzfcmd() {
   TMUX_PANE=$TMUX __fzfcmd
 }
@@ -17,7 +16,6 @@ __list_ip() {
     getent hosts | awk '{print $2, $1}'
   } | sort -u
 }
-
 
 __list_ip | \
   FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore --bind 'enter:become(echo -n {2})' ${FZF_DEFAULT_OPTS-}" $(__fix_fzfcmd)

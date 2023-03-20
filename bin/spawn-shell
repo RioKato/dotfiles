@@ -14,5 +14,3 @@ tmux \
   send "reset" Enter \;\
   send "export TERM='$TERM'" Enter \;\
   send "stty rows $PANE_HEIGHT columns $PANE_WIDTH" Enter
-
-exit 0
