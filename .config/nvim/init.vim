@@ -107,3 +107,5 @@ let g:silicon_options = {
       \  'tab_width': 4,
       \  'theme': 'GitHub',
       \ }
+
+autocmd BufNewFile,BufRead *.weg set filetype=weggli
