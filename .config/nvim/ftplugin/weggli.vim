@@ -1,4 +1,3 @@
-
 function! s:weggli() range abort
   let s:lines = join(getline(a:firstline, a:lastline), '')
   let s:fname = printf('%s.out', expand('%:t'))
