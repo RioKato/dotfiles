@@ -73,6 +73,8 @@ alias ls="ls --color"
 alias ll="ls -al --time-style long-iso --color"
 export LESS="-R"
 
+###############################################################################################
+
 export EDITOR=vim
 
 if which nvim &> /dev/null
@@ -85,8 +87,6 @@ if which xdg-open &> /dev/null
 then
   alias open=xdg-open
 fi
-
-###############################################################################################
 
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
