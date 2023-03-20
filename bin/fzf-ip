@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
+__fzfcmd() {
+  [ -n "${TMUX_PANE-}" ] && { [ "${FZF_TMUX:-0}" != 0 ] || [ -n "${FZF_TMUX_OPTS-}" ]; } &&
+    echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- " || echo "fzf"
+}
+
+
+__fix_fzfcmd() {
+  TMUX_PANE=$TMUX __fzfcmd
+}
+
+__list_ip() {
+  {
+    ip -o address show | awk '{print $2, substr($4, 0, index($4, "/")-1)}'
+    getent hosts | awk '{print $2, $1}'
+  } | sort -u
+}
+
+
+__fzf_ip() {
+  __list_ip | \
+    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-} --bind 'enter:become(echo -n {2})'" $(__fix_fzfcmd)
+}
+
+__fzf_ip
