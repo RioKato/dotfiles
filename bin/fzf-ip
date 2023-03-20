@@ -14,7 +14,7 @@ __list_ip() {
   {
     ip -o address show | awk '{print $2, substr($4, 0, index($4, "/")-1)}'
     getent hosts | awk '{for(i=2; i<=NF; i++) print $i, $1}'
-  } | sort -k 2 -V | uniq
+  } | sort -u | sort -k 2 -V
 }
 
 FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore --bind 'enter:become(echo -n {2})' ${FZF_DEFAULT_OPTS-}"
