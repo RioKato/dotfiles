@@ -19,9 +19,5 @@ __list_ip() {
 }
 
 
-__fzf_ip() {
-  __list_ip | \
-    FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-} --bind 'enter:become(echo -n {2})'" $(__fix_fzfcmd)
-}
-
-__fzf_ip
+__list_ip | \
+  FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-} --bind 'enter:become(echo -n {2})'" $(__fix_fzfcmd)

@@ -123,4 +123,3 @@ let g:silicon_options = {
       \  'tab_width': 4,
       \  'theme': 'GitHub',
       \ }
-
