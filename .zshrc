@@ -36,7 +36,7 @@ function __backward-kill-line() {
 }
 
 function __yank() {
-  CUTBUFFER=$(__paste)
+  CUTBUFFER="$(__paste)"
   zle yank
 }
 
