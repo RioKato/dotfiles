@@ -39,12 +39,10 @@ nnoremap <esc><esc> <cmd>nohlsearch<cr>
 nnoremap <C-w>z <C-w>\|<C-w>_
 nnoremap <C-w>o <nop>
 nnoremap <C-w><C-o> <nop>
-xnoremap = "*c<C-r>=printf('0x%x', eval(@*))<cr><esc>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd FileType make setlocal noexpandtab
 autocmd FileType markdown setlocal noexpandtab
-autocmd FileType python nnoremap <buffer> <F9> :exec '!python3' shellescape(@%, 1)<cr>
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
@@ -52,19 +50,6 @@ autocmd Colorscheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
 autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guifg=Grey
 autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
-
-if has('win32') || has('win64')
-  let g:python3_host_prog='python'
-  tnoremap <C-p> <up>
-  tnoremap <C-n> <down>
-  tnoremap <C-f> <right>
-  tnoremap <C-b> <left>
-  tnoremap <C-a> <home>
-  tnoremap <C-e> <end>
-  tnoremap <C-h> <bs>
-  tnoremap <C-d> <del>
-endif
-
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
@@ -82,7 +67,6 @@ call plug#begin()
   " Plug 'skanehira/denops-silicon.vim'
   " Plug 'vim-denops/denops.vim'
 call plug#end()
-
 
 lua require('init')
 
