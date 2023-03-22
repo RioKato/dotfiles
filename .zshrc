@@ -59,6 +59,16 @@ export PROMPT="
 %B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b
 %B%F{green}╰╴$%f%b "
 
+precmd() {
+  RPROMPT=
+
+  BRANCH=$(git branch --show-current 2> /dev/null)
+  if [ -n "$BRANCH" ]
+  then
+    RPROMPT="%B%F{red}[$BRANCH]%f%b"
+  fi
+}
+
 if which dircolors >& /dev/null
 then
   eval $(dircolors)
