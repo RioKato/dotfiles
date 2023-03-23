@@ -55,18 +55,17 @@ then
   bindkey '^y' __yank
 fi
 
-export PROMPT="
-%B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b
-%B%F{green}╰╴$%f%b "
-
 precmd() {
-  RPROMPT=
-
-  BRANCH=$(git branch --show-current 2> /dev/null)
+  local BRANCH=$(git branch --show-current 2> /dev/null)
   if [ -n "$BRANCH" ]
   then
-    RPROMPT="%B%F{red}[$BRANCH]%f%b"
+    BRANCH="%B%F{red}[$BRANCH]%f%b"
   fi
+
+  local NEWLINE=$'\n'
+  export PROMPT=$NEWLINE
+  export PROMPT=$PROMPT"%B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b $BRANCH"$NEWLINE
+  export PROMPT=$PROMPT"%B%F{green}╰╴$%f%b "
 }
 
 if which dircolors >& /dev/null
