@@ -17,5 +17,5 @@ __list_ip() {
   } | sort -k 2V,2V -k 1,1 -u
 }
 
-FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore --bind 'enter:execute(echo {2})+close' ${FZF_DEFAULT_OPTS-}"
-__list_ip | $(__fix_fzfcmd)
+FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-}"
+__list_ip | $(__fix_fzfcmd) | awk '{print $2}'
