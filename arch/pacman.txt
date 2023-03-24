@@ -54,6 +54,5 @@ gnu-netcat
 tcpdump
 hydra
 proxychains-ng
-john
 ghidra
 wireshark-qt
