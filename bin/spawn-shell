@@ -6,11 +6,10 @@
 PTY='import pty;pty.spawn("/bin/sh")'
 PTY='$(which python python3 python2 2> /dev/null | head -n 1) -c '"'$PTY'"
 tmux send "$PTY" Enter
-
 sleep 0.5
+
 ROWS=$(tmux display -p '#{pane_height}')
 COLS=$(tmux display -p '#{pane_width}')
-
 tmux send \
   C-z \
   'stty raw -echo' Enter \
