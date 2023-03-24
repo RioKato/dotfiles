@@ -101,6 +101,11 @@ then
   alias open=xdg-open
 fi
 
+if which docker &> /dev/null
+then
+  alias docker='sudo -E docker'
+fi
+
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
