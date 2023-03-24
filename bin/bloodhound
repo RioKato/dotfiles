@@ -2,7 +2,7 @@
 
 xhost +local:$(id -nu)
 
-docker run -it --rm \
+sudo docker run -it --rm \
   -p 7474:7474 \
   -e DISPLAY=unix$DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
