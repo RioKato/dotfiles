@@ -62,7 +62,6 @@ indent_blankline.setup({
 
 local telescope = require("telescope")
 telescope.load_extension("fzf")
-telescope.load_extension("lookup_ip")
 
 telescope.setup({
 	defaults = {
@@ -94,6 +93,9 @@ vim.keymap.set("n", "<space>r", telescope_builtin.registers, opts)
 vim.keymap.set("n", "<space>g", telescope_builtin.live_grep, opts)
 vim.keymap.set("n", "<space>G", telescope_builtin.current_buffer_fuzzy_find, opts)
 vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
+
+telescope.load_extension("lookup_ip")
+vim.keymap.set("n", "<space>i", telescope.extensions.lookup_ip.lookup_ip, opts)
 
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
