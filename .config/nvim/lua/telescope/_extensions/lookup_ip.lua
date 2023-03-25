@@ -10,7 +10,7 @@ local conf = require("telescope.config").values
 local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 
-local insert_hosts = function(results)
+local function insert_hosts(results)
 	local lines = vim.split(vim.fn.system("getent hosts"), "\n")
 	local seen = {}
 
@@ -32,7 +32,7 @@ local insert_hosts = function(results)
 	end
 end
 
-local insert_ifs = function(results)
+local function insert_ifs(results)
 	local lines = vim.split(vim.fn.system("ip -o address show"), "\n")
 
 	for i, line in ipairs(lines) do
