@@ -13,6 +13,7 @@ local pensnippet = require("pensnippet")
 
 local pickers = function(opts)
 	local results = {}
+	pensnippet.insert(results)
 
 	local entry_maker = function(e)
 		local display = string.format("%s: %s", e.lang, e.snippet)
