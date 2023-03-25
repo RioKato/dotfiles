@@ -62,6 +62,7 @@ indent_blankline.setup({
 
 local telescope = require("telescope")
 telescope.load_extension("fzf")
+telescope.load_extension("lookup_ip")
 
 telescope.setup({
 	defaults = {
