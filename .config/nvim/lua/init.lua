@@ -81,10 +81,6 @@ telescope.setup({
 })
 
 local telescope_builtin = require("telescope.builtin")
-vim.api.nvim_create_user_command("Tman", function()
-	telescope_builtin.man_pages({ sections = { "1", "2", "3", "4", "5", "6", "7", "8", "9" } })
-end, {})
-
 local opts = { noremap = true, silent = true }
 
 vim.keymap.set("n", "<space>f", telescope_builtin.find_files, opts)
@@ -95,10 +91,12 @@ vim.keymap.set("n", "<space>G", telescope_builtin.current_buffer_fuzzy_find, opt
 vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
 
 telescope.load_extension("lookup_ip")
-vim.keymap.set("n", "<space>i", telescope.extensions.lookup_ip.lookup_ip, opts)
+vim.keymap.set("n", "<space>l", telescope.extensions.lookup_ip.lookup_ip, opts)
+vim.api.nvim_create_user_command("LookupIP", telescope.extensions.lookup_ip.lookup_ip, {})
 
 telescope.load_extension("pensnippet")
-vim.keymap.set("n", "<space>s", telescope.extensions.pensnippet.pensnippet, opts)
+vim.keymap.set("n", "<space>p", telescope.extensions.pensnippet.pensnippet, opts)
+vim.api.nvim_create_user_command("Pensnippet", telescope.extensions.pensnippet.pensnippet, {})
 
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
