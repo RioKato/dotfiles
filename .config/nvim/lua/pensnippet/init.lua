@@ -4,24 +4,18 @@ local shell = require("pensnippet.shell")
 local command = require("pensnippet.command")
 local powershell = require("pensnippet.powershell")
 
+local function insert_by_lang(results, snippet, lang)
+	for line in string.gmatch(snippet, "([^\n]*)\n?") do
+		if line ~= "" then
+			table.insert(results, { lang = lang, snippet = line })
+		end
+	end
+end
+
 function M.insert(results)
-	for line in string.gmatch(shell_snippet, "([^\n]*)\n?") do
-		if line ~= "" then
-			table.insert(results, { lang = "sh", snippet = line })
-		end
-	end
-
-	for line in string.gmatch(powershell_snippet, "([^\n]*)\n?") do
-		if line ~= "" then
-			table.insert(results, { lang = "ps", snippet = line })
-		end
-	end
-
-	for line in string.gmatch(command_snippet, "([^\n]*)\n?") do
-		if line ~= "" then
-			table.insert(results, { lang = "cmd", snippet = line })
-		end
-	end
+	insert_by_lang(results, shell_snippet, "sh")
+	insert_by_lang(results, powershell_snippet, "ps")
+	insert_by_lang(results, command_snippet, "cmd")
 end
 
 return M
