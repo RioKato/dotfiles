@@ -92,6 +92,7 @@ vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
 
 telescope.load_extension("lookup_ip")
 vim.keymap.set("n", "<space>l", telescope.extensions.lookup_ip.lookup_ip, opts)
+vim.keymap.set("i", "<C-l>", telescope.extensions.lookup_ip.lookup_ip, opts)
 vim.api.nvim_create_user_command("LookupIP", telescope.extensions.lookup_ip.lookup_ip, {})
 
 telescope.load_extension("pensnippet")
