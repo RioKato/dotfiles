@@ -97,6 +97,9 @@ vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
 telescope.load_extension("lookup_ip")
 vim.keymap.set("n", "<space>i", telescope.extensions.lookup_ip.lookup_ip, opts)
 
+telescope.load_extension("pensnippet")
+vim.keymap.set("n", "<space>s", telescope.extensions.pensnippet.pensnippet, opts)
+
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
