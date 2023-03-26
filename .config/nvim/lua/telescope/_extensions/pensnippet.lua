@@ -11,7 +11,7 @@ local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local pensnippet = require("pensnippet")
 
-local pickers = function(opts)
+local pensnippet = function(opts)
 	local results = {}
 	pensnippet.insert(results)
 
@@ -52,6 +52,6 @@ end
 return require("telescope").register_extension({
 	setup = function(ext_config, config) end,
 	exports = {
-		pensnippet = pickers,
+		pensnippet = pensnippet,
 	},
 })
