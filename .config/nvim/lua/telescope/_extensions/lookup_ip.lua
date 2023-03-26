@@ -48,7 +48,7 @@ local function insert_ifs(results)
 	end
 end
 
-local pickers = function(opts)
+local function lookup_ip_by_mode(opts, mode)
 	local results = {}
 	insert_hosts(results)
 	insert_ifs(results)
@@ -62,15 +62,34 @@ local pickers = function(opts)
 		}
 	end
 
-	local attach_mappings = function(prompt_bufnr, map)
-		actions.select_default:replace(function()
-			actions.close(prompt_bufnr)
-			local selection = action_state.get_selected_entry()
-			if selection ~= nil then
-				vim.api.nvim_put({ selection.value }, "", false, true)
-			end
-		end)
-		return true
+	local attach_mappings = nil
+	if mode == "n" then
+		attach_mappings = function(prompt_bufnr, map)
+			actions.select_default:replace(function()
+				actions.close(prompt_bufnr)
+				local selection = action_state.get_selected_entry()
+				if selection ~= nil then
+					vim.api.nvim_put({ selection.value }, "", true, true)
+				end
+			end)
+			return true
+		end
+	elseif mode == "i" then
+		attach_mappings = function(prompt_bufnr, map)
+			actions.select_default:replace(function()
+				actions.close(prompt_bufnr)
+				local selection = action_state.get_selected_entry()
+				if selection ~= nil then
+					vim.schedule(function()
+						vim.cmd([[startinsert]])
+						vim.api.nvim_put({ selection.value }, "", true, true)
+					end)
+				end
+			end)
+			return true
+		end
+	else
+		error("Argument Error: mode must be n or i")
 	end
 
 	opts = opts or {}
@@ -87,9 +106,18 @@ local pickers = function(opts)
 		:find()
 end
 
+local lookup_ip_n = function(opts)
+	return lookup_ip_by_mode(opts, "n")
+end
+
+local lookup_ip_i = function(opts)
+	return lookup_ip_by_mode(opts, "i")
+end
+
 return require("telescope").register_extension({
 	setup = function(ext_config, config) end,
 	exports = {
-		lookup_ip = pickers,
+		lookup_ip_n = lookup_ip_n,
+		lookup_ip_i = lookup_ip_i,
 	},
 })
