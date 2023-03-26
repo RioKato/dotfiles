@@ -66,7 +66,9 @@ local pickers = function(opts)
 		actions.select_default:replace(function()
 			actions.close(prompt_bufnr)
 			local selection = action_state.get_selected_entry()
-			vim.api.nvim_put({ selection.value }, "", false, true)
+			if selection ~= nil then
+				vim.api.nvim_put({ selection.value }, "", false, true)
+			end
 		end)
 		return true
 	end

