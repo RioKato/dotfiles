@@ -16,7 +16,7 @@ local function insert_hosts(results)
 
 	for i, line in ipairs(lines) do
 		local elems = {}
-		for elem in string.gmatch(line, "[^%s]+") do
+		for elem in string.gmatch(line, "%S+") do
 			table.insert(elems, elem)
 		end
 
