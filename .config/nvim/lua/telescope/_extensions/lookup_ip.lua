@@ -107,11 +107,11 @@ local function lookup_ip_by_mode(opts, mode)
 end
 
 local lookup_ip_n = function(opts)
-	return lookup_ip_by_mode(opts, "n")
+	lookup_ip_by_mode(opts, "n")
 end
 
 local lookup_ip_i = function(opts)
-	return lookup_ip_by_mode(opts, "i")
+	lookup_ip_by_mode(opts, "i")
 end
 
 return require("telescope").register_extension({
