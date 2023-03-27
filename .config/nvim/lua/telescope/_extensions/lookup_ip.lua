@@ -81,9 +81,11 @@ local function lookup_ip_by_mode(opts, mode)
 				local selection = action_state.get_selected_entry()
 				if selection ~= nil then
 					vim.schedule(function()
-						vim.cmd([[startinsert]])
+						vim.api.nvim_feedkeys("i", "n", false)
 						vim.api.nvim_put({ selection.value }, "", true, true)
 					end)
+				else
+					vim.api.nvim_feedkeys("a", "n", false)
 				end
 			end)
 			return true
