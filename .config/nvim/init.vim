@@ -41,7 +41,6 @@ nnoremap <C-w>o <nop>
 nnoremap <C-w><C-o> <nop>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
-autocmd BufNewFile,BufRead *.cmd set filetype=command
 autocmd BufNewFile,BufRead *.weg set filetype=weggli
 autocmd FileType make setlocal noexpandtab
 autocmd FileType markdown setlocal noexpandtab
