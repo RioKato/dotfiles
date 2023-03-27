@@ -35,7 +35,7 @@ local function insert_home_path_by_mode(mode)
 				local selection = action_state.get_selected_entry()
 				if selection ~= nil then
 					vim.schedule(function()
-						vim.api.nvim_feedkeys("i", "n", false)
+						vim.cmd([[startinsert]])
 						vim.api.nvim_put({ selection.value }, "", true, true)
 					end)
 				else
