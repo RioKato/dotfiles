@@ -49,7 +49,7 @@ local pensnippet = function(opts)
 		:find()
 end
 
-return require("telescope").register_extension({
+return telescope.register_extension({
 	setup = function(ext_config, config) end,
 	exports = {
 		pensnippet = pensnippet,

@@ -114,7 +114,7 @@ local lookup_ip_i = function(opts)
 	lookup_ip_by_mode(opts, "i")
 end
 
-return require("telescope").register_extension({
+return telescope.register_extension({
 	setup = function(ext_config, config) end,
 	exports = {
 		lookup_ip_n = lookup_ip_n,
