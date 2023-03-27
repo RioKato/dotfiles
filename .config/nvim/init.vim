@@ -41,6 +41,8 @@ nnoremap <C-w>o <nop>
 nnoremap <C-w><C-o> <nop>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
+autocmd BufNewFile,BufRead *.cmd set filetype=command
+autocmd BufNewFile,BufRead *.weg set filetype=weggli
 autocmd FileType make setlocal noexpandtab
 autocmd FileType markdown setlocal noexpandtab
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
@@ -107,6 +109,3 @@ let g:silicon_options = {
       \  'tab_width': 4,
       \  'theme': 'GitHub',
       \ }
-
-autocmd BufNewFile,BufRead *.cmd set filetype=command
-autocmd BufNewFile,BufRead *.weg set filetype=weggli
