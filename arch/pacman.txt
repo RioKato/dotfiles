@@ -51,8 +51,9 @@ openvpn
 
 nmap
 gnu-netcat
-tcpdump
-hydra
 proxychains-ng
-ghidra
+tcpdump
 wireshark-qt
+
+hydra
+ghidra
