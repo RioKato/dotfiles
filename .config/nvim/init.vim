@@ -108,4 +108,5 @@ let g:silicon_options = {
       \  'theme': 'GitHub',
       \ }
 
+autocmd BufNewFile,BufRead *.cmd set filetype=command
 autocmd BufNewFile,BufRead *.weg set filetype=weggli
