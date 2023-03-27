@@ -59,12 +59,13 @@ precmd() {
   if which git >& /dev/null
   then
     local BRANCH="$(git branch --show-current 2> /dev/null)"
+
+    if [ -z "$BRANCH" ]
+    then
+      BRANCH="$(git show --format='%h' --no-patch 2> /dev/null)"
+    fi
   fi
 
-  if [ -z "$BRANCH" ]
-  then
-    BRANCH="$(git show --format='%h' --no-patch 2> /dev/null)"
-  fi
 
   if [ -n "$BRANCH" ]
   then
