@@ -61,6 +61,11 @@ precmd() {
     local BRANCH="$(git branch --show-current 2> /dev/null)"
   fi
 
+  if [ -z "$BRANCH" ]
+  then
+    BRANCH="$(git show --format='%h' --no-patch 2> /dev/null)"
+  fi
+
   if [ -n "$BRANCH" ]
   then
     BRANCH="%B%F{red}[$BRANCH]%f%b"
