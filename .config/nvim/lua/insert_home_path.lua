@@ -56,11 +56,11 @@ local function insert_home_path_by_mode(mode)
 	builtin.find_files(opts)
 end
 
-function M.insert_home_path_by_mode_n()
+function M.insert_home_path_n()
 	insert_home_path_by_mode("n")
 end
 
-function M.insert_home_path_by_mode_i()
+function M.insert_home_path_i()
 	insert_home_path_by_mode("i")
 end
 

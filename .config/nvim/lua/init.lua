@@ -99,6 +99,9 @@ telescope.load_extension("pensnippet")
 vim.keymap.set("n", "<space>p", telescope.extensions.pensnippet.pensnippet, opts)
 vim.api.nvim_create_user_command("Pensnippet", telescope.extensions.pensnippet.pensnippet, {})
 
+local insert_home_path = require("insert_home_path")
+vim.keymap.set("i", "<C-t>", insert_home_path.insert_home_path_i, opts)
+
 local on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
