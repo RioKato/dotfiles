@@ -47,6 +47,7 @@ smbclient
 openldap
 nfs-utils
 mariadb
+postgresql
 openvpn
 
 nmap
