@@ -23,7 +23,7 @@ local function insert_home_path_by_mode(mode)
 				actions.close(prompt_bufnr)
 				local selection = action_state.get_selected_entry()
 				if selection ~= nil then
-					vim.api.nvim_put({ selection.value }, "", true, true)
+					vim.api.nvim_put({ selection.value }, "", false, true)
 				end
 			end)
 			return true
