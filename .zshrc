@@ -66,7 +66,6 @@ precmd() {
     fi
   fi
 
-
   if [ -n "$BRANCH" ]
   then
     BRANCH="%B%F{red}[$BRANCH]%f%b"
