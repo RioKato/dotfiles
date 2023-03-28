@@ -3,6 +3,7 @@ compinit && promptinit
 
 setopt noautomenu
 setopt noautoremoveslash
+setopt globdots
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 setopt print_eight_bit
