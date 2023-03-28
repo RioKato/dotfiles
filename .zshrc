@@ -1,4 +1,4 @@
-autoload -Uz compinit promptinit
+autoload -Uz compinit promptinit edit-command-line
 compinit && promptinit
 
 setopt noautomenu
@@ -19,6 +19,8 @@ setopt hist_ignore_all_dups
 setopt hist_reduce_blanks
 
 bindkey -e
+zle -N edit-command-line
+bindkey "^O" edit-command-line
 
 if which xsel >& /dev/null
 then
