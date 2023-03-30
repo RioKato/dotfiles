@@ -9,3 +9,4 @@ https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
 https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
 https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
 https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
+https://github.com/cyberark/kubeletctl/releases/download/v1.10/kubeletctl_linux_amd64

