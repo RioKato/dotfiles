@@ -32,12 +32,17 @@ go install github.com/ffuf/ffuf@latest
 go install github.com/ropnop/kerbrute@latest
 gem install --user-install evil-winrm
 gem install --user-install wpscan
+pip install dirsearch
 pip install sqlmap
 pip install hash-id
 pip install git-dumper
 pip install impacket
+pip install bloodhound
 pip install pwntools
 pip install ROPGadget
+pip install git+https://github.com/GerbenJavado/LinkFinder.git
+pip install git+https://github.com/ShawnDEvans/smbmap.git
+pip install git+https://github.com/cytopia/smtp-user-enum.git
 gem install --user-install one_gadget
 npm install --prefix ~/Documents/js-beautify.npm js-beautify
 cargo install urlencode
