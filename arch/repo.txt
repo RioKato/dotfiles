@@ -16,6 +16,3 @@ https://github.com/tennc/webshell.git
 https://github.com/ticarpi/jwt_tool.git
 https://github.com/urbanadventurer/username-anarchy.git
 https://gitlab.com/exploit-database/exploitdb.git
-https://gitlab.com/kalilinux/packages/cewl.git
-https://gitlab.com/kalilinux/packages/dnsenum.git
-https://gitlab.com/kalilinux/packages/responder.git
