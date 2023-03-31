@@ -48,6 +48,7 @@ openldap
 nfs-utils
 mariadb
 postgresql
+net-snmp
 openvpn
 
 nmap
