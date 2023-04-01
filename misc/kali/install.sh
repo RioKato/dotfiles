@@ -17,3 +17,5 @@ go install github.com/ropnop/kerbrute@latest
 pip install git-dumper
 npm -g install js-beautify
 cargo install urlencode
+
+/usr/share/neo4j/bin/neo4j-admin set-initial-password blood

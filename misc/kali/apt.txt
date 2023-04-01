@@ -4,6 +4,7 @@ iputils-ping
 zsh
 vim
 neovim
+xsel
 fzf
 ripgrep
 locate
@@ -41,3 +42,6 @@ cewl
 john
 hashcat
 hash-identifier
+
+bloodhound
+libgtk-3-0
