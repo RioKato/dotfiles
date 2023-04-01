@@ -79,7 +79,7 @@ precmd() {
 
 if which dircolors >& /dev/null
 then
-  eval "$(dircolors)"
+  eval "$(dircolors 2> /dev/null)"
 fi
 
 if [ -n "$LS_COLORS" ]
