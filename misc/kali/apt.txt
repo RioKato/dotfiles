@@ -1,19 +1,32 @@
 iproute2
 iputils-ping
 
+golang
+python3-pip
+npm
+
 nmap
 ncat
+hydra
 smbmap
 dnsenum
 snmpenum
 smtp-user-enum
 impacket-scripts
+evil-winrm
 crackmapexec
 responder
 metasploit-framework
+exploitdb
+bloodhound.py
 
+gobuster
+ffuf
+sqlmap
+dirsearch
+wpscan
 cewl
-hydra
+
 john
 hashcat
-
+hash-identifier

@@ -15,4 +15,3 @@ https://github.com/synacktiv/php_filter_chain_generator.git
 https://github.com/tennc/webshell.git
 https://github.com/ticarpi/jwt_tool.git
 https://github.com/urbanadventurer/username-anarchy.git
-https://gitlab.com/exploit-database/exploitdb.git
