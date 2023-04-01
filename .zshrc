@@ -59,7 +59,7 @@ then
 fi
 
 precmd() {
-  if [ -f /.dockerenv ]
+  if [ -e /.dockerenv ]
   then
     local DOCKER="@docker"
   fi
