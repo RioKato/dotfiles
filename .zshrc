@@ -62,7 +62,6 @@ precmd() {
   if [ -f '/.dockerenv' ]
   then
     local DOCKER="@docker"
-    DOCKER="%B%F{red}$DOCKER%f%b"
   fi
 
   if which git >& /dev/null
