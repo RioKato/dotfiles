@@ -9,7 +9,7 @@ sleep 0.5
 tmux send C-z
 tmux send 'stty raw -echo' Enter
 tmux send 'fg' Enter
-tmux send 'reset' Enter
+tmux send 'reset xterm' Enter
 tmux send 'export TERM=xterm' Enter
 ROWS=$(tmux display -p '#{pane_height}')
 COLS=$(tmux display -p '#{pane_width}')

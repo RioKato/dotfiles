@@ -1,6 +1,5 @@
 From kalilinux/kali-rolling:latest
-
-WORKDIR /tmp
+WORKDIR /work
 
 COPY apt.txt apt.txt
 RUN apt update && apt install -y $(cat apt.txt)
