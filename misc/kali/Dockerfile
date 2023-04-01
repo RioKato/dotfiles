@@ -1,9 +1,18 @@
 From kalilinux/kali-rolling:latest
 
-COPY apt.txt /tmp/apt.txt
-RUN apt update && apt install -y $(cat /tmp/apt.txt)
-RUN rm /tmp/apt.txt
+WORKDIR /tmp
+
+COPY apt.txt apt.txt
+RUN apt update && apt install -y $(cat apt.txt)
+RUN rm apt.txt
+
+COPY repo.txt apt.txt
+COPY tool.txt tool.txt
+COPY install.sh install.sh
+RUN sh install.sh
+RUN rm repo.txt tool.txt install.sh
+
 RUN go install github.com/ropnop/kerbrute@latest
 RUN pip install git-dumper
-RUN pip install git+https://github.com/GerbenJavado/LinkFinder.git
 RUN npm -g install js-beautify
+RUN cargo install urlencode

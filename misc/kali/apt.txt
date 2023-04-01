@@ -2,13 +2,16 @@ iproute2
 iputils-ping
 
 golang
+cargo
 python3-pip
 npm
 
 nmap
 ncat
 hydra
+smbclient
 smbmap
+ldapscripts
 dnsenum
 snmpenum
 smtp-user-enum
@@ -22,6 +25,7 @@ bloodhound.py
 
 gobuster
 ffuf
+seclists
 sqlmap
 dirsearch
 wpscan

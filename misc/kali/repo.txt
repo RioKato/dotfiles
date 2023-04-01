@@ -1,5 +1,4 @@
 https://github.com/andrew-d/static-binaries.git
-https://github.com/danielmiessler/SecLists.git
 https://github.com/dirkjanm/krbrelayx.git
 https://github.com/drgreenthumb93/windows-kernel-exploits.git
 https://github.com/Flangvik/SharpCollection.git
