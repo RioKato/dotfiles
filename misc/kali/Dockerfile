@@ -4,7 +4,8 @@ WORKDIR /work
 COPY apt.txt .
 COPY repo.txt .
 COPY tool.txt .
-COPY --chmod=0755 install.sh .
+COPY install.sh .
+RUN chmod +x install.sh
 RUN sh install.sh
 RUN rm apt.txt repo.txt tool.txt install.sh
 
