@@ -1,3 +1,9 @@
+tmux
+zsh
+neovim
+fzf
+ripgrep
+
 iproute2
 iputils-ping
 
