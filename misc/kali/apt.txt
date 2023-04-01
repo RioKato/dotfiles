@@ -33,7 +33,6 @@ exploitdb
 
 gobuster
 ffuf
-seclists
 sqlmap
 dirsearch
 wpscan
