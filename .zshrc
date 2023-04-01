@@ -148,8 +148,8 @@ fi
 
 ###############################################################################################
 
-# if which tmux &> /dev/null && [ -z "$TMUX" ]
-# then
-#   tmux attach || tmux new-session
-#   exit 0
-# fi
+if which tmux &> /dev/null && [ -z "$TMUX" ] && [ ! -e "/.dockerenv" ]
+then
+  tmux attach || tmux new-session
+  exit 0
+fi
