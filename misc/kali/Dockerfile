@@ -5,6 +5,9 @@ COPY apt.txt apt.txt
 RUN apt update && apt install -y $(cat apt.txt)
 RUN rm apt.txt
 
+RUN git clone https://github.com/RioKato/dotfiles.git ~/dotfiles
+RUN sh ~/dotfiles/deploy.sh
+
 COPY repo.txt repo.txt
 COPY tool.txt tool.txt
 COPY install.sh install.sh
