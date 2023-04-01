@@ -1,5 +1,4 @@
 iproute2
-iputils-ping
 
 zsh
 vim
@@ -14,13 +13,16 @@ cargo
 python3-pip
 npm
 
+iputils-ping
 nmap
 ncat
 hydra
 smbclient
 smbmap
 ldapscripts
+dnsutils
 dnsenum
+snmp
 snmpenum
 smtp-user-enum
 impacket-scripts
@@ -29,7 +31,6 @@ crackmapexec
 responder
 metasploit-framework
 exploitdb
-bloodhound.py
 
 gobuster
 ffuf
@@ -44,4 +45,5 @@ hashcat
 hash-identifier
 
 bloodhound
+bloodhound.py
 libgtk-3-0
