@@ -68,12 +68,12 @@ precmd() {
   then
     local BRANCH="$(git branch --show-current 2> /dev/null)"
     [ -z "$BRANCH" ] && BRANCH="$(git show --format='%h' --no-patch 2> /dev/null)"
-    [ -n "$BRANCH" ] && BRANCH="%B%F{red}[$BRANCH]%f%b"
+    [ -n "$BRANCH" ] && BRANCH="[$BRANCH]"
   fi
 
   local NEWLINE=$'\n'
   export PROMPT=$NEWLINE
-  export PROMPT=$PROMPT"%B%F{green}╭╴(%n$DOCKER)%f%b %B%F{cyan}%~%f%b $BRANCH"$NEWLINE
+  export PROMPT=$PROMPT"%B%F{green}╭╴(%n$DOCKER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b"$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╰╴\$%f%b "
 }
 
