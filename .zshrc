@@ -59,7 +59,7 @@ then
 fi
 
 precmd() {
-  if [ -f '/.dockerenv' ]
+  if [ -f /.dockerenv ]
   then
     local DOCKER="@docker"
   fi
@@ -153,7 +153,7 @@ fi
 
 ###############################################################################################
 
-if which tmux &> /dev/null && [ -z "$TMUX" ] && [ ! -e "/.dockerenv" ]
+if which tmux &> /dev/null && [ -z "$TMUX" ] && [ ! -e /.dockerenv ]
 then
   tmux attach || tmux new-session
   exit 0
