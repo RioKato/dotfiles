@@ -59,6 +59,12 @@ then
 fi
 
 precmd() {
+  if [ -f '/.dockerenv' ]
+  then
+    local DOCKER="@docker"
+    DOCKER="%B%F{red}$DOCKER%f%b"
+  fi
+
   if which git >& /dev/null
   then
     local BRANCH="$(git branch --show-current 2> /dev/null)"
@@ -68,7 +74,7 @@ precmd() {
 
   local NEWLINE=$'\n'
   export PROMPT=$NEWLINE
-  export PROMPT=$PROMPT"%B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b $BRANCH"$NEWLINE
+  export PROMPT=$PROMPT"%B%F{green}╭╴(%n$DOCKER)%f%b %B%F{cyan}%~%f%b $BRANCH"$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╰╴\$%f%b "
 }
 
