@@ -1,12 +1,12 @@
-tmux
+iproute2
+iputils-ping
+
 zsh
+vim
 neovim
 fzf
 ripgrep
 locate
-
-iproute2
-iputils-ping
 
 golang
 cargo
