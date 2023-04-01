@@ -3,6 +3,7 @@ zsh
 neovim
 fzf
 ripgrep
+locate
 
 iproute2
 iputils-ping

@@ -15,3 +15,5 @@ RUN go install github.com/ropnop/kerbrute@latest
 RUN pip install git-dumper
 RUN npm -g install js-beautify
 RUN cargo install urlencode
+
+RUN updatedb

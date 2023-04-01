@@ -1,6 +1,5 @@
 #!/bin/sh
 
-
 for URL in $(cat repo.txt)
 do
   git clone $URL ~/Documents/$(basename $URL)
