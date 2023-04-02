@@ -62,7 +62,7 @@ precmd() {
   if [ -e /.dockerenv ]
   then
     local CONTAINER=$(echo $HOSTNAME | grep '[0-9a-f]\{12\}')
-    [ -z "$CONTAINER" ] && CONTAINER="CONTAINER"
+    [ -z "$CONTAINER" ] && CONTAINER="container"
     CONTAINER="@$CONTAINER"
   fi
 
