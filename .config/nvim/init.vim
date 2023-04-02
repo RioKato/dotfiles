@@ -44,6 +44,7 @@ nnoremap <esc><esc> <cmd>nohlsearch<cr>
 nnoremap <C-w>z <C-w>\|<C-w>_
 nnoremap <C-w>o <nop>
 nnoremap <C-w><C-o> <nop>
+inoremap <C-d> <del>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd BufNewFile,BufRead *.weg set filetype=weggli
