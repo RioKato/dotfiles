@@ -22,8 +22,7 @@ ARG GHIDRA_URL=https://github.com/NationalSecurityAgency/ghidra/releases/downloa
 RUN wget -P ~/Downloads $GHIDRA_URL && unzip -d ~ ~/Downloads/ghidra_*.zip && rm ~/Downloads/ghidra_*.zip
 
 ARG DOTFILES_URL=https://github.com/RioKato/dotfiles.git
-RUN git clone $DOTFILES_URL ~/dotfiles && \
-  chmod +x ~/dotfiles/deploy.sh && ~/dotfiles/deploy.sh
+RUN git clone $DOTFILES_URL ~/dotfiles && chmod +x ~/dotfiles/deploy.sh && ~/dotfiles/deploy.sh
 
 ENV LC_ALL en_US.UTF-8
 CMD ["/bin/zsh"]
