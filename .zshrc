@@ -61,9 +61,9 @@ fi
 precmd() {
   if [ -e /.dockerenv ]
   then
-    local DOCKER=$(echo $HOSTNAME | grep '[0-9a-f]\{12\}')
-    [ -z "$DOCKER" ] && DOCKER="docker"
-    DOCKER="@$DOCKER"
+    local CONTAINER=$(echo $HOSTNAME | grep '[0-9a-f]\{12\}')
+    [ -z "$CONTAINER" ] && CONTAINER="CONTAINER"
+    CONTAINER="@$CONTAINER"
   fi
 
   if which git >& /dev/null
@@ -75,7 +75,7 @@ precmd() {
 
   local NEWLINE=$'\n'
   export PROMPT=$NEWLINE
-  export PROMPT=$PROMPT"%B%F{green}╭╴(%n$DOCKER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b"$NEWLINE
+  export PROMPT=$PROMPT"%B%F{green}╭╴(%n$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b"$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╰╴\$%f%b "
 }
 
