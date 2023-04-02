@@ -11,9 +11,6 @@ rustup component add rust-analyzer
 go install golang.org/x/tools/gopls@latest
 pip install python-lsp-server
 
-pip install pwntools
-pip install ROPGadget
-gem install --user-install one_gadget
 cargo install weggli
 
 exit 0
