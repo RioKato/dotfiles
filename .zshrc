@@ -61,7 +61,9 @@ fi
 precmd() {
   if [ -e /.dockerenv ]
   then
-    local DOCKER="@docker"
+    local DOCKER=$(echo $HOSTNAME | grep '[0-9a-z]\{12\}')
+    [ -z "$BRANCH" ] && DOCKER="docker"
+    DOCKER="@$DOCKER"
   fi
 
   if which git >& /dev/null
