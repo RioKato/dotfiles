@@ -61,7 +61,7 @@ fi
 precmd() {
   if [ -e /.dockerenv ]
   then
-    local DOCKER=$(echo $HOSTNAME | grep '[0-9a-z]\{12\}')
+    local DOCKER=$(echo $HOSTNAME | grep '[0-9a-f]\{12\}')
     [ -z "$DOCKER" ] && DOCKER="docker"
     DOCKER="@$DOCKER"
   fi
