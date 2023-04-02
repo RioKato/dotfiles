@@ -129,11 +129,9 @@ export PATH=$PATH:/opt/idapro-8.2
 if which debuginfod >& /dev/null
 then
   local OS=$(awk '/^DISTRIB_ID=.+$/{print substr($0, 12)}' /etc/lsb-release 2> /dev/null)
-  case $OS in
-    Ubuntu) export DEBUGINFOD_URLS=https://debuginfod.ubuntu.com
-      ;;
-    EndeavourOS) export DEBUGINFOD_URLS=https://debuginfod.archlinux.org
-      ;;
+  case "$OS" in
+    Ubuntu) export DEBUGINFOD_URLS=https://debuginfod.ubuntu.com ;;
+    EndeavourOS) export DEBUGINFOD_URLS=https://debuginfod.archlinux.org ;;
   esac
 fi
 
