@@ -8,13 +8,10 @@ RUN apt update && apt install -y \
   git curl wget file \
   tmux zsh vim neovim \
   gcc \
-  python3 python3-pip python-is-python3 \
+  python3 python3-pip python-is-python3 python3-pylsp \
   ruby \
   openjdk-19-jdk \
   gdb debuginfod binutils
-
-RUN git clone https://github.com/RioKato/dotfiles.git ~/dotfiles && \
-  chmod +x ~/dotfiles/deploy.sh && ~/dotfiles/deploy.sh
 
 RUN pip install python-lsp-server
 ARG GEF_URL=https://github.com/hugsy/gef.git
@@ -24,6 +21,10 @@ RUN pip install ROPGadget
 RUN gem install one_gadget
 ARG GHIDRA_URL=https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.2.3_build/ghidra_10.2.3_PUBLIC_20230208.zip
 RUN wget -P ~/Downloads $GHIDRA_URL && unzip -d ~ ~/Downloads/ghidra_*.zip && rm ~/Downloads/ghidra_*.zip
+
+ARG DOTFILES_URL=https://github.com/RioKato/dotfiles.git
+RUN git clone $DOTFILES_URL ~/dotfiles && \
+  chmod +x ~/dotfiles/deploy.sh && ~/dotfiles/deploy.sh
 
 ENV LC_ALL en_US.UTF-8
 CMD ["/bin/zsh"]
