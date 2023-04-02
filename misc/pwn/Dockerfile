@@ -13,7 +13,6 @@ RUN apt update && apt install -y \
   openjdk-19-jdk \
   gdb debuginfod binutils
 
-RUN pip install python-lsp-server
 ARG GEF_URL=https://github.com/hugsy/gef.git
 RUN git clone $GEF_URL ~/Documents/gef.git
 RUN pip install pwntools
