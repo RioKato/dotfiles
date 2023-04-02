@@ -23,7 +23,7 @@ RUN pip install pwntools
 RUN pip install ROPGadget
 RUN gem install one_gadget
 ARG GHIDRA_URL=https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.2.3_build/ghidra_10.2.3_PUBLIC_20230208.zip
-RUN wget -P ~/Downloads $GHIDRA_URL && unzip -d ~ ~/Downloads/ghidra_*.zip
+RUN wget -P ~/Downloads $GHIDRA_URL && unzip -d ~ ~/Downloads/ghidra_*.zip && rm ~/Downloads/ghidra_*.zip
 
 ENV LC_ALL en_US.UTF-8
 CMD ["/bin/zsh"]
