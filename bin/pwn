@@ -3,9 +3,8 @@
 xhost +local:$(id -nu)
 
 sudo -E docker run --rm -ti \
-  -e DISPLAY=unix$DISPLAY \
+  -e DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
-  --device=/dev/dri:/dev/dri \
   --privileged \
   -v $PWD:/work \
   pwn

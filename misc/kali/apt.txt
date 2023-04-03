@@ -6,6 +6,7 @@ xsel
 fzf
 ripgrep
 locate
+jq
 
 golang
 cargo
