@@ -17,6 +17,7 @@ iproute2
 iputils-ping
 nmap
 ncat
+tcpdump
 hydra
 smbclient
 smbmap
