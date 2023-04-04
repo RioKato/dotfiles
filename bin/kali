@@ -5,7 +5,6 @@ xhost +local:$(id -nu)
 sudo -E docker run --rm -ti \
   --network host \
   -e DISPLAY \
-  -v /tmp/.X11-unix:/tmp/.X11-unix \
   --device=/dev/dri:/dev/dri \
   -v $PWD:/work \
   kalilinux/kali-rolling:custom
