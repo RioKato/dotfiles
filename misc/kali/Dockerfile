@@ -63,18 +63,18 @@ RUN <<EOF
   git clone https://github.com/ticarpi/jwt_tool.git
   git clone https://github.com/urbanadventurer/username-anarchy.git
 
-  wget -P ~/Documents/tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
-  wget -P ~/Documents/tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
-  wget -P ~/Documents/tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
-  wget -P ~/Documents/tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
-  wget -P ~/Documents/tool https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64
-  wget -P ~/Documents/tool https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip
-  wget -P ~/Documents/tool https://raw.githubusercontent.com/stealthcopter/deepce/main/deepce.sh
-  wget -P ~/Documents/tool https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
-  wget -P ~/Documents/tool https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
-  wget -P ~/Documents/tool https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
-  wget -P ~/Documents/tool https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
-  wget -P ~/Documents/tool https://github.com/cyberark/kubeletctl/releases/download/v1.10/kubeletctl_linux_amd64
+  wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
+  wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
+  wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
+  wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
+  wget -P tool https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64
+  wget -P tool https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip
+  wget -P tool https://raw.githubusercontent.com/stealthcopter/deepce/main/deepce.sh
+  wget -P tool https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
+  wget -P tool https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
+  wget -P tool https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
+  wget -P tool https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
+  wget -P tool https://github.com/cyberark/kubeletctl/releases/download/v1.10/kubeletctl_linux_amd64
 EOF
 
 RUN <<EOF
