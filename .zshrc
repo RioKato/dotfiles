@@ -22,7 +22,7 @@ bindkey -e
 zle -N edit-command-line
 bindkey "^O" edit-command-line
 
-if which xsel >& /dev/null
+if [ "$XDG_SESSION_TYPE" = "x11" ] && which xsel >& /dev/null
 then
   function __copy() {
     xsel -pi && xsel -po | xsel -bi
@@ -33,7 +33,7 @@ then
   }
 fi
 
-if which wl-copy wl-paste >& /dev/null
+if [ "$XDG_SESSION_TYPE" = "wayland" ] && which wl-copy wl-paste >& /dev/null
 then
   function __copy() {
     wl-copy
