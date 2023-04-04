@@ -8,7 +8,6 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
 setopt print_eight_bit
 setopt no_beep
-setopt ignore_eof
 setopt no_flow_control
 
 export HISTFILE=~/.zsh_history
@@ -75,7 +74,7 @@ then
   bindkey '^y' __yank
 fi
 
-precmd() {
+function precmd() {
   if [ -e /.dockerenv ]
   then
     local CONTAINER=$(echo $HOSTNAME | grep '[0-9a-f]\{12\}')
@@ -94,6 +93,13 @@ precmd() {
   export PROMPT=$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╭╴(%n$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b"$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╰╴\$%f%b "
+}
+
+function zshexit() {
+  if [ -n "$TMUX" ]
+  then
+    tmux detach
+  fi
 }
 
 if which dircolors >& /dev/null
