@@ -33,6 +33,17 @@ then
   }
 fi
 
+if which wl-copy wl-paste >& /dev/null
+then
+  function __copy() {
+    wl-copy
+  }
+
+  function __paste() {
+    wl-paste
+  }
+fi
+
 if which __copy __paste >& /dev/null
 then
   function __kill-line() {
