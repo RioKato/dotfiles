@@ -38,6 +38,7 @@ perl-image-exiftool
 imagemagick
 
 docker
+docker-buildx
 qemu-base
 swtpm
 libvirt
