@@ -32,9 +32,7 @@ case "$XDG_SESSION_TYPE" in
       function __paste() {
         xsel -bo
       }
-    fi
-    ;;
-
+    fi ;;
   wayland)
     if which wl-copy wl-paste >& /dev/null
     then
@@ -45,8 +43,7 @@ case "$XDG_SESSION_TYPE" in
       function __paste() {
         wl-paste
       }
-    fi
-    ;;
+    fi ;;
 esac
 
 if which __copy __paste >& /dev/null
@@ -93,6 +90,10 @@ function precmd() {
   export PROMPT=$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╭╴(%n$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b"$NEWLINE
   export PROMPT=$PROMPT"%B%F{green}╰╴\$%f%b "
+}
+
+function chpwd() {
+  ls --color
 }
 
 function zshexit() {
