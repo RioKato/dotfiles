@@ -1,6 +1,8 @@
 FROM ubuntu:22.04
 
 RUN <<EOF
+  set -e
+
   apt update
   apt install -y software-properties-common
   add-apt-repository -y ppa:neovim-ppa/stable
@@ -20,6 +22,8 @@ RUN <<EOF
 EOF
 
 RUN <<EOF
+  set -e
+
   GEF_URL=https://github.com/hugsy/gef.git
   git clone $GEF_URL ~/Documents/gef.git
 
@@ -34,6 +38,8 @@ RUN <<EOF
 EOF
 
 RUN <<EOF
+  set -e
+
   DOTFILES_URL=https://github.com/RioKato/dotfiles.git
   git clone $DOTFILES_URL ~/dotfiles
   chmod +x ~/dotfiles/deploy.sh
