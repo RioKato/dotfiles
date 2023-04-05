@@ -21,30 +21,33 @@ bindkey -e
 zle -N edit-command-line
 bindkey "^O" edit-command-line
 
-case "$XDG_SESSION_TYPE" in
-  x11)
-    if which xsel >& /dev/null
-    then
-      function __copy() {
-        xsel -pi && xsel -po | xsel -bi
-      }
+if [ "$XDG_SESSION_TYPE" = x11 ] || [ -z "$XDG_SESSION_TYPE" ]
+then
+  if which xsel >& /dev/null
+  then
+    function __copy() {
+      xsel -pi && xsel -po | xsel -bi
+    }
 
-      function __paste() {
-        xsel -bo
-      }
-    fi ;;
-  wayland)
-    if which wl-copy wl-paste >& /dev/null
-    then
-      function __copy() {
-        wl-copy
-      }
+    function __paste() {
+      xsel -bo
+    }
+  fi
+fi
 
-      function __paste() {
-        wl-paste
-      }
-    fi ;;
-esac
+if [ "$XDG_SESSION_TYPE" = wayland ] || [ -z "$XDG_SESSION_TYPE" ]
+then
+  if which wl-copy wl-paste >& /dev/null
+  then
+    function __copy() {
+      wl-copy
+    }
+
+    function __paste() {
+      wl-paste
+    }
+  fi
+fi
 
 if which __copy __paste >& /dev/null
 then
