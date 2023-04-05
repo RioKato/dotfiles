@@ -18,7 +18,6 @@ RUN <<EOF
     ruby \
     openjdk-19-jdk \
     gdb debuginfod binutils
-
   apt clean
 EOF
 
