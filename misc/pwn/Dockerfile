@@ -12,7 +12,8 @@ RUN <<EOF
     locales locales-all \
     git curl wget file \
     tmux zsh vim neovim \
-    gcc \
+    gcc clangd \
+    cargo \
     python3 python3-pip python-is-python3 python3-pylsp \
     ruby \
     openjdk-19-jdk \
@@ -30,6 +31,7 @@ RUN <<EOF
   pip install pwntools
   pip install ROPGadget
   gem install one_gadget
+  cargo install weggli
 
   GHIDRA_URL=https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.2.3_build/ghidra_10.2.3_PUBLIC_20230208.zip
   wget -P ~/Downloads $GHIDRA_URL

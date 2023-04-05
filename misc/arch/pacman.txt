@@ -34,8 +34,6 @@ ripgrep
 jq
 wget
 p7zip
-perl-image-exiftool
-imagemagick
 
 docker
 docker-buildx

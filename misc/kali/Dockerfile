@@ -11,6 +11,7 @@ RUN <<EOF
     xsel \
     fzf ripgrep locate \
     jq \
+    imagemagick exiftool \
     golang \
     cargo \
     python3-pip python3-pylsp \
