@@ -11,7 +11,7 @@ RUN <<EOF
   apt install -y \
     locales locales-all \
     git curl wget file \
-    tmux zsh vim neovim \
+    tmux zsh vim neovim xsel \
     gcc clangd \
     cargo \
     python3 python3-pip python-is-python3 python3-pylsp \
