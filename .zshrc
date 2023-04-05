@@ -96,13 +96,6 @@ function chpwd() {
   ls --color
 }
 
-function zshexit() {
-  if [ -n "$TMUX" ]
-  then
-    tmux detach
-  fi
-}
-
 if which dircolors >& /dev/null
 then
   eval "$(dircolors 2> /dev/null)"
