@@ -173,6 +173,6 @@ then
 
   if which locate &> /dev/null
   then
-    export FZF_CTRL_T_COMMAND="locate -A ~"
+    export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
   fi
 fi
