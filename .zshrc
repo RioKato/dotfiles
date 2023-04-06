@@ -157,6 +157,17 @@ fi
 
 ###############################################################################################
 
+if which fzf >& /dev/null
+then
+  export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
+  export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
+
+  if which rg &> /dev/null
+  then
+    FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
+  fi
+fi
+
 [ -d /usr/share/fzf ] && FZF_PLUGIN=/usr/share/fzf
 [ -d /usr/share/doc/fzf/examples ] && FZF_PLUGIN=/usr/share/doc/fzf/examples
 
@@ -164,15 +175,8 @@ if [ -n "$FZF_PLUGIN" ] && [ -e "$FZF_PLUGIN/key-bindings.zsh" ] && [ -e "$FZF_P
 then
   source $FZF_PLUGIN/key-bindings.zsh
   source $FZF_PLUGIN/completion.zsh
-  export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
-  export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
   export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
   export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
-
-  if which rg &> /dev/null
-  then
-    FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
-  fi
 
   if which locate &> /dev/null
   then
