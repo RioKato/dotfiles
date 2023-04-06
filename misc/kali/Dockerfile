@@ -39,7 +39,8 @@ RUN <<EOF
     wpscan \
     cewl \
     john hashcat hash-identifier \
-    bloodhound bloodhound.py libgtk-3-0
+    bloodhound bloodhound.py libgtk-3-0 \
+    burpsuite
   apt clean
 EOF
 
