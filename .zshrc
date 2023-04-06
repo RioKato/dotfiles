@@ -171,15 +171,23 @@ fi
 [ -d /usr/share/fzf ] && FZF_PLUGIN=/usr/share/fzf
 [ -d /usr/share/doc/fzf/examples ] && FZF_PLUGIN=/usr/share/doc/fzf/examples
 
-if [ -n "$FZF_PLUGIN" ] && [ -e "$FZF_PLUGIN/key-bindings.zsh" ] && [ -e "$FZF_PLUGIN/completion.zsh" ]
+if [ -n "$FZF_PLUGIN" ]
 then
-  source $FZF_PLUGIN/key-bindings.zsh
-  source $FZF_PLUGIN/completion.zsh
-  export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
-  export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
-
-  if which locate &> /dev/null
+  if [ -e "$FZF_PLUGIN/completion.zsh" ]
   then
-    FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
+    source $FZF_PLUGIN/completion.zsh
+  fi
+
+  if [ -e "$FZF_PLUGIN/key-bindings.zsh" ]
+  then
+    source $FZF_PLUGIN/key-bindings.zsh
+
+    export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
+    export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
+
+    if which locate &> /dev/null
+    then
+      FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
+    fi
   fi
 fi
