@@ -20,3 +20,9 @@ then
   nvim --headless +PlugInstall +qa
   nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 fi
+
+if which gdb >& /dev/null
+then
+  wget -O ~/.gef.py -q https://gef.blah.cat/py
+fi
+
