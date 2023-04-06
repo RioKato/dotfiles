@@ -12,9 +12,12 @@ RUN <<EOF
     fzf ripgrep locate \
     jq \
     imagemagick exiftool \
+    gcc clangd \
+    gdb debuginfod binutils \
     golang \
     cargo \
-    python3-pip python3-pylsp \
+    python3-pip python-is-python3 python3-pylsp \
+    ruby \
     npm \
     iproute2 \
     iputils-ping \

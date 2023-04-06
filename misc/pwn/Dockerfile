@@ -10,14 +10,18 @@ RUN <<EOF
   apt update
   apt install -y \
     locales locales-all \
+    zsh tmux \
+    vim neovim \
+    xsel \
+    fzf ripgrep locate \
     git curl wget file \
-    tmux zsh vim neovim xsel \
     gcc clangd \
+    gdb debuginfod binutils \
+    golang \
     cargo \
     python3 python3-pip python-is-python3 python3-pylsp \
     ruby \
-    openjdk-19-jdk \
-    gdb debuginfod binutils
+    openjdk-19-jdk
   apt clean
 EOF
 
