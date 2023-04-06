@@ -89,10 +89,9 @@ function precmd() {
     [ -n "$BRANCH" ] && BRANCH="[$BRANCH]"
   fi
 
-  local NEWLINE=$'\n'
-  export PROMPT=$NEWLINE
-  export PROMPT=$PROMPT"%B%F{green}╭╴(%n$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b"$NEWLINE
-  export PROMPT=$PROMPT"%B%F{green}╰╴\$%f%b "
+  export PROMPT="
+%B%F{green}╭╴(%n$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b
+%B%F{green}╰╴\$%f%b "
 }
 
 function chpwd() {
@@ -148,8 +147,7 @@ export PATH=$PATH:/opt/idapro-8.2
 
 if which debuginfod >& /dev/null
 then
-  local OS=$(awk '/^DISTRIB_ID=.+$/{print substr($0, 12)}' /etc/lsb-release 2> /dev/null)
-  case "$OS" in
+  case $(awk '/^DISTRIB_ID=.+$/{print substr($0, 12)}' /etc/lsb-release 2> /dev/null) in
     Ubuntu) export DEBUGINFOD_URLS=https://debuginfod.ubuntu.com ;;
     EndeavourOS) export DEBUGINFOD_URLS=https://debuginfod.archlinux.org ;;
   esac
