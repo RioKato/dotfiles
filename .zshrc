@@ -118,7 +118,7 @@ export EDITOR=vim
 
 if which nvim &> /dev/null
 then
-  export EDITOR=nvim
+  EDITOR=nvim
   alias vim=nvim
 fi
 
@@ -147,9 +147,11 @@ export PATH=$PATH:/opt/idapro-8.2
 
 if which debuginfod >& /dev/null
 then
+  export DEBUGINFOD_URLS
+
   case "$(awk '/^DISTRIB_ID=.+$/{print substr($0, 12)}' /etc/lsb-release 2> /dev/null)" in
-    Ubuntu) export DEBUGINFOD_URLS=https://debuginfod.ubuntu.com ;;
-    EndeavourOS) export DEBUGINFOD_URLS=https://debuginfod.archlinux.org ;;
+    Ubuntu) DEBUGINFOD_URLS=https://debuginfod.ubuntu.com ;;
+    EndeavourOS) DEBUGINFOD_URLS=https://debuginfod.archlinux.org ;;
   esac
 fi
 
@@ -169,11 +171,11 @@ then
 
   if which rg &> /dev/null
   then
-    export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
+    FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
   fi
 
   if which locate &> /dev/null
   then
-    export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
+    FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
   fi
 fi
