@@ -24,9 +24,6 @@ EOF
 RUN <<EOF
   set -e
 
-  GEF_URL=https://github.com/hugsy/gef.git
-  git clone $GEF_URL ~/Documents/gef.git
-
   pip install pwntools
   pip install ROPGadget
   gem install one_gadget

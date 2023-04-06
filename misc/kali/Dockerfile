@@ -52,7 +52,6 @@ RUN <<EOF
   git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git
   git clone https://github.com/Flangvik/SharpCollection.git
   git clone https://github.com/FuzzySecurity/PowerShell-Suite.git
-  git clone https://github.com/hugsy/gef.git
   git clone https://github.com/Kevin-Robertson/Powermad.git
   git clone https://github.com/micahvandeusen/gMSADumper.git
   git clone https://github.com/pentestmonkey/php-reverse-shell.git
