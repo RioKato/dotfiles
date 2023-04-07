@@ -102,9 +102,10 @@ EOF
 RUN <<EOF
   set -e
 
+  chsh -s /bin/zsh
   touch ~/.hushlogin
   /usr/share/neo4j/bin/neo4j-admin set-initial-password blood
   updatedb
 EOF
 
-CMD ["/bin/zsh"]
+CMD ["tmux"]

@@ -48,5 +48,10 @@ RUN <<EOF
   ~/dotfiles/deploy.sh
 EOF
 
+RUN <<EOF
+  chsh -s /bin/zsh
+  updatedb
+EOF
+
 ENV LC_ALL en_US.UTF-8
-CMD ["/bin/zsh"]
+CMD ["tmux"]

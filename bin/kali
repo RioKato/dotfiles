@@ -6,7 +6,6 @@ sudo -E docker run --rm -ti \
   --network host \
   -e DISPLAY \
   --device=/dev/dri:/dev/dri \
-  -v /etc/hosts:/etc/hosts \
   -v $PWD:/work \
   kalilinux/kali-rolling:custom
 
