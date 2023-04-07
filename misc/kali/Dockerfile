@@ -109,4 +109,4 @@ RUN <<EOF
   updatedb
 EOF
 
-CMD ["tmux"]
+CMD ["/bin/zsh"]

@@ -56,4 +56,4 @@ RUN <<EOF
 EOF
 
 ENV LC_ALL en_US.UTF-8
-CMD ["tmux"]
+CMD ["/bin/zsh"]
