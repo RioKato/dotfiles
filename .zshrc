@@ -175,12 +175,12 @@ if [ -n "$FZF_PLUGIN" ]
 then
   if [ -e "$FZF_PLUGIN/completion.zsh" ]
   then
-    source $FZF_PLUGIN/completion.zsh
+    source "$FZF_PLUGIN/completion.zsh"
   fi
 
   if [ -e "$FZF_PLUGIN/key-bindings.zsh" ]
   then
-    source $FZF_PLUGIN/key-bindings.zsh
+    source "$FZF_PLUGIN/key-bindings.zsh"
     export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
     export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 
