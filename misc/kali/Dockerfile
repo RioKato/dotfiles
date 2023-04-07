@@ -41,7 +41,7 @@ RUN <<EOF
     cewl \
     john hashcat hash-identifier \
     bloodhound bloodhound.py libgtk-3-0 \
-    burpsuite
+    burpsuite mitmproxy
   apt clean
 EOF
 
