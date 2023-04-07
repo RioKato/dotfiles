@@ -1,4 +1,4 @@
 console_palette: dark
-web_open_browser: false
 console_mouse: false
+web_open_browser: false
 ssl_insecure: true
