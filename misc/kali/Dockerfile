@@ -18,6 +18,7 @@ RUN <<EOF
     cargo \
     python3-pip python-is-python3 python3-pylsp \
     ruby \
+    openjdk-17-jdk \
     npm \
     iproute2 \
     iputils-ping \

@@ -49,6 +49,8 @@ RUN <<EOF
 EOF
 
 RUN <<EOF
+  set -e
+
   chsh -s /bin/zsh
   updatedb
 EOF
