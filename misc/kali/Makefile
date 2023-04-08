@@ -5,3 +5,4 @@ build:
 clean:
 	sudo docker rmi $(NAME)
 	sudo docker image prune
+	sudo docker builder prune
