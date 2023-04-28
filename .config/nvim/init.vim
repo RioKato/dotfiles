@@ -58,7 +58,6 @@ autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse
 
 call plug#begin()
   Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
-  Plug 'mhartington/oceanic-next'
   Plug 'deris/vim-shot-f'
   Plug 't9md/vim-quickhl'
   Plug 'junegunn/vim-easy-align'
@@ -79,8 +78,8 @@ call plug#end()
 
 lua require('init')
 
+colorscheme desert
 syntax on
-colorscheme OceanicNext
 
 nmap <C-t> <plug>(quickhl-manual-this)
 xmap <C-t> <plug>(quickhl-manual-this)
