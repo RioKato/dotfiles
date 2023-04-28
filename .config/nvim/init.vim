@@ -46,8 +46,6 @@ inoremap <C-d> <del>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd BufNewFile,BufRead *.weg set filetype=weggli
-autocmd FileType make setlocal noexpandtab
-autocmd FileType markdown setlocal noexpandtab
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
@@ -104,15 +102,7 @@ augroup END
 let g:git_messenger_no_default_mappings=1
 nmap <C-g> <plug>(git-messenger)
 
-let g:vim_markdown_folding_disabled = 1
-let g:previm_enable_realtime = 1
-autocmd FileType markdown nmap <buffer><silent> <leader>s :!xfce4-screenshooter -rc<CR>
-autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
-let g:mdip_imgdir = 'images'
-
 let g:translator_target_lang='ja'
-
-let g:graphviz_output_format='jpg'
 
 let g:silicon_options = {
       \  'font': 'Cica',
