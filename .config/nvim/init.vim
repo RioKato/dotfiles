@@ -67,6 +67,8 @@ call plug#begin()
   Plug 'rhysd/git-messenger.vim'
   Plug 'voldikss/vim-translator'
   Plug 'liuchengxu/graphviz.vim'
+  Plug 'tyru/open-browser.vim'
+  Plug 'previm/previm'
   Plug 'img-paste-devs/img-paste.vim'
   Plug 'lambdalisue/fern.vim'
   Plug 'lambdalisue/fern-hijack.vim'
@@ -103,9 +105,11 @@ augroup END
 let g:git_messenger_no_default_mappings=1
 nmap <C-g> <plug>(git-messenger)
 
+let g:vim_markdown_folding_disabled = 1
+let g:previm_enable_realtime = 1
+autocmd FileType markdown nmap <buffer><silent> <leader>s :!xfce4-screenshooter -rc<CR>
 autocmd FileType markdown nmap <buffer><silent> <leader>p :call mdip#MarkdownClipboardImage()<CR>
 let g:mdip_imgdir = 'images'
-autocmd FileType markdown nmap <buffer><silent> <leader>s :!xfce4-screenshooter -rc<CR>
 
 let g:translator_target_lang='ja'
 
