@@ -68,7 +68,9 @@ call plug#begin()
   Plug 'voldikss/vim-translator'
   Plug 'liuchengxu/graphviz.vim'
   Plug 'tyru/capture.vim'
-  Plug 'dhruvasagar/vim-table-mode'
+  Plug 'lambdalisue/fern.vim'
+  Plug 'lambdalisue/fern-hijack.vim'
+  Plug 'yuki-yano/fern-preview.vim'
   " Plug 'skanehira/denops-silicon.vim'
   " Plug 'vim-denops/denops.vim'
 call plug#end()
@@ -93,8 +95,6 @@ let g:translator_target_lang='ja'
 
 let g:graphviz_output_format='jpg'
 
-autocmd FileType markdown :TableModeToggle
-
 let g:silicon_options = {
       \  'font': 'Cica',
       \  'no_line_number': v:true,
@@ -112,3 +112,15 @@ let g:silicon_options = {
       \  'tab_width': 4,
       \  'theme': 'GitHub',
       \ }
+
+function! s:fern_settings() abort
+  nmap <silent> <buffer> p     <plug>(fern-action-preview:toggle)
+  nmap <silent> <buffer> <C-p> <plug>(fern-action-preview:auto:toggle)
+  nmap <silent> <buffer> <C-d> <plug>(fern-action-preview:scroll:down:half)
+  nmap <silent> <buffer> <C-u> <plug>(fern-action-preview:scroll:up:half)
+endfunction
+
+augroup fern-settings
+  autocmd!
+  autocmd FileType fern call s:fern_settings()
+augroup END
