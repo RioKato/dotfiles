@@ -115,11 +115,13 @@ export LESS="-R"
 ###############################################################################################
 
 export EDITOR=vim
+alias view='vim -R'
 
 if which nvim &> /dev/null
 then
   EDITOR=nvim
   alias vim=nvim
+  alias view='nvim -R'
 fi
 
 if which xdg-open &> /dev/null
