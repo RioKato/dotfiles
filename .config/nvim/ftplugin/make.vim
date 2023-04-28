@@ -1,1 +1,1 @@
-autocmd FileType make setlocal noexpandtab
+setlocal noexpandtab
