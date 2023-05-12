@@ -7,6 +7,7 @@ curl --path-as-is URL
 curl -u USERNAME:PASSWORD pop3://IP
 curl -X POST -F "ARG=@PATH;filename=FILE;type=TYPE" URL
 dig axfr @IP DOMAIN
+find . -type f -printf '%T+ %p\n' 2> /dev/null | grep -v 0000000000 | sort
 ip link add dummy0 type dummy && ip link delete dummy0
 ldapsearch -x -H ldap://IP -b 'dc=DC0,dc=DC1'
 ldapsearch -x -H ldap://IP -D USERNAME@DOMAIN -w PASSWORD -b 'dc=DC0,dc=DC1'
