@@ -35,7 +35,7 @@ RUN <<EOF
     responder \
     metasploit-framework \
     exploitdb \
-    gobuster ffuf dirsearch \
+    gobuster ffuf dirsearch feroxbuster \
     sqlmap \
     wpscan \
     cewl \
