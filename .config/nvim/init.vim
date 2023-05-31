@@ -1,7 +1,3 @@
-" for training
-map h <nop>
-map l <nop>
-
 set encoding=utf-8
 set autoindent
 set expandtab
