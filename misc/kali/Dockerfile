@@ -16,7 +16,7 @@ RUN <<EOF
     gdb debuginfod binutils \
     golang \
     cargo \
-    python3-pip python-is-python3 python3-pylsp \
+    python3-pip python-is-python3 \
     ruby \
     openjdk-17-jdk \
     npm \
@@ -43,6 +43,8 @@ RUN <<EOF
     bloodhound bloodhound.py libgtk-3-0 \
     burpsuite mitmproxy
   apt clean
+
+  pip install pyright
 EOF
 
 RUN <<EOF

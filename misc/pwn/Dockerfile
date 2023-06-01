@@ -19,10 +19,12 @@ RUN <<EOF
     gdb debuginfod binutils \
     golang \
     cargo \
-    python3 python3-pip python-is-python3 python3-pylsp \
+    python3 python3-pip python-is-python3 \
     ruby \
     openjdk-19-jdk
   apt clean
+
+  pip install pyright
 EOF
 
 RUN <<EOF
