@@ -89,6 +89,8 @@ RUN <<EOF
   pip install git-dumper
   npm -g install js-beautify
   cargo install urlencode
+  cargo install --features=ssl websocat
+  go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
 EOF
 
 RUN <<EOF
