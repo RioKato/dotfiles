@@ -90,22 +90,23 @@ vim.keymap.set("n", "<space>g", telescope_builtin.live_grep, opts)
 vim.keymap.set("n", "<space>G", telescope_builtin.current_buffer_fuzzy_find, opts)
 vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
 
-local on_attach = function(client, bufnr)
-	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
-
-	local bufopts = { noremap = true, silent = true, buffer = bufnr }
-	vim.keymap.set("n", "<C-j>", telescope_builtin.lsp_definitions, bufopts)
-	vim.keymap.set("n", "<C-k>", telescope_builtin.lsp_references, bufopts)
-	vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, bufopts)
-	vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, bufopts)
-	vim.keymap.set("n", "<space>h", telescope_builtin.lsp_document_symbols, bufopts)
-	vim.keymap.set("n", "<space>t", telescope_builtin.tagstack, bufopts)
-	vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, bufopts)
-	vim.keymap.set("n", "<space><space>", function()
-		vim.lsp.buf.format({ async = true })
-	end, bufopts)
-end
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	callback = function(ev)
+		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
+		local opts = { buffer = ev.bufnr }
+		vim.keymap.set("n", "<C-j>", telescope_builtin.lsp_definitions, opts)
+		vim.keymap.set("n", "<C-k>", telescope_builtin.lsp_references, opts)
+		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
+		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
+		vim.keymap.set("n", "<space>h", telescope_builtin.lsp_document_symbols, opts)
+		vim.keymap.set("n", "<space>t", telescope_builtin.tagstack, opts)
+		vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, opts)
+		vim.keymap.set("n", "<space><space>", function()
+			vim.lsp.buf.format({ async = true })
+		end, opts)
+	end,
+})
 
 local cmp = require("cmp")
 cmp.setup({
@@ -141,27 +142,22 @@ local capabilities = cmp_nvim_lsp.default_capabilities()
 local lspconfig = require("lspconfig")
 
 lspconfig.clangd.setup({
-	on_attach = on_attach,
 	capabilities = capabilities,
 })
 
 lspconfig.pyright.setup({
-	on_attach = on_attach,
 	capabilities = capabilities,
 })
 
 lspconfig.rust_analyzer.setup({
-	on_attach = on_attach,
 	capabilities = capabilities,
 })
 
 lspconfig.gopls.setup({
-	on_attach = on_attach,
 	capabilities = capabilities,
 })
 
 lspconfig.tsserver.setup({
-	on_attach = on_attach,
 	capabilities = capabilities,
 	root_dir = vim.loop.cwd,
 })
