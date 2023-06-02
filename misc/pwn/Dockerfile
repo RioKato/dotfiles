@@ -26,6 +26,7 @@ RUN <<EOF
   apt clean
 
   pip install pyright
+  pip install --upgrade autopep8
 EOF
 
 RUN <<EOF

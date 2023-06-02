@@ -15,10 +15,12 @@ vim.diagnostic.config({
 local packer = require("packer")
 packer.startup(function()
 	use("wbthomason/packer.nvim")
-	use("ckipp01/stylua-nvim")
 
 	use("neovim/nvim-lspconfig")
-	use("williamboman/nvim-lsp-installer")
+	use({
+		"jose-elias-alvarez/null-ls.nvim",
+		requires = { "nvim-lua/plenary.nvim" },
+	})
 	use("nvim-treesitter/nvim-treesitter")
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -46,14 +48,6 @@ packer.startup(function()
 	use("tversteeg/registers.nvim")
 	use("ellisonleao/glow.nvim")
 end)
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-	pattern = { "*.lua" },
-	callback = function()
-		local stylua = require("stylua-nvim")
-		stylua.format_file()
-	end,
-})
 
 local indent_blankline = require("indent_blankline")
 indent_blankline.setup({
@@ -152,4 +146,14 @@ end
 lspconfig.tsserver.setup({
 	capabilities = capabilities,
 	root_dir = vim.loop.cwd,
+})
+
+local null_ls = require("null-ls")
+
+null_ls.setup({
+	sources = {
+		null_ls.builtins.formatting.stylua,
+		null_ls.builtins.formatting.autopep8,
+		null_ls.builtins.formatting.prettier,
+	},
 })

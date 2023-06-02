@@ -46,6 +46,8 @@ RUN <<EOF
   apt clean
 
   pip install pyright
+  pip install --upgrade autopep8
+  npm i -g prettier
 EOF
 
 RUN <<EOF
