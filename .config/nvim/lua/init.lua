@@ -141,21 +141,13 @@ local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local capabilities = cmp_nvim_lsp.default_capabilities()
 local lspconfig = require("lspconfig")
 
-lspconfig.clangd.setup({
-	capabilities = capabilities,
-})
+local servers = { "clangd", "pyright", "rust_analyzer", "gopls" }
 
-lspconfig.pyright.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.rust_analyzer.setup({
-	capabilities = capabilities,
-})
-
-lspconfig.gopls.setup({
-	capabilities = capabilities,
-})
+for _, lsp in ipairs(servers) do
+	lspconfig[lsp].setup({
+		capabilities = capabilities,
+	})
+end
 
 lspconfig.tsserver.setup({
 	capabilities = capabilities,
