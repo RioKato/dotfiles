@@ -46,7 +46,6 @@ packer.startup(function()
 	use("xiyaowong/nvim-cursorword")
 	use("lukas-reineke/indent-blankline.nvim")
 	use("tversteeg/registers.nvim")
-	use("ellisonleao/glow.nvim")
 end)
 
 local indent_blankline = require("indent_blankline")
