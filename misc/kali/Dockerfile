@@ -1,5 +1,6 @@
 FROM kalilinux/kali-rolling:latest
 WORKDIR /work
+ENV TERM xterm-256color
 
 RUN <<EOF
   set -e

@@ -1,4 +1,5 @@
 FROM ubuntu:22.04
+ENV TERM xterm-256color
 
 RUN <<EOF
   set -e
