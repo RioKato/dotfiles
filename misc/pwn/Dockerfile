@@ -6,7 +6,7 @@ RUN <<EOF
 
   apt update
   apt install -y software-properties-common
-  add-apt-repository -y ppa:neovim-ppa/stable
+  add-apt-repository -y ppa:neovim-ppa/unstable
 
   apt update
   apt install -y \

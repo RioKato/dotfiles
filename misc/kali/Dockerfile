@@ -8,7 +8,7 @@ RUN <<EOF
   apt update
   apt install -y \
     zsh tmux \
-    vim neovim \
+    vim \
     xsel \
     fzf ripgrep locate \
     jq \
@@ -48,6 +48,13 @@ RUN <<EOF
   pip install pyright
   pip install --upgrade autopep8
   npm i -g prettier
+EOF
+
+RUN <<EOF
+  set -e
+
+  curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | tar zx -C /usr/local/bin
+  ln -s /usr/local/bin/nvim-linux64/bin/nvim /usr/local/bin/nvim
 EOF
 
 RUN <<EOF
