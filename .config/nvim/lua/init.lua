@@ -27,8 +27,13 @@ packer.startup(function()
 		tag = "0.1.1",
 		requires = {
 			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
-			{ "kyazdani42/nvim-web-devicons" },
+		},
+	})
+	use({
+		"nvim-telescope/telescope-fzf-native.nvim",
+		run = "make",
+		requires = {
+			{ "nvim-telescope/telescope.nvim" },
 		},
 	})
 	use({
