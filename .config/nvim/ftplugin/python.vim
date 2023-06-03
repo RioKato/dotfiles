@@ -8,3 +8,4 @@ function PyRun()
 endfunction
 
 command! Run call PyRun()
+noremap r :Run<cr>
