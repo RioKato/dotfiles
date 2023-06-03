@@ -47,6 +47,7 @@ RUN <<EOF
 
   pip install pyright
   pip install --upgrade autopep8
+  pip install pdbpp
   npm i -g prettier
 EOF
 
