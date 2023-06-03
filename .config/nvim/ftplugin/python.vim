@@ -7,5 +7,5 @@ function PyRun()
   call system(printf('tmux new-window python3 %s', shellescape(@%, 1)))
 endfunction
 
-command! Run call PyRun()
-noremap r :Run<cr>
+command! PyRun call PyRun()
+noremap r :PyRun<cr>
