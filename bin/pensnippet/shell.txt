@@ -19,6 +19,7 @@ nmap -Pn -p5985-5986 IP
 nmap -sSU -p- -Pn --max-retries=0 -T4 -v IP
 openssl pkcs12 -in PFX_PATH -out CRT_PATH -nokeys -nodes
 openssl pkcs12 -in PFX_PATH -out PEM_PATH -nocerts -nodes
+php -S localhost:8080
 rpcclient -U USERNAME IP
 smbclient -U geust '\\IP\SHARE'
 smbclient -U USERNAME -L IP
