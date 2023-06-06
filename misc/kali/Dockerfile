@@ -100,6 +100,7 @@ RUN <<EOF
 
   go install github.com/ropnop/kerbrute@latest
   pip install git-dumper
+  pip install certipy-ad
   npm -g install js-beautify
   cargo install urlencode
   cargo install --features=ssl websocat
