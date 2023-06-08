@@ -4,7 +4,7 @@ function PyRun()
   endif
 
   write
-  call system(printf('tmux new-window python3 %s', shellescape(@%, 1)))
+  call system(printf('ID=$(tmux new-window -P python3 %s) && tmux set -w -t $ID remain-on-exit failed', shellescape(@%, 1)))
 endfunction
 
 command! PyRun call PyRun()
