@@ -1,6 +1,6 @@
 function PyRun()
   if empty($TMUX)
-    echo 'ERROR: must be run inside a tmux session'
+    echo 'ERROR: run inside a tmux session'
   endif
 
   write
