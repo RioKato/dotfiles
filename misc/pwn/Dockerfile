@@ -22,7 +22,8 @@ RUN <<EOF
     cargo \
     python3 python3-pip python-is-python3 \
     ruby \
-    openjdk-19-jdk
+    openjdk-19-jdk \
+    npm
   apt clean
 
   pip install pyright
