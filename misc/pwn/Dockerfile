@@ -17,7 +17,7 @@ RUN <<EOF
     fzf ripgrep locate \
     git curl wget file \
     gcc clangd \
-    gdb debuginfod binutils \
+    gdb gdbserver debuginfod binutils \
     golang \
     cargo \
     python3 python3-pip python-is-python3 \
