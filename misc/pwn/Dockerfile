@@ -38,11 +38,6 @@ RUN <<EOF
   pip install ROPGadget
   gem install one_gadget
   cargo install weggli
-
-  GHIDRA_URL=https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_10.2.3_build/ghidra_10.2.3_PUBLIC_20230208.zip
-  wget -P ~/Downloads $GHIDRA_URL
-  unzip -d ~ ~/Downloads/ghidra_*.zip
-  rm ~/Downloads/ghidra_*.zip
 EOF
 
 RUN <<EOF
