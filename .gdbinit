@@ -22,6 +22,9 @@ define gefinit
   gef config theme.dereference_register_value "white"
 end
 
-define pwndbginit
+define pwninit
   source ~/.pwndbg/gdbinit.py
+  set context-sections disasm code backtrace
 end
+
+pwninit
