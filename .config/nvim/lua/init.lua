@@ -49,14 +49,14 @@ packer.startup(function()
 		},
 	})
 	use("xiyaowong/nvim-cursorword")
-	use("lukas-reineke/indent-blankline.nvim")
+	-- use("lukas-reineke/indent-blankline.nvim")
 	use("tversteeg/registers.nvim")
 end)
 
-local indent_blankline = require("indent_blankline")
-indent_blankline.setup({
-	show_current_context = true,
-})
+-- local indent_blankline = require("indent_blankline")
+-- indent_blankline.setup({
+-- 	show_current_context = true,
+-- })
 
 local telescope = require("telescope")
 telescope.load_extension("fzf")

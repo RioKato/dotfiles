@@ -12,7 +12,7 @@ set style enabled off
 handle SIGALRM ignore
 set debuginfod enabled on
 
-define gefinit
+define init-gef
   source ~/.gef.py
   gef config context.layout "code source trace"
   gef config context.nb_lines_code 18
@@ -22,9 +22,11 @@ define gefinit
   gef config theme.dereference_register_value "white"
 end
 
-define pwninit
+define init-pwndbg
   source ~/.pwndbg/gdbinit.py
   set context-sections disasm code backtrace
+  set context-code-lines 16
+  set context-backtrace-lines 4
+  set banner-color white
+  set memory-heap-color white
 end
-
-pwninit
