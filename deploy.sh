@@ -26,5 +26,6 @@ then
   wget -O ~/.gef.py -q https://gef.blah.cat/py
 
   git clone https://github.com/pwndbg/pwndbg.git ~/.pwndbg
-  ~/.pwndbg/setup.sh
+  cd ~/.pwndbg
+  yes | ./setup.sh
 fi

@@ -12,7 +12,7 @@ set style enabled off
 handle SIGALRM ignore
 set debuginfod enabled on
 
-define gef
+define gefinit
   source ~/.gef.py
   gef config context.layout "code source trace"
   gef config context.nb_lines_code 18
@@ -22,6 +22,6 @@ define gef
   gef config theme.dereference_register_value "white"
 end
 
-define pwndbg
+define pwndbginit
   source ~/.pwndbg/gdbinit.py
 end
