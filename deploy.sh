@@ -28,4 +28,6 @@ then
   git clone https://github.com/pwndbg/pwndbg.git ~/.pwndbg
   cd ~/.pwndbg
   yes | ./setup.sh
+  cd $(dirname $0)
+  ln -snf `pwd`/.gdbinit ~/.gdbinit
 fi
