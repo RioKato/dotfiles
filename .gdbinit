@@ -24,6 +24,7 @@ end
 
 define init-pwndbg
   source ~/.pwndbg/gdbinit.py
+  set show-tips off
   set context-sections disasm code backtrace
   set context-code-lines 16
   set context-backtrace-lines 4
