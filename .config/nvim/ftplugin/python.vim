@@ -6,8 +6,8 @@ function PyRun()
   write
   let l:command = printf("python3 %s", shellescape(@%, 1))
   let l:command = printf("tmux respawn-window -k -t python %s ||
-        \ ID=$(tmux new-window -bP -n python %s) &&
-        \ tmux set -w -t $ID remain-on-exit failed",
+        \ tmux new-window -bP -n python %s &&
+        \ tmux set -w -t python remain-on-exit on",
         \ command, command)
   call system(command)
 endfunction
