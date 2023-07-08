@@ -1,0 +1,23 @@
+#!/bin/sh
+
+if [ $(id -u) -ne 0 ]
+then
+  SUDO='sudo'
+fi
+
+BIT=$(cat /proc/sys/kernel/randomize_va_space)
+CMD="echo $((1-$BIT)) | $SUDO tee /proc/sys/kernel/randomize_va_space > /dev/null"
+
+eval $CMD || {
+  echo error
+  exit 1
+}
+
+if [ $BIT -eq 0 ]
+then
+  echo enabled
+else
+  echo disabled
+fi
+
+exit 0
