@@ -10,7 +10,13 @@ set print demangle
 set print asm-demangle
 set style enabled off
 handle SIGALRM ignore
-set debuginfod enabled on
+
+define init-debuginfod
+  set debuginfod urls \
+    https://debuginfod.archlinux.org \
+    https://debuginfod.ubuntu.com
+  set debuginfod enabled on
+end
 
 define init-gef
   source ~/.gef.py
@@ -31,3 +37,4 @@ define init-pwndbg
   set banner-color white
   set memory-heap-color white
 end
+set debuginfod enabled on

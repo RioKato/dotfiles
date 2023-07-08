@@ -147,16 +147,6 @@ export PERL_MB_OPT="--install_base \"~/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=~/perl5"
 export PATH=$PATH:/opt/idapro-8.2
 
-if which debuginfod >& /dev/null
-then
-  export DEBUGINFOD_URLS
-
-  case "$(awk '/^DISTRIB_ID=.+$/{print substr($0, 12)}' /etc/lsb-release 2> /dev/null)" in
-    Ubuntu) DEBUGINFOD_URLS=https://debuginfod.ubuntu.com ;;
-    EndeavourOS) DEBUGINFOD_URLS=https://debuginfod.archlinux.org ;;
-  esac
-fi
-
 ###############################################################################################
 
 if which fzf >& /dev/null
