@@ -18,6 +18,7 @@ RUN <<EOF
     git curl wget file \
     gcc clangd \
     gdb gdbserver debuginfod binutils \
+    rr \
     golang \
     cargo \
     python3 python3-pip python-is-python3 \
