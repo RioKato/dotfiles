@@ -40,6 +40,6 @@ end
 
 define compile-load-decs
   shell touch $arg0
-  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o $arg0.o $arg0
-  add-symbol-file $arg0.o
+  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o $arg1 $arg0
+  add-symbol-file $arg1
 end
