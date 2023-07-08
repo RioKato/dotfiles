@@ -37,3 +37,8 @@ define init-pwndbg
   set banner-color white
   set memory-heap-color white
 end
+
+define compile-load-decs
+  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o $arg0.o $arg0
+  add-symbol-file $arg0.o
+end
