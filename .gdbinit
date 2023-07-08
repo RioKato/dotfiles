@@ -37,4 +37,3 @@ define init-pwndbg
   set banner-color white
   set memory-heap-color white
 end
-set debuginfod enabled on
