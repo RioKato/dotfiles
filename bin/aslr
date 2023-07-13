@@ -6,7 +6,15 @@ then
 fi
 
 BIT=$(cat /proc/sys/kernel/randomize_va_space)
-CMD="echo $((1-$BIT)) | $SUDO tee /proc/sys/kernel/randomize_va_space > /dev/null"
+
+if [ $BIT -gt 0 ]
+then
+  NEW_BIT=0
+else
+  NEW_BIT=2
+fi
+
+CMD="echo $NEW_BIT | $SUDO tee /proc/sys/kernel/randomize_va_space > /dev/null"
 
 eval $CMD || {
   echo error
