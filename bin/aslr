@@ -7,11 +7,11 @@ fi
 
 BIT=$(cat /proc/sys/kernel/randomize_va_space)
 
-if [ $BIT -gt 0 ]
+if [ $BIT -eq 0 ]
 then
-  NEW_BIT=0
-else
   NEW_BIT=2
+else
+  NEW_BIT=0
 fi
 
 CMD="echo $NEW_BIT | $SUDO tee /proc/sys/kernel/randomize_va_space > /dev/null"
@@ -21,11 +21,11 @@ eval $CMD || {
   exit 1
 }
 
-if [ $BIT -eq 0 ]
+if [ $NEW_BIT -eq 0 ]
 then
-  echo enabled
-else
   echo disabled
+else
+  echo enabled
 fi
 
 exit 0
