@@ -7,6 +7,7 @@ RUN <<EOF
   apt update
   apt install -y software-properties-common
   add-apt-repository -y ppa:neovim-ppa/unstable
+  add-apt-repository -y ppa:deadsnakes/ppa
 
   apt update
   apt install -y \
@@ -21,12 +22,13 @@ RUN <<EOF
     rr \
     golang \
     cargo \
-    python3 python3-pip python-is-python3 \
+    python3 python3.11 python3-pip python-is-python3 \
     ruby \
     openjdk-19-jdk \
     npm
   apt clean
 
+  update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
   pip install pyright
   pip install --upgrade autopep8
   pip install pdbpp
