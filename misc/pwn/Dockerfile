@@ -2,6 +2,12 @@ FROM ubuntu:22.04
 ENV TERM xterm-256color
 
 RUN <<EOF
+  TZ=America/Los_Angeles
+  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime
+  echo $TZ > /etc/timezone
+EOF
+
+RUN <<EOF
   set -e
 
   apt update
