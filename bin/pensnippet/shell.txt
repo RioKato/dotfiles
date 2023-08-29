@@ -29,3 +29,4 @@ wpscan --plugins-detection aggressive -e ap --url URL
 kubectl auth can-i --list --server=https://IP:PORT --token TOKEN --certificate-authority=ca.crt
 kubectl describe pod PODD --list --server=https://IP:PORT --token TOKEN --certificate-authority=ca.crt
 kubeletctl -s IP exec "/bin/sh" --namespace NAMESPACE --pod POD --container CONTAINER
+echo -n COMMAND | iconv --to-code UTF-16LE | base64 -w 0
