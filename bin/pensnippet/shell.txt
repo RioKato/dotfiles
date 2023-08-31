@@ -23,6 +23,7 @@ php -S localhost:PORT
 rpcclient -U USERNAME IP
 smbclient -U geust '\\IP\SHARE'
 smbclient -U USERNAME -L IP
+sqlmap -r PATH --force-ssl
 sqlmap -r PATH --privileges
 sqlmap -r PATH --technique=BEUS --level=5 --risk=3 -v 3 --batch
 wpscan --plugins-detection aggressive -e ap --url URL
