@@ -17,3 +17,4 @@ type PATH | powershell -NoProfile -
 where COMMAND
 whoami /all
 (dir 2>&1 *`|echo CMD);&<# rem #>echo PowerShell
+icacls PATH
