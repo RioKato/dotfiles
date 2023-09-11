@@ -18,3 +18,4 @@ where COMMAND
 whoami /all
 (dir 2>&1 *`|echo CMD);&<# rem #>echo PowerShell
 icacls PATH
+schtasks /query /fo LIST /v
