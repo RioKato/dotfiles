@@ -37,3 +37,4 @@ getcap -r / 2>/dev/null
 socat -ddd TCP-LISTEN:PORT,fork TCP:IP:PORT
 ssh -D IP:PORT USERNAME@IP
 ssh -R PORT USERNAME@IP
+xfreerdp /u:USERNAME /p:PASSWORD /v:IP
