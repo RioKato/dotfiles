@@ -17,4 +17,4 @@ Enter-PSSession -ComputerName COMPUTER -Credential $cred
 Get-CimInstance -ClassName win32_service
 Get-ScheduledTask
 [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
-([adsi]'').distinguishedName
+([ADSI]'').distinguishedName
