@@ -17,6 +17,7 @@ __list_snippet() {
     cat pensnippet/shell.txt | awk '{print "sh", $0}'
     cat pensnippet/command.txt | awk '{print "cmd", $0}'
     cat pensnippet/powershell.txt | awk '{print "ps", $0}'
+    cat pensnippet/mimikatz.txt | awk '{print "mimikatz", $0}'
   } | sed '/^$/d'
 }
 

