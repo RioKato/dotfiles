@@ -18,3 +18,5 @@ Get-CimInstance -ClassName win32_service
 Get-ScheduledTask
 [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
 ([ADSI]'').distinguishedName
+$direntry = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$PDC/$DN")
+(New-Object System.DirectoryServices.DirectorySearcher($direntry)).FindAll()
