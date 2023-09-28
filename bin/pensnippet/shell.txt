@@ -15,7 +15,7 @@ ldapsearch -x -H ldap://IP -D USERNAME@DOMAIN -w PASSWORD -b 'dc=DC0,dc=DC1'
 ldapsearch -x -H ldap://IP -s base
 snmpwalk -v 2c -c public IP .1
 nmap -6 IPv6
-nmap -Pn -p5985-5986 IP
+nmap -Pn -p3389,5985-5986 IP
 nmap -sSU -p- -Pn --max-retries=0 -T4 -v IP
 openssl pkcs12 -in PFX_PATH -out CRT_PATH -nokeys -nodes
 openssl pkcs12 -in PFX_PATH -out PEM_PATH -nocerts -nodes
@@ -37,4 +37,5 @@ getcap -r / 2>/dev/null
 socat -ddd TCP-LISTEN:PORT,fork TCP:IP:PORT
 ssh -D IP:PORT USERNAME@IP
 ssh -R PORT USERNAME@IP
-xfreerdp /u:USERNAME /p:PASSWORD /v:IP /d:DOMAIN
+xfreerdp /cert-ignore /u:USERNAME /p:PASSWORD /v:IP /d:DOMAIN
+crackmapexec smb IP -u USERNAME -p PASSWORD --continue-on-success

@@ -23,3 +23,4 @@ schtasks /query /fo LIST /v
 netsh interface portproxy add v4tov4 listenport=PORT listenaddress=IP connectport=PORT connectaddress=IP
 netsh advfirewall firewall add rule name="RULE" protocol=TCP dir=in localip=IP localport=PORT action=allow
 setspn -L SERVICE
+klist

