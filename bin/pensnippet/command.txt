@@ -24,3 +24,5 @@ netsh interface portproxy add v4tov4 listenport=PORT listenaddress=IP connectpor
 netsh advfirewall firewall add rule name="RULE" protocol=TCP dir=in localip=IP localport=PORT action=allow
 setspn -L SERVICE
 klist
+wmic /node:IP /user:USERNAME /password:PASSWORD process call create "COMMAND"
+winrs -r:IP -u:USERNAME -p:PASSWORD "COMMAND"
