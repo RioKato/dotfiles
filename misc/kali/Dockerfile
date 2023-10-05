@@ -80,6 +80,7 @@ RUN <<EOF
   git clone https://github.com/tennc/webshell.git
   git clone https://github.com/ticarpi/jwt_tool.git
   git clone https://github.com/urbanadventurer/username-anarchy.git
+  git clone https://github.com/besimorhino/powercat.git
 
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
