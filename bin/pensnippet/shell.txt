@@ -39,3 +39,4 @@ ssh -D IP:PORT USERNAME@IP
 ssh -R PORT USERNAME@IP
 xfreerdp /cert-ignore /u:USERNAME /p:PASSWORD /v:IP /d:DOMAIN
 crackmapexec smb IP -u USERNAME -p PASSWORD --continue-on-success
+wpscan --url http://IP --enumerate p --plugins-detection aggressive

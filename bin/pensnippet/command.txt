@@ -26,3 +26,4 @@ setspn -L SERVICE
 klist
 wmic /node:IP /user:USERNAME /password:PASSWORD process call create "COMMAND"
 winrs -r:IP -u:USERNAME -p:PASSWORD "COMMAND"
+vshadow -nw -p C:
