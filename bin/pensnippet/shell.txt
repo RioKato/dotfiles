@@ -39,5 +39,6 @@ socat -ddd TCP-LISTEN:PORT,fork TCP:IP:PORT
 ssh -D PORT USERNAME@IP
 ssh -R PORT USERNAME@IP
 xfreerdp /cert-ignore /u:USERNAME /p:PASSWORD /v:IP /d:DOMAIN
+xfreerdp /cert-ignore /u:USERNAME /pth:NTLM /v:IP /d:DOMAIN
 crackmapexec smb IP -u USERNAME -p PASSWORD --continue-on-success
 wpscan --url URL --enumerate p --plugins-detection aggressive
