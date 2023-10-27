@@ -4,6 +4,7 @@ $cred = New-Object System.Management.Automation.PSCredential('DOMAIN\USERNAME', 
 $pass = ConvertTo-SecureString 'PASSWORD' -AsPlainText -Force
 [Convert]::ToBase64String([System.IO.File]::ReadAllBytes('PATH'))
 Get-ACL PATH | fl *
+Set-Acl -Path DST -AclObject $(Get-Acl -Path SRC)
 Get-ChildItem -Path PATH -Include PATTERN -File -Recurse -Force -ErrorAction SilentlyContinue
 Get-Command COMMAND
 Set-Location HKLM:\\System\CurrentControlSet\Services; Get-ChildItem
