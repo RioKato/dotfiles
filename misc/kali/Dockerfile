@@ -24,6 +24,7 @@ RUN <<EOF
     iproute2 \
     iputils-ping \
     nmap \
+    proxychains4 \
     ncat \
     tcpdump \
     hydra \
@@ -42,7 +43,11 @@ RUN <<EOF
     cewl \
     john hashcat hash-identifier \
     bloodhound bloodhound.py libgtk-3-0 \
-    burpsuite mitmproxy
+    burpsuite mitmproxy \
+    kpcli \
+    ssh \
+    default-mysql-client \
+    mingw-w64
   apt clean
 
   pip install pyright
@@ -88,11 +93,17 @@ RUN <<EOF
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEASx64.exe
   wget -P tool https://github.com/DominicBreuker/pspy/releases/download/v1.2.1/pspy64
   wget -P tool https://eternallybored.org/misc/netcat/netcat-win32-1.11.zip
+  wget -P tool https://the.earth.li/~sgtatham/putty/latest/w64/plink.exe
   wget -P tool https://raw.githubusercontent.com/stealthcopter/deepce/main/deepce.sh
   wget -P tool https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
+  wget -P tool https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer64.exe
+  wget -P tool https://github.com/BeichenDream/GodPotato/releases/download/V1.20/GodPotato-NET2.exe
+  wget -P tool https://github.com/BeichenDream/GodPotato/releases/download/V1.20/GodPotato-NET35.exe
+  wget -P tool https://github.com/BeichenDream/GodPotato/releases/download/V1.20/GodPotato-NET4.exe
   wget -P tool https://github.com/antonioCoco/RoguePotato/releases/download/1.0/RoguePotato.zip
   wget -P tool https://github.com/gentilkiwi/mimikatz/releases/download/2.2.0-20220919/mimikatz_trunk.zip
-  wget -P tool https://github.com/jpillora/chisel/releases/download/v1.8.1/chisel_1.8.1_linux_amd64.gz
+  wget -P tool https://github.com/jpillora/chisel/releases/download/v1.9.1/chisel_1.9.1_linux_amd64.gz
+  wget -P tool https://github.com/jpillora/chisel/releases/download/v1.9.1/chisel_1.9.1_windows_amd64.gz
   wget -P tool https://github.com/cyberark/kubeletctl/releases/download/v1.10/kubeletctl_linux_amd64
 EOF
 
