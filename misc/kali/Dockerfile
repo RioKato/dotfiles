@@ -11,6 +11,7 @@ RUN <<EOF
     vim \
     xsel \
     fzf ripgrep locate \
+    rlwrap \
     jq \
     imagemagick exiftool \
     gcc clangd \
