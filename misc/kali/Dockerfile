@@ -32,6 +32,7 @@ RUN <<EOF
     smbclient smbmap \
     ldapscripts \
     dnsutils dnsenum \
+    ftp \
     snmp snmpenum \
     smtp-user-enum \
     impacket-scripts evil-winrm crackmapexec \
@@ -70,7 +71,8 @@ RUN <<EOF
   mkdir ~/Documents
   cd ~/Documents
 
-  git clone https://github.com/andrew-d/static-binaries.git
+  git clone https://github.com/InfosecMatter/Minimalistic-offensive-security-tools.git
+  git clone https://github.com/drtychai/wordlists.git
   git clone https://github.com/danielmiessler/SecLists.git
   git clone https://github.com/dirkjanm/krbrelayx.git
   git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git
@@ -88,6 +90,7 @@ RUN <<EOF
   git clone https://github.com/urbanadventurer/username-anarchy.git
   git clone https://github.com/besimorhino/powercat.git
 
+  wget -P tool https://github.com/opsec-infosec/nmap-static-binaries/releases/download/v2/nmap-x64.tar.gz
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas_linux_amd64
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/winPEAS.bat
