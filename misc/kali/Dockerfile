@@ -10,7 +10,7 @@ RUN <<EOF
     zsh tmux \
     vim \
     xsel \
-    fzf ripgrep locate \
+    fzf locate \
     rlwrap \
     jq \
     imagemagick exiftool \
@@ -33,7 +33,7 @@ RUN <<EOF
     ldapscripts \
     dnsutils dnsenum \
     ftp \
-    snmp snmpenum \
+    snmp snmp-mibs-downloader snmpenum \
     smtp-user-enum \
     impacket-scripts evil-winrm crackmapexec \
     responder \
@@ -71,24 +71,24 @@ RUN <<EOF
   mkdir ~/Documents
   cd ~/Documents
 
-  git clone https://github.com/InfosecMatter/Minimalistic-offensive-security-tools.git
-  git clone https://github.com/drtychai/wordlists.git
-  git clone https://github.com/danielmiessler/SecLists.git
-  git clone https://github.com/dirkjanm/krbrelayx.git
-  git clone https://github.com/drgreenthumb93/windows-kernel-exploits.git
-  git clone https://github.com/Flangvik/SharpCollection.git
-  git clone https://github.com/FuzzySecurity/PowerShell-Suite.git
-  git clone https://github.com/Kevin-Robertson/Powermad.git
-  git clone https://github.com/micahvandeusen/gMSADumper.git
-  git clone https://github.com/pentestmonkey/php-reverse-shell.git
-  git clone https://github.com/PowerShellMafia/PowerSploit.git
-  git clone https://github.com/samratashok/nishang.git
-  git clone https://github.com/swisskyrepo/PayloadsAllTheThings.git
-  git clone https://github.com/synacktiv/php_filter_chain_generator.git
-  git clone https://github.com/tennc/webshell.git
-  git clone https://github.com/ticarpi/jwt_tool.git
-  git clone https://github.com/urbanadventurer/username-anarchy.git
-  git clone https://github.com/besimorhino/powercat.git
+  git clone --depth=1 https://github.com/InfosecMatter/Minimalistic-offensive-security-tools.git
+  git clone --depth=1 https://github.com/drtychai/wordlists.git
+  git clone --depth=1 https://github.com/danielmiessler/SecLists.git
+  git clone --depth=1 https://github.com/dirkjanm/krbrelayx.git
+  git clone --depth=1 https://github.com/drgreenthumb93/windows-kernel-exploits.git
+  git clone --depth=1 https://github.com/Flangvik/SharpCollection.git
+  git clone --depth=1 https://github.com/FuzzySecurity/PowerShell-Suite.git
+  git clone --depth=1 https://github.com/Kevin-Robertson/Powermad.git
+  git clone --depth=1 https://github.com/micahvandeusen/gMSADumper.git
+  git clone --depth=1 https://github.com/pentestmonkey/php-reverse-shell.git
+  git clone --depth=1 https://github.com/PowerShellMafia/PowerSploit.git
+  git clone --depth=1 https://github.com/samratashok/nishang.git
+  git clone --depth=1 https://github.com/swisskyrepo/PayloadsAllTheThings.git
+  git clone --depth=1 https://github.com/synacktiv/php_filter_chain_generator.git
+  git clone --depth=1 https://github.com/tennc/webshell.git
+  git clone --depth=1 https://github.com/ticarpi/jwt_tool.git
+  git clone --depth=1 https://github.com/urbanadventurer/username-anarchy.git
+  git clone --depth=1 https://github.com/besimorhino/powercat.git
 
   wget -P tool https://github.com/opsec-infosec/nmap-static-binaries/releases/download/v2/nmap-x64.tar.gz
   wget -P tool https://github.com/carlospolop/PEASS-ng/releases/latest/download/linpeas.sh
@@ -118,6 +118,7 @@ RUN <<EOF
   pip install git-dumper
   pip install certipy-ad
   npm -g install js-beautify
+  cargo install ripgrep
   cargo install urlencode
   cargo install --features=ssl websocat
   go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
