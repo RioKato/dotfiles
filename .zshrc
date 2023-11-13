@@ -182,3 +182,8 @@ then
     fi
   fi
 fi
+
+###############################################################################################
+
+alias rnc="rlwrap nc"
+alias mitmproxy="trap '' 2; mitmproxy; trap - 2"
