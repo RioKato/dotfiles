@@ -12,9 +12,6 @@ set style enabled off
 handle SIGALRM ignore
 
 define init-debuginfod
-  set debuginfod urls \
-    https://debuginfod.archlinux.org \
-    https://debuginfod.ubuntu.com
   set debuginfod enabled on
 end
 
@@ -43,3 +40,6 @@ define compile-load-decs
   shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o $arg1 $arg0
   add-symbol-file $arg1
 end
+
+init-debuginfod
+init-gef
