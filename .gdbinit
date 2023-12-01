@@ -46,5 +46,7 @@ define vim
   shell tmux split-window vim $arg0
 end
 
+source ~/.gdbinit.py
+
 init-debuginfod
 init-gef
