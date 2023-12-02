@@ -25,7 +25,7 @@ RUN <<EOF
     git curl wget file \
     gcc clangd \
     gdb gdbserver debuginfod binutils \
-    rr \
+    ltrace strace rr \
     golang \
     cargo \
     python3 python3.11 python3-pip python-is-python3 \
