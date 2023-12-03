@@ -5,6 +5,7 @@ xhost +local:$(id -nu)
 sudo -E docker run --rm -ti \
   -e DISPLAY \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v /sys/kernel/debug/:/sys/kernel/debug:rw \
   --privileged \
   -v $PWD:/work \
   pwn
