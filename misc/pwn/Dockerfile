@@ -25,7 +25,7 @@ RUN <<EOF
     git curl wget file \
     gcc clangd \
     gdb gdbserver debuginfod binutils \
-    ltrace strace rr bpftrace \
+    ltrace strace rr \
     golang \
     cargo \
     python3 python3.11 python3-pip python-is-python3 \
@@ -39,6 +39,9 @@ RUN <<EOF
   pip install pyright
   pip install --upgrade autopep8
   pip install pdbpp
+
+  wget -P ~/bin https://github.com/iovisor/bpftrace/releases/download/v0.19.1/bpftrace
+  chmod +x ~/bin/bpftrace
 EOF
 
 RUN <<EOF
