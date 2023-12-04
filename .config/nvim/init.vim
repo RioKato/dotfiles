@@ -67,6 +67,7 @@ call plug#begin()
   Plug 'lambdalisue/fern.vim'
   Plug 'lambdalisue/fern-hijack.vim'
   Plug 'yuki-yano/fern-preview.vim'
+  Plug 'mmarchini/bpftrace.vim'
   " Plug 'skanehira/denops-silicon.vim'
   " Plug 'vim-denops/denops.vim'
 call plug#end()
