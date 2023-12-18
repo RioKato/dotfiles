@@ -18,6 +18,7 @@ RUN <<EOF
   apt update
   apt install -y \
     locales locales-all \
+    kmod \
     zsh tmux \
     vim neovim \
     xsel \
@@ -40,6 +41,7 @@ RUN <<EOF
   pip install pyright
   pip install --upgrade autopep8
   pip install pdbpp
+  pip install git+https://github.com/RioKato/ucallg.git
 
   wget -P ~/bin https://github.com/iovisor/bpftrace/releases/download/v0.19.1/bpftrace
   chmod +x ~/bin/bpftrace
