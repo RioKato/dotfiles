@@ -134,6 +134,11 @@ then
   alias docker='sudo -E docker'
 fi
 
+case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
+  EndeavourOS) export DEBUGINFOD_URLS="https://debuginfod.archlinux.org";;
+  Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
+esac
+
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
