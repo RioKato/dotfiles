@@ -12,6 +12,8 @@ paru
 
 gcc
 clang
+ccache
+linux-headers
 gdb
 debuginfod
 jdk-openjdk
