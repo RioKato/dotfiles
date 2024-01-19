@@ -47,12 +47,6 @@ define init-pwndbg
   set memory-heap-color white
 end
 
-define declare
-  shell touch $arg0
-  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o $arg1 $arg0
-  add-symbol-file $arg1
-end
-
 define vim
   shell tmux send 'source $arg0'
   shell tmux split-window vim $arg0

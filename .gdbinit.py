@@ -1,14 +1,28 @@
-from gdb import Command
 from typing import Iterator
 
 
-class Offset(Command):
+class Declare(gdb.Command):
+    def __init__(self):
+        super().__init__('declare', gdb.COMMAND_FILES)
+
+    def invoke(self, arg: str, _):
+        if not arg:
+            return
+
+        command = [
+            'gcc', '-g', '-fno-eliminate-unused-debug-types', '-x', 'c', '-c', arg
+        ]
+        subprocess.run(command)
+        obj = pathlib.Path(arg).with_suffix('.o').name
+        gdb.execute(f'add-symbol-file {obj}')
+
+
+class Offset(gdb.Command):
     @staticmethod
     def mappings() -> Iterator[tuple[int, str]]:
-        from gdb import execute
         from re import compile
 
-        result = execute('info proc mappings', False, True)
+        result = gdb.execute('info proc mappings', False, True)
         assert (result)
         pattern = compile(r'(0x[0-9a-f]+)')
 
@@ -19,12 +33,10 @@ class Offset(Command):
                 yield (base, line)
 
     def __init__(self):
-        from gdb import COMMAND_USER
-        super().__init__('offset', COMMAND_USER)
+        super().__init__('offset', gdb.COMMAND_USER)
 
     def invoke(self, arg: str, _):
-        from gdb import parse_and_eval
-        addr = parse_and_eval(arg)
+        addr = gdb.parse_and_eval(arg)
         addr = int(addr)
 
         for (base, line) in Offset.mappings():
@@ -39,4 +51,5 @@ class Offset(Command):
                 print(f'{PURPLE}{offset:+#019x}{END} {line}')
 
 
+Declare()
 Offset()
