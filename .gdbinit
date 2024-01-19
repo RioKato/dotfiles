@@ -24,7 +24,11 @@ define init-gef
 
   python
 if os.getenv('TMUX'):
-  command = ['tmux', 'split-window', '-h', '-f', '-P', '-F#{session_name}:#{window_index}.#{pane_index}-#{pane_tty}', 'cat']
+  command = [
+    'tmux',
+    'split-window', '-h', '-f', '-P', '-F#{session_name}:#{window_index}.#{pane_index}-#{pane_tty}', 'cat', ';',
+    'select-pane', '-L'
+  ]
   proc = subprocess.run(command, capture_output=True, text=True)
   pane, pty = proc.stdout.strip().split('-')
   command = ['tmux', 'kill-pane', '-t', pane]
