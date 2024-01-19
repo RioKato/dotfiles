@@ -3,16 +3,17 @@ from typing import Iterator
 
 class Declare(gdb.Command):
     def __init__(self):
-        super().__init__('declare', gdb.COMMAND_FILES)
+        super().__init__('declare', gdb.COMMAND_USER)
 
     def invoke(self, arg: str, _):
         if not arg:
+            print('declare example.h')
             return
 
         command = [
             'gcc', '-g', '-fno-eliminate-unused-debug-types', '-x', 'c', '-c', arg
         ]
-        subprocess.run(command)
+        subprocess.run(command, check=True)
         obj = pathlib.Path(arg).with_suffix('.o').name
         gdb.execute(f'add-symbol-file {obj}')
 

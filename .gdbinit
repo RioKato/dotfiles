@@ -29,7 +29,7 @@ if os.getenv('TMUX'):
     'split-window', '-h', '-f', '-P', '-F#{session_name}:#{window_index}.#{pane_index}-#{pane_tty}', 'cat', ';',
     'select-pane', '-L'
   ]
-  proc = subprocess.run(command, capture_output=True, text=True)
+  proc = subprocess.run(command, capture_output=True, text=True, check=True)
   pane, pty = proc.stdout.strip().split('-')
   command = ['tmux', 'kill-pane', '-t', pane]
   atexit.register(lambda : subprocess.run(command, stderr=subprocess.DEVNULL))
