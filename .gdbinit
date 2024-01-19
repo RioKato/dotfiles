@@ -17,12 +17,18 @@ end
 
 define init-gef
   source ~/.gef.py
-  gef config context.layout "code source trace"
-  gef config context.nb_lines_code 18
-  gef config context.nb_lines_backtrace 4
-  gef config context.peek_calls False
   gef config theme.registers_register_name "white"
   gef config theme.dereference_register_value "white"
+
+  python
+if os.getenv("TMUX"):
+  command = ['tmux', 'split-window', '-h', '-f', '-P', '-F#{session_name}:#{window_index}.#{pane_index}-#{pane_tty}', 'cat']
+  proc = subprocess.run(command, capture_output=True, text=True)
+  pane, pty = proc.stdout.strip().split("-")
+  command = ['tmux', "kill-pane", "-t", pane]
+  atexit.register(lambda : subprocess.run(command, stderr=subprocess.DEVNULL))
+  gdb.execute(f'gef config context.redirect {pty}')
+  end
 end
 
 define init-pwndbg
