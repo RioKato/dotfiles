@@ -19,6 +19,8 @@ define init-gef
   source ~/.gef.py
   gef config theme.registers_register_name "white"
   gef config theme.dereference_register_value "white"
+  gef config context.nb_lines_backtrace 4
+  gef config context.nb_lines_code 5
 
   python
 if os.getenv("TMUX"):
