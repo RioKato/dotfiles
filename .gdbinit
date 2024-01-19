@@ -23,11 +23,11 @@ define init-gef
   gef config context.nb_lines_code 5
 
   python
-if os.getenv("TMUX"):
+if os.getenv('TMUX'):
   command = ['tmux', 'split-window', '-h', '-f', '-P', '-F#{session_name}:#{window_index}.#{pane_index}-#{pane_tty}', 'cat']
   proc = subprocess.run(command, capture_output=True, text=True)
-  pane, pty = proc.stdout.strip().split("-")
-  command = ['tmux', "kill-pane", "-t", pane]
+  pane, pty = proc.stdout.strip().split('-')
+  command = ['tmux', 'kill-pane', '-t', pane]
   atexit.register(lambda : subprocess.run(command, stderr=subprocess.DEVNULL))
   gdb.execute(f'gef config context.redirect {pty}')
   end
