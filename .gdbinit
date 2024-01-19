@@ -48,7 +48,6 @@ define init-pwndbg
 end
 
 define vim
-  shell tmux send 'source $arg0'
   shell tmux split-window vim $arg0
 end
 
