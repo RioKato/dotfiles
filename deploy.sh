@@ -24,6 +24,7 @@ fi
 if which gdb >& /dev/null
 then
   wget -O ~/.gef.py -q https://gef.blah.cat/py
+  wget -q -O- https://github.com/hugsy/gef/raw/main/scripts/gef-extras.sh | sh
 
   git clone https://github.com/pwndbg/pwndbg.git ~/.pwndbg
   cd ~/.pwndbg
