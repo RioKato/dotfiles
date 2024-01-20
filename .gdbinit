@@ -12,52 +12,57 @@ set style enabled off
 handle SIGALRM ignore
 set debuginfod enabled on
 
-define hookpost-break
-  save breakpoints breakpoints.gdb
-end
 
-define hookpost-watch
-  save breakpoints breakpoints.gdb
-end
+define record-breakpoints
+  source breakpoints.gdb
 
-define hookpost-rwatch
-  save breakpoints breakpoints.gdb
-end
+  define save-breakpoints
+    save breakpoints breakpoints.gdb
+  end
 
-define hookpost-awatch
-  save breakpoints breakpoints.gdb
-end
+  define hookpost-break
+    save-breakpoints
+  end
 
-define hookpost-condition
-  save breakpoints breakpoints.gdb
-end
+  define hookpost-watch
+    save-breakpoints
+  end
 
-define hookpost-enable
-  save breakpoints breakpoints.gdb
-end
+  define hookpost-rwatch
+    save-breakpoints
+  end
 
-define hookpost-disable
-  save breakpoints breakpoints.gdb
-end
+  define hookpost-awatch
+    save-breakpoints
+  end
 
-define hookpost-delete
-  save breakpoints breakpoints.gdb
+  define hookpost-condition
+    save-breakpoints
+  end
+
+  define hookpost-enable
+    save-breakpoints
+  end
+
+  define hookpost-disable
+    save-breakpoints
+  end
+
+  define hookpost-delete
+    save-breakpoints
+  end
+
+  define e
+    pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
+  end
+
+  define d
+    pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
+  end
 end
 
 define vim
   shell tmux split-window vim $arg0
-end
-
-define l
-  source breakpoints.gdb
-end
-
-define e
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
-end
-
-define d
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
 end
 
 define init-gef
