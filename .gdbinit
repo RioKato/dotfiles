@@ -49,11 +49,11 @@ define vim
 end
 
 define e
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable " " {1} Enter)' $FZF_TMUX_OPTS
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
 end
 
 define d
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable " " {1} Enter)' $FZF_TMUX_OPTS
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
 end
 
 define init-gef
