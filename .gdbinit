@@ -48,6 +48,14 @@ define vim
   shell tmux split-window vim $arg0
 end
 
+define e
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable " " {1} Enter)' $FZF_TMUX_OPTS
+end
+
+define d
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable " " {1} Enter)' $FZF_TMUX_OPTS
+end
+
 define init-gef
   source ~/.gef.py
   gef config theme.registers_register_name "white"
