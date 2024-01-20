@@ -14,6 +14,7 @@ set debuginfod enabled on
 
 
 define record-breakpoints
+  set breakpoint pending on
   source breakpoints.gdb
 
   define save-breakpoints
