@@ -12,14 +12,6 @@ set style enabled off
 handle SIGALRM ignore
 set debuginfod enabled on
 
-define hookpost-start
-  source breakpoints.gdb
-end
-
-define hookpost-attach
-  source breakpoints.gdb
-end
-
 define hookpost-break
   save breakpoints breakpoints.gdb
 end
@@ -54,6 +46,10 @@ end
 
 define vim
   shell tmux split-window vim $arg0
+end
+
+define l
+  source breakpoints.gdb
 end
 
 define e
