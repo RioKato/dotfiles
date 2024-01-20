@@ -10,9 +10,42 @@ set print demangle
 set print asm-demangle
 set style enabled off
 handle SIGALRM ignore
+set debuginfod enabled on
 
-define init-debuginfod
-  set debuginfod enabled on
+define hookpost-break
+  save breakpoints breakpoints.gdb
+end
+
+define hookpost-watch
+  save breakpoints breakpoints.gdb
+end
+
+define hookpost-rwatch
+  save breakpoints breakpoints.gdb
+end
+
+define hookpost-awatch
+  save breakpoints breakpoints.gdb
+end
+
+define hookpost-condition
+  save breakpoints breakpoints.gdb
+end
+
+define hookpost-enable
+  save breakpoints breakpoints.gdb
+end
+
+define hookpost-disable
+  save breakpoints breakpoints.gdb
+end
+
+define load-breakpoints
+  source breakpoints.gdb
+end
+
+define vim
+  shell tmux split-window vim $arg0
 end
 
 define init-gef
@@ -47,11 +80,6 @@ define init-pwndbg
   set memory-heap-color white
 end
 
-define vim
-  shell tmux split-window vim $arg0
-end
-
 source ~/.gdbinit.py
 
-init-debuginfod
 init-gef
