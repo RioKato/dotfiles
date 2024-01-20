@@ -12,6 +12,14 @@ set style enabled off
 handle SIGALRM ignore
 set debuginfod enabled on
 
+define hookpost-start
+  source breakpoints.gdb
+end
+
+define hookpost-attach
+  source breakpoints.gdb
+end
+
 define hookpost-break
   save breakpoints breakpoints.gdb
 end
@@ -40,8 +48,8 @@ define hookpost-disable
   save breakpoints breakpoints.gdb
 end
 
-define load-breakpoints
-  source breakpoints.gdb
+define hookpost-delete
+  save breakpoints breakpoints.gdb
 end
 
 define vim
