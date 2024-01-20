@@ -14,56 +14,62 @@ set debuginfod enabled on
 
 
 define record-breakpoints
-  set breakpoint pending on
-  source breakpoints.gdb
+  init-if-undefined $__record_breakpoints__ = 1
 
-  define save-breakpoints
-    save breakpoints breakpoints.gdb
+  if $__record_breakpoints__
+    set breakpoint pending on
+    source breakpoints.gdb
+
+    define save-breakpoints
+      save breakpoints breakpoints.gdb
+    end
+
+    define hookpost-break
+      save-breakpoints
+    end
+
+    define hookpost-watch
+      save-breakpoints
+    end
+
+    define hookpost-rwatch
+      save-breakpoints
+    end
+
+    define hookpost-awatch
+      save-breakpoints
+    end
+
+    define hookpost-condition
+      save-breakpoints
+    end
+
+    define hookpost-commands
+      save-breakpoints
+    end
+
+    define hookpost-enable
+      save-breakpoints
+    end
+
+    define hookpost-disable
+      save-breakpoints
+    end
+
+    define hookpost-delete
+      save-breakpoints
+    end
+
+    define e
+      pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
+    end
+
+    define d
+      pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
+    end
   end
 
-  define hookpost-break
-    save-breakpoints
-  end
-
-  define hookpost-watch
-    save-breakpoints
-  end
-
-  define hookpost-rwatch
-    save-breakpoints
-  end
-
-  define hookpost-awatch
-    save-breakpoints
-  end
-
-  define hookpost-condition
-    save-breakpoints
-  end
-
-  define hookpost-commands
-    save-breakpoints
-  end
-
-  define hookpost-enable
-    save-breakpoints
-  end
-
-  define hookpost-disable
-    save-breakpoints
-  end
-
-  define hookpost-delete
-    save-breakpoints
-  end
-
-  define e
-    pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
-  end
-
-  define d
-    pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
-  end
+  set $__record_breakpoints__ = 0
 end
 
 define vim
