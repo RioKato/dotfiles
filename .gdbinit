@@ -40,6 +40,10 @@ define record-breakpoints
     save-breakpoints
   end
 
+  define hookpost-commands
+    save-breakpoints
+  end
+
   define hookpost-enable
     save-breakpoints
   end
