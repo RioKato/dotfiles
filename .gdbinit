@@ -17,7 +17,7 @@ define record-breakpoints
   init-if-undefined $__record_breakpoints__ = 1
 
   if $__record_breakpoints__
-    set breakpoint pending on
+    delete
     source breakpoints.gdb
 
     define save-breakpoints
@@ -70,6 +70,18 @@ define record-breakpoints
   end
 
   set $__record_breakpoints__ = 0
+end
+
+define hookpost-run
+  record-breakpoints
+end
+
+define hookpost-start
+  record-breakpoints
+end
+
+define hookpost-attach
+  record-breakpoints
 end
 
 define vim
