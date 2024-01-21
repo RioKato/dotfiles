@@ -14,39 +14,23 @@ set debuginfod enabled on
 
 
 define record-breakpoints
-  init-if-undefined $__record_breakpoints__ = 1
+  delete
+  source breakpoints.gdb
 
-  if $__record_breakpoints__
-    delete
-    source breakpoints.gdb
-
-    define hook-quit
-      save breakpoints breakpoints.gdb
-    end
-
-    define e
-      pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
-    end
-
-    define d
-      pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
-    end
+  define hook-quit
+    save breakpoints breakpoints.gdb
   end
 
-  set $__record_breakpoints__ = 0
+  define e
+    pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
+  end
+
+  define d
+    pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
+  end
 end
 
-define hookpost-run
-  record-breakpoints
-end
-
-define hookpost-start
-  record-breakpoints
-end
-
-define hookpost-attach
-  record-breakpoints
-end
+alias -a a = record-breakpoints
 
 define vim
   shell tmux split-window vim $arg0
