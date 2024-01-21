@@ -14,7 +14,6 @@ set debuginfod enabled on
 
 
 define record-breakpoints
-  delete
   source breakpoints.gdb
 
   define hook-quit
