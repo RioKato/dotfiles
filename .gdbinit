@@ -31,6 +31,10 @@ define d
   pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
 end
 
+define D
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send del Space {1} Enter)' $FZF_TMUX_OPTS
+end
+
 define vim
   shell tmux split-window vim $arg0
 end
