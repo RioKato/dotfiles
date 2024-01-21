@@ -20,44 +20,8 @@ define record-breakpoints
     delete
     source breakpoints.gdb
 
-    define save-breakpoints
+    define hook-quit
       save breakpoints breakpoints.gdb
-    end
-
-    define hookpost-break
-      save-breakpoints
-    end
-
-    define hookpost-watch
-      save-breakpoints
-    end
-
-    define hookpost-rwatch
-      save-breakpoints
-    end
-
-    define hookpost-awatch
-      save-breakpoints
-    end
-
-    define hookpost-condition
-      save-breakpoints
-    end
-
-    define hookpost-commands
-      save-breakpoints
-    end
-
-    define hookpost-enable
-      save-breakpoints
-    end
-
-    define hookpost-disable
-      save-breakpoints
-    end
-
-    define hookpost-delete
-      save-breakpoints
     end
 
     define e
