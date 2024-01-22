@@ -23,16 +23,20 @@ end
 
 alias -a a = record-breakpoints
 
+define fzf_bpnum_exec
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become('$arg0')' $FZF_TMUX_OPTS
+end
+
 define e
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send enable Space {1} Enter)' $FZF_TMUX_OPTS
+  fzf_bpnum_exec 'tmux send enable Space {1} Enter'
 end
 
 define d
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send disable Space {1} Enter)' $FZF_TMUX_OPTS
+  fzf_bpnum_exec 'tmux send disable Space {1} Enter'
 end
 
 define D
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(tmux send del Space {1} Enter)' $FZF_TMUX_OPTS
+  fzf_bpnum_exec 'tmux send del Space {1} Enter'
 end
 
 define cc
