@@ -36,7 +36,7 @@ define D
 end
 
 define cc
-  condition $bpnum $_any_caller_is("$arg0", 255)
+  condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
 end
 
 define vim
