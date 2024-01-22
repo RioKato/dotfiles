@@ -18,6 +18,23 @@ class Declare(gdb.Command):
         gdb.execute(f'add-symbol-file {obj}')
 
 
+class DLImport(gdb.Command):
+    def __init__(self):
+        super().__init__('dlimport', gdb.COMMAND_USER)
+
+    def invoke(self, arg: str, _):
+        if not arg:
+            print('dlimport example.c')
+            return
+
+        so = pathlib.Path(arg).with_suffix('.so').name
+        command = [
+            'gcc', '-g', '-shared', '-fPIC', '-o', so, arg
+        ]
+        subprocess.run(command, check=True)
+        gdb.execute(f'call dlopen("./{so}", 2)')
+
+
 class Offset(gdb.Command):
     @staticmethod
     def mappings() -> Iterator[tuple[int, str]]:
@@ -53,4 +70,5 @@ class Offset(gdb.Command):
 
 
 Declare()
+DLImport()
 Offset()
