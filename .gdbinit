@@ -23,6 +23,22 @@ end
 
 alias -a a = record-breakpoints
 
+define wi
+  watch *(unsigned int*)($arg0)
+end
+
+define wl
+  watch *(unsigned long*)($arg0)
+end
+
+define wa
+  watch *(unsigned char [$arg1]*)($arg0)
+end
+
+define cc
+  condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
+end
+
 define fzf_bpnum_exec
   pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become('$arg0')' $FZF_TMUX_OPTS
 end
@@ -37,10 +53,6 @@ end
 
 define D
   fzf_bpnum_exec 'tmux send del Space {1} Enter'
-end
-
-define cc
-  condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
 end
 
 define vim
