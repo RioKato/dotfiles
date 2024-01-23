@@ -35,6 +35,30 @@ define wa
   watch *(unsigned char [$arg1]*)($arg0)
 end
 
+define rwi
+  rwatch *(unsigned int*)($arg0)
+end
+
+define rwl
+  rwatch *(unsigned long*)($arg0)
+end
+
+define rwa
+  rwatch *(unsigned char [$arg1]*)($arg0)
+end
+
+define awi
+  awatch *(unsigned int*)($arg0)
+end
+
+define awl
+  awatch *(unsigned long*)($arg0)
+end
+
+define awa
+  awatch *(unsigned char [$arg1]*)($arg0)
+end
+
 define cc
   condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
 end
