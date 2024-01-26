@@ -13,15 +13,17 @@ handle SIGALRM ignore
 set debuginfod enabled on
 
 
-define record-breakpoints
+define a
   source breakpoints.gdb
 
-  define hook-quit
+  define aa
     save breakpoints breakpoints.gdb
   end
-end
 
-alias -a a = record-breakpoints
+  define hook-quit
+    aa
+  end
+end
 
 define wi
   watch *(unsigned int*)($arg0)
@@ -59,18 +61,22 @@ define awa
   awatch *(unsigned char [$arg1]*)($arg0)
 end
 
+define cc
+  condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
+end
+
+define vim
+  shell vim $arg0
+end
+
 define xxd
   dump binary memory temp.bin $arg1 $arg2
   shell xxd -g 8 -R never -o $arg1 temp.bin $arg0
   shell rm temp.bin
 end
 
-define xxdiff
+define diff
   shell git diff --no-index --color-words='[a-f0-9]{16}' $arg0 $arg1
-end
-
-define cc
-  condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
 end
 
 define fzf_bpnum_exec
@@ -87,10 +93,6 @@ end
 
 define D
   fzf_bpnum_exec 'tmux send del Space {1} Enter'
-end
-
-define vim
-  shell tmux split-window vim $arg0
 end
 
 define init-gef
