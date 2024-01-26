@@ -84,7 +84,8 @@ end
 define offset
   pipe info proc mappings | awk -v addr=$arg0 \
   '$1~/0x[a-f0-9]+/{ \
-    start=strtonum($1); addr=strtonum(addr); \
+    start=strtonum($1); \
+    addr=strtonum(addr); \
     if(start < addr) printf "+0x%016x %s\n", (addr-start), $0; \
     if(start >= addr) printf "-0x%016x %s\n", (start-addr), $0; \
   }'
