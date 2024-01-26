@@ -69,6 +69,27 @@ define vim
   shell vim $arg0
 end
 
+define declare
+  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o temp.o $arg0
+  add-symbol-file temp.o
+  shell rm temp.o
+end
+
+define dlimport
+  shell gcc -g -shared -fPIC -o temp.so $arg0
+  call dlopen("./temp.so", 2)
+  shell rm temp.so
+end
+
+define offset
+  pipe info proc mappings | awk -v addr=$arg0 \
+  '$1~/0x[a-f0-9]+/{ \
+    start=strtonum($1); addr=strtonum(addr); \
+    if(start < addr) printf "+0x%016x %s\n", (addr-start), $0; \
+    if(start >= addr) printf "-0x%016x %s\n", (start-addr), $0; \
+  }'
+end
+
 define xxd
   dump binary memory temp.bin $arg1 $arg2
   shell xxd -g 8 -R never -o $arg1 temp.bin $arg0
@@ -117,5 +138,4 @@ if os.getenv('TMUX'):
   end
 end
 
-source ~/.gdbinit.py
 init-gef
