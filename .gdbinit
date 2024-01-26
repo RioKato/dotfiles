@@ -59,6 +59,16 @@ define awa
   awatch *(unsigned char [$arg1]*)($arg0)
 end
 
+define xxd
+  dump binary memory temp.bin $arg1 $arg2
+  shell xxd -g 8 -R never -o $arg1 temp.bin $arg0
+  shell rm temp.bin
+end
+
+define xxdiff
+  shell git diff --no-index --color-words='[a-f0-9]{16}' $arg0 $arg1
+end
+
 define cc
   condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
 end
