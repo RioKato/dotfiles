@@ -167,7 +167,7 @@ define init-gef
 
   define ow
     tmux-pty
-    eval "gef config context.redirect %s", $pty
+    eval "gef config context.redirect \"%s\"", $pty
   end
 end
 
