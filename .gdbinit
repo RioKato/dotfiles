@@ -81,16 +81,6 @@ define dlimport
   shell rm temp.so
 end
 
-define offset
-  pipe info proc mappings | awk -v addr=$arg0 \
-  '$1~/0x[a-f0-9]+/{ \
-    start=strtonum($1); \
-    addr=strtonum(addr); \
-    if(start < addr) printf "+0x%016x %s\n", (addr-start), $0; \
-    if(start >= addr) printf "-0x%016x %s\n", (start-addr), $0; \
-  }'
-end
-
 define xxd
   dump binary memory temp.bin $arg1 $arg2
   shell xxd -g 8 -R never -o $arg1 temp.bin $arg0
@@ -99,6 +89,31 @@ end
 
 define diff
   shell git diff --no-index --color-words='[a-f0-9]{16}' $arg0 $arg1
+end
+
+python
+class OffsetCommand(gdb.Command):
+    def __init__(self):
+        super().__init__('offset', gdb.COMMAND_USER)
+
+    def invoke(self, arg: str, _):
+        target = gdb.parse_and_eval(arg)
+        target = int(target)
+        hex = re.compile(r'(0x[0-9a-f]+)')
+        GREEN = '\033[32m'
+        PURPLE = '\033[35m'
+        END = '\033[0m'
+
+        for line in gdb.execute('info proc mappings', False, True).splitlines():
+            if found := hex.search(line):
+                start, = found.groups()
+                start = int(start, 16)
+                if target > start:
+                    print(f'{GREEN}+{target-start:#019x}{END} {line}')
+                else:
+                    print(f'{PURPLE}-{start-target:#019x}{END} {line}')
+
+OffsetCommand()
 end
 
 define fzf_bpnum_exec
