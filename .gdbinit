@@ -70,21 +70,21 @@ define vim
 end
 
 define declare
-  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o temp.o $arg0
-  add-symbol-file temp.o
-  shell rm -f temp.o
+  shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o /tmp/gdb.o $arg0
+  add-symbol-file /tmp/gdb.o
+  shell rm -f /tmp/gdb.o
 end
 
 define dlimport
-  shell gcc -g -shared -fPIC -o temp.so $arg0
-  call dlopen("./temp.so", 2)
-  shell rm -f temp.so
+  shell gcc -g -shared -fPIC -o /tmp/gdb.so $arg0
+  call dlopen("/tmp/gdb.so", 2)
+  shell rm -f /tmp/gdb.so
 end
 
 define xxd
-  dump binary memory temp.bin $arg1 $arg2
-  shell xxd -g 8 -R never -o $arg1 temp.bin $arg0
-  shell rm -f temp.bin
+  dump binary memory /tmp/gdb.bin $arg1 $arg2
+  shell xxd -g 8 -R never -o $arg1 /tmp/gdb.bin $arg0
+  shell rm -f /tmp/gdb.bin
 end
 
 define diff
@@ -92,10 +92,9 @@ define diff
 end
 
 define fzf-bps
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1} > temp.bpstr)' $FZF_TMUX_OPTS
-  set $bpstr = ""
-  python with open('temp.bpstr') as fd: gdb.set_convenience_variable('bpstr', fd.read())
-  shell rm -f temp.bpstr
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1} > /tmp/gdb.bpstr)' $FZF_TMUX_OPTS
+  python with open('/tmp/gdb.bpstr') as fd: gdb.set_convenience_variable('bpstr', fd.read())
+  shell rm -f /tmp/gdb.bpstr
 end
 
 define e
@@ -114,9 +113,9 @@ define D
 end
 
 define tmux-tty
-  shell tmux split-window -h -f -d -P -F#{pane_tty} cat | tr -d '\n' > temp.tty
-  python with open('temp.tty') as fd: gdb.set_convenience_variable('tty', fd.read())
-  shell rm -f temp.tty
+  shell tmux split-window -h -f -d -P -F#{pane_tty} cat | tr -d '\n' > /tmp/gdb.tty
+  python with open('/tmp/gdb.tty') as fd: gdb.set_convenience_variable('tty', fd.read())
+  shell rm -f /tmp/gdb.tty
 end
 
 python
