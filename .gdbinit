@@ -91,10 +91,16 @@ define diff
   shell git diff --no-index --color-words='[a-f0-9]{16}' $arg0 $arg1
 end
 
+define set-conv
+  shell sed -i -E 's/..*/set \$$arg0 = "&"/' $arg1
+  source $arg1
+  # python with open('$arg1') as fd: gdb.set_convenience_variable('$arg0', fd.read())
+  shell rm -f $arg1
+end
+
 define fzf-bps
   pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1} > /tmp/gdb)' $FZF_TMUX_OPTS
-  python with open('/tmp/gdb') as fd: gdb.set_convenience_variable('bpstr', fd.read())
-  shell rm -f /tmp/gdb
+  set-conv bpstr /tmp/gdb
 end
 
 define e
@@ -114,8 +120,7 @@ end
 
 define tmux-tty
   shell tmux split-window -h -f -d -P -F#{pane_tty} cat | tr -d '\n' > /tmp/gdb
-  python with open('/tmp/gdb') as fd: gdb.set_convenience_variable('tty', fd.read())
-  shell rm -f /tmp/gdb
+  set-conv tty /tmp/gdb
 end
 
 python
