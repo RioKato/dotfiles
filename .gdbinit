@@ -72,19 +72,19 @@ end
 define declare
   shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o temp.o $arg0
   add-symbol-file temp.o
-  shell rm temp.o
+  shell rm -f temp.o
 end
 
 define dlimport
   shell gcc -g -shared -fPIC -o temp.so $arg0
   call dlopen("./temp.so", 2)
-  shell rm temp.so
+  shell rm -f temp.so
 end
 
 define xxd
   dump binary memory temp.bin $arg1 $arg2
   shell xxd -g 8 -R never -o $arg1 temp.bin $arg0
-  shell rm temp.bin
+  shell rm -f temp.bin
 end
 
 define diff
@@ -93,8 +93,9 @@ end
 
 define fzf-bps
   pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1} > temp.bpstr)' $FZF_TMUX_OPTS
-  python with open('temp.bpstr') as fd: gdb.set_convenience_variable('bpstr', fd.read())
-  shell rm temp.bpstr
+  set $bpstr = ""
+  python with open('temp.bpstr') as fd:  gdb.set_convenience_variable('bpstr', fd.read())
+  shell rm -f temp.bpstr
 end
 
 define e
