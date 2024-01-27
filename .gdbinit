@@ -151,6 +151,8 @@ class TmuxPtyCommand(gdb.Command):
             command = ['tmux', 'kill-pane', '-t', pane]
             atexit.register(lambda : subprocess.run(command, stderr=subprocess.DEVNULL))
             gdb.set_convenience_variable('pty', pty)
+        else:
+            gdb.set_convenience_variable('pty', '')
 
 OffsetCommand()
 TmuxPtyCommand()
@@ -164,7 +166,6 @@ define init-gef
   gef config context.nb_lines_code 5
 
   define ow
-    set $pty = ""
     tmux-pty
     eval "gef config context.redirect %s", $pty
   end
