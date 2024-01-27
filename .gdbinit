@@ -91,6 +91,27 @@ define diff
   shell git diff --no-index --color-words='[a-f0-9]{16}' $arg0 $arg1
 end
 
+define fzf-bps
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1})' $FZF_TMUX_OPTS > temp.bpstr
+  python with open('temp.bpstr') as fd: gdb.set_convenience_variable('bpstr', fd.read())
+  shell rm temp.bpstr
+end
+
+define e
+  fzf-bps
+  eval "enable %s", $bpstr
+end
+
+define d
+  fzf-bps
+  eval "disable %s", $bpstr
+end
+
+define D
+  fzf-bps
+  eval "delete %s", $bpstr
+end
+
 python
 class OffsetCommand(gdb.Command):
     def __init__(self):
@@ -114,22 +135,6 @@ class OffsetCommand(gdb.Command):
                     print(f'{PURPLE}-{start-target:#019x}{END} {line}')
 
 OffsetCommand()
-end
-
-define fzf_bpnum_exec
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become('$arg0')' $FZF_TMUX_OPTS
-end
-
-define e
-  fzf_bpnum_exec 'tmux send enable Space {1} Enter'
-end
-
-define d
-  fzf_bpnum_exec 'tmux send disable Space {1} Enter'
-end
-
-define D
-  fzf_bpnum_exec 'tmux send del Space {1} Enter'
 end
 
 define init-gef
