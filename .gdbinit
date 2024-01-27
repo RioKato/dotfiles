@@ -113,6 +113,12 @@ define D
   eval "delete %s", $bpstr
 end
 
+define tmux-tty
+  shell tmux split-window -h -f -d -P -F#{pane_tty} cat | tr -d '\n' > temp.tty
+  python with open('temp.tty') as fd: gdb.set_convenience_variable('tty', fd.read())
+  shell rm -f temp.tty
+end
+
 python
 class OffsetCommand(gdb.Command):
     def __init__(self):
@@ -134,28 +140,7 @@ class OffsetCommand(gdb.Command):
                     print(f'{GREEN}+{target-start:#019x}{END} {line}')
                 else:
                     print(f'{PURPLE}-{start-target:#019x}{END} {line}')
-
-class TmuxPtyCommand(gdb.Command):
-    def __init__(self):
-        super().__init__('tmux-pty', gdb.COMMAND_USER)
-
-    def invoke(self, _, __):
-        if os.getenv('TMUX'):
-            command = [
-                'tmux',
-                'split-window', '-h', '-f', '-P', '-F#{session_name}:#{window_index}.#{pane_index}-#{pane_tty}', 'cat', ';',
-                'select-pane', '-L'
-            ]
-            proc = subprocess.run(command, capture_output=True, text=True, check=True)
-            pane, pty = proc.stdout.strip().split('-')
-            command = ['tmux', 'kill-pane', '-t', pane]
-            atexit.register(lambda : subprocess.run(command, stderr=subprocess.DEVNULL))
-            gdb.set_convenience_variable('pty', pty)
-        else:
-            gdb.set_convenience_variable('pty', '')
-
 OffsetCommand()
-TmuxPtyCommand()
 end
 
 define init-gef
@@ -166,8 +151,8 @@ define init-gef
   gef config context.nb_lines_code 5
 
   define ow
-    tmux-pty
-    eval "gef config context.redirect \"%s\"", $pty
+    tmux-tty
+    eval "gef config context.redirect \"%s\"", $tty
   end
 end
 
