@@ -92,7 +92,7 @@ define diff
 end
 
 define fzf-bps
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1})' $FZF_TMUX_OPTS > temp.bpstr
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1} > temp.bpstr)' $FZF_TMUX_OPTS
   python with open('temp.bpstr') as fd: gdb.set_convenience_variable('bpstr', fd.read())
   shell rm temp.bpstr
 end
