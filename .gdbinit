@@ -105,7 +105,7 @@ define set-conv
 end
 
 define fzf-bps
-  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m --bind 'enter:become(echo -n {1} > /tmp/gdb)' $FZF_TMUX_OPTS
+  pipe info breakpoints | grep '^[0-9]' | fzf-tmux +m +s --bind 'enter:become(echo -n {1} > /tmp/gdb)' $FZF_TMUX_OPTS
   set-conv bpstr /tmp/gdb
 end
 
