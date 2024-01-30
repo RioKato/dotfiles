@@ -65,6 +65,8 @@ define cc
   condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
 end
 
+alias -a rf = reverse-finish
+
 define vim
   shell vim $arg0
 end
