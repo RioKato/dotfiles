@@ -62,7 +62,11 @@ define awa
 end
 
 define cc
-  condition $arg0 $_any_caller_is("$arg1", (unsigned long)-1)
+  if $argc < 2
+    condition $bpnum $_any_caller_is("$arg0", (unsigned long)-1)
+  else
+    condition $arg0 $_any_caller_is("$arg1", (unsigned long)-1)
+  end
 end
 
 alias -a rf = reverse-finish
