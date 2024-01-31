@@ -23,7 +23,7 @@ bindkey "^O" edit-command-line
 
 if [ "$XDG_SESSION_TYPE" = x11 ] || [ -z "$XDG_SESSION_TYPE" ]
 then
-  if which xsel >& /dev/null
+  if command -v xsel >& /dev/null
   then
     function __copy() {
       xsel -pi && xsel -po | xsel -bi
@@ -37,7 +37,7 @@ fi
 
 if [ "$XDG_SESSION_TYPE" = wayland ] || [ -z "$XDG_SESSION_TYPE" ]
 then
-  if which wl-copy wl-paste >& /dev/null
+  if command -v wl-copy wl-paste >& /dev/null
   then
     function __copy() {
       wl-copy
@@ -49,7 +49,7 @@ then
   fi
 fi
 
-if which __copy __paste >& /dev/null
+if command -v __copy __paste >& /dev/null
 then
   function __kill-line() {
     zle kill-line
@@ -82,7 +82,7 @@ function precmd() {
     CONTAINER="@$CONTAINER"
   fi
 
-  if which git >& /dev/null
+  if command -v git >& /dev/null
   then
     local BRANCH="$(git branch --show-current 2> /dev/null)"
     [ -z "$BRANCH" ] && BRANCH="$(git show --format='%h' --no-patch 2> /dev/null)"
@@ -98,7 +98,7 @@ function chpwd() {
   ls --color
 }
 
-if which dircolors >& /dev/null
+if command -v dircolors >& /dev/null
 then
   eval "$(dircolors 2> /dev/null)"
 fi
@@ -117,19 +117,19 @@ export LESS="-R"
 export EDITOR=vim
 alias view='vim -R'
 
-if which nvim &> /dev/null
+if command -v nvim &> /dev/null
 then
   EDITOR=nvim
   alias vim=nvim
   alias view='nvim -R'
 fi
 
-if which xdg-open &> /dev/null
+if command -v xdg-open &> /dev/null
 then
   alias open=xdg-open
 fi
 
-if which docker &> /dev/null
+if command -v docker &> /dev/null
 then
   alias docker='sudo -E docker'
 fi
@@ -154,12 +154,12 @@ export PATH=$PATH:/opt/idapro-8.2
 
 ###############################################################################################
 
-if which fzf >& /dev/null
+if command -v fzf >& /dev/null
 then
   export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
   export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
 
-  if which rg &> /dev/null
+  if command -v rg &> /dev/null
   then
     FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
   fi
@@ -181,7 +181,7 @@ then
     export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
     export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 
-    if which locate &> /dev/null
+    if command -v locate &> /dev/null
     then
       FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
     fi

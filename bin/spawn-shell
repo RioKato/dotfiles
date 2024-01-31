@@ -2,7 +2,7 @@
 
 [ -z "$TMUX" ] && exit 1
 
-PYTHON='$(which python python3 python2 2> /dev/null | head -n 1)'
+PYTHON='$(command -v python python3 python2 2> /dev/null | head -n 1)'
 PYCMD='import pty;pty.spawn("/bin/sh")'
 tmux send "$PYTHON -c '$PYCMD'" Enter
 sleep 0.5
