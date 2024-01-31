@@ -159,6 +159,7 @@ define init-gef
   gef config theme.dereference_register_value "white"
   gef config context.nb_lines_backtrace 4
   gef config context.nb_lines_code 5
+  gef config gef.disable_target_remote_overwrite True
 
   define ow
     tmux-tty
