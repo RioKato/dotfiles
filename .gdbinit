@@ -94,7 +94,7 @@ define xxd
 end
 
 define diff
-  shell git diff --no-index --color-words='[a-f0-9]{16}' $arg0 $arg1
+  shell $(command -v colordiff diff | head -n 1) -y $arg0 $arg1 | less
 end
 
 define set-conv
