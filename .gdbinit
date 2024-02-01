@@ -74,7 +74,7 @@ define dlog
   shell rm dlog.out
   break $arg0
   commands
-    pipe printf "%#0lx,%#0lx,%#0lx,%#0lx,%#0lx,%#0lx\n", $rdi, $rsi, $rdx, $rcx, $r8, $r9 | tee -a dlog.out
+    pipe printf "%d.%d,%#0lx,%#0lx,%#0lx,%#0lx,%#0lx,%#0lx\n", $_hit_bpnum, $_hit_locno, $rdi, $rsi, $rdx, $rcx, $r8, $r9 | tee -a dlog.out
     continue
   end
 end
