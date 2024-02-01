@@ -11,6 +11,7 @@ set print asm-demangle
 set style enabled off
 handle SIGALRM ignore
 set debuginfod enabled on
+alias -a rf = reverse-finish
 
 
 define a
@@ -69,7 +70,14 @@ define cc
   end
 end
 
-alias -a rf = reverse-finish
+define dlog
+  shell rm dlog.out
+  break $arg0
+  commands
+    pipe printf "%#0lx,%#0lx,%#0lx,%#0lx,%#0lx,%#0lx\n", $rdi, $rsi, $rdx, $rcx, $r8, $r9 | tee -a dlog.out
+    continue
+  end
+end
 
 define vim
   shell vim $arg0
