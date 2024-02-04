@@ -1,5 +1,5 @@
-function RunCargoBuild()
-  let l:command = "cargo build"
+function RunCargoCheck()
+  let l:command = "cargo check"
   write
   call RunTmux('cargo', command)
 endfunction
@@ -10,5 +10,5 @@ function RunCargoRun()
   call RunTmux('cargo', command)
 endfunction
 
-noremap r :call RunCargoBuild()<cr>
+noremap r :call RunCargoCheck()<cr>
 noremap R :call RunCargoRun()<cr>
