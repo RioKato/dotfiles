@@ -1,0 +1,38 @@
+#!/usr/bin/python
+
+def main():
+    from argparse import ArgumentParser
+    from pathlib import Path
+    from subprocess import run
+    from os import remove
+    from atexit import register
+
+    parser = ArgumentParser()
+    parser.add_argument('path')
+    args = parser.parse_args()
+
+    path = Path(args.path)
+    ll = path.with_suffix('.ll').name
+    dot = f'{ll}.callgraph.dot'
+    jpeg = path.with_suffix('.jpeg').name
+
+    match path.suffix:
+        case '.c' | '.cpp':
+            command = ['clang', '-S', '-emit-llvm', '-c', path]
+
+        case '.o':
+            command = ['llvm-dis', '-o', ll, path]
+
+        case _:
+            parser.print_help()
+            exit(1)
+
+    run(command, check=True)
+    register(lambda: remove(ll))
+    run(['opt', '-passes=dot-callgraph', ll], check=True)
+    register(lambda: remove(dot))
+    run(['dot', '-T', 'jpeg', dot, '-o', jpeg], check=True)
+
+
+if __name__ == '__main__':
+    main()
