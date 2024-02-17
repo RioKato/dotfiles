@@ -134,6 +134,12 @@ then
   alias docker='sudo -E docker'
 fi
 
+if command -v bear &> /dev/null
+then
+  alias make='bear -- make'
+  alias clang-make='bear -- make CC=clang CFLAGS=-flto'
+fi
+
 case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
   EndeavourOS) export DEBUGINFOD_URLS="https://debuginfod.archlinux.org";;
   Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;

@@ -12,6 +12,7 @@ paru
 
 gcc
 clang
+bear
 llvm
 ccache
 linux-headers
