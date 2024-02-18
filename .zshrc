@@ -116,6 +116,7 @@ export LESS="-R"
 
 export EDITOR=vim
 alias view='vim -R'
+alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 
 if command -v nvim &> /dev/null
 then
@@ -137,7 +138,6 @@ fi
 if command -v bear &> /dev/null
 then
   alias make='bear -- make'
-  alias clang-make='bear -- make CC=clang CFLAGS=-flto'
 fi
 
 case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
