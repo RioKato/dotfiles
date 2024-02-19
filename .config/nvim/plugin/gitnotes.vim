@@ -15,7 +15,7 @@ function GitNotes() abort
   let l:bufnr = bufnr("%")
   let l:result = system(printf("git blame -L %d,+1 -l %s", line("."), expand("%:p")))
   let l:hash = split(l:result)[0]
-  let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate(l:hash))
+  let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate())
 
   if l:hash == "0000000000000000000000000000000000000000"
     echo "not commited"
@@ -85,12 +85,13 @@ function GitLinkNormalize(url) abort
   return l:url
 endfunction
 
-function GitLinkCreate(hash) abort
+function GitLinkCreate() abort
   let l:url = trim(system("git ls-remote --get-url origin"))
   let l:url = GitLinkNormalize(l:url)
+  let l:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
   let l:path = trim(system(printf("git ls-files --full-name %s", shellescape(@%, 1))))
   let l:line = line(".")
-  let l:link = printf("%s/blob/%s/%s#L%d", l:url, a:hash, l:path, l:line)
+  let l:link = printf("%s/blob/%s/%s#L%d", l:url, l:hash, l:path, l:line)
   return l:link
 endfunction
 
