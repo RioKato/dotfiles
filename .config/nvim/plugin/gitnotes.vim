@@ -4,7 +4,7 @@ function GitNotes() abort
   let l:hash = trim(system("git show --format='%H' --no-patch"))
 
   if buflisted(l:hash)
-    vnew
+    vsplit
     execute printf("buffer %s", l:hash)
     call append(line("$"), [l:link])
     call cursor(line("$"), 1)
