@@ -18,7 +18,7 @@ function GitNotes() abort
   let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate())
 
   if l:hash == "0000000000000000000000000000000000000000"
-    echo "not commited"
+    echo "not committed"
     return
   endif
 
@@ -99,7 +99,6 @@ function GitLinkOpen() abort
   let l:url = trim(system("git ls-remote --get-url origin"))
   let l:url = GitLinkNormalize(l:url)
   let l:pattern = printf('%s/blob/\x\+/\([^#]\+\)#L\(\d\+\)', l:url)
-  echo l:pattern
   let l:params = matchlist(getline("."), l:pattern)
   if l:params == []
     echo "url error"
