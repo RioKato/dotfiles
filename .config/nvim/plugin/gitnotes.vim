@@ -3,11 +3,20 @@ function GitNotes() abort
   let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate())
   let l:hash = trim(system("git show --format='%H' --no-patch"))
 
+  let l:winid = bufwinid(printf("^%s$", l:hash))
+  if l:winid != -1
+    call win_gotoid(l:winid)
+    call append(line("$"), [l:link])
+    call cursor(line("$"), 1)
+    return
+  endif
+
   if buflisted(l:hash)
     vsplit
     execute printf("buffer %s", l:hash)
     call append(line("$"), [l:link])
     call cursor(line("$"), 1)
+    return
 
   else
     if bufexists(l:hash)
@@ -30,6 +39,7 @@ function GitNotes() abort
 
     call append(line("$") - 1, l:result)
     call cursor(line("$"), 1)
+    return
   endif
 endfunction
 
