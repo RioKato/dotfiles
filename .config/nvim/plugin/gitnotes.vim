@@ -27,28 +27,28 @@ function GitNotes() abort
     vnew
     execute printf("buffer %s", l:hash)
     call append(line("$"), [l:link])
-    return
-  endif
 
-  if bufexists(l:hash)
-    execute printf("bwipeout %s", l:hash)
-  endif
-
-  vnew
-
-  let l:result = systemlist(printf("git notes show %s", l:hash))
-  if v:shell_error == 0
-    call append(line("$") - 1, l:result)
-    call append(line("$"), [l:link])
   else
-    call append(line("$") - 1, [l:link])
-  endif
+    if bufexists(l:hash)
+      execute printf("bwipeout %s", l:hash)
+    endif
 
-  setlocal buftype=acwrite
-  setlocal filetype=markdown
-  setlocal nomodified
-  execute printf("file %s", l:hash)
-  execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd(%d)", l:hash, l:bufnr)
+    vnew
+    setlocal buftype=acwrite
+    setlocal filetype=markdown
+    setlocal nomodified
+    execute printf("file %s", l:hash)
+    execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd(%d)", l:hash, l:bufnr)
+
+    let l:result = systemlist(printf("git notes show %s", l:hash))
+    if v:shell_error == 0
+      let l:result = add(l:result, l:link)
+    else
+      let l:result = [l:result]
+    endif
+
+    call append(line("$") - 1, l:result)
+  endif
 endfunction
 
 sign define GitNotesSign text=N
@@ -79,13 +79,6 @@ function GitNotesUpdateSign(bufnr) abort
   endfor
 endfunction
 
-function GitNotesHook() abort
-  call system("git rev-parse")
-  if v:shell_error == 0
-    noremap <C-l> :call GitNotes()<cr>
-  end
-endfunction
-
 function GitLinkNormalize(url) abort
   let l:url = a:url
   let l:url = substitute(l:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
@@ -100,4 +93,11 @@ function GitLinkCreate(hash) abort
   let l:line = line(".")
   let l:link = printf('%s/blob/%s/%s#L%d', l:url, a:hash, l:path, l:line)
   return l:link
+endfunction
+
+function GitNotesHook() abort
+  call system("git rev-parse")
+  if v:shell_error == 0
+    noremap <C-l> :call GitNotes()<cr>
+  end
 endfunction
