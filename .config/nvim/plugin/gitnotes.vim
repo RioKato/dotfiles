@@ -6,16 +6,16 @@ function GitNotes() abort
   let l:winid = bufwinid(printf("^%s$", l:hash))
   if l:winid != -1
     call win_gotoid(l:winid)
-    call append(line("$"), [l:link])
-    call cursor(line("$"), 1)
+    call append(line("."), [l:link])
+    call cursor(line(".") + 1, 1)
     return
   endif
 
   if buflisted(l:hash)
     vsplit
     execute printf("buffer %s", l:hash)
-    call append(line("$"), [l:link])
-    call cursor(line("$"), 1)
+    call append(line("."), [l:link])
+    call cursor(line(".") + 1, 1)
     return
 
   else
@@ -32,13 +32,10 @@ function GitNotes() abort
 
     let l:result = systemlist(printf("git notes show %s", l:hash))
     if v:shell_error == 0
-      let l:result = add(l:result, l:link)
-    else
-      let l:result = [l:link]
+      call append(line("$") - 1, l:result)
+      call cursor(1, 1)
     endif
 
-    call append(line("$") - 1, l:result)
-    call cursor(line("$"), 1)
     return
   endif
 endfunction
