@@ -94,9 +94,10 @@ function GitLinkCreate(hash) abort
   return l:link
 endfunction
 
-function GitNotesHook() abort
+function GitNotesInit() abort
   call system("git rev-parse")
   if v:shell_error == 0
     noremap <C-l> :call GitNotes()<cr>
+    call GitNotesUpdateSign(bufnr("%"))
   end
 endfunction

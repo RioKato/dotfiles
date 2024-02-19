@@ -37,4 +37,4 @@ noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
 command Cov :call LLVMCov()
 
-call GitNotesHook()
+call GitNotesInit()
