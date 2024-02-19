@@ -74,7 +74,14 @@ function GitLinkOpen() abort
   let l:line = l:params[2]
   let l:root = trim(system("git rev-parse --show-toplevel"))
   let l:path = printf("%s/%s", l:root, l:path)
-  execute printf("edit +%d %s", l:line, l:path)
+
+  let l:winid = bufwinid(printf("^%s$", l:path))
+  if l:winid == -1
+    execute printf("edit +%d %s", l:line, l:path)
+  else
+    call win_gotoid(l:winid)
+    call cursor(l:line, 1)
+  endif
 endfunction
 
 function GitNotesInit() abort
