@@ -42,7 +42,7 @@ function GitNotesUpdateSign(bufnr) abort
   endfor
 
   let l:result = systemlist(printf("git blame -l %s", bufname(a:bufnr)))
-  let l:count = 1 
+  let l:count = 1
   for l:line in l:result
     execute printf("sign unplace %d group=GitNotesSign buffer=%d", l:count, a:bufnr)
 
