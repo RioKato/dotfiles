@@ -15,8 +15,7 @@ function GitNotes() abort
   let l:bufnr = bufnr("%")
   let l:result = system(printf("git blame -L %d,+1 -l %s", line("."), expand("%:p")))
   let l:hash = split(l:result)[0]
-  let l:link = GitLinkCreate(l:hash)
-  let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), l:link)
+  let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate(l:hash))
 
   if l:hash == "0000000000000000000000000000000000000000"
     echo "not commited"
