@@ -29,6 +29,7 @@ function GitNotes() abort
     setlocal nomodified
     execute printf("file %s", l:hash)
     execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd()", l:hash)
+    noremap <buffer> <C-m> :call GitLinkOpen()<cr>
 
     let l:result = systemlist(printf("git notes show %s", l:hash))
     if v:shell_error == 0
@@ -100,7 +101,6 @@ endfunction
 function GitNotesInit() abort
   call system("git rev-parse")
   if v:shell_error == 0
-    noremap <C-l> :call GitNotes()<cr>
-    noremap <C-m> :call GitLinkOpen()<cr>
+    noremap <buffer> <C-l> :call GitNotes()<cr>
   end
 endfunction
