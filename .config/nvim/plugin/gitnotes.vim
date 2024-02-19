@@ -7,6 +7,7 @@ function GitNotes() abort
     vnew
     execute printf("buffer %s", l:hash)
     call append(line("$"), [l:link])
+    call cursor(line("$"), 1)
 
   else
     if bufexists(l:hash)
@@ -28,6 +29,7 @@ function GitNotes() abort
     endif
 
     call append(line("$") - 1, l:result)
+    call cursor(line("$"), 1)
   endif
 endfunction
 
