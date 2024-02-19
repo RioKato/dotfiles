@@ -1,26 +1,7 @@
-function GitNotesBufWriteCmd(bufnr) abort
-  let l:bufname = bufname(bufnr("%"))
-  let l:contents = join(getline(1, "$"), "\n")
-  if l:contents == ""
-    call system(printf("git notes remove %s", l:bufname))
-  else
-    call system(printf("git notes add -f -F - %s", l:bufname), l:contents)
-  endif
-
-  setlocal nomodified
-  call GitNotesUpdateSign(a:bufnr)
-endfunction
-
 function GitNotes() abort
   let l:bufnr = bufnr("%")
-  let l:result = system(printf("git blame -L %d,+1 -l %s", line("."), expand("%:p")))
-  let l:hash = split(l:result)[0]
   let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate())
-
-  if l:hash == "0000000000000000000000000000000000000000"
-    echo "not committed"
-    return
-  endif
+  let l:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
 
   if buflisted(l:hash)
     vnew
@@ -37,7 +18,7 @@ function GitNotes() abort
     setlocal filetype=markdown
     setlocal nomodified
     execute printf("file %s", l:hash)
-    execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd(%d)", l:hash, l:bufnr)
+    execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd()", l:hash)
 
     let l:result = systemlist(printf("git notes show %s", l:hash))
     if v:shell_error == 0
@@ -50,32 +31,16 @@ function GitNotes() abort
   endif
 endfunction
 
-sign define GitNotesSign text=N
+function GitNotesBufWriteCmd() abort
+  let l:bufname = bufname(bufnr("%"))
+  let l:contents = join(getline(1, "$"), "\n")
+  if l:contents == ""
+    call system(printf("git notes remove %s", l:bufname))
+  else
+    call system(printf("git notes add -f -F - %s", l:bufname), l:contents)
+  endif
 
-function GitNotesUpdateSign(bufnr) abort
-  let l:result = systemlist(printf("git notes"))
-  let l:notes = []
-
-  for l:line in l:result
-    let l:notes = add(l:notes, split(l:line)[1])
-  endfor
-
-  execute printf("sign unplace * group=GitNotesSign buffer=%d", a:bufnr)
-
-  let l:result = systemlist(printf("git blame -l %s", bufname(a:bufnr)))
-  let l:count = 0
-  for l:line in l:result
-    let l:count += 1
-
-    let l:hash = split(l:line)[0]
-    if l:hash == "0000000000000000000000000000000000000000"
-      continue
-    endif
-
-    if index(l:notes, l:hash) >= 0
-      execute printf("sign place %d line=%d name=GitNotesSign group=GitNotesSign buffer=%d", l:count, l:count, a:bufnr)
-    endif
-  endfor
+  setlocal nomodified
 endfunction
 
 function GitLinkNormalize(url) abort
@@ -117,6 +82,5 @@ function GitNotesInit() abort
   if v:shell_error == 0
     noremap <C-l> :call GitNotes()<cr>
     noremap <C-m> :call GitLinkOpen()<cr>
-    call GitNotesUpdateSign(bufnr("%"))
   end
 endfunction
