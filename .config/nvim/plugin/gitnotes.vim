@@ -26,7 +26,7 @@ function GitNotes() abort
   if buflisted(l:githash)
     vnew
     execute printf("buffer %s", l:githash)
-    call append(line("$") - 1, [printf("* %s:%d", l:file, l:line)])
+    call append(line("$"), [printf("- %s:%d", l:file, l:line)])
     return
   endif
 
@@ -39,9 +39,10 @@ function GitNotes() abort
   let l:result = systemlist(printf("git notes show %s", l:githash))
   if v:shell_error == 0
     call append(line("$") - 1, l:result)
+    call append(line("$"), [printf("- %s:%d", l:file, l:line)])
+  else
+    call append(line("$") - 1, [printf("- %s:%d", l:file, l:line)])
   endif
-
-  call append(line("$") - 1, [printf("* %s:%d", l:file, l:line)])
 
   setlocal buftype=acwrite
   setlocal filetype=markdown
@@ -63,14 +64,18 @@ function GitNotesUpdateSign(bufnr) abort
   execute printf("sign unplace * group=GitNotesSign buffer=%d", a:bufnr)
 
   let l:result = systemlist(printf("git blame -l %s", bufname(a:bufnr)))
-  let l:count = 1
+  let l:count = 0
   for l:line in l:result
+    let l:count += 1
+
     let l:githash = split(l:line)[0]
+    if l:githash == "0000000000000000000000000000000000000000"
+      continue
+    endif
+
     if index(l:notes, l:githash) >= 0
       execute printf("sign place %d line=%d name=GitNotesSign group=GitNotesSign buffer=%d", l:count, l:count, a:bufnr)
     endif
-
-    let l:count += 1
   endfor
 endfunction
 
