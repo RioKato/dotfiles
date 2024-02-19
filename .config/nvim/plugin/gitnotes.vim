@@ -80,24 +80,43 @@ endfunction
 
 function GitLinkNormalize(url) abort
   let l:url = a:url
-  let l:url = substitute(l:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
-  let l:url = substitute(l:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
+  let l:url = substitute(l:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', "")
+  let l:url = substitute(l:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', "")
   return l:url
 endfunction
 
 function GitLinkCreate(hash) abort
-  let l:url = trim(system('git ls-remote --get-url origin'))
+  let l:url = trim(system("git ls-remote --get-url origin"))
   let l:url = GitLinkNormalize(l:url)
   let l:path = trim(system(printf("git ls-files --full-name %s", shellescape(@%, 1))))
   let l:line = line(".")
-  let l:link = printf('%s/blob/%s/%s#L%d', l:url, a:hash, l:path, l:line)
+  let l:link = printf("%s/blob/%s/%s#L%d", l:url, a:hash, l:path, l:line)
   return l:link
+endfunction
+
+function GitLinkOpen() abort
+  let l:url = trim(system("git ls-remote --get-url origin"))
+  let l:url = GitLinkNormalize(l:url)
+  let l:pattern = printf('%s/blob/\x\+/\([^#]\+\)#L\(\d\+\)', l:url)
+  echo l:pattern
+  let l:params = matchlist(getline("."), l:pattern)
+  if l:params == []
+    echo "url error"
+    return
+  endif
+
+  let l:path = l:params[1]
+  let l:line = l:params[2]
+  let l:root = trim(system("git rev-parse --show-toplevel"))
+  let l:path = printf("%s/%s", l:root, l:path)
+  execute printf("edit +%d %s", l:line, l:path)
 endfunction
 
 function GitNotesInit() abort
   call system("git rev-parse")
   if v:shell_error == 0
     noremap <C-l> :call GitNotes()<cr>
+    noremap <C-m> :call GitLinkOpen()<cr>
     call GitNotesUpdateSign(bufnr("%"))
   end
 endfunction
