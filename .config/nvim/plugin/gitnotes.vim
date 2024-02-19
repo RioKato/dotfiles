@@ -43,7 +43,7 @@ function GitNotes() abort
     if v:shell_error == 0
       let l:result = add(l:result, l:link)
     else
-      let l:result = [l:result]
+      let l:result = [l:link]
     endif
 
     call append(line("$") - 1, l:result)
