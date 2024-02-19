@@ -1,7 +1,7 @@
 function GitNotes() abort
   let l:bufnr = bufnr("%")
   let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), GitLinkCreate())
-  let l:hash = trim(system(printf('git rev-list -1 HEAD -- %s', shellescape(@%, 1))))
+  let l:hash = trim(system("git show --format='%H' --no-patch"))
 
   if buflisted(l:hash)
     vnew
