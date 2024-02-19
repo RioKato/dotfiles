@@ -85,12 +85,16 @@ function GitLinkOpen() abort
   let l:path = printf("%s/%s", l:root, l:path)
 
   let l:winid = bufwinid(printf("^%s$", l:path))
-  if l:winid == -1
-    execute printf("edit +%d %s", l:line, l:path)
-  else
+  if l:winid != -1
     call win_gotoid(l:winid)
     call cursor(l:line, 1)
+    return
   endif
+
+  let l:winid = win_getid()
+  vsplit
+  call win_gotoid(l:winid)
+  execute printf("edit +%d %s", l:line, l:path)
 endfunction
 
 function GitNotesInit() abort
