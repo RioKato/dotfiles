@@ -12,43 +12,43 @@ function GitNotesBufWriteCmd(bufnr) abort
 endfunction
 
 function GitNotes() abort
-  let l:file = trim(system(printf("git ls-files --full-name %s", shellescape(@%, 1))))
-  let l:line = line(".")
   let l:bufnr = bufnr("%")
   let l:result = system(printf("git blame -L %d,+1 -l %s", line("."), expand("%:p")))
-  let l:githash = split(l:result)[0]
+  let l:hash = split(l:result)[0]
+  let l:link = GitLinkCreate(l:hash)
+  let l:link = printf("- [%s:%d](%s)", expand("%:t"), line("."), l:link)
 
-  if l:githash == "0000000000000000000000000000000000000000"
+  if l:hash == "0000000000000000000000000000000000000000"
     echo "not commited"
     return
   endif
 
-  if buflisted(l:githash)
+  if buflisted(l:hash)
     vnew
-    execute printf("buffer %s", l:githash)
-    call append(line("$"), [printf("- %s:%d", l:file, l:line)])
+    execute printf("buffer %s", l:hash)
+    call append(line("$"), [l:link])
     return
   endif
 
-  if bufexists(l:githash)
-    execute printf("bwipeout %s", l:githash)
+  if bufexists(l:hash)
+    execute printf("bwipeout %s", l:hash)
   endif
 
   vnew
 
-  let l:result = systemlist(printf("git notes show %s", l:githash))
+  let l:result = systemlist(printf("git notes show %s", l:hash))
   if v:shell_error == 0
     call append(line("$") - 1, l:result)
-    call append(line("$"), [printf("- %s:%d", l:file, l:line)])
+    call append(line("$"), [l:link])
   else
-    call append(line("$") - 1, [printf("- %s:%d", l:file, l:line)])
+    call append(line("$") - 1, [l:link])
   endif
 
   setlocal buftype=acwrite
   setlocal filetype=markdown
   setlocal nomodified
-  execute printf("file %s", l:githash)
-  execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd(%d)", l:githash, l:bufnr)
+  execute printf("file %s", l:hash)
+  execute printf("autocmd BufWriteCmd %s call GitNotesBufWriteCmd(%d)", l:hash, l:bufnr)
 endfunction
 
 sign define GitNotesSign text=N
@@ -68,12 +68,12 @@ function GitNotesUpdateSign(bufnr) abort
   for l:line in l:result
     let l:count += 1
 
-    let l:githash = split(l:line)[0]
-    if l:githash == "0000000000000000000000000000000000000000"
+    let l:hash = split(l:line)[0]
+    if l:hash == "0000000000000000000000000000000000000000"
       continue
     endif
 
-    if index(l:notes, l:githash) >= 0
+    if index(l:notes, l:hash) >= 0
       execute printf("sign place %d line=%d name=GitNotesSign group=GitNotesSign buffer=%d", l:count, l:count, a:bufnr)
     endif
   endfor
@@ -84,4 +84,20 @@ function GitNotesHook() abort
   if v:shell_error == 0
     noremap <C-l> :call GitNotes()<cr>
   end
+endfunction
+
+function GitLinkNormalize(url) abort
+  let l:url = a:url
+  let l:url = substitute(l:url, '^git@github.com:\(.\{-}\).git$', 'https://github.com/\1', '')
+  let l:url = substitute(l:url, '^https://github.com/\(.\{-}\)/\(.\{-}\).git$', 'https://github.com/\1/\2', '')
+  return l:url
+endfunction
+
+function GitLinkCreate(hash) abort
+  let l:url = trim(system('git ls-remote --get-url origin'))
+  let l:url = GitLinkNormalize(l:url)
+  let l:path = trim(system(printf("git ls-files --full-name %s", shellescape(@%, 1))))
+  let l:line = line(".")
+  let l:link = printf('%s/blob/%s/%s#L%d', l:url, a:hash, l:path, l:line)
+  return l:link
 endfunction
