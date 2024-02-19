@@ -54,3 +54,10 @@ function GitNotesUpdateSign(bufnr) abort
     let l:count += 1
   endfor
 endfunction
+
+function GitNotesHook() abort
+  call system("git rev-parse")
+  if v:shell_error == 0
+    noremap <C-l> :call GitNotes()<cr>
+  end
+endfunction
