@@ -1,5 +1,11 @@
 function GitNotesBufWriteCmd(bufnr) abort
-  call execute(printf("write !git notes add -f -F - %s", bufname(bufnr("%"))))
+  let l:contents = join(getline(1, "$"), "\n")
+  if l:contents == ""
+    call system(printf("git notes remove %s", bufname(bufnr("%"))))
+  else
+    call system(printf("git notes add -f -F - %s", bufname(bufnr("%"))), l:contents)
+  endif
+
   setlocal nomodified
   call GitNotesUpdateSign(a:bufnr)
 endfunction
@@ -44,7 +50,7 @@ function GitNotesUpdateSign(bufnr) abort
   let l:result = systemlist(printf("git blame -l %s", bufname(a:bufnr)))
   let l:count = 1
   for l:line in l:result
-    execute printf("sign unplace %d group=GitNotesSign buffer=%d", l:count, a:bufnr)
+    execute printf("sign unplace %d buffer=%d", l:count, a:bufnr)
 
     let l:githash = split(l:line)[0]
     if index(l:notes, l:githash) >= 0
