@@ -23,6 +23,7 @@ function GitNotes() abort
       execute printf("bwipeout %s", l:hash)
     endif
 
+    let l:winid = win_getid()
     vnew
     setlocal buftype=acwrite
     setlocal filetype=markdown
@@ -37,6 +38,7 @@ function GitNotes() abort
       call cursor(1, 1)
     endif
 
+    call win_gotoid(l:winid)
     return
   endif
 endfunction
