@@ -25,6 +25,10 @@ function! ReplayBreakLine() abort
 endfunction
 
 function! LLVMCov(program) abort
+  if empty($TMUX)
+    echoerr "ERROR: run inside a tmux session"
+  endif
+
   let l:command = "rm -f default.profdata && llvm-profdata merge -o default.profdata default.profraw"
   call system(l:command)
   let l:command = printf("llvm-cov show -instr-profile=default.profdata %s -sources %s --use-color | less -R -j %d", a:program, expand("%:p"), line("."))
