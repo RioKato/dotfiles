@@ -36,9 +36,16 @@ function! LLVMCov(program) abort
   call system(l:command)
 endfunction
 
+function GHSearchCode(keyword) abort
+  let l:command = printf("gh search code --language c %s | column -t -l 2 -o ' | ' | less -S", a:keyword)
+  let l:command = printf("tmux split -h %s", shellescape(l:command))
+  call system(l:command)
+endfunction
+
 command -nargs=* Record :call Record(<q-args>)
 noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
 command -nargs=1 Cov :call LLVMCov(<f-args>)
+command SearchCode :call GHSearchCode(expand("<cword>"))
 
 call GitNotesInit()
