@@ -31,7 +31,7 @@ function! LLVMCov(program) abort
 
   let l:command = "rm -f default.profdata && llvm-profdata merge -o default.profdata default.profraw"
   call system(l:command)
-  let l:command = printf("llvm-cov show -instr-profile=default.profdata %s -sources %s --use-color | less -R +%d", a:program, expand("%:p"), line("."))
+  let l:command = printf("llvm-cov show -instr-profile=default.profdata %s -sources %s --use-color | less -R -S +%d", a:program, expand("%:p"), line("w0"))
   let l:command = printf("tmux split -h %s", shellescape(l:command))
   call system(l:command)
 endfunction
