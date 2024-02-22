@@ -1,4 +1,4 @@
-sign define CovSign text=P texthl=Error
+sign define CovSign numhl=Error
 
 function! CovSign(lcov)
   execute printf("sign unplace * group=CovSign buffer=%d", bufnr("%"))
