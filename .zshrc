@@ -118,6 +118,7 @@ export EDITOR=vim
 alias view='vim -R'
 alias clang='clang -MJ compile_commands.json'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+alias gcc-cov='gcc -coverage'
 alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 
 if command -v nvim &> /dev/null
