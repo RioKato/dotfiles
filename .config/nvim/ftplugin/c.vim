@@ -24,6 +24,8 @@ function! ReplayBreakLine() abort
   call system(l:command)
 endfunction
 
+sign define LLVMCovSign text=P texthl=Error
+
 function! LLVMCov(program) abort
   if empty($TMUX)
     echoerr "ERROR: run inside a tmux session"
@@ -31,9 +33,17 @@ function! LLVMCov(program) abort
 
   let l:command = "rm -f default.profdata && llvm-profdata merge -o default.profdata default.profraw"
   call system(l:command)
-  let l:command = printf("llvm-cov show -instr-profile=default.profdata %s -sources %s --use-color | less -R -S +%d", a:program, expand("%:p"), line("w0"))
-  let l:command = printf("tmux split -h %s", shellescape(l:command))
-  call system(l:command)
+  let l:command = printf("llvm-cov export -instr-profile=default.profdata %s -format=lcov -sources %s", a:program, expand("%:p"))
+  let l:result = systemlist(l:command)
+  execute printf("sign unplace * group=LLVMCovSign buffer=%d", bufnr("%"))
+
+  for l:line in l:result
+    let l:no = matchlist(l:line, 'DA:\(\d\+\),1')
+    if l:no != []
+      let l:no = l:no[1]
+      execute printf("sign place %s line=%s name=LLVMCovSign group=LLVMCovSign", l:no, l:no)
+    endif
+  endfor
 endfunction
 
 function GHSearchCode(keyword) abort
