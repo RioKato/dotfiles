@@ -4,10 +4,9 @@ function! CovSign(lcov)
   execute printf("sign unplace * group=CovSign buffer=%d", bufnr("%"))
 
   for l:line in a:lcov
-    let l:no = matchlist(l:line, 'DA:\(\d\+\),1')
-    if l:no != []
-      let l:no = l:no[1]
-      execute printf("sign place %s line=%s name=CovSign group=CovSign", l:no, l:no)
+    let l:da = matchlist(l:line, 'DA:\(\d\+\),\(\d\+\)')
+    if l:da != [] && str2nr(l:da[2], 10) > 0
+      execute printf("sign place %s line=%s name=CovSign group=CovSign", l:da[1], l:da[1])
     endif
   endfor
 endfunction
@@ -25,14 +24,7 @@ function! LCov() abort
   call CovSign(systemlist(l:command))
 endfunction
 
-function! Cov(...) abort
-  if filereadable("default.profraw")
-    call LLVMCov(a:1)
-  else
-    call LCov()
-  endif
-endfunction
-
 function CovInit() abort
-  command -nargs=? Cov :call Cov(<q-args>)
+  command -nargs=1 LLVMCov :call LLVMCov(<f-args>)
+  command LCov :call LCov()
 endfunction
