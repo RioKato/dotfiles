@@ -25,6 +25,6 @@ function! LCov() abort
 endfunction
 
 function CovInit() abort
-  command -nargs=1 LLVMCov :call LLVMCov(<f-args>)
-  command LCov :call LCov()
+  command! -nargs=1 LLVMCov :call LLVMCov(<f-args>)
+  command! LCov :call LCov()
 endfunction
