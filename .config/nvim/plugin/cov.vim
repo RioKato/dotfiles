@@ -1,4 +1,5 @@
-sign define CovSign numhl=CursorLineNr
+highlight CovSignHighlight cterm=bold ctermfg=167 gui=bold guifg=#cd5c5c
+sign define CovSign numhl=CovSignHighlight
 
 function! CovSign(lcov)
   execute printf("sign unplace * group=CovSign buffer=%d", bufnr("%"))
