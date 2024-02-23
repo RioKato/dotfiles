@@ -15,6 +15,8 @@ clang
 bear
 llvm
 lcov
+valgrind
+kcachegrind
 ccache
 linux-headers
 gdb

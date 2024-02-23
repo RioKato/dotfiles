@@ -121,8 +121,7 @@ alias gcc-cov='gcc -coverage'
 alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias make='bear -- make'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
-alias make-dbg='bear -- make CC=clang CFLAGS="-Og -g3 -fprofile-instr-generate -fcoverage-mapping"'
-alias cmake-dbg='CC=clang cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_FLAGS="-Og -g3 -fprofile-instr-generate -fcoverage-mapping"'
+alias callgrind='valgrind --tool=callgrind'
 
 if command -v nvim &> /dev/null
 then
