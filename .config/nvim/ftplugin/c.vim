@@ -35,5 +35,4 @@ noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
 command SearchCode :call GHSearchCode(expand("<cword>"))
 
-call CovInit()
 call GitNotesInit()

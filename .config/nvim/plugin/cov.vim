@@ -25,7 +25,5 @@ function! LCov() abort
   call CovSign(systemlist(l:command))
 endfunction
 
-function CovInit() abort
-  command! -nargs=1 LLVMCov :call LLVMCov(<f-args>)
-  command! LCov :call LCov()
-endfunction
+command -nargs=1 LLVMCov :call LLVMCov(<f-args>)
+command LCov :call LCov()
