@@ -117,9 +117,12 @@ export LESS="-R"
 export EDITOR=vim
 alias view='vim -R'
 alias clang='clang -MJ compile_commands.json'
-alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 alias gcc-cov='gcc -coverage'
 alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
+alias make='bear -- make'
+alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
+alias make-dbg='bear -- make CC=clang CFLAGS="-Og -g3 -fprofile-instr-generate -fcoverage-mapping"'
+alias cmake-dbg='CC=clang cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_C_FLAGS="-Og -g3 -fprofile-instr-generate -fcoverage-mapping"'
 
 if command -v nvim &> /dev/null
 then
@@ -136,11 +139,6 @@ fi
 if command -v docker &> /dev/null
 then
   alias docker='sudo -E docker'
-fi
-
-if command -v bear &> /dev/null
-then
-  alias make='bear -- make'
 fi
 
 case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
