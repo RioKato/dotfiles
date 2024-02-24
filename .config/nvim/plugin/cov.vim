@@ -26,10 +26,14 @@ endfunction
 
 function! LCovRun() abort
   let l:command = printf("lcov -c -d . > lcov.out")
-  echo system(l:command)
+  call system(l:command)
 endfunction
 
 function! LCov() abort
+  if !filereadable("lcov.out")
+    call LCovRun()
+  endif
+
   let l:command = printf("SF:%s", expand("%:p"))
   let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", l:command)
   call CovSign(systemlist(l:command))
