@@ -1,11 +1,11 @@
 highlight CovSignHighlight cterm=bold ctermfg=167 gui=bold guifg=#cd5c5c
 sign define CovSign linehl=CovSignHighlight
 
-function! CovClear() abort
+function CovClear() abort
   execute printf("sign unplace * group=CovSign buffer=%d", bufnr("%"))
 endfunction
 
-function! CovSign(lcov) abort
+function CovSign(lcov) abort
   call CovClear()
 
   for l:line in a:lcov
@@ -17,11 +17,11 @@ function! CovSign(lcov) abort
   endfor
 endfunction
 
-function! LLVMCovRun() abort
+function LLVMCovRun() abort
   call system("rm -f default.profdata && llvm-profdata merge -o default.profdata default.profraw")
 endfunction
 
-function! LLVMCov(program) abort
+function LLVMCov(program) abort
   if !filereadable("default.profdata")
     call LLVMCovRun()
   endif
@@ -30,11 +30,11 @@ function! LLVMCov(program) abort
   call CovSign(systemlist(l:command))
 endfunction
 
-function! LCovRun() abort
+function LCovRun() abort
   call system("lcov -c -d . > lcov.out")
 endfunction
 
-function! LCov() abort
+function LCov() abort
   if !filereadable("lcov.out")
     call LCovRun()
   endif

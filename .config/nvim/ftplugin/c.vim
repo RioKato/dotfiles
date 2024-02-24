@@ -1,4 +1,4 @@
-function! Record(command) abort
+function Record(command) abort
   if empty($TMUX)
     echoerr "ERROR: run inside a tmux session"
   endif
@@ -7,7 +7,7 @@ function! Record(command) abort
   call system(l:command)
 endfunction
 
-function! Replay() abort
+function Replay() abort
   if empty($TMUX)
     echoerr "ERROR: run inside a tmux session"
   endif
@@ -15,7 +15,7 @@ function! Replay() abort
   call system("tmux split -h rr replay")
 endfunction
 
-function! ReplayBreakLine() abort
+function ReplayBreakLine() abort
   if empty($TMUX)
     echoerr "ERROR: run inside a tmux session"
   endif
@@ -30,7 +30,7 @@ function GHSearchCode(keyword) abort
   echo system(l:command)
 endfunction
 
-function! Complexity() abort
+function Complexity() abort
   let l:command = printf("complexity -t 0 %s", shellescape(expand("%:p")))
   echo system(l:command)
 endfunction
