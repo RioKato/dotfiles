@@ -30,9 +30,15 @@ function GHSearchCode(keyword) abort
   call system(l:command)
 endfunction
 
+function! Complexity() abort
+  let l:command = printf("complexity -t 0 %s", shellescape(expand("%:p")))
+  echo system(l:command)
+endfunction
+
 command -nargs=* Record :call Record(<q-args>)
 noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
 command SearchCode :call GHSearchCode(expand("<cword>"))
+command Complexity :call Complexity()
 
 call GitNotesInit()
