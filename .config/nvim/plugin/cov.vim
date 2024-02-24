@@ -1,8 +1,12 @@
 highlight CovSignHighlight cterm=bold ctermfg=167 gui=bold guifg=#cd5c5c
 sign define CovSign linehl=CovSignHighlight
 
-function! CovSign(lcov)
+function! CovClear() abort
   execute printf("sign unplace * group=CovSign buffer=%d", bufnr("%"))
+endfunction
+
+function! CovSign(lcov) abort
+  call CovClear()
 
   for l:line in a:lcov
     let l:da = matchlist(l:line, 'DA:\(\d\+\),\(\d\+\)')
@@ -44,3 +48,4 @@ command LLVMCovRun :call LLVMCovRun()
 command -nargs=1 LLVMCov :call LLVMCov(<f-args>)
 command LCovRun :call LCovRun()
 command LCov :call LCov()
+command CovClear :call CovClear()
