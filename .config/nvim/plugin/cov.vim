@@ -26,7 +26,7 @@ function! LLVMCov(program) abort
     call LLVMCovRun()
   endif
 
-  let l:command = printf("llvm-cov export -instr-profile=default.profdata %s -format=lcov -sources %s", a:program, expand("%:p"))
+  let l:command = printf("llvm-cov export -instr-profile=default.profdata %s -format=lcov -sources %s", shellescape(a:program), shellescape(expand("%:p")))
   call CovSign(systemlist(l:command))
 endfunction
 
@@ -40,7 +40,7 @@ function! LCov() abort
   endif
 
   let l:command = printf("SF:%s", expand("%:p"))
-  let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", shellescape(l:command, 1))
+  let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", shellescape(l:command))
   call CovSign(systemlist(l:command))
 endfunction
 
