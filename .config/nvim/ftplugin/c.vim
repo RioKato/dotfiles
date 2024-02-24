@@ -25,9 +25,8 @@ function! ReplayBreakLine() abort
 endfunction
 
 function GHSearchCode(keyword) abort
-  let l:command = printf("gh search code --language c %s | column -t -l 2 -o ' | ' | less -S", a:keyword)
-  let l:command = printf("tmux split -h %s", shellescape(l:command))
-  call system(l:command)
+  let l:command = printf("gh search code --language c %s | column -t -l 2 -o ' | ' | less -S", shellescape(a:keyword))
+  echo system(l:command)
 endfunction
 
 function! Complexity() abort
