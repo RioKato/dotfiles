@@ -2,7 +2,7 @@ highlight CovSignHighlight cterm=bold ctermfg=167 gui=bold guifg=#cd5c5c
 sign define CovSign linehl=CovSignHighlight
 
 function! CovSign(lcov)
-  sign unplace * group=CovSign
+  execute printf("sign unplace * group=CovSign buffer=%d", bufnr("%"))
 
   for l:line in a:lcov
     let l:da = matchlist(l:line, 'DA:\(\d\+\),\(\d\+\)')
