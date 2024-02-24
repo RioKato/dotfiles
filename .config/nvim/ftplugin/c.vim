@@ -17,10 +17,12 @@ function! Replay() abort
 endfunction
 
 function! ReplayBreakLine() abort
-  call Replay()
-  sleep 1
+  if empty($TMUX)
+    echoerr "ERROR: run inside a tmux session"
+  endif
+
   let l:command = printf("break %s:%d", expand("%:p"), line("."))
-  let l:command = printf("tmux send %s Enter continue Enter", shellescape(l:command))
+  let l:command = printf("tmux split -h rr replay -- -ex %s -ex continue", shellescape(l:command))
   call system(l:command)
 endfunction
 
