@@ -17,9 +17,16 @@ function! CovSign(lcov)
   endfor
 endfunction
 
-function! LLVMCov(program) abort
+function! LLVMCovRun() abort
   let l:command = "rm -f default.profdata && llvm-profdata merge -o default.profdata default.profraw"
   call system(l:command)
+endfunction
+
+function! LLVMCov(program) abort
+  if !filereadable("default.profdata")
+    call LLVMCovRun()
+  endif
+
   let l:command = printf("llvm-cov export -instr-profile=default.profdata %s -format=lcov -sources %s", a:program, expand("%:p"))
   call CovSign(systemlist(l:command))
 endfunction
@@ -39,6 +46,7 @@ function! LCov() abort
   call CovSign(systemlist(l:command))
 endfunction
 
+command LLVMCovRun :call LLVMCovRun()
 command -nargs=1 LLVMCov :call LLVMCov(<f-args>)
 command LCovRun :call LCovRun()
 command LCov :call LCov()
