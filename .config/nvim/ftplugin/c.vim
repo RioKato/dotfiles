@@ -3,8 +3,7 @@ function! Record(command) abort
     echoerr "ERROR: run inside a tmux session"
   endif
 
-  let l:command = printf("rr record %s", a:command)
-  let l:command = printf("tmux split -h %s", shellescape(l:command))
+  let l:command = printf("tmux split -h rr record %s", a:command)
   call system(l:command)
 endfunction
 
@@ -27,7 +26,7 @@ function! ReplayBreakLine() abort
 endfunction
 
 function GHSearchCode(keyword) abort
-  let l:command = printf("gh search code --language c %s | column -t -l 2 -o ' | ' | less -S", shellescape(a:keyword))
+  let l:command = printf("gh search code --language c %s | column -t -l 2 -o ' | '", shellescape(a:keyword))
   echo system(l:command)
 endfunction
 
