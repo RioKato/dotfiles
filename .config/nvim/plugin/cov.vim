@@ -24,11 +24,17 @@ function! LLVMCov(program) abort
   call CovSign(systemlist(l:command))
 endfunction
 
+function! LCovRun() abort
+  let l:command = printf("lcov -c -d . > lcov.out")
+  echo system(l:command)
+endfunction
+
 function! LCov() abort
   let l:command = printf("SF:%s", expand("%:p"))
-  let l:command = printf("lcov -c -d . 2> /dev/null | awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}'", l:command)
+  let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", l:command)
   call CovSign(systemlist(l:command))
 endfunction
 
 command -nargs=1 LLVMCov :call LLVMCov(<f-args>)
+command LCovRun :call LCovRun()
 command LCov :call LCov()
