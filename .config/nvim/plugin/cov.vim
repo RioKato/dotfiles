@@ -2,17 +2,13 @@ highlight CovSignHighlight cterm=bold ctermfg=167 gui=bold guifg=#cd5c5c
 sign define CovSign linehl=CovSignHighlight
 
 function! CovSign(lcov)
-  let l:i = 1
-  let l:end = line("$")
-  while l:i <= l:end
-    execute printf("sign place %s line=%s name=CovSign group=CovSign", l:i, l:i)
-    let l:i = l:i + 1
-  endwhile
+  sign unplace * group=CovSign
 
   for l:line in a:lcov
     let l:da = matchlist(l:line, 'DA:\(\d\+\),\(\d\+\)')
-    if l:da != [] && str2nr(l:da[2], 10) > 0
-      execute printf("sign unplace %d group=CovSign", str2nr(l:da[1], 10))
+    if l:da != [] && str2nr(l:da[2], 10) == 0
+      let l:no = str2nr(l:da[1], 10)
+      execute printf("sign place %d line=%d name=CovSign group=CovSign", l:no, l:no)
     endif
   endfor
 endfunction
