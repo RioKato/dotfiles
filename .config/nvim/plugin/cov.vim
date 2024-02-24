@@ -40,7 +40,7 @@ function! LCov() abort
   endif
 
   let l:command = printf("SF:%s", expand("%:p"))
-  let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", l:command)
+  let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", shellescape(l:command, 1))
   call CovSign(systemlist(l:command))
 endfunction
 
