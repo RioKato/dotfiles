@@ -35,10 +35,15 @@ function Complexity() abort
   echo system(l:command)
 endfunction
 
+function BugSpots() abort
+  echo system("git bugspots")
+endfunction
+
 command -nargs=* Record :call Record(<q-args>)
 noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
 command SearchCode :call GHSearchCode(expand("<cword>"))
 command Complexity :call Complexity()
+command BugSpots :call BugSpots()
 
 call GitNotesInit()
