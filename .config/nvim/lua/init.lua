@@ -49,14 +49,8 @@ packer.startup(function()
 		},
 	})
 	use("xiyaowong/nvim-cursorword")
-	-- use("lukas-reineke/indent-blankline.nvim")
 	use("tversteeg/registers.nvim")
 end)
-
--- local indent_blankline = require("indent_blankline")
--- indent_blankline.setup({
--- 	show_current_context = true,
--- })
 
 local telescope = require("telescope")
 telescope.load_extension("fzf")
@@ -98,7 +92,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
 		vim.keymap.set("n", "<space>h", telescope_builtin.lsp_document_symbols, opts)
-		vim.keymap.set("n", "<space>t", telescope_builtin.tagstack, opts)
 		vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, opts)
 		vim.keymap.set("n", "<space><space>", function()
 			vim.lsp.buf.format({ async = true })
