@@ -25,6 +25,11 @@ function ReplayBreakLine() abort
   call system(l:command)
 endfunction
 
+function Weggli(pattern) abort
+  let l:command = printf("weggli %s %s", shellescape(a:pattern), shellescape(expand("%:p")))
+  echo system(l:command)
+endfunction
+
 function GHSearchCode(keyword) abort
   let l:command = printf("gh search code --language c %s | column -t -l 2 -o ' | '", shellescape(a:keyword))
   echo system(l:command)
@@ -42,6 +47,7 @@ endfunction
 command -nargs=* Record :call Record(<q-args>)
 noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
+command -nargs=* Weggli :call Weggli(<q-args>)
 command SearchCode :call GHSearchCode(expand("<cword>"))
 command Complexity :call Complexity()
 command BugSpots :call BugSpots()
