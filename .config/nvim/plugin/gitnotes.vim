@@ -12,10 +12,10 @@ function GitNotes() abort
   endif
 
   if buflisted(l:hash)
+    let l:winid = win_getid()
     vsplit
     execute printf("buffer %s", l:hash)
-    call append(line("."), [l:link])
-    call cursor(line(".") + 1, 1)
+    call win_gotoid(l:winid)
     return
 
   else
