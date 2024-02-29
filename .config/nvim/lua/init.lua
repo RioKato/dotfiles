@@ -74,6 +74,7 @@ telescope.setup({
 
 local telescope_builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
+local extref = require("extref")
 
 vim.keymap.set("n", "<space>f", telescope_builtin.find_files, opts)
 vim.keymap.set("n", "<space>b", telescope_builtin.buffers, opts)
@@ -91,7 +92,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<C-k>", telescope_builtin.lsp_references, opts)
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
-		vim.keymap.set("n", "<space>h", telescope_builtin.lsp_document_symbols, opts)
+		vim.keymap.set("n", "<space>h", extref.list_symbols, opts)
 		vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, opts)
 		vim.keymap.set("n", "<space><space>", function()
 			vim.lsp.buf.format({ async = true })
