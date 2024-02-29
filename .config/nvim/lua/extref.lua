@@ -1,6 +1,6 @@
 local M = {}
 
-local function is_extref_symbol(params, ms)
+local function is_extref(params, ms)
 	local references = vim.lsp.buf_request_sync(0, "textDocument/references", params, ms)
 	for _, v in ipairs(references) do
 		for _, v in ipairs(v.result) do
@@ -19,7 +19,7 @@ local finders = require("telescope.finders")
 local make_entry = require("telescope.make_entry")
 local pickers = require("telescope.pickers")
 
-M.list_symbols = function(opts)
+M.symbols = function(opts)
 	opts = opts or {}
 
 	vim.lsp.buf.document_symbol({
@@ -32,7 +32,7 @@ M.list_symbols = function(opts)
 				params.textDocument = vim.lsp.util.make_text_document_params()
 				params.context = { includeDeclaration = false }
 
-				if is_extref_symbol(params, opts.ms) then
+				if is_extref(params, opts.ms) then
 					items[#items + 1] = v
 				end
 			end
