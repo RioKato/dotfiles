@@ -24,18 +24,13 @@ M.symbols = function(opts)
 
 	vim.lsp.buf.document_symbol({
 		on_list = function(symbol)
-			local items = {}
-
-			for _, v in ipairs(symbol.items) do
+			local items = vim.tbl_filter(function(item)
 				local params = {}
-				params.position = { line = v.lnum - 1, character = v.col }
+				params.position = { line = item.lnum - 1, character = item.col }
 				params.textDocument = vim.lsp.util.make_text_document_params()
 				params.context = { includeDeclaration = false }
-
-				if is_extref(params, opts.ms) then
-					items[#items + 1] = v
-				end
-			end
+				return is_extref(params, opts.ms)
+			end, symbol.items)
 
 			opts.path_display = { "hidden" }
 			pickers
