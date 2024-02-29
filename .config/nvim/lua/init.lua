@@ -72,28 +72,28 @@ telescope.setup({
 	},
 })
 
-local telescope_builtin = require("telescope.builtin")
+local builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
 local extref = require("extref")
 
-vim.keymap.set("n", "<space>f", telescope_builtin.find_files, opts)
-vim.keymap.set("n", "<space>b", telescope_builtin.buffers, opts)
-vim.keymap.set("n", "<space>r", telescope_builtin.registers, opts)
-vim.keymap.set("n", "<space>g", telescope_builtin.live_grep, opts)
-vim.keymap.set("n", "<space>G", telescope_builtin.current_buffer_fuzzy_find, opts)
-vim.keymap.set("n", "<C-s>", telescope_builtin.grep_string, opts)
+vim.keymap.set("n", "<space>f", builtin.find_files, opts)
+vim.keymap.set("n", "<space>b", builtin.buffers, opts)
+vim.keymap.set("n", "<space>r", builtin.registers, opts)
+vim.keymap.set("n", "<space>g", builtin.live_grep, opts)
+vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find, opts)
+vim.keymap.set("n", "<C-s>", builtin.grep_string, opts)
 
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
 		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 		local opts = { buffer = ev.bufnr }
-		vim.keymap.set("n", "<C-j>", telescope_builtin.lsp_definitions, opts)
-		vim.keymap.set("n", "<C-k>", telescope_builtin.lsp_references, opts)
+		vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
+		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
 		vim.keymap.set("n", "<space>h", extref.list_symbols, opts)
-		vim.keymap.set("n", "<space>d", telescope_builtin.diagnostics, opts)
+		vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
 		vim.keymap.set("n", "<space><space>", function()
 			vim.lsp.buf.format({ async = true })
 		end, opts)
