@@ -57,6 +57,7 @@ telescope.load_extension("fzf")
 
 telescope.setup({
 	defaults = {
+		path_display = { "shorten" },
 		layout_config = {
 			width = 0.99,
 			height = 0.99,
