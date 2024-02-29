@@ -50,6 +50,7 @@ packer.startup(function()
 	})
 	use("xiyaowong/nvim-cursorword")
 	use("tversteeg/registers.nvim")
+	use("ray-x/lsp_signature.nvim")
 end)
 
 local telescope = require("telescope")
@@ -128,6 +129,12 @@ cmp.setup({
 		{ name = "buffer" },
 		{ name = "path" },
 	}),
+})
+
+local lsp_signature = require("lsp_signature")
+lsp_signature.setup({
+	floating_window = false,
+	hint_enable = true,
 })
 
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
