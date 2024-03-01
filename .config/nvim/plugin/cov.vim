@@ -31,7 +31,7 @@ function LLVMCov(program) abort
 endfunction
 
 function LCovRun() abort
-  call system("lcov -c -d . > lcov.out")
+  call system("lcov -c -d . -o lcov.out")
 endfunction
 
 function LCov() abort
