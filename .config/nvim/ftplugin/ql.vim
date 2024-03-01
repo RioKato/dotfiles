@@ -1,5 +1,5 @@
 function CodeQL(database) abort
-  let l:command = printf("tmux split -h codeql query run -d %s %s", a:database, shellescape(expand("%:p")))
+  let l:command = printf("tmux split -h codeql query run -d %s %s", shellescape(a:database), shellescape(expand("%:p")))
   call system(l:command)
 endfunction
 
