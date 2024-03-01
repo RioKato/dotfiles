@@ -31,16 +31,15 @@ function LLVMCov(program) abort
 endfunction
 
 function LCovRun() abort
-  call system("lcov -c -d . -o lcov.out")
+  call system("lcov -c -d . -o lcov.info")
 endfunction
 
 function LCov() abort
-  if !filereadable("lcov.out")
+  if !filereadable("lcov.info")
     call LCovRun()
   endif
 
-  let l:command = printf("SF:%s", expand("%:p"))
-  let l:command = printf("awk -v start=%s -v end='end_of_record' '$0==start,$0==end {print $1}' lcov.out", shellescape(l:command))
+  let l:command = printf("lcov -e lcov.info %s", shellescape(expand("%:p")))
   call CovSign(systemlist(l:command))
 endfunction
 
