@@ -141,7 +141,7 @@ local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local capabilities = cmp_nvim_lsp.default_capabilities()
 local lspconfig = require("lspconfig")
 
-local servers = { "clangd", "pyright", "rust_analyzer", "gopls" }
+local servers = { "clangd", "pyright", "rust_analyzer", "gopls", "codeqlls" }
 
 for _, lsp in ipairs(servers) do
 	lspconfig[lsp].setup({

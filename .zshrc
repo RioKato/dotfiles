@@ -157,6 +157,7 @@ export PERL_LOCAL_LIB_ROOT=~/perl5
 export PERL_MB_OPT="--install_base \"~/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=~/perl5"
 export PATH=$PATH:/opt/idapro-8.2
+export PATH=$PATH:~/bin/codeql
 
 ###############################################################################################
 
