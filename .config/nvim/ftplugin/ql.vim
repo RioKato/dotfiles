@@ -3,7 +3,7 @@ function CodeQL(database) abort
     echoerr "ERROR: run inside a tmux session"
   endif
 
-  let l:command = printf("tmux split -h codeql query run -d %s %s", shellescape(a:database), shellescape(expand("%:p")))
+  let l:command = printf('tmux split -h "codeql query run -d %s %s | less"', shellescape(a:database), shellescape(expand("%:p")))
   call system(l:command)
 endfunction
 

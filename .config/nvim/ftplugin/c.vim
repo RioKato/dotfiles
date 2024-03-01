@@ -30,7 +30,7 @@ function Weggli(pattern) abort
     echoerr "ERROR: run inside a tmux session"
   endif
 
-  let l:command = printf("tmux split -h weggli %s %s", shellescape(a:pattern), shellescape(expand("%:p")))
+  let l:command = printf('tmux split -h "weggli %s %s | less"', shellescape(a:pattern), shellescape(expand("%:p")))
   call system(l:command)
 endfunction
 
