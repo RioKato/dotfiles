@@ -26,6 +26,10 @@ function ReplayBreakLine() abort
 endfunction
 
 function Weggli(pattern) abort
+  if empty($TMUX)
+    echoerr "ERROR: run inside a tmux session"
+  endif
+
   let l:command = printf("tmux split -h weggli %s %s", shellescape(a:pattern), shellescape(expand("%:p")))
   call system(l:command)
 endfunction
