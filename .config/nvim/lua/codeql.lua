@@ -17,11 +17,11 @@ M.run_query = function(db, opts)
 		item.lnum = tonumber(lnum)
 		item.col = tonumber(col)
 		item.filename = filename
-		item.text = filename
+		item.text = ""
 		items[#items + 1] = item
 	end
 
-	opts.path_display = { "hidden" }
+	opts.show_line = false
 	pickers
 		.new(opts, {
 			prompt_title = "CodeQL Results",
