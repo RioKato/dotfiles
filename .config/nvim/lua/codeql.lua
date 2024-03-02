@@ -12,6 +12,11 @@ M.run_query = function(db, opts)
 	local items = {}
 	local command = { "codeql", "query", "run", "-d", db, vim.api.nvim_buf_get_name(0) }
 	local stdout = vim.fn.system(command)
+	if vim.v.shell_error then
+		print(stdout)
+		return
+	end
+
 	for filename, lnum, col in string.gmatch(stdout, "file://([^:]+):(%d+):(%d+):%d+:%d+") do
 		local item = {}
 		item.lnum = tonumber(lnum)
