@@ -6,7 +6,12 @@ local finders = require("telescope.finders")
 local make_entry = require("telescope.make_entry")
 local pickers = require("telescope.pickers")
 
+M.set_db = function(db)
+	M.db = db
+end
+
 M.run_query = function(db, opts)
+	db = db or M.db
 	opts = opts or {}
 
 	local items = {}

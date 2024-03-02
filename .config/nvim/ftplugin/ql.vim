@@ -1,1 +1,2 @@
-command -nargs=* CodeQL :lua require("codeql").run_query(<q-args>)
+command -nargs=* CodeQLDB :lua require("codeql").set_db(<q-args>)
+noremap r :lua require("codeql").run_query()<cr>
