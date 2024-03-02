@@ -12,7 +12,7 @@ M.run_query = function(db, opts)
 	local items = {}
 	local command = { "codeql", "query", "run", "-d", db, vim.api.nvim_buf_get_name(0) }
 	local stdout = vim.fn.system(command)
-	if vim.v.shell_error then
+	if vim.v.shell_error ~= 0 then
 		print(stdout)
 		return
 	end
@@ -24,6 +24,11 @@ M.run_query = function(db, opts)
 		item.filename = filename
 		item.text = ""
 		items[#items + 1] = item
+	end
+
+	if vim.tbl_isempty(items) then
+		print(stdout)
+		return
 	end
 
 	opts.show_line = false
