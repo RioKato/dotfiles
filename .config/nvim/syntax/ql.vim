@@ -40,12 +40,12 @@ highlight default link codeqlConstant      Constant
 highlight default link codeqlImport        Include
 highlight default link codeqlKeyword       Keyword
 highlight default link codeqlAnnotation    PreProc
-highlight default link codeqlTypeMod       Keyword 
+highlight default link codeqlTypeMod       Keyword
 highlight default link codeqlTypeName      Function
 highlight default link codeqlConstructorName Function
-highlight default link codeqlPredicateMod  Keyword 
+highlight default link codeqlPredicateMod  Keyword
 highlight default link codeqlPredicateName Function
-highlight default link codeqlVarDeclMod    Keyword 
+highlight default link codeqlVarDeclMod    Keyword
 highlight default link codeqlVarDeclType   Function
 highlight default link codeqlString        String
 highlight default link codeqlInt           Number
