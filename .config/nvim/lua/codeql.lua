@@ -11,7 +11,7 @@ M.set_db = function(db)
 end
 
 M.run_query = function(db, opts)
-	db = db or M.db
+	db = db or M.db or ""
 	opts = opts or {}
 
 	local items = {}
