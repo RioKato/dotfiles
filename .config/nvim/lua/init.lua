@@ -76,10 +76,10 @@ telescope.setup({
 
 local builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
-local lsputil = require("lsputil")
+local lsputils = require("lsputils")
 
-vim.api.nvim_create_user_command("LspUtilCallgraph", function(opts)
-	lsputil.callgraph(opts.fargs[1])
+vim.api.nvim_create_user_command("Callgraph", function(opts)
+	lsputils.callgraph(opts.fargs[1])
 end, { nargs = 1 })
 
 vim.keymap.set("n", "<space>f", builtin.find_files, opts)
@@ -98,7 +98,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
-		vim.keymap.set("n", "<space>h", lsputil.symbols, opts)
+		vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
 		vim.keymap.set("n", "<space><space>", function()
 			vim.lsp.buf.format({ async = true })
