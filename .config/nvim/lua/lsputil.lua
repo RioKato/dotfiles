@@ -53,4 +53,60 @@ M.symbols = function(opts)
 	})
 end
 
+local function callgraph(depth, path, ms)
+	if depth == 0 then
+		return { path }
+	end
+
+	local incoming = vim.lsp.buf_request_sync(0, "callHierarchy/incomingCalls", { item = path[#path] }, ms)
+
+	local append = function(dst, src)
+		for _, v in ipairs(src) do
+			dst[#dst + 1] = v
+		end
+	end
+
+	local ret = {}
+	for _, v in ipairs(incoming) do
+		for _, v in ipairs(v.result) do
+			local copy = {}
+			append(copy, path)
+			copy[#copy + 1] = v.from
+
+			append(ret, callgraph(depth - 1, copy, ms))
+		end
+	end
+
+	if vim.tbl_isempty(ret) then
+		return { path }
+	end
+
+	return ret
+end
+
+M.callgraph = function(depth, opts)
+	opts = opts or {}
+
+	local params = vim.lsp.util.make_position_params()
+	vim.lsp.buf_request(0, "textDocument/prepareCallHierarchy", params, function(err, result)
+		if err then
+			return
+		end
+
+		if vim.tbl_isempty(result) then
+			return
+		end
+
+		local cg = callgraph(depth, result, opts.ms)
+		for _, v in ipairs(cg) do
+			local name = {}
+			for _, v in ipairs(v) do
+				name[#name + 1] = v.name
+			end
+			name = table.concat(name, " <= ")
+			print(name)
+		end
+	end)
+end
+
 return M
