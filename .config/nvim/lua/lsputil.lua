@@ -97,15 +97,36 @@ M.callgraph = function(depth, opts)
 			return
 		end
 
-		local cg = callgraph(depth, result, opts.ms)
-		for _, v in ipairs(cg) do
-			local name = {}
+		local items = {}
+		for _, v in ipairs(callgraph(depth, result, opts.ms)) do
+			local text = {}
 			for _, v in ipairs(v) do
-				name[#name + 1] = v.name
+				text[#text + 1] = v.name
 			end
-			name = table.concat(name, " <= ")
-			print(name)
+			text = table.concat(text, " < ")
+
+			table.insert(items, {
+				filename = vim.uri_to_fname(v[#v].uri),
+				text = text,
+				lnum = v[#v].range.start.line + 1,
+				col = v[#v].range.start.character + 1,
+			})
 		end
+
+		opts.wrap_results = true
+		pickers
+			.new(opts, {
+				prompt_title = title,
+				finder = finders.new_table({
+					results = items,
+					entry_maker = opts.entry_maker or make_entry.gen_from_quickfix(opts),
+				}),
+				previewer = config.values.qflist_previewer(opts),
+				sorter = config.values.generic_sorter(opts),
+				push_cursor_on_edit = true,
+				push_tagstack_on_edit = true,
+			})
+			:find()
 	end)
 end
 
