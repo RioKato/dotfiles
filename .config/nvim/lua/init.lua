@@ -96,6 +96,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local opts = { buffer = ev.bufnr }
 		vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
 		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
+		vim.keymap.set("n", "<C-m>", builtin.lsp_incoming_calls, opts)
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
 		vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
