@@ -78,6 +78,10 @@ local builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
 local lsputil = require("lsputil")
 
+vim.api.nvim_create_user_command("LspUtilCallgraph", function(opts)
+	lsputil.callgraph(opts.fargs[1])
+end, { nargs = 1 })
+
 vim.keymap.set("n", "<space>f", builtin.find_files, opts)
 vim.keymap.set("n", "<space>b", builtin.buffers, opts)
 vim.keymap.set("n", "<space>r", builtin.registers, opts)
