@@ -24,7 +24,6 @@ packer.startup(function()
 	use("nvim-treesitter/nvim-treesitter")
 	use({
 		"nvim-telescope/telescope.nvim",
-		tag = "0.1.4",
 		requires = {
 			{ "nvim-lua/plenary.nvim" },
 		},
@@ -54,10 +53,16 @@ packer.startup(function()
 end)
 
 local telescope = require("telescope")
+local actions = require("telescope.actions")
 telescope.load_extension("fzf")
 
 telescope.setup({
 	defaults = {
+		mappings = {
+			i = {
+				["<C-v>"] = actions.select_vertical,
+			},
+		},
 		path_display = { "shorten" },
 		layout_config = {
 			width = 0.99,
