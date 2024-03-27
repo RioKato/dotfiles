@@ -47,6 +47,7 @@ packer.startup(function()
 			{ "rafamadriz/friendly-snippets" },
 		},
 	})
+	use("kevinhwang91/nvim-bqf")
 	use("xiyaowong/nvim-cursorword")
 	use("tversteeg/registers.nvim")
 	use("ray-x/lsp_signature.nvim")
@@ -60,7 +61,7 @@ telescope.setup({
 	defaults = {
 		mappings = {
 			i = {
-				["<C-v>"] = actions.select_vertical,
+				["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
 			},
 		},
 		path_display = { "shorten" },

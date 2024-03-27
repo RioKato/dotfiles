@@ -57,6 +57,7 @@ call plug#begin()
   Plug 'junegunn/vim-easy-align'
   Plug 'machakann/vim-sandwich'
   Plug 'tpope/vim-commentary'
+  Plug 'itchyny/vim-qfedit'
   Plug 'rhysd/git-messenger.vim'
   Plug 'voldikss/vim-translator'
   Plug 'liuchengxu/graphviz.vim'
