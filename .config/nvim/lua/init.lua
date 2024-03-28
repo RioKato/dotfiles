@@ -48,7 +48,7 @@ packer.startup(function()
 		},
 	})
 	use("stevearc/qf_helper.nvim")
-	use("xiyaowong/nvim-cursorword")
+	use("lewis6991/gitsigns.nvim")
 	use("tversteeg/registers.nvim")
 	use("ray-x/lsp_signature.nvim")
 end)
@@ -185,3 +185,6 @@ null_ls.setup({
 		null_ls.builtins.formatting.prettier,
 	},
 })
+
+local gitsigns = require("gitsigns")
+gitsigns.setup()
