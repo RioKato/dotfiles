@@ -63,10 +63,6 @@ call plug#begin()
   Plug 'tyru/open-browser.vim'
   Plug 'previm/previm'
   Plug 'img-paste-devs/img-paste.vim'
-  Plug 'lambdalisue/fern.vim'
-  Plug 'lambdalisue/fern-hijack.vim'
-  Plug 'yuki-yano/fern-preview.vim'
-  Plug 'mmarchini/bpftrace.vim'
   " Plug 'skanehira/denops-silicon.vim'
   " Plug 'vim-denops/denops.vim'
 call plug#end()
@@ -83,18 +79,6 @@ xmap <space>m <plug>(quickhl-manual-reset)
 
 nmap ga <plug>(EasyAlign)
 xmap ga <plug>(EasyAlign)
-
-function! s:fern_settings() abort
-  nmap <silent> <buffer> p     <plug>(fern-action-preview:toggle)
-  nmap <silent> <buffer> <C-p> <plug>(fern-action-preview:auto:toggle)
-  nmap <silent> <buffer> <C-d> <plug>(fern-action-preview:scroll:down:half)
-  nmap <silent> <buffer> <C-u> <plug>(fern-action-preview:scroll:up:half)
-endfunction
-
-augroup fern-settings
-  autocmd!
-  autocmd FileType fern call s:fern_settings()
-augroup END
 
 let g:git_messenger_no_default_mappings=1
 nmap <C-g> <plug>(git-messenger)
