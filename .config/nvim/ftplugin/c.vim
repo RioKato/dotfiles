@@ -39,4 +39,3 @@ command -nargs=* Record :call Record(<q-args>)
 noremap r :call ReplayBreakLine()<cr>
 noremap R :call Replay()<cr>
 command -nargs=* Weggli :call Weggli(<q-args>)
-call GitNotesInit()

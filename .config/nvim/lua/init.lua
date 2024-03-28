@@ -47,7 +47,7 @@ packer.startup(function()
 			{ "rafamadriz/friendly-snippets" },
 		},
 	})
-	use("kevinhwang91/nvim-bqf")
+	use("stevearc/qf_helper.nvim")
 	use("xiyaowong/nvim-cursorword")
 	use("tversteeg/registers.nvim")
 	use("ray-x/lsp_signature.nvim")
@@ -104,7 +104,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
 		vim.keymap.set("n", "<C-m>", builtin.lsp_incoming_calls, opts)
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
-		vim.keymap.set("n", "<C-n>", vim.lsp.buf.rename, opts)
 		vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
 		vim.keymap.set("n", "<space><space>", function()
@@ -112,6 +111,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end, opts)
 	end,
 })
+
+local qf_helper = require("qf_helper")
+qf_helper.setup()
+vim.keymap.set("n", "<C-N>", "<cmd>QNext<cr>")
+vim.keymap.set("n", "<C-P>", "<cmd>QPrev<cr>")
+vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
 
 local cmp = require("cmp")
 cmp.setup({
