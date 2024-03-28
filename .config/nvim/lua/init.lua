@@ -117,6 +117,12 @@ qf_helper.setup()
 vim.keymap.set("n", "<C-n>", "<cmd>QNext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>QPrev<cr>")
 vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	pattern = "qf",
+	callback = function()
+		vim.keymap.set("n", "dd", "<cmd>Reject<cr>")
+	end,
+})
 
 local cmp = require("cmp")
 cmp.setup({
