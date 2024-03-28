@@ -114,8 +114,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 local qf_helper = require("qf_helper")
 qf_helper.setup()
-vim.keymap.set("n", "<C-N>", "<cmd>QNext<cr>")
-vim.keymap.set("n", "<C-P>", "<cmd>QPrev<cr>")
+vim.keymap.set("n", "<C-n>", "<cmd>QNext<cr>")
+vim.keymap.set("n", "<C-p>", "<cmd>QPrev<cr>")
 vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
 
 local cmp = require("cmp")
