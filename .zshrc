@@ -122,6 +122,7 @@ alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias make='bear -- make'
 alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 alias callgrind='valgrind --tool=callgrind'
+alias git-pclone='git clone --filter=blob:none -n'
 
 if command -v nvim &> /dev/null
 then
