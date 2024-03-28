@@ -120,9 +120,9 @@ vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
 vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = "qf",
 	callback = function()
-		vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>")
-		vim.keymap.set("n", "<enter>", "<cmd>QFToggle!<cr>")
-		vim.keymap.set("n", "dd", "<cmd>Reject<cr>")
+		vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
+		vim.keymap.set("n", "<enter>", "<cmd>QFToggle!<cr>", { buffer = true })
+		vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
 	end,
 })
 
