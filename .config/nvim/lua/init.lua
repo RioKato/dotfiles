@@ -48,7 +48,8 @@ packer.startup(function()
 		},
 	})
 	use("stevearc/qf_helper.nvim")
-	use("tversteeg/registers.nvim")
+	use("dinhhuy258/git.nvim")
+	use("sindrets/diffview.nvim")
 	use("ray-x/lsp_signature.nvim")
 end)
 
@@ -185,4 +186,12 @@ null_ls.setup({
 		null_ls.builtins.formatting.autopep8,
 		null_ls.builtins.formatting.prettier,
 	},
+})
+
+local git = require("git")
+git.setup()
+
+local diffview = require("diffview")
+diffview.setup({
+	use_icons = false,
 })
