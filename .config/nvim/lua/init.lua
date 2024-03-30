@@ -47,9 +47,8 @@ packer.startup(function()
 		},
 	})
 	use("stevearc/qf_helper.nvim")
-	use("dinhhuy258/git.nvim")
-	use("sindrets/diffview.nvim")
 	use("ray-x/lsp_signature.nvim")
+	use("FabijanZulj/blame.nvim")
 end)
 
 local telescope = require("telescope")
@@ -187,10 +186,4 @@ null_ls.setup({
 	},
 })
 
-local git = require("git")
-git.setup()
-
-local diffview = require("diffview")
-diffview.setup({
-	use_icons = false,
-})
+require("git-related")

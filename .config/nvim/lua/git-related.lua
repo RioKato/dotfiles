@@ -110,8 +110,12 @@ M.git_related = function(path, from, to, opts)
   }):find()
 end
 
-vim.api.nvim_create_user_command("GitRelated", function()
-  M.git_related(vim.fn.expand("%:p"))
-end, {})
+vim.api.nvim_create_user_command("GitRelated", function(opts)
+  if opts.range == 0 then
+    M.git_related(vim.fn.expand("%:p"))
+  else
+    M.git_related(vim.fn.expand("%:p"), opts.line1, opts.line2)
+  end
+end, {range = true})
 
 return M
