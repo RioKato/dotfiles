@@ -105,12 +105,12 @@ M.callgraph = function(depth, opts)
 			end
 			text = table.concat(text, " < ")
 
-			table.insert(items, {
+			items[#items + 1] = {
 				filename = vim.uri_to_fname(v[#v].uri),
 				text = text,
 				lnum = v[#v].range.start.line + 1,
 				col = v[#v].range.start.character + 1,
-			})
+			}
 		end
 
 		opts.wrap_results = true
