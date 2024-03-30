@@ -108,7 +108,7 @@ M.git_related = function(path, from, to, opts)
 		:find()
 end
 
-vim.cmd("sign define BlameSign linehl=DiffText")
+vim.fn.sign_define("BlameSign", { linehl = "DiffText" })
 
 M.blame_highlight = function(path, line)
 	local command = { "git", "blame", "-l", "-s", "--", path }
@@ -124,15 +124,18 @@ M.blame_highlight = function(path, line)
 	end
 
 	local hash = blame[line]
-	for i, v in ipairs(blame) do
-		if v == hash then
-			vim.cmd(string.format("sign place %d line=%d name=BlameSign group=BlameSign", i, i))
-		end
-	end
-end
+	local bufnr = vim.fn.bufnr()
+	local placed = vim.fn.sign_getplaced(bufnr, { group = hash })
 
-M.blame_clear_highlight = function()
-	vim.cmd(string.format("sign unplace * group=BlameSign buffer=%d", vim.fn.bufnr()))
+	if placed[1] and #placed[1].signs == 0 then
+		for i, v in ipairs(blame) do
+			if v == hash then
+				vim.fn.sign_place(0, hash, "BlameSign", bufnr, { lnum = i })
+			end
+		end
+	else
+		vim.fn.sign_unplace(hash, { buffer = bufnr })
+	end
 end
 
 vim.api.nvim_create_user_command("GitRelated", function(opts)
@@ -146,9 +149,5 @@ end, { range = true })
 vim.api.nvim_create_user_command("BlameHighlight", function(opts)
 	M.blame_highlight(vim.fn.expand("%:p"), opts.line1)
 end, { range = true })
-
-vim.api.nvim_create_user_command("BlameClearHighlight", function(opts)
-	M.blame_clear_highlight()
-end, {})
 
 return M
