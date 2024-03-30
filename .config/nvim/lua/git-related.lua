@@ -1,24 +1,9 @@
 local M = {}
 
-local function git_blame(path, from, to)
+local function git_blame(path)
 	local result = {}
-	local command = nil
 
-	if from then
-		local range = nil
-
-		if to then
-			range = string.format("%d,%d", from, to)
-		else
-			range = string.format("%d", from)
-		end
-
-		command = { "git", "blame", "-l", "-s", "-L", range, "--", path }
-	else
-		command = { "git", "blame", "-l", "-s", "--", path }
-	end
-
-	local blame = vim.fn.systemlist(command)
+	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
 		return nil
 	end
