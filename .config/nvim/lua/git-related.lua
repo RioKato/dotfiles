@@ -68,25 +68,17 @@ local finders = require("telescope.finders")
 local make_entry = require("telescope.make_entry")
 local pickers = require("telescope.pickers")
 
-M.git_related = function(path, from, to, opts)
-	local blame = nil
-	if path then
-		blame = git_blame(path, from, to)
-		if blame == nil then
-			return nil
-		end
-	else
-		local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
+M.git_related = function(opts)
+	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
 
-		if placed[1] == nil or placed[1].signs == nil then
-			return nil
-		end
+	if placed[1] == nil or placed[1].signs == nil then
+		return nil
+	end
 
-		blame = {}
-		for _, v in ipairs(placed[1].signs) do
-			if v.name == "BlameSign" then
-				blame[v.group] = true
-			end
+	local blame = {}
+	for _, v in ipairs(placed[1].signs) do
+		if v.name == "BlameSign" then
+			blame[v.group] = true
 		end
 	end
 
@@ -154,13 +146,7 @@ M.blame_highlight = function(path, line)
 	end
 end
 
-vim.api.nvim_create_user_command("GitRelated", function(opts)
-	if opts.range == 0 then
-		M.git_related()
-	else
-		M.git_related(vim.fn.expand("%:p"), opts.line1, opts.line2)
-	end
-end, { range = true })
+vim.api.nvim_create_user_command("GitRelated", M.git_related, {})
 
 vim.api.nvim_create_user_command("BlameHighlight", function(opts)
 	M.blame_highlight(vim.fn.expand("%:p"), opts.line1)
