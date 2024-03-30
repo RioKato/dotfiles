@@ -120,6 +120,7 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 		vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
 		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
 		vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
+		vim.keymap.set("v", "d", ":'<,'>Reject<cr>", { buffer = true })
 	end,
 })
 
