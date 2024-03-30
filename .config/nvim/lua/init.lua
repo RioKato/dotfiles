@@ -88,7 +88,6 @@ end, { nargs = 1 })
 
 vim.keymap.set("n", "<space>f", builtin.find_files, opts)
 vim.keymap.set("n", "<space>b", builtin.buffers, opts)
-vim.keymap.set("n", "<space>r", builtin.registers, opts)
 vim.keymap.set("n", "<space>g", builtin.live_grep, opts)
 vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find, opts)
 vim.keymap.set("n", "<C-s>", builtin.grep_string, opts)
@@ -188,4 +187,4 @@ null_ls.setup({
 
 require("git-related")
 vim.keymap.set("n", "<C-r>", "<cmd>BlameHighlight<cr>", {})
-vim.keymap.set("v", "<C-r>", ":'<,'>GitRelated<cr>", {})
+vim.keymap.set("n", "<space>r", "<cmd>GitRelated<cr>", {})
