@@ -142,10 +142,30 @@ M.git_related_select = function(path, line1, line2)
 	end
 end
 
+M.git_related_clear = function()
+	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
+
+	if placed[1] == nil or placed[1].signs == nil then
+		return nil
+	end
+
+	local unplaced = {}
+	for _, v in ipairs(placed[1].signs) do
+		if v.name == "GitRelatedSign" then
+			if not unplaced[v.group] then
+				vim.fn.sign_unplace(v.group)
+				unplaced[v.group] = true
+			end
+		end
+	end
+end
+
 vim.api.nvim_create_user_command("GitRelated", M.git_related, {})
 
 vim.api.nvim_create_user_command("GitRelatedSelect", function(opts)
 	M.git_related_select(vim.fn.expand("%:p"), opts.line1, opts.line2)
 end, { range = true })
+
+vim.api.nvim_create_user_command("GitRelatedClear", M.git_related_clear, {})
 
 return M
