@@ -26,16 +26,14 @@ local function git_blame(path, from, to)
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
 		if result[hash] == nil then
-			result[hash] = {}
+			result[hash] = {{ from = i, to = i }}
+    else
+      lines = result[hash]
+      if lines[#lines].to + 1 == i then
+        lines[#lines].to = i
+      else
+        lines[#lines + 1] = { from = i, to = i }
 		end
-
-		lines = result[hash]
-		if lines[#lines] == nil then
-			lines[#lines] = { from = i, to = i }
-		elseif lines[#lines].to + 1 == i then
-			lines[#lines].to = i
-		else
-			lines[#lines + 1] = { from = i, to = i }
 		end
 	end
 
@@ -110,12 +108,41 @@ M.git_related = function(path, from, to, opts)
   }):find()
 end
 
+vim.cmd("sign define BlameSign linehl=DiffText")
+
+M.blame_highlight = function(path, line)
+  vim.cmd(string.format("sign unplace * group=BlameSign buffer=%d", vim.fn.bufnr()))
+
+	local command = { "git", "blame", "-l", "-s", "--", path }
+
+	local blame = vim.fn.systemlist(command)
+	if vim.v.shell_error ~= 0 then
+		return nil
+	end
+
+	for i, v in ipairs(blame) do
+		local hash = string.match(v, "%S+")
+    blame[i] = hash
+  end
+
+  local hash = blame[line]
+	for i, v in ipairs(blame) do
+    if v == hash then
+      vim.cmd(string.format("sign place %d line=%d name=BlameSign group=BlameSign", i, i))
+    end
+  end
+end
+
 vim.api.nvim_create_user_command("GitRelated", function(opts)
   if opts.range == 0 then
     M.git_related(vim.fn.expand("%:p"))
   else
     M.git_related(vim.fn.expand("%:p"), opts.line1, opts.line2)
   end
+end, {range = true})
+
+vim.api.nvim_create_user_command("BlameHighlight", function(opts)
+  M.blame_highlight(vim.fn.expand("%:p"), opts.line1)
 end, {range = true})
 
 return M
