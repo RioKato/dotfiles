@@ -187,3 +187,5 @@ null_ls.setup({
 })
 
 require("git-related")
+vim.keymap.set("n", "<C-r>", "<cmd>BlameHighlight<cr>", {})
+vim.keymap.set("v", "<C-r>", ":'<,'>GitRelated<cr>", {})
