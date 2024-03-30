@@ -62,7 +62,7 @@ M.git_related = function(opts)
 
 	local blame = {}
 	for _, v in ipairs(placed[1].signs) do
-		if v.name == "BlameSign" then
+		if v.name == "GitRelatedSign" then
 			blame[v.group] = true
 		end
 	end
@@ -101,9 +101,9 @@ M.git_related = function(opts)
 		:find()
 end
 
-vim.fn.sign_define("BlameSign", { linehl = "DiffText" })
+vim.fn.sign_define("GitRelatedSign", { linehl = "DiffText" })
 
-M.blame_highlight = function(path, line)
+M.git_related_select = function(path, line1, line2)
 	local command = { "git", "blame", "-l", "-s", "--", path }
 
 	local blame = vim.fn.systemlist(command)
@@ -116,25 +116,36 @@ M.blame_highlight = function(path, line)
 		blame[i] = hash
 	end
 
-	local hash = blame[line]
-	local bufnr = vim.fn.bufnr()
-	local placed = vim.fn.sign_getplaced(bufnr, { group = hash })
-
-	if placed[1] and #placed[1].signs == 0 then
-		for i, v in ipairs(blame) do
-			if v == hash then
-				vim.fn.sign_place(0, hash, "BlameSign", bufnr, { lnum = i })
-			end
+	local selected = {}
+	if line2 then
+		for i = line1, line2 do
+			selected[blame[i]] = true
 		end
 	else
-		vim.fn.sign_unplace(hash, { buffer = bufnr })
+		selected[blame[line1]] = true
+	end
+
+	local bufnr = vim.fn.bufnr()
+
+	for hash, _ in pairs(selected) do
+		local placed = vim.fn.sign_getplaced(bufnr, { group = hash })
+
+		if placed[1] and #placed[1].signs == 0 then
+			for i, v in ipairs(blame) do
+				if v == hash then
+					vim.fn.sign_place(0, hash, "GitRelatedSign", bufnr, { lnum = i })
+				end
+			end
+		else
+			vim.fn.sign_unplace(hash, { buffer = bufnr })
+		end
 	end
 end
 
 vim.api.nvim_create_user_command("GitRelated", M.git_related, {})
 
-vim.api.nvim_create_user_command("BlameHighlight", function(opts)
-	M.blame_highlight(vim.fn.expand("%:p"), opts.line1)
+vim.api.nvim_create_user_command("GitRelatedSelect", function(opts)
+	M.git_related_select(vim.fn.expand("%:p"), opts.line1, opts.line2)
 end, { range = true })
 
 return M
