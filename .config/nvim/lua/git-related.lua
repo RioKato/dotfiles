@@ -3,7 +3,8 @@ local M = {}
 local function git_blame(path)
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
-		error("git-blame failed")
+		-- error("git-blame failed")
+		return {}
 	end
 
 	for i, v in ipairs(blame) do
@@ -41,7 +42,8 @@ end
 local function git_show(hash)
 	local show = vim.fn.systemlist({ "git", "show", "--name-only", "--oneline", hash })
 	if vim.v.shell_error ~= 0 then
-		error("git-show failed")
+		-- error("git-show failed")
+		return {}
 	end
 
 	if #show < 2 then
@@ -76,17 +78,11 @@ M.list = function(opts)
 	local sorted = {}
 	local cache = {}
 	for hash, _ in pairs(blame) do
-		local show = nil
-
-		if hash == "0000000000000000000000000000000000000000" then
-			show = {}
-		else
-			show = git_show(hash)
-		end
+		local show = git_show(hash)
 
 		for _, path in ipairs(show) do
 			if cache[path] == nil then
-				cache[path] = git_group_by_blame(path) or {}
+				cache[path] = git_group_by_blame(path)
 			end
 
 			for _, pos in ipairs(cache[path][hash] or {}) do
