@@ -1,12 +1,12 @@
 local M = {}
 
 local function git_blame(path)
-	local result = {}
-
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
 		return nil
 	end
+
+	local result = {}
 
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
@@ -26,7 +26,6 @@ local function git_blame(path)
 end
 
 local function git_show(hash)
-	local result = {}
 	local show = vim.fn.systemlist({ "git", "show", "--name-only", "--oneline", hash })
 	if vim.v.shell_error ~= 0 then
 		return nil
@@ -35,6 +34,8 @@ local function git_show(hash)
 	if #show < 2 then
 		return nil
 	end
+
+	local result = {}
 
 	for i = 2, #show do
 		result[#result + 1] = show[i]
