@@ -3,7 +3,7 @@ local M = {}
 local function git_blame(path)
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
-		return nil
+		error("git-blame failed")
 	end
 
 	local result = {}
@@ -11,7 +11,7 @@ local function git_blame(path)
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
 		if hash == nil then
-			return nil
+			error("git-blame format is invalid")
 		end
 
 		if result[hash] == nil then
@@ -32,11 +32,11 @@ end
 local function git_show(hash)
 	local show = vim.fn.systemlist({ "git", "show", "--name-only", "--oneline", hash })
 	if vim.v.shell_error ~= 0 then
-		return nil
+		error("git-show failed")
 	end
 
 	if #show < 2 then
-		return nil
+		error("git-show format is invalid")
 	end
 
 	local result = {}
@@ -57,10 +57,6 @@ local pickers = require("telescope.pickers")
 M.list = function(opts)
 	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
 
-	if placed[1] == nil or placed[1].signs == nil then
-		return nil
-	end
-
 	local blame = {}
 	for _, v in ipairs(placed[1].signs) do
 		if v.name == "GitRelatedSelectSign" then
@@ -71,7 +67,13 @@ M.list = function(opts)
 	local sorted = {}
 	local cache = {}
 	for hash, _ in pairs(blame) do
-		local show = git_show(hash) or {}
+		local show = nil
+
+		if hash == "0000000000000000000000000000000000000000" then
+			show = {}
+		else
+			show = git_show(hash)
+		end
 
 		for _, path in ipairs(show) do
 			if cache[path] == nil then
@@ -142,13 +144,13 @@ vim.fn.sign_define("GitRelatedSelectSign", { linehl = "DiffText" })
 M.select = function(path, line1, line2)
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
-		return nil
+		error("git-blame failed")
 	end
 
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
 		if hash == nil then
-			return nil
+			error("git-blame format is invalid")
 		end
 
 		blame[i] = hash
@@ -168,7 +170,7 @@ M.select = function(path, line1, line2)
 	for hash, _ in pairs(selected) do
 		local placed = vim.fn.sign_getplaced(bufnr, { group = hash })
 
-		if placed[1] and #placed[1].signs == 0 then
+		if #placed[1].signs == 0 then
 			for i, v in ipairs(blame) do
 				if v == hash then
 					vim.fn.sign_place(0, hash, "GitRelatedSelectSign", bufnr, { lnum = i })
@@ -182,10 +184,6 @@ end
 
 M.clear = function()
 	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
-
-	if placed[1] == nil or placed[1].signs == nil then
-		return nil
-	end
 
 	local unplaced = {}
 	for _, v in ipairs(placed[1].signs) do
