@@ -63,7 +63,7 @@ M.git_related = function(opts)
 		end
 	end
 
-	local items = {}
+	local sorted = {}
 	local cache = {}
 	for hash, _ in pairs(blame) do
 		local show = git_show(hash)
@@ -75,10 +75,43 @@ M.git_related = function(opts)
 
 			if cache[path] and cache[path][hash] then
 				for _, pos in ipairs(cache[path][hash]) do
-					local text = string.format("%s:%d", path, pos.from)
-					items[#items + 1] = { filename = path, lnum = pos.from, col = 1, text = text }
+					if sorted[path] == nil then
+						sorted[path] = {}
+					end
+
+					local temp = sorted[path]
+					temp[#temp + 1] = pos
 				end
 			end
+		end
+	end
+
+	for path, v in pairs(sorted) do
+		table.sort(v, function(x, y)
+			return x.from < y.from
+		end)
+
+		local merged = nil
+		for _, pos in ipairs(v) do
+			if merged == nil then
+				merged = { pos }
+			else
+				if merged[#merged].to + 1 == pos.from then
+					merged[#merged].to = pos.to
+				else
+					merged[#merged + 1] = pos
+				end
+			end
+		end
+
+		sorted[path] = merged
+	end
+
+	local items = {}
+	for path, v in pairs(sorted) do
+		for _, pos in ipairs(v) do
+			local text = string.format("%s:%d", path, pos.from)
+			items[#items + 1] = { filename = path, lnum = pos.from, col = 1, text = text }
 		end
 	end
 
