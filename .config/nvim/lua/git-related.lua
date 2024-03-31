@@ -6,18 +6,27 @@ local function git_blame(path)
 		error("git-blame failed")
 	end
 
-	local result = {}
-
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
 		if hash == nil then
 			error("git-blame format is invalid")
 		end
 
-		if result[hash] == nil then
-			result[hash] = { { from = i, to = i } }
+		blame[i] = hash
+	end
+
+	return blame
+end
+
+local function git_group_by_blame(path)
+	local blame = git_blame(path)
+	local result = {}
+
+	for i, v in ipairs(blame) do
+		if result[v] == nil then
+			result[v] = { { from = i, to = i } }
 		else
-			line = result[hash]
+			line = result[v]
 			if line[#line].to + 1 == i then
 				line[#line].to = i
 			else
@@ -77,7 +86,7 @@ M.list = function(opts)
 
 		for _, path in ipairs(show) do
 			if cache[path] == nil then
-				cache[path] = git_blame(path) or {}
+				cache[path] = git_group_by_blame(path) or {}
 			end
 
 			for _, pos in ipairs(cache[path][hash] or {}) do
@@ -142,19 +151,7 @@ end
 vim.fn.sign_define("GitRelatedSelectSign", { linehl = "DiffText" })
 
 M.select = function(path, line1, line2)
-	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
-	if vim.v.shell_error ~= 0 then
-		error("git-blame failed")
-	end
-
-	for i, v in ipairs(blame) do
-		local hash = string.match(v, "%S+")
-		if hash == nil then
-			error("git-blame format is invalid")
-		end
-
-		blame[i] = hash
-	end
+	local blame = git_blame(path)
 
 	if line2 == nil then
 		line2 = line1
