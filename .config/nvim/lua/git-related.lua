@@ -10,14 +10,16 @@ local function git_blame(path)
 
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
-		if result[hash] == nil then
-			result[hash] = { { from = i, to = i } }
-		else
-			lines = result[hash]
-			if lines[#lines].to + 1 == i then
-				lines[#lines].to = i
+		if hash ~= nil and hash ~= "0000000000000000000000000000000000000000" then
+			if result[hash] == nil then
+				result[hash] = { { from = i, to = i } }
 			else
-				lines[#lines + 1] = { from = i, to = i }
+				line = result[hash]
+				if line[#line].to + 1 == i then
+					line[#line].to = i
+				else
+					line[#line + 1] = { from = i, to = i }
+				end
 			end
 		end
 	end
@@ -59,7 +61,7 @@ M.list = function(opts)
 
 	local blame = {}
 	for _, v in ipairs(placed[1].signs) do
-		if v.name == "GitRelatedSign" then
+		if v.name == "GitRelatedSelectSign" then
 			blame[v.group] = true
 		end
 	end
@@ -67,22 +69,20 @@ M.list = function(opts)
 	local sorted = {}
 	local cache = {}
 	for hash, _ in pairs(blame) do
-		local show = git_show(hash)
+		local show = git_show(hash) or {}
 
 		for _, path in ipairs(show) do
 			if cache[path] == nil then
-				cache[path] = git_blame(path)
+				cache[path] = git_blame(path) or {}
 			end
 
-			if cache[path] and cache[path][hash] then
-				for _, pos in ipairs(cache[path][hash]) do
-					if sorted[path] == nil then
-						sorted[path] = {}
-					end
-
-					local temp = sorted[path]
-					temp[#temp + 1] = pos
+			for _, pos in ipairs(cache[path][hash] or {}) do
+				if sorted[path] == nil then
+					sorted[path] = {}
 				end
+
+				local temp = sorted[path]
+				temp[#temp + 1] = pos
 			end
 		end
 	end
@@ -135,7 +135,7 @@ M.list = function(opts)
 		:find()
 end
 
-vim.fn.sign_define("GitRelatedSign", { linehl = "DiffText" })
+vim.fn.sign_define("GitRelatedSelectSign", { linehl = "DiffText" })
 
 M.select = function(path, line1, line2)
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
@@ -145,16 +145,20 @@ M.select = function(path, line1, line2)
 
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
+		if hash == nil then
+			return nil
+		end
+
 		blame[i] = hash
 	end
 
+	if line2 == nil then
+		line2 = line1
+	end
+
 	local selected = {}
-	if line2 then
-		for i = line1, line2 do
-			selected[blame[i]] = true
-		end
-	else
-		selected[blame[line1]] = true
+	for i = line1, line2 do
+		selected[blame[i]] = true
 	end
 
 	local bufnr = vim.fn.bufnr()
@@ -165,7 +169,7 @@ M.select = function(path, line1, line2)
 		if placed[1] and #placed[1].signs == 0 then
 			for i, v in ipairs(blame) do
 				if v == hash then
-					vim.fn.sign_place(0, hash, "GitRelatedSign", bufnr, { lnum = i })
+					vim.fn.sign_place(0, hash, "GitRelatedSelectSign", bufnr, { lnum = i })
 				end
 			end
 		else
@@ -183,7 +187,7 @@ M.clear = function()
 
 	local unplaced = {}
 	for _, v in ipairs(placed[1].signs) do
-		if v.name == "GitRelatedSign" then
+		if v.name == "GitRelatedSelectSign" then
 			if not unplaced[v.group] then
 				vim.fn.sign_unplace(v.group)
 				unplaced[v.group] = true
@@ -192,7 +196,7 @@ M.clear = function()
 	end
 end
 
-vim.api.nvim_create_user_command("GitRelated", M.list, {})
+vim.api.nvim_create_user_command("GitRelatedList", M.list, {})
 
 vim.api.nvim_create_user_command("GitRelatedSelect", function(opts)
 	M.select(vim.fn.expand("%:p"), opts.line1, opts.line2)
