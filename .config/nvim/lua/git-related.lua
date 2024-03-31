@@ -10,16 +10,18 @@ local function git_blame(path)
 
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
-		if hash ~= nil and hash ~= "0000000000000000000000000000000000000000" then
-			if result[hash] == nil then
-				result[hash] = { { from = i, to = i } }
+		if hash == nil then
+			return nil
+		end
+
+		if result[hash] == nil then
+			result[hash] = { { from = i, to = i } }
+		else
+			line = result[hash]
+			if line[#line].to + 1 == i then
+				line[#line].to = i
 			else
-				line = result[hash]
-				if line[#line].to + 1 == i then
-					line[#line].to = i
-				else
-					line[#line + 1] = { from = i, to = i }
-				end
+				line[#line + 1] = { from = i, to = i }
 			end
 		end
 	end
