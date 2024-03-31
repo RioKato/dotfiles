@@ -50,7 +50,7 @@ local finders = require("telescope.finders")
 local make_entry = require("telescope.make_entry")
 local pickers = require("telescope.pickers")
 
-M.git_related = function(opts)
+M.list = function(opts)
 	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
 
 	if placed[1] == nil or placed[1].signs == nil then
@@ -98,7 +98,7 @@ M.git_related = function(opts)
 				merged = { pos }
 			else
 				if merged[#merged].to + 1 == pos.from then
-					merged[#merged].to = pos.to
+					merged[#merged] = { from = merged[#merged].from, to = pos.to }
 				else
 					merged[#merged + 1] = pos
 				end
@@ -137,7 +137,7 @@ end
 
 vim.fn.sign_define("GitRelatedSign", { linehl = "DiffText" })
 
-M.git_related_select = function(path, line1, line2)
+M.select = function(path, line1, line2)
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
 		return nil
@@ -174,7 +174,7 @@ M.git_related_select = function(path, line1, line2)
 	end
 end
 
-M.git_related_clear = function()
+M.clear = function()
 	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
 
 	if placed[1] == nil or placed[1].signs == nil then
@@ -192,12 +192,12 @@ M.git_related_clear = function()
 	end
 end
 
-vim.api.nvim_create_user_command("GitRelated", M.git_related, {})
+vim.api.nvim_create_user_command("GitRelated", M.list, {})
 
 vim.api.nvim_create_user_command("GitRelatedSelect", function(opts)
-	M.git_related_select(vim.fn.expand("%:p"), opts.line1, opts.line2)
+	M.select(vim.fn.expand("%:p"), opts.line1, opts.line2)
 end, { range = true })
 
-vim.api.nvim_create_user_command("GitRelatedClear", M.git_related_clear, {})
+vim.api.nvim_create_user_command("GitRelatedClear", M.clear, {})
 
 return M
