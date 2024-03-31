@@ -32,18 +32,14 @@ local function git_show(hash)
 		return nil
 	end
 
-	local description = nil
-	local path = {}
-	for i, v in ipairs(show) do
-		if i == 1 then
-			description = v
-		else
-			path[#path + 1] = v
-		end
+	if #show < 2 then
+		return nil
 	end
 
-	result.description = description
-	result.path = path
+	for i = 2, #show do
+		result[#result + 1] = show[i]
+	end
+
 	return result
 end
 
@@ -72,20 +68,24 @@ M.git_related = function(opts)
 	for hash, _ in pairs(blame) do
 		local show = git_show(hash)
 
-		for _, path in ipairs(show.path) do
+		for _, path in ipairs(show) do
 			if cache[path] == nil then
 				cache[path] = git_blame(path)
 			end
 
 			if cache[path] and cache[path][hash] then
 				for _, pos in ipairs(cache[path][hash]) do
-					items[#items + 1] = { filename = path, lnum = pos.from, col = 1, text = hash }
+					local text = string.format("%s:%d", path, pos.from)
+					items[#items + 1] = { filename = path, lnum = pos.from, col = 1, text = text }
 				end
 			end
 		end
 	end
 
 	opts = opts or {}
+	opts.show_line = false
+	opts.sorting_strategy = "ascending"
+
 	pickers
 		.new(opts, {
 			prompt_title = "Git Related",
@@ -104,9 +104,7 @@ end
 vim.fn.sign_define("GitRelatedSign", { linehl = "DiffText" })
 
 M.git_related_select = function(path, line1, line2)
-	local command = { "git", "blame", "-l", "-s", "--", path }
-
-	local blame = vim.fn.systemlist(command)
+	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
 	if vim.v.shell_error ~= 0 then
 		return nil
 	end
