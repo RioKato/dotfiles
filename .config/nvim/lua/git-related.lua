@@ -68,6 +68,7 @@ end
 local GitCache = {
 	cblame = {},
 	cshow = {},
+	cgroup_by_blame = {},
 
 	blame = function(self, hash, path)
 		if self.cblame[hash] == nil then
@@ -89,29 +90,32 @@ local GitCache = {
 		return self.cshow[hash]
 	end,
 
-	clear = function(self)
-		self.cblame = {}
-		self.cshow = {}
-	end,
-
 	group_by_blame = function(self, hash, path)
-		local blame = self:blame(hash, path)
-		local result = {}
-
-		for i, v in ipairs(blame) do
-			if result[v] == nil then
-				result[v] = { { from = i, to = i } }
-			else
-				line = result[v]
-				if line[#line].to + 1 == i then
-					line[#line].to = i
-				else
-					line[#line + 1] = { from = i, to = i }
-				end
-			end
+		if self.cgroup_by_blame[hash] == nil then
+			self.cgroup_by_blame[hash] = {}
 		end
 
-		return result
+		if self.cgroup_by_blame[hash][path] == nil then
+			local blame = self:blame(hash, path)
+			local result = {}
+
+			for i, v in ipairs(blame) do
+				if result[v] == nil then
+					result[v] = { { from = i, to = i } }
+				else
+					line = result[v]
+					if line[#line].to + 1 == i then
+						line[#line].to = i
+					else
+						line[#line + 1] = { from = i, to = i }
+					end
+				end
+			end
+
+			self.cgroup_by_blame[hash][path] = result
+		end
+
+		return self.cgroup_by_blame[hash][path]
 	end,
 }
 
