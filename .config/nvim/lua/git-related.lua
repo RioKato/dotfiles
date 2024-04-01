@@ -1,7 +1,7 @@
 local M = {}
 
-local function git_blame(path)
-	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "--", path })
+local function git_blame(hash, path)
+	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", hash, "--", path })
 	if vim.v.shell_error ~= 0 then
 		-- error("git-blame failed")
 		return {}
@@ -17,26 +17,6 @@ local function git_blame(path)
 	end
 
 	return blame
-end
-
-local function git_group_by_blame(path)
-	local blame = git_blame(path)
-	local result = {}
-
-	for i, v in ipairs(blame) do
-		if result[v] == nil then
-			result[v] = { { from = i, to = i } }
-		else
-			line = result[v]
-			if line[#line].to + 1 == i then
-				line[#line].to = i
-			else
-				line[#line + 1] = { from = i, to = i }
-			end
-		end
-	end
-
-	return result
 end
 
 local function git_show(hash)
@@ -59,6 +39,19 @@ local function git_show(hash)
 	return result
 end
 
+local function git_show_head()
+	local head = vim.fn.systemlist({ "git", "show", "--format=%H", "--no-patch", "HEAD" })
+	if vim.v.shell_error ~= 0 then
+		error("git-show-head failed")
+	end
+
+	if #head ~= 1 then
+		error("git-show-head format is invalid")
+	end
+
+	return head[1]
+end
+
 local function git_rev_parse()
 	local rev_parse = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })
 	if vim.v.shell_error ~= 0 then
@@ -72,6 +65,58 @@ local function git_rev_parse()
 	return rev_parse[1]
 end
 
+local GitCache = {
+	cblame = {},
+	cshow = {},
+
+	blame = function(self, path)
+		local head = git_show_head()
+
+		if self.cblame[head] == nil then
+			self.cblame[head] = {}
+		end
+
+		if self.cblame[head][path] == nil then
+			self.cblame[head][path] = git_blame(head, path)
+		end
+
+		return self.cblame[head][path]
+	end,
+
+	show = function(self, hash)
+		if self.cshow[hash] == nil then
+			self.cshow[hash] = git_show(hash)
+		end
+
+		return self.cshow[hash]
+	end,
+
+	clear = function(self)
+		self.cblame = {}
+		self.cshow = {}
+	end,
+}
+
+local function git_group_by_blame(path)
+	local blame = GitCache:blame(path)
+	local result = {}
+
+	for i, v in ipairs(blame) do
+		if result[v] == nil then
+			result[v] = { { from = i, to = i } }
+		else
+			line = result[v]
+			if line[#line].to + 1 == i then
+				line[#line].to = i
+			else
+				line[#line + 1] = { from = i, to = i }
+			end
+		end
+	end
+
+	return result
+end
+
 local soters = require("telescope.sorters")
 local config = require("telescope.config")
 local finders = require("telescope.finders")
@@ -81,27 +126,23 @@ local pickers = require("telescope.pickers")
 M.list = function(opts)
 	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
 
-	local blame = {}
+	local signs = {}
 	for _, v in ipairs(placed[1].signs) do
 		if v.name == "GitRelatedSelectSign" then
-			blame[v.group] = true
+			signs[v.group] = true
 		end
 	end
 
 	local sorted = {}
-	local cache = {}
 	local root = git_rev_parse()
-	for hash, _ in pairs(blame) do
-		local show = git_show(hash)
+	for hash, _ in pairs(signs) do
+		local show = GitCache:show(hash)
 
 		for _, path in ipairs(show) do
 			path = string.format("%s/%s", root, path)
+			local group = git_group_by_blame(path)[hash] or {}
 
-			if cache[path] == nil then
-				cache[path] = git_group_by_blame(path)
-			end
-
-			for _, pos in ipairs(cache[path][hash] or {}) do
+			for _, pos in ipairs(group) do
 				if sorted[path] == nil then
 					sorted[path] = {}
 				end
@@ -172,7 +213,7 @@ vim.fn.sign_define("GitRelatedMark9", { text = "9" })
 vim.fn.sign_define("GitRelatedMark*", { text = "*" })
 
 M.select = function(path, line1, line2)
-	local blame = git_blame(path)
+	local blame = GitCache:blame(path)
 
 	if line2 == nil then
 		line2 = line1
@@ -219,25 +260,20 @@ M.mark = function(path)
 	local placed = vim.fn.sign_getplaced(bufnr, { group = "GitRelatedMark" })
 
 	if #placed[1].signs == 0 then
-		local blame = git_blame(path)
+		local blame = GitCache:blame(path)
 
-		local cache = {}
 		for i, hash in ipairs(blame) do
-			if cache[hash] == nil then
-				local count = #git_show(hash)
+			local count = #GitCache:show(hash)
 
-				local mark = nil
-				if count > 1 and count <= 9 then
-					mark = string.format("GitRelatedMark%d", count)
-				elseif count > 9 then
-					mark = "GitRelatedMark*"
-				end
-
-				cache[hash] = mark
+			local mark = nil
+			if count > 1 and count <= 9 then
+				mark = string.format("GitRelatedMark%d", count)
+			elseif count > 9 then
+				mark = "GitRelatedMark*"
 			end
 
-			if cache[hash] then
-				vim.fn.sign_place(0, "GitRelatedMark", cache[hash], bufnr, { lnum = i })
+			if mark then
+				vim.fn.sign_place(0, "GitRelatedMark", mark, bufnr, { lnum = i })
 			end
 		end
 	else
