@@ -99,7 +99,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local opts = { buffer = ev.bufnr }
 		vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
 		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-		vim.keymap.set("n", "<C-m>", builtin.lsp_incoming_calls, opts)
 		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
 		vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
 		vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
@@ -187,7 +186,7 @@ null_ls.setup({
 })
 
 require("git-related")
-vim.keymap.set("n", "nn", "<cmd>GitRelatedList<cr>", {})
-vim.keymap.set("n", "<C-n>", "<cmd>GitRelatedSelect<cr>", {})
-vim.keymap.set("v", "<C-n>", ":'<,'>GitRelatedSelect<cr>", {})
-vim.keymap.set("n", "nm", "<cmd>GitRelatedMark<cr>", {})
+vim.keymap.set("n", "ml", "<cmd>GitRelatedList<cr>", {})
+vim.keymap.set("n", "<C-m>", "<cmd>GitRelatedSelect<cr>", {})
+vim.keymap.set("v", "<C-m>", ":'<,'>GitRelatedSelect<cr>", {})
+vim.keymap.set("n", "mm", "<cmd>GitRelatedMark<cr>", {})
