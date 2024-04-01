@@ -187,6 +187,7 @@ null_ls.setup({
 })
 
 require("git-related")
-vim.keymap.set("n", "<space>r", "<cmd>GitRelatedList<cr>", {})
-vim.keymap.set("n", "<C-r>", "<cmd>GitRelatedSelect<cr>", {})
-vim.keymap.set("v", "<C-r>", ":'<,'>GitRelatedSelect<cr>", {})
+vim.keymap.set("n", "nn", "<cmd>GitRelatedList<cr>", {})
+vim.keymap.set("n", "<C-n>", "<cmd>GitRelatedSelect<cr>", {})
+vim.keymap.set("v", "<C-n>", ":'<,'>GitRelatedSelect<cr>", {})
+vim.keymap.set("n", "nm", "<cmd>GitRelatedMark<cr>", {})
