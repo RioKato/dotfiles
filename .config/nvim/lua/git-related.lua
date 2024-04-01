@@ -59,6 +59,19 @@ local function git_show(hash)
 	return result
 end
 
+local function git_rev_parse()
+	local rev_parse = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })
+	if vim.v.shell_error ~= 0 then
+		error("git-rev-parse failed")
+	end
+
+	if #rev_parse ~= 1 then
+		error("git-rev-parse format is invalid")
+	end
+
+	return rev_parse[1]
+end
+
 local soters = require("telescope.sorters")
 local config = require("telescope.config")
 local finders = require("telescope.finders")
@@ -77,12 +90,13 @@ M.list = function(opts)
 
 	local sorted = {}
 	local cache = {}
+	local root = git_rev_parse()
 	for hash, _ in pairs(blame) do
 		local show = git_show(hash)
 
 		for _, path in ipairs(show) do
 			if cache[path] == nil then
-				cache[path] = git_group_by_blame(path)
+				cache[path] = git_group_by_blame(strings.format("%s/%s", root, path))
 			end
 
 			for _, pos in ipairs(cache[path][hash] or {}) do
