@@ -49,6 +49,7 @@ packer.startup(function()
 	use("stevearc/qf_helper.nvim")
 	use("ray-x/lsp_signature.nvim")
 	use("FabijanZulj/blame.nvim")
+	use("sindrets/diffview.nvim")
 end)
 
 local telescope = require("telescope")
