@@ -254,13 +254,24 @@ end
 
 M.mark = function(path)
 	local bufnr = vim.fn.bufnr()
+	local head = git_show_head()
 	local placed = vim.fn.sign_getplaced(bufnr, { group = "GitRelatedMark" })
 
 	if #placed[1].signs == 0 then
-		local blame = GitCache:blame(git_show_head(), path)
+		local blame = GitCache:blame(head, path)
+		local root = git_rev_parse()
 
 		for i, hash in ipairs(blame) do
-			local count = #GitCache:show(hash)
+			local show = GitCache:show(hash)
+			local count = 0
+
+			for _, path in ipairs(show) do
+				path = string.format("%s/%s", root, path)
+				local group = GitCache:group_by_blame(head, path)
+				if group[hash] then
+					count = count + 1
+				end
+			end
 
 			local mark = nil
 			if count > 1 and count <= 9 then
