@@ -243,13 +243,14 @@ M.select = function(path, line1, line2)
 end
 
 M.clear = function()
-	local placed = vim.fn.sign_getplaced(vim.fn.bufnr(), { group = "*" })
+	local bufnr = vim.fn.bufnr()
+	local placed = vim.fn.sign_getplaced(bufnr, { group = "*" })
 
 	local unplaced = {}
 	for _, v in ipairs(placed[1].signs) do
 		if v.name == "GitRelatedSelectSign" then
 			if not unplaced[v.group] then
-				vim.fn.sign_unplace(v.group)
+				vim.fn.sign_unplace(v.group, { buffer = bufnr })
 				unplaced[v.group] = true
 			end
 		end
