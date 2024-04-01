@@ -69,18 +69,16 @@ local GitCache = {
 	cblame = {},
 	cshow = {},
 
-	blame = function(self, path)
-		local head = git_show_head()
-
-		if self.cblame[head] == nil then
-			self.cblame[head] = {}
+	blame = function(self, hash, path)
+		if self.cblame[hash] == nil then
+			self.cblame[hash] = {}
 		end
 
-		if self.cblame[head][path] == nil then
-			self.cblame[head][path] = git_blame(head, path)
+		if self.cblame[hash][path] == nil then
+			self.cblame[hash][path] = git_blame(hash, path)
 		end
 
-		return self.cblame[head][path]
+		return self.cblame[hash][path]
 	end,
 
 	show = function(self, hash)
@@ -97,8 +95,8 @@ local GitCache = {
 	end,
 }
 
-local function git_group_by_blame(path)
-	local blame = GitCache:blame(path)
+local function git_group_by_blame(hash, path)
+	local blame = GitCache:blame(hash, path)
 	local result = {}
 
 	for i, v in ipairs(blame) do
@@ -135,12 +133,13 @@ M.list = function(opts)
 
 	local sorted = {}
 	local root = git_rev_parse()
+	local head = git_show_head()
 	for hash, _ in pairs(signs) do
 		local show = GitCache:show(hash)
 
 		for _, path in ipairs(show) do
 			path = string.format("%s/%s", root, path)
-			local group = git_group_by_blame(path)[hash] or {}
+			local group = git_group_by_blame(head, path)[hash] or {}
 
 			for _, pos in ipairs(group) do
 				if sorted[path] == nil then
@@ -213,7 +212,7 @@ vim.fn.sign_define("GitRelatedMark9", { text = "9" })
 vim.fn.sign_define("GitRelatedMark*", { text = "*" })
 
 M.select = function(path, line1, line2)
-	local blame = GitCache:blame(path)
+	local blame = GitCache:blame(git_show_head(), path)
 
 	if line2 == nil then
 		line2 = line1
@@ -260,7 +259,7 @@ M.mark = function(path)
 	local placed = vim.fn.sign_getplaced(bufnr, { group = "GitRelatedMark" })
 
 	if #placed[1].signs == 0 then
-		local blame = GitCache:blame(path)
+		local blame = GitCache:blame(git_show_head(), path)
 
 		for i, hash in ipairs(blame) do
 			local count = #GitCache:show(hash)
