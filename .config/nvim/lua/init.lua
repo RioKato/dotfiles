@@ -48,6 +48,12 @@ packer.startup(function()
 	})
 	use("stevearc/qf_helper.nvim")
 	use("ray-x/lsp_signature.nvim")
+	use({
+		"junegunn/gv.vim",
+		requires = {
+			"tpope/vim-fugitive",
+		},
+	})
 	use("FabijanZulj/blame.nvim")
 	use("sindrets/diffview.nvim")
 end)
