@@ -96,7 +96,7 @@ M.list = function(opts)
 
 		for _, path in ipairs(show) do
 			if cache[path] == nil then
-				cache[path] = git_group_by_blame(strings.format("%s/%s", root, path))
+				cache[path] = git_group_by_blame(string.format("%s/%s", root, path))
 			end
 
 			for _, pos in ipairs(cache[path][hash] or {}) do
