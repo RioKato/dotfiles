@@ -48,6 +48,7 @@ packer.startup(function()
 	})
 	use("stevearc/qf_helper.nvim")
 	use("ray-x/lsp_signature.nvim")
+	use("rhysd/git-messenger.vim")
 	use({
 		"junegunn/gv.vim",
 		requires = {
