@@ -188,7 +188,36 @@ null_ls.setup({
 
 require("git-related")
 vim.keymap.set("n", "ml", "<cmd>GitRelatedList<cr>", {})
-vim.keymap.set("n", "<C-m>", "<cmd>GitRelatedSelect<cr>", {})
-vim.keymap.set("v", "<C-m>", ":'<,'>GitRelatedSelect<cr>", {})
+vim.keymap.set("n", "ms", "<cmd>GitRelatedSelect<cr>", {})
+vim.keymap.set("v", "ms", ":'<,'>GitRelatedSelect<cr>", {})
 vim.keymap.set("n", "mc", "<cmd>GitRelatedClear<cr>", {})
 vim.keymap.set("n", "mm", "<cmd>GitRelatedMark<cr>", {})
+
+local diffview = require("diffview")
+
+diffview.setup({
+	use_icons = false,
+	show_help_hints = false,
+	file_history_panel = {
+		win_config = {
+			height = 8,
+		},
+	},
+	keymaps = {
+		diff1 = {
+			{ "n", "q", diffview.close },
+		},
+		diff2 = {
+			{ "n", "q", diffview.close },
+		},
+		diff3 = {
+			{ "n", "q", diffview.close },
+		},
+		diff4 = {
+			{ "n", "q", diffview.close },
+		},
+		file_history_panel = {
+			{ "n", "q", diffview.close },
+		},
+	},
+})
