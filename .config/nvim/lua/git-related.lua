@@ -176,14 +176,12 @@ M.list = function(opts)
 	local items = {}
 	for path, v in pairs(sorted) do
 		for _, pos in ipairs(v) do
-			local text = string.format("%s:%d", path, pos.from)
-			items[#items + 1] = { filename = path, lnum = pos.from, col = 1, text = text }
+			items[#items + 1] = { filename = path, lnum = pos.from, col = 1, text = "" }
 		end
 	end
 
 	opts = opts or {}
 	opts.show_line = false
-	opts.sorting_strategy = "ascending"
 
 	pickers
 		.new(opts, {
