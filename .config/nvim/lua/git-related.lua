@@ -161,6 +161,15 @@ M.list = function(opts)
 end
 
 vim.fn.sign_define("GitRelatedSelectSign", { linehl = "DiffText" })
+vim.fn.sign_define("GitRelatedMark2", { text = "2" })
+vim.fn.sign_define("GitRelatedMark3", { text = "3" })
+vim.fn.sign_define("GitRelatedMark4", { text = "4" })
+vim.fn.sign_define("GitRelatedMark5", { text = "5" })
+vim.fn.sign_define("GitRelatedMark6", { text = "6" })
+vim.fn.sign_define("GitRelatedMark7", { text = "7" })
+vim.fn.sign_define("GitRelatedMark8", { text = "8" })
+vim.fn.sign_define("GitRelatedMark9", { text = "9" })
+vim.fn.sign_define("GitRelatedMark*", { text = "*" })
 
 M.select = function(path, line1, line2)
 	local blame = git_blame(path)
@@ -205,12 +214,44 @@ M.clear = function()
 	end
 end
 
-vim.api.nvim_create_user_command("GitRelatedList", M.list, {})
+M.mark = function(path)
+	local blame = git_blame(path)
 
+	local cache = {}
+	local bufnr = vim.fn.bufnr()
+	for i, hash in ipairs(blame) do
+		if cache[hash] == nil then
+			local count = #git_show(hash)
+
+			local mark = nil
+			if count > 1 and count <= 9 then
+				mark = string.format("GitRelatedMark%d", count)
+			elseif count > 9 then
+				mark = "GitRelatedMark*"
+			end
+
+			cache[hash] = mark
+		end
+
+		if cache[hash] then
+			vim.fn.sign_place(0, "GitRelatedMark", cache[hash], bufnr, { lnum = i })
+		end
+	end
+end
+
+M.unmark = function(path)
+	local bufnr = vim.fn.bufnr()
+	vim.fn.sign_unplace("GitRelatedMark", { buffer = bufnr })
+end
+
+vim.api.nvim_create_user_command("GitRelatedList", M.list, {})
 vim.api.nvim_create_user_command("GitRelatedSelect", function(opts)
 	M.select(vim.fn.expand("%:p"), opts.line1, opts.line2)
 end, { range = true })
-
 vim.api.nvim_create_user_command("GitRelatedClear", M.clear, {})
+vim.api.nvim_create_user_command("GitRelatedMark", function()
+	M.mark(vim.fn.expand("%:p"))
+end, {})
+vim.api.nvim_create_user_command("GitRelatedUnmark", M.unmark, {})
 
 return M
