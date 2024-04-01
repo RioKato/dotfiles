@@ -3,14 +3,13 @@ local M = {}
 local function git_blame(hash, path)
 	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", hash, "--", path })
 	if vim.v.shell_error ~= 0 then
-		-- error("git-blame failed")
 		return {}
 	end
 
 	for i, v in ipairs(blame) do
 		local hash = string.match(v, "%S+")
 		if hash == nil then
-			error("git-blame format is invalid")
+			error("git_blame: hash not found")
 		end
 
 		blame[i] = hash
@@ -22,12 +21,11 @@ end
 local function git_show(hash)
 	local show = vim.fn.systemlist({ "git", "show", "--name-only", "--oneline", hash })
 	if vim.v.shell_error ~= 0 then
-		-- error("git-show failed")
 		return {}
 	end
 
 	if #show < 2 then
-		error("git-show format is invalid")
+		error("git_show: invalid format")
 	end
 
 	local result = {}
@@ -42,11 +40,11 @@ end
 local function git_show_head()
 	local head = vim.fn.systemlist({ "git", "show", "--format=%H", "--no-patch", "HEAD" })
 	if vim.v.shell_error ~= 0 then
-		error("git-show-head failed")
+		error("git_show_head: failed to execute command")
 	end
 
 	if #head ~= 1 then
-		error("git-show-head format is invalid")
+		error("git_show_head: invalid format")
 	end
 
 	return head[1]
@@ -55,11 +53,11 @@ end
 local function git_rev_parse()
 	local rev_parse = vim.fn.systemlist({ "git", "rev-parse", "--show-toplevel" })
 	if vim.v.shell_error ~= 0 then
-		error("git-rev-parse failed")
+		error("git_rev_parse: failed to execute command")
 	end
 
 	if #rev_parse ~= 1 then
-		error("git-rev-parse format is invalid")
+		error("git_rev_parse: invalid format")
 	end
 
 	return rev_parse[1]
@@ -218,6 +216,10 @@ M.select = function(path, line1, line2)
 
 	if line2 == nil then
 		line2 = line1
+	end
+
+	if line2 > #blame then
+		error("select: invalid index")
 	end
 
 	local selected = {}
