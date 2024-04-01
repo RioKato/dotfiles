@@ -215,33 +215,34 @@ M.clear = function()
 end
 
 M.mark = function(path)
-	local blame = git_blame(path)
-
-	local cache = {}
 	local bufnr = vim.fn.bufnr()
-	for i, hash in ipairs(blame) do
-		if cache[hash] == nil then
-			local count = #git_show(hash)
+	local placed = vim.fn.sign_getplaced(bufnr, { group = "GitRelatedMark" })
 
-			local mark = nil
-			if count > 1 and count <= 9 then
-				mark = string.format("GitRelatedMark%d", count)
-			elseif count > 9 then
-				mark = "GitRelatedMark*"
+	if #placed[1].signs == 0 then
+		local blame = git_blame(path)
+
+		local cache = {}
+		for i, hash in ipairs(blame) do
+			if cache[hash] == nil then
+				local count = #git_show(hash)
+
+				local mark = nil
+				if count > 1 and count <= 9 then
+					mark = string.format("GitRelatedMark%d", count)
+				elseif count > 9 then
+					mark = "GitRelatedMark*"
+				end
+
+				cache[hash] = mark
 			end
 
-			cache[hash] = mark
+			if cache[hash] then
+				vim.fn.sign_place(0, "GitRelatedMark", cache[hash], bufnr, { lnum = i })
+			end
 		end
-
-		if cache[hash] then
-			vim.fn.sign_place(0, "GitRelatedMark", cache[hash], bufnr, { lnum = i })
-		end
+	else
+		vim.fn.sign_unplace("GitRelatedMark", { buffer = bufnr })
 	end
-end
-
-M.unmark = function(path)
-	local bufnr = vim.fn.bufnr()
-	vim.fn.sign_unplace("GitRelatedMark", { buffer = bufnr })
 end
 
 vim.api.nvim_create_user_command("GitRelatedList", M.list, {})
@@ -252,6 +253,5 @@ vim.api.nvim_create_user_command("GitRelatedClear", M.clear, {})
 vim.api.nvim_create_user_command("GitRelatedMark", function()
 	M.mark(vim.fn.expand("%:p"))
 end, {})
-vim.api.nvim_create_user_command("GitRelatedUnmark", M.unmark, {})
 
 return M
