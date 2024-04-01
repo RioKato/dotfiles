@@ -93,27 +93,27 @@ local GitCache = {
 		self.cblame = {}
 		self.cshow = {}
 	end,
-}
 
-local function git_group_by_blame(hash, path)
-	local blame = GitCache:blame(hash, path)
-	local result = {}
+	group_by_blame = function(self, hash, path)
+		local blame = self:blame(hash, path)
+		local result = {}
 
-	for i, v in ipairs(blame) do
-		if result[v] == nil then
-			result[v] = { { from = i, to = i } }
-		else
-			line = result[v]
-			if line[#line].to + 1 == i then
-				line[#line].to = i
+		for i, v in ipairs(blame) do
+			if result[v] == nil then
+				result[v] = { { from = i, to = i } }
 			else
-				line[#line + 1] = { from = i, to = i }
+				line = result[v]
+				if line[#line].to + 1 == i then
+					line[#line].to = i
+				else
+					line[#line + 1] = { from = i, to = i }
+				end
 			end
 		end
-	end
 
-	return result
-end
+		return result
+	end,
+}
 
 local soters = require("telescope.sorters")
 local config = require("telescope.config")
@@ -139,7 +139,7 @@ M.list = function(opts)
 
 		for _, path in ipairs(show) do
 			path = string.format("%s/%s", root, path)
-			local group = git_group_by_blame(head, path)[hash] or {}
+			local group = GitCache:group_by_blame(head, path)[hash] or {}
 
 			for _, pos in ipairs(group) do
 				if sorted[path] == nil then
