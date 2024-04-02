@@ -56,7 +56,6 @@ packer.startup(function()
 		},
 	})
 	use("FabijanZulj/blame.nvim")
-	use("sindrets/diffview.nvim")
 end)
 
 local telescope = require("telescope")
@@ -194,38 +193,32 @@ null_ls.setup({
 	},
 })
 
+vim.api.nvim_create_user_command("GVBlame", function(opts)
+	local range = string.format("%d,+1", opts.line1)
+	local path = vim.fn.expand("%:p")
+	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "-L", range, "--", path })
+
+	if vim.v.shell_error ~= 0 then
+		error("GVBlame: failed to execute git-blame")
+	end
+
+	if #blame == 0 then
+		error("GVBlame: invalid format")
+	end
+
+	local hash = string.match(blame[1], "%S+")
+	if hash == nil then
+		error("GVBlame: invalid format")
+	end
+
+	vim.cmd(string.format("GV %s -- %s", hash, path))
+end, { range = true })
+
+vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
+
 require("git-related")
 vim.keymap.set("n", "ml", "<cmd>GitRelatedList<cr>", {})
 vim.keymap.set("n", "ms", "<cmd>GitRelatedSelect<cr>", {})
 vim.keymap.set("v", "ms", ":'<,'>GitRelatedSelect<cr>", {})
 vim.keymap.set("n", "mc", "<cmd>GitRelatedClear<cr>", {})
 vim.keymap.set("n", "mm", "<cmd>GitRelatedMark<cr>", {})
-
-local diffview = require("diffview")
-
-diffview.setup({
-	use_icons = false,
-	show_help_hints = false,
-	file_history_panel = {
-		win_config = {
-			height = 8,
-		},
-	},
-	keymaps = {
-		diff1 = {
-			{ "n", "q", diffview.close },
-		},
-		diff2 = {
-			{ "n", "q", diffview.close },
-		},
-		diff3 = {
-			{ "n", "q", diffview.close },
-		},
-		diff4 = {
-			{ "n", "q", diffview.close },
-		},
-		file_history_panel = {
-			{ "n", "q", diffview.close },
-		},
-	},
-})
