@@ -48,7 +48,6 @@ packer.startup(function()
 	})
 	use("stevearc/qf_helper.nvim")
 	use("ray-x/lsp_signature.nvim")
-	use("rhysd/git-messenger.vim")
 	use({
 		"junegunn/gv.vim",
 		requires = {
@@ -214,5 +213,6 @@ vim.api.nvim_create_user_command("GVBlame", function(opts)
 	vim.cmd(string.format("GV %s -- %s", hash, path))
 end, { range = true })
 
+vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
 vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
 vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
