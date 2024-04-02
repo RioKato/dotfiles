@@ -214,5 +214,8 @@ vim.api.nvim_create_user_command("GVBlame", function(opts)
 end, { range = true })
 
 vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
+vim.keymap.set("n", "mf", function()
+	vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
+end, {})
 vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
 vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
