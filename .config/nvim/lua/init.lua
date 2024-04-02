@@ -121,6 +121,7 @@ qf_helper.setup()
 vim.keymap.set("n", "<C-n>", "<cmd>silent QNext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>silent QPrev<cr>")
 vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
+vim.keymap.set("n", "<C-m>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
 vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = "qf",
 	callback = function()
