@@ -216,10 +216,3 @@ end, { range = true })
 
 vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
 vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
-
-require("git-related")
-vim.keymap.set("n", "ml", "<cmd>GitRelatedList<cr>", {})
-vim.keymap.set("n", "ms", "<cmd>GitRelatedSelect<cr>", {})
-vim.keymap.set("v", "ms", ":'<,'>GitRelatedSelect<cr>", {})
-vim.keymap.set("n", "mc", "<cmd>GitRelatedClear<cr>", {})
-vim.keymap.set("n", "mm", "<cmd>GitRelatedMark<cr>", {})
