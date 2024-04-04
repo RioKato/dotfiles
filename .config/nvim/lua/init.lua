@@ -116,14 +116,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 local qf_helper = require("qf_helper")
 qf_helper.setup()
+vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
 vim.keymap.set("n", "<C-n>", "<cmd>silent QNext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>silent QPrev<cr>")
-vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
+vim.keymap.set("n", "<space>o", "<cmd>colder<cr>")
+vim.keymap.set("n", "<space>i", "<cmd>cnewer<cr>")
 vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
 vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = "qf",
 	callback = function()
 		vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
+		vim.keymap.set("n", "<space>o", "<cmd>colder<cr>", { buffer = true })
+		vim.keymap.set("n", "<space>i", "<cmd>cnewer<cr>", { buffer = true })
 		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
 		vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
 		vim.keymap.set("v", "d", ":'<,'>Reject<cr>", { buffer = true })
