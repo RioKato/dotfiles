@@ -9,9 +9,9 @@ set -e
 PEM=$1
 
 # create certificate
- CERT="/tmp/$(openssl x509 -inform PEM -subject_hash_old -in $PEM | head -1).0"
- cp $PEM $CERT
- openssl x509 -inform PEM -text -in $CERT -out /dev/null >> $CERT
+CERT="/tmp/$(openssl x509 -inform PEM -subject_hash_old -in $PEM | head -1).0"
+cp $PEM $CERT
+openssl x509 -inform PEM -text -in $CERT -out /dev/null >> $CERT
 
 # install certificate
 adb root
