@@ -205,4 +205,5 @@ alias mitmproxy="trap '' 2; mitmproxy; trap - 2"
 ###############################################################################################
 
 export PATH=$PATH:"/mnt/c/Windows/System32"
+export PATH=$PATH:"/mnt/c/Windows/System32/WindowsPowerShell/v1.0"
 export PATH=$PATH:"/mnt/c/Program Files (x86)/Windows Kits/10/Debugger/x64"
