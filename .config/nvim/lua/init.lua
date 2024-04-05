@@ -23,26 +23,111 @@ require("packer").startup(function()
 	use("wbthomason/packer.nvim")
 
 	use({
-		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
-		"neovim/nvim-lspconfig",
+		requires = {
+			"neovim/nvim-lspconfig",
+			"williamboman/mason.nvim",
+		},
+
+		config = function()
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local mason_lspconfig = require("mason-lspconfig")
+			local lspconfig = require("lspconfig")
+
+			require("mason").setup()
+
+			mason_lspconfig.setup({
+				ensure_installed = { "pyright" },
+			})
+
+			mason_lspconfig.setup_handlers({
+				function(server)
+					lspconfig[server].setup({
+						capabilities = capabilities,
+					})
+				end,
+			})
+
+			for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls" }) do
+				lspconfig[server].setup({
+					capabilities = capabilities,
+				})
+			end
+		end,
 	})
+
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		requires = { "nvim-lua/plenary.nvim" },
+
+		config = function()
+			local null_ls = require("null-ls")
+			null_ls.setup({
+				sources = {
+					null_ls.builtins.formatting.stylua,
+					null_ls.builtins.formatting.autopep8,
+					null_ls.builtins.formatting.prettier,
+				},
+			})
+		end,
 	})
+
 	use("nvim-treesitter/nvim-treesitter")
+
 	use({
 		"nvim-telescope/telescope.nvim",
 		requires = { "nvim-lua/plenary.nvim" },
+
+		config = function()
+			local telescope = require("telescope")
+			local actions = require("telescope.actions")
+			local builtin = require("telescope.builtin")
+
+			telescope.setup({
+				defaults = {
+					mappings = {
+						i = {
+							["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
+						},
+					},
+					path_display = { "shorten" },
+					layout_config = {
+						width = 0.99,
+						height = 0.99,
+					},
+				},
+			})
+
+			local opts = { noremap = true, silent = true }
+			local lsputils = require("lsputils")
+
+			vim.api.nvim_create_user_command("Callgraph", function(opts)
+				lsputils.callgraph(opts.fargs[1])
+			end, { nargs = 1 })
+
+			vim.keymap.set("n", "<space>f", builtin.find_files, opts)
+			vim.keymap.set("n", "<space>b", builtin.buffers, opts)
+			vim.keymap.set("n", "<space>g", builtin.live_grep, opts)
+			vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find, opts)
+			vim.keymap.set("n", "<C-s>", builtin.grep_string, opts)
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+				callback = function(ev)
+					local opts = { buffer = ev.bufnr }
+					vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
+					vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
+					vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
+					vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
+					vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
+					vim.keymap.set("n", "<space><space>", function()
+						vim.lsp.buf.format({ async = true })
+					end, opts)
+				end,
+			})
+		end,
 	})
-	use({
-		"nvim-telescope/telescope-fzf-native.nvim",
-		run = "make",
-		requires = {
-			{ "nvim-telescope/telescope.nvim" },
-		},
-	})
+
 	use({
 		"hrsh7th/nvim-cmp",
 		requires = {
@@ -53,185 +138,116 @@ require("packer").startup(function()
 			{ "hrsh7th/vim-vsnip" },
 			{ "rafamadriz/friendly-snippets" },
 		},
+
+		config = function()
+			local cmp = require("cmp")
+			cmp.setup({
+				snippet = {
+					expand = function(args)
+						vim.fn["vsnip#anonymous"](args.body)
+					end,
+				},
+				window = {},
+				mapping = {
+					["<C-b>"] = cmp.mapping.scroll_docs(-4),
+					["<C-f>"] = cmp.mapping.scroll_docs(4),
+					["<cr>"] = cmp.mapping.confirm({ select = true }),
+					["<tab>"] = function(fallback)
+						if cmp.visible() then
+							cmp.select_next_item()
+						else
+							fallback()
+						end
+					end,
+				},
+				sources = cmp.config.sources({
+					{ name = "nvim_lsp" },
+					{ name = "vsnip" },
+				}, {
+					{ name = "buffer" },
+				}),
+			})
+		end,
 	})
-	use("stevearc/qf_helper.nvim")
-	use("ray-x/lsp_signature.nvim")
+
+	use({
+		"stevearc/qf_helper.nvim",
+
+		config = function()
+			require("qf_helper").setup()
+			vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
+			vim.keymap.set("n", "<C-n>", "<cmd>silent QNext<cr>")
+			vim.keymap.set("n", "<C-p>", "<cmd>silent QPrev<cr>")
+			vim.keymap.set("n", "<space>o", "<cmd>silent! colder<cr>")
+			vim.keymap.set("n", "<space>i", "<cmd>silent! cnewer<cr>")
+			vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
+			vim.api.nvim_create_autocmd({ "FileType" }, {
+				pattern = "qf",
+				callback = function()
+					vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
+					vim.keymap.set("n", "<space>o", "<cmd>silent! colder<cr>", { buffer = true })
+					vim.keymap.set("n", "<space>i", "<cmd>sielnt! cnewer<cr>", { buffer = true })
+					vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
+					vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
+					vim.keymap.set("v", "d", ":'<,'>Reject<cr>", { buffer = true })
+				end,
+			})
+		end,
+	})
+
+	use({
+		"ray-x/lsp_signature.nvim",
+
+		config = function()
+			require("lsp_signature").setup({
+				floating_window = false,
+				hint_enable = true,
+			})
+		end,
+	})
+
 	use({
 		"junegunn/gv.vim",
-		requires = {
-			"tpope/vim-fugitive",
-		},
+		requires = { "tpope/vim-fugitive" },
+
+		config = function()
+			vim.api.nvim_create_user_command("GVBlame", function(opts)
+				local range = string.format("%d,+1", opts.line1)
+				local path = vim.fn.expand("%:p")
+				local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "-L", range, "--", path })
+
+				if vim.v.shell_error ~= 0 then
+					error("GVBlame: failed to execute git-blame")
+				end
+
+				if #blame == 0 then
+					error("GVBlame: invalid format")
+				end
+
+				local hash = string.match(blame[1], "%S+")
+				if hash == nil then
+					error("GVBlame: invalid format")
+				end
+
+				vim.cmd(string.format("GV %s -- %s", hash, path))
+			end, { range = true })
+
+			vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
+			vim.keymap.set("n", "mf", function()
+				vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
+			end, {})
+			vim.keymap.set("n", "ms", function()
+				vim.cmd(string.format("GV -S %s", vim.fn.expand("<cword>")))
+			end, {})
+			vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
+		end,
 	})
-	use("FabijanZulj/blame.nvim")
+
+	use({
+		"FabijanZulj/blame.nvim",
+
+		config = function()
+			vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
+		end,
+	})
 end)
-
-local telescope = require("telescope")
-local actions = require("telescope.actions")
-local builtin = require("telescope.builtin")
-telescope.load_extension("fzf")
-
-telescope.setup({
-	defaults = {
-		mappings = {
-			i = {
-				["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
-			},
-		},
-		path_display = { "shorten" },
-		layout_config = {
-			width = 0.99,
-			height = 0.99,
-		},
-	},
-	extensions = {
-		fzf = {
-			fuzzy = true,
-			override_generic_sorter = true,
-			override_file_sorter = true,
-			case_mode = "smart_case",
-		},
-	},
-})
-
-local opts = { noremap = true, silent = true }
-local lsputils = require("lsputils")
-
-vim.api.nvim_create_user_command("Callgraph", function(opts)
-	lsputils.callgraph(opts.fargs[1])
-end, { nargs = 1 })
-
-vim.keymap.set("n", "<space>f", builtin.find_files, opts)
-vim.keymap.set("n", "<space>b", builtin.buffers, opts)
-vim.keymap.set("n", "<space>g", builtin.live_grep, opts)
-vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find, opts)
-vim.keymap.set("n", "<C-s>", builtin.grep_string, opts)
-
-vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-	callback = function(ev)
-		local opts = { buffer = ev.bufnr }
-		vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
-		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-		vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
-		vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
-		vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
-		vim.keymap.set("n", "<space><space>", function()
-			vim.lsp.buf.format({ async = true })
-		end, opts)
-	end,
-})
-
-require("qf_helper").setup()
-vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
-vim.keymap.set("n", "<C-n>", "<cmd>silent QNext<cr>")
-vim.keymap.set("n", "<C-p>", "<cmd>silent QPrev<cr>")
-vim.keymap.set("n", "<space>o", "<cmd>silent! colder<cr>")
-vim.keymap.set("n", "<space>i", "<cmd>silent! cnewer<cr>")
-vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
-vim.api.nvim_create_autocmd({ "FileType" }, {
-	pattern = "qf",
-	callback = function()
-		vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
-		vim.keymap.set("n", "<space>o", "<cmd>silent! colder<cr>", { buffer = true })
-		vim.keymap.set("n", "<space>i", "<cmd>sielnt! cnewer<cr>", { buffer = true })
-		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
-		vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
-		vim.keymap.set("v", "d", ":'<,'>Reject<cr>", { buffer = true })
-	end,
-})
-
-local cmp = require("cmp")
-cmp.setup({
-	snippet = {
-		expand = function(args)
-			vim.fn["vsnip#anonymous"](args.body)
-		end,
-	},
-	window = {},
-	mapping = {
-		["<C-b>"] = cmp.mapping.scroll_docs(-4),
-		["<C-f>"] = cmp.mapping.scroll_docs(4),
-		["<cr>"] = cmp.mapping.confirm({ select = true }),
-		["<tab>"] = function(fallback)
-			if cmp.visible() then
-				cmp.select_next_item()
-			else
-				fallback()
-			end
-		end,
-	},
-	sources = cmp.config.sources({
-		{ name = "nvim_lsp" },
-		{ name = "vsnip" },
-	}, {
-		{ name = "buffer" },
-	}),
-})
-
-require("lsp_signature").setup({
-	floating_window = false,
-	hint_enable = true,
-})
-
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-local mason_lspconfig = require("mason-lspconfig")
-
-require("mason").setup()
-mason_lspconfig.setup({
-	ensure_installed = { "pyright" },
-})
-
-local lspconfig = require("lspconfig")
-mason_lspconfig.setup_handlers({
-	function(server)
-		lspconfig[server].setup({
-			capabilities = capabilities,
-		})
-	end,
-})
-
-for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls" }) do
-	lspconfig[server].setup({
-		capabilities = capabilities,
-	})
-end
-
-local null_ls = require("null-ls")
-null_ls.setup({
-	sources = {
-		null_ls.builtins.formatting.stylua,
-		null_ls.builtins.formatting.autopep8,
-		null_ls.builtins.formatting.prettier,
-	},
-})
-
-vim.api.nvim_create_user_command("GVBlame", function(opts)
-	local range = string.format("%d,+1", opts.line1)
-	local path = vim.fn.expand("%:p")
-	local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "-L", range, "--", path })
-
-	if vim.v.shell_error ~= 0 then
-		error("GVBlame: failed to execute git-blame")
-	end
-
-	if #blame == 0 then
-		error("GVBlame: invalid format")
-	end
-
-	local hash = string.match(blame[1], "%S+")
-	if hash == nil then
-		error("GVBlame: invalid format")
-	end
-
-	vim.cmd(string.format("GV %s -- %s", hash, path))
-end, { range = true })
-
-vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
-vim.keymap.set("n", "mf", function()
-	vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
-end, {})
-vim.keymap.set("n", "ms", function()
-	vim.cmd(string.format("GV -S %s", vim.fn.expand("<cword>")))
-end, {})
-vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
-vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
