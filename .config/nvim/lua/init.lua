@@ -23,7 +23,11 @@ local packer = require("packer")
 packer.startup(function()
 	use("wbthomason/packer.nvim")
 
-	use("neovim/nvim-lspconfig")
+	use({
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
+		"neovim/nvim-lspconfig",
+	})
 	use({
 		"jose-elias-alvarez/null-ls.nvim",
 		requires = { "nvim-lua/plenary.nvim" },
@@ -31,9 +35,7 @@ packer.startup(function()
 	use("nvim-treesitter/nvim-treesitter")
 	use({
 		"nvim-telescope/telescope.nvim",
-		requires = {
-			{ "nvim-lua/plenary.nvim" },
-		},
+		requires = { "nvim-lua/plenary.nvim" },
 	})
 	use({
 		"nvim-telescope/telescope-fzf-native.nvim",
@@ -178,20 +180,28 @@ lsp_signature.setup({
 
 local cmp_nvim_lsp = require("cmp_nvim_lsp")
 local capabilities = cmp_nvim_lsp.default_capabilities()
+local mason = require("mason")
+local mason_lspconfig = require("mason-lspconfig")
+
+mason.setup()
+mason_lspconfig.setup({
+	ensure_installed = { "pyright" },
+})
+
 local lspconfig = require("lspconfig")
+mason_lspconfig.setup_handlers({
+	function(server)
+		lspconfig[server].setup({
+			capabilities = capabilities,
+		})
+	end,
+})
 
-local servers = { "clangd", "pyright", "rust_analyzer", "gopls", "codeqlls", "jdtls" }
-
-for _, lsp in ipairs(servers) do
-	lspconfig[lsp].setup({
+for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls" }) do
+	lspconfig[server].setup({
 		capabilities = capabilities,
 	})
 end
-
-lspconfig.tsserver.setup({
-	capabilities = capabilities,
-	root_dir = vim.loop.cwd,
-})
 
 local null_ls = require("null-ls")
 
