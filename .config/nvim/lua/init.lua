@@ -19,8 +19,7 @@ vim.diagnostic.config({
 	underline = true,
 })
 
-local packer = require("packer")
-packer.startup(function()
+require("packer").startup(function()
 	use("wbthomason/packer.nvim")
 
 	use({
@@ -68,6 +67,7 @@ end)
 
 local telescope = require("telescope")
 local actions = require("telescope.actions")
+local builtin = require("telescope.builtin")
 telescope.load_extension("fzf")
 
 telescope.setup({
@@ -93,7 +93,6 @@ telescope.setup({
 	},
 })
 
-local builtin = require("telescope.builtin")
 local opts = { noremap = true, silent = true }
 local lsputils = require("lsputils")
 
@@ -110,7 +109,6 @@ vim.keymap.set("n", "<C-s>", builtin.grep_string, opts)
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
-		vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 		local opts = { buffer = ev.bufnr }
 		vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
 		vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
@@ -123,8 +121,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-local qf_helper = require("qf_helper")
-qf_helper.setup()
+require("qf_helper").setup()
 vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
 vim.keymap.set("n", "<C-n>", "<cmd>silent QNext<cr>")
 vim.keymap.set("n", "<C-p>", "<cmd>silent QPrev<cr>")
@@ -171,18 +168,15 @@ cmp.setup({
 	}),
 })
 
-local lsp_signature = require("lsp_signature")
-lsp_signature.setup({
+require("lsp_signature").setup({
 	floating_window = false,
 	hint_enable = true,
 })
 
-local cmp_nvim_lsp = require("cmp_nvim_lsp")
-local capabilities = cmp_nvim_lsp.default_capabilities()
-local mason = require("mason")
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 local mason_lspconfig = require("mason-lspconfig")
 
-mason.setup()
+require("mason").setup()
 mason_lspconfig.setup({
 	ensure_installed = { "pyright" },
 })
@@ -203,7 +197,6 @@ for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls
 end
 
 local null_ls = require("null-ls")
-
 null_ls.setup({
 	sources = {
 		null_ls.builtins.formatting.stylua,
