@@ -152,13 +152,13 @@ require("packer").startup(function()
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
 					["<cr>"] = cmp.mapping.confirm({ select = true }),
-					["<tab>"] = function(fallback)
+					["<tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_next_item()
 						else
 							fallback()
 						end
-					end,
+					end),
 				},
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
