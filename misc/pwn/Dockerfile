@@ -38,7 +38,6 @@ RUN <<EOF
   update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
   update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 2
   update-alternatives --auto python3
-  pip install pyright
   pip install --upgrade autopep8
   pip install pdbpp
   pip install git+https://github.com/RioKato/ucallg.git

@@ -52,7 +52,6 @@ RUN <<EOF
     mingw-w64
   apt clean
 
-  pip install pyright
   pip install --upgrade autopep8
   pip install pdbpp
   npm i -g prettier
