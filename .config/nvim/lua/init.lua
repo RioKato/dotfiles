@@ -1,6 +1,12 @@
 vim.o.inccommand = "split"
 vim.o.jumpoptions = "stack"
 
+vim.api.nvim_create_autocmd("VimEnter", {
+	callback = function()
+		vim.cmd("clearjumps")
+	end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
 		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
