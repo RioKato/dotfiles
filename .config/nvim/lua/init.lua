@@ -1,4 +1,5 @@
 vim.o.inccommand = "split"
+vim.o.jumpoptions = "stack"
 
 vim.api.nvim_create_autocmd("TextYankPost", {
 	callback = function()
