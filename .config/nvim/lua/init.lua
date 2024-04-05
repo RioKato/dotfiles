@@ -79,11 +79,10 @@ require("packer").startup(function()
 		requires = { "nvim-lua/plenary.nvim" },
 
 		config = function()
-			local telescope = require("telescope")
 			local actions = require("telescope.actions")
 			local builtin = require("telescope.builtin")
 
-			telescope.setup({
+			require("telescope").setup({
 				defaults = {
 					mappings = {
 						i = {
