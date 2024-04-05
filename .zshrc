@@ -201,3 +201,7 @@ fi
 
 alias rnc="rlwrap nc"
 alias mitmproxy="trap '' 2; mitmproxy; trap - 2"
+
+###############################################################################################
+
+export PATH=$PATH:"/mnt/c/Program Files (x86)/Windows Kits/10/Debugger/x64"
