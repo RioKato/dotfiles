@@ -59,10 +59,6 @@ require("lazy").setup({
 		end,
 	},
 
-	{ "liuchengxu/graphviz.vim" },
-
-	{ "tyru/open-browser.vim" },
-
 	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = {
@@ -325,4 +321,6 @@ require("lazy").setup({
 			})
 		end,
 	},
+
+	{ "liuchengxu/graphviz.vim" },
 })
