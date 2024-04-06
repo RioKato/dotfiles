@@ -27,6 +27,7 @@ require("packer").startup(function()
 		requires = {
 			"neovim/nvim-lspconfig",
 			"williamboman/mason.nvim",
+			"hrsh7th/cmp-nvim-lsp",
 		},
 
 		config = function()
@@ -130,12 +131,11 @@ require("packer").startup(function()
 	use({
 		"hrsh7th/nvim-cmp",
 		requires = {
-			{ "hrsh7th/cmp-nvim-lsp" },
-			{ "hrsh7th/cmp-buffer" },
-			{ "hrsh7th/cmp-cmdline" },
-			{ "hrsh7th/cmp-vsnip" },
-			{ "hrsh7th/vim-vsnip" },
-			{ "rafamadriz/friendly-snippets" },
+			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-cmdline",
+			"hrsh7th/cmp-vsnip",
+			"hrsh7th/vim-vsnip",
+			"rafamadriz/friendly-snippets",
 		},
 
 		config = function()
@@ -201,6 +201,7 @@ require("packer").startup(function()
 			require("lsp_signature").setup({
 				floating_window = false,
 				hint_enable = true,
+				hint_prefix = "",
 			})
 		end,
 	})
