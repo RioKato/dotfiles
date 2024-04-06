@@ -103,10 +103,6 @@ require("lazy").setup({
 		},
 
 		config = function()
-			require("mason-null-ls").setup({
-				ensure_installed = { "stylua", "autopep8", "prettier" },
-			})
-
 			local null_ls = require("null-ls")
 			null_ls.setup({
 				sources = {
@@ -114,6 +110,11 @@ require("lazy").setup({
 					null_ls.builtins.formatting.autopep8,
 					null_ls.builtins.formatting.prettier,
 				},
+			})
+
+			require("mason-null-ls").setup({
+				ensure_installed = nil,
+				automatic_installation = true,
 			})
 		end,
 	},
