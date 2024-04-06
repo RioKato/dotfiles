@@ -207,9 +207,16 @@ require("packer").startup(function()
 		requires = { "tpope/vim-fugitive" },
 
 		config = function()
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "fugitiveblame",
+				callback = function()
+					vim.keymap.set("n", "q", "<cmd>close<cr>", {})
+				end,
+			})
+
 			vim.keymap.set("n", "mt", function()
 				if vim.bo.filetype ~= "fugitiveblame" then
-					vim.cmd("silent Git blame")
+					vim.cmd("Git blame -w")
 				else
 					vim.cmd("close")
 				end
