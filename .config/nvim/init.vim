@@ -51,7 +51,6 @@ autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guif
 autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
 
 call plug#begin()
-  Plug 'wbthomason/packer.nvim', { 'dir' : '~/.local/share/nvim/site/pack/packer/start/packer.nvim' }
   Plug 'deris/vim-shot-f'
   Plug 't9md/vim-quickhl'
   Plug 'junegunn/vim-easy-align'
