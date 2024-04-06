@@ -207,27 +207,13 @@ require("packer").startup(function()
 		requires = { "tpope/vim-fugitive" },
 
 		config = function()
-			vim.api.nvim_create_user_command("GVBlame", function(opts)
-				local range = string.format("%d,+1", opts.line1)
-				local path = vim.fn.expand("%:p")
-				local blame = vim.fn.systemlist({ "git", "blame", "-l", "-s", "-L", range, "--", path })
-
-				if vim.v.shell_error ~= 0 then
-					error("GVBlame: failed to execute git-blame")
+			vim.keymap.set("n", "mt", function()
+				if vim.bo.filetype ~= "fugitiveblame" then
+					vim.cmd("silent Git blame")
+				else
+					vim.cmd("close")
 				end
-
-				if #blame == 0 then
-					error("GVBlame: invalid format")
-				end
-
-				local hash = string.match(blame[1], "%S+")
-				if hash == nil then
-					error("GVBlame: invalid format")
-				end
-
-				vim.cmd(string.format("GV %s -- %s", hash, path))
-			end, { range = true })
-
+			end, {})
 			vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
 			vim.keymap.set("n", "mf", function()
 				vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
@@ -235,15 +221,6 @@ require("packer").startup(function()
 			vim.keymap.set("n", "ms", function()
 				vim.cmd(string.format("GV -S %s", vim.fn.expand("<cword>")))
 			end, {})
-			vim.keymap.set("n", "mb", "<cmd>GVBlame<cr>", {})
-		end,
-	})
-
-	use({
-		"FabijanZulj/blame.nvim",
-
-		config = function()
-			vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
 		end,
 	})
 
