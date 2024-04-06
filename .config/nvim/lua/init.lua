@@ -286,15 +286,5 @@ require("lazy").setup({
 		end,
 	},
 
-	{
-		"topazape/md-preview.nvim",
-
-		config = function()
-			require("md-preview").setup({
-				viewer = {
-					exec = "glow",
-				},
-			})
-		end,
-	},
+	{ "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
 })
