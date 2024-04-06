@@ -47,15 +47,6 @@ require("lazy").setup({
 
 	{ "deris/vim-shot-f" },
 
-	{
-		"junegunn/vim-easy-align",
-
-		config = function()
-			vim.keymap.set("n", "ga", "<plug>(EasyAlign)")
-			vim.keymap.set("x", "ga", "<plug>(EasyAlign)")
-		end,
-	},
-
 	{ "machakann/vim-sandwich" },
 
 	{ "tpope/vim-commentary" },
