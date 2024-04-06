@@ -50,28 +50,7 @@ autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
 autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guifg=Grey
 autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
 
-call plug#begin()
-  Plug 'deris/vim-shot-f'
-  Plug 't9md/vim-quickhl'
-  Plug 'junegunn/vim-easy-align'
-  Plug 'machakann/vim-sandwich'
-  Plug 'tpope/vim-commentary'
-  Plug 'voldikss/vim-translator'
-  Plug 'liuchengxu/graphviz.vim'
-  Plug 'tyru/open-browser.vim'
-call plug#end()
-
-lua require('init')
-
 colorscheme desert
 syntax on
 
-nmap <C-t> <plug>(quickhl-manual-this)
-xmap <C-t> <plug>(quickhl-manual-this)
-nmap <space>m <plug>(quickhl-manual-reset)
-xmap <space>m <plug>(quickhl-manual-reset)
-
-nmap ga <plug>(EasyAlign)
-xmap ga <plug>(EasyAlign)
-
-let g:translator_target_lang='ja'
+lua require('init')

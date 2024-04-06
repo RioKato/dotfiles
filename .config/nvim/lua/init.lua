@@ -36,6 +36,43 @@ require("lazy").setup({
 	{ "folke/lazy.nvim" },
 
 	{
+		"t9md/vim-quickhl",
+
+		config = function()
+			vim.keymap.set("n", "<C-t>", "<plug>(quickhl-manual-this)")
+			vim.keymap.set("x", "<C-t>", "<plug>(quickhl-manual-this)")
+			vim.keymap.set("n", "<space>m", "<plug>(quickhl-manual-reset)")
+		end,
+	},
+
+	{ "deris/vim-shot-f" },
+
+	{
+		"junegunn/vim-easy-align",
+
+		config = function()
+			vim.keymap.set("n", "ga", "<plug>(EasyAlign)")
+			vim.keymap.set("x", "ga", "<plug>(EasyAlign)")
+		end,
+	},
+
+	{ "machakann/vim-sandwich" },
+
+	{ "tpope/vim-commentary" },
+
+	{
+		"voldikss/vim-translator",
+
+		config = function()
+			vim.g.translator_target_lang = "ja"
+		end,
+	},
+
+	{ "liuchengxu/graphviz.vim" },
+
+	{ "tyru/open-browser.vim" },
+
+	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = {
 			"neovim/nvim-lspconfig",
