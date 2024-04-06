@@ -19,12 +19,23 @@ vim.diagnostic.config({
 	underline = true,
 })
 
-require("packer").startup(function()
-	use("wbthomason/packer.nvim")
+local lazypath = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath,
+	})
+end
+vim.opt.rtp:prepend(lazypath)
 
-	use({
+require("lazy").setup({
+	{
 		"williamboman/mason-lspconfig.nvim",
-		requires = {
+		dependencies = {
 			"neovim/nvim-lspconfig",
 			"williamboman/mason.nvim",
 			"hrsh7th/cmp-nvim-lsp",
@@ -55,11 +66,11 @@ require("packer").startup(function()
 				})
 			end
 		end,
-	})
+	},
 
-	use({
+	{
 		"jose-elias-alvarez/null-ls.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
+		dependencies = { "nvim-lua/plenary.nvim" },
 
 		config = function()
 			local null_ls = require("null-ls")
@@ -71,13 +82,13 @@ require("packer").startup(function()
 				},
 			})
 		end,
-	})
+	},
 
-	use("nvim-treesitter/nvim-treesitter")
+	{ "nvim-treesitter/nvim-treesitter" },
 
-	use({
+	{
 		"nvim-telescope/telescope.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
+		dependencies = { "nvim-lua/plenary.nvim" },
 
 		config = function()
 			local actions = require("telescope.actions")
@@ -122,11 +133,11 @@ require("packer").startup(function()
 				end,
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"hrsh7th/nvim-cmp",
-		requires = {
+		dependencies = {
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-vsnip",
@@ -163,9 +174,9 @@ require("packer").startup(function()
 				}),
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"stevearc/qf_helper.nvim",
 
 		config = function()
@@ -188,9 +199,9 @@ require("packer").startup(function()
 				end,
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"ray-x/lsp_signature.nvim",
 
 		config = function()
@@ -200,11 +211,11 @@ require("packer").startup(function()
 				hint_prefix = "",
 			})
 		end,
-	})
+	},
 
-	use({
+	{
 		"junegunn/gv.vim",
-		requires = { "tpope/vim-fugitive" },
+		dependencies = { "tpope/vim-fugitive" },
 
 		config = function()
 			vim.api.nvim_create_autocmd("FileType", {
@@ -229,17 +240,17 @@ require("packer").startup(function()
 				vim.cmd(string.format("GV -S %s", vim.fn.expand("<cword>")))
 			end, {})
 		end,
-	})
+	},
 
-	use({
+	{
 		"linrongbin16/gitlinker.nvim",
 
 		config = function()
 			require("gitlinker").setup()
 		end,
-	})
+	},
 
-	use({
+	{
 		"segeljakt/vim-silicon",
 
 		config = function()
@@ -261,9 +272,9 @@ require("packer").startup(function()
 				["output"] = "/tmp/silicon.png",
 			}
 		end,
-	})
+	},
 
-	use({
+	{
 		"img-paste-devs/img-paste.vim",
 
 		config = function()
@@ -271,5 +282,5 @@ require("packer").startup(function()
 				vim.fn["mdip#MarkdownClipboardImage"]()
 			end, {})
 		end,
-	})
-end)
+	},
+})

@@ -13,14 +13,6 @@ do
   fi
 done
 
-if command -v nvim >& /dev/null
-then
-  sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  nvim --headless +PlugInstall +qa
-  nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-fi
-
 if command -v gdb >& /dev/null
 then
   wget -O ~/.gef.py -q https://gef.blah.cat/py
