@@ -60,10 +60,6 @@ call plug#begin()
   Plug 'voldikss/vim-translator'
   Plug 'liuchengxu/graphviz.vim'
   Plug 'tyru/open-browser.vim'
-  Plug 'previm/previm'
-  Plug 'img-paste-devs/img-paste.vim'
-  " Plug 'skanehira/denops-silicon.vim'
-  " Plug 'vim-denops/denops.vim'
 call plug#end()
 
 lua require('init')
@@ -79,25 +75,4 @@ xmap <space>m <plug>(quickhl-manual-reset)
 nmap ga <plug>(EasyAlign)
 xmap ga <plug>(EasyAlign)
 
-let g:git_messenger_no_default_mappings=1
-nmap <C-g> <plug>(git-messenger)
-
 let g:translator_target_lang='ja'
-
-let g:silicon_options = {
-      \  'font': 'Cica',
-      \  'no_line_number': v:true,
-      \  'no_round_corner': v:true,
-      \  'no_window_controls': v:true,
-      \  'background_color': '#aaaaff',
-      \  'line_offset': 1,
-      \  'line_pad': 2,
-      \  'pad_horiz': 0,
-      \  'pad_vert': 0,
-      \  'shadow_blur_radius': 0,
-      \  'shadow_color': '#555555',
-      \  'shadow_offset_x': 0,
-      \  'shadow_offset_y': 0,
-      \  'tab_width': 4,
-      \  'theme': 'GitHub',
-      \ }
