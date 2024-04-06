@@ -82,6 +82,7 @@ require("packer").startup(function()
 		config = function()
 			local actions = require("telescope.actions")
 			local builtin = require("telescope.builtin")
+			local lsputils = require("lsputils")
 
 			require("telescope").setup({
 				defaults = {
@@ -99,11 +100,6 @@ require("packer").startup(function()
 			})
 
 			local opts = { noremap = true, silent = true }
-			local lsputils = require("lsputils")
-
-			vim.api.nvim_create_user_command("Callgraph", function(opts)
-				lsputils.callgraph(opts.fargs[1])
-			end, { nargs = 1 })
 
 			vim.keymap.set("n", "<space>f", builtin.find_files, opts)
 			vim.keymap.set("n", "<space>b", builtin.buffers, opts)

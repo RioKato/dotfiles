@@ -130,4 +130,8 @@ M.callgraph = function(depth, opts)
 	end)
 end
 
+vim.api.nvim_create_user_command("Callgraph", function(opts)
+	M.callgraph(opts.fargs[1])
+end, { nargs = 1 })
+
 return M
