@@ -286,5 +286,14 @@ require("lazy").setup({
 		end,
 	},
 
-	{ "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
+	{
+		"ellisonleao/glow.nvim",
+
+		config = function()
+			require("glow").setup({
+				style = "dark",
+				border = "",
+			})
+		end,
+	},
 })
