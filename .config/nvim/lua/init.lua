@@ -280,7 +280,7 @@ require("lazy").setup({
 		"img-paste-devs/img-paste.vim",
 
 		config = function()
-			vim.api.nvim_create_user_command("PasteImage", function()
+			vim.api.nvim_create_user_command("ImagePaste", function()
 				vim.fn["mdip#MarkdownClipboardImage"]()
 			end, {})
 		end,
