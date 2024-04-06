@@ -223,7 +223,8 @@ require("lazy").setup({
 			vim.api.nvim_create_autocmd("FileType", {
 				pattern = "fugitiveblame",
 				callback = function()
-					vim.keymap.set("n", "q", "<cmd>close<cr>", {})
+					vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = true })
+					vim.keymap.set("n", "<tab>", "~", { buffer = true, remap = true })
 				end,
 			})
 
