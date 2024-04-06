@@ -248,19 +248,10 @@ require("packer").startup(function()
 	})
 
 	use({
-		"ruifm/gitlinker.nvim",
-		requires = { "nvim-lua/plenary.nvim" },
+		"linrongbin16/gitlinker.nvim",
 
 		config = function()
-			local gitlinker = require("gitlinker")
-			gitlinker.setup({
-				mappings = nil,
-			})
-
-			vim.api.nvim_create_user_command("Gitlink", function(opts)
-				local mode = opts.range > 0 and "v" or "n"
-				gitlinker.get_buf_range_url(mode)
-			end, { range = true })
+			require("gitlinker").setup()
 		end,
 	})
 
