@@ -95,10 +95,18 @@ require("lazy").setup({
 	},
 
 	{
-		"jose-elias-alvarez/null-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		"jay-babu/mason-null-ls.nvim",
+		dependencies = {
+			"nvimtools/none-ls.nvim",
+			"nvim-lua/plenary.nvim",
+			"williamboman/mason.nvim",
+		},
 
 		config = function()
+			require("mason-null-ls").setup({
+				ensure_installed = { "stylua", "autopep8", "prettier" },
+			})
+
 			local null_ls = require("null-ls")
 			null_ls.setup({
 				sources = {
