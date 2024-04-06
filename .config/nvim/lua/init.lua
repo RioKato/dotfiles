@@ -246,4 +246,38 @@ require("packer").startup(function()
 			vim.keymap.set("n", "mt", "<cmd>ToggleBlame<cr>", {})
 		end,
 	})
+
+	use({
+		"segeljakt/vim-silicon",
+
+		config = function()
+			vim.g.silicon = {
+				["theme"] = "Dracula",
+				["font"] = "Hack",
+				["background"] = "#AAAAFF",
+				["shadow-color"] = "#555555",
+				["line-pad"] = 2,
+				["pad-horiz"] = 80,
+				["pad-vert"] = 100,
+				["shadow-blur-radius"] = 0,
+				["shadow-offset-x"] = 0,
+				["shadow-offset-y"] = 0,
+				["line-number"] = true,
+				["round-corner"] = true,
+				["window-controls"] = true,
+				["to-clipboard"] = true,
+				["output"] = "/tmp/silicon.png",
+			}
+		end,
+	})
+
+	use({
+		"img-paste-devs/img-paste.vim",
+
+		config = function()
+			vim.api.nvim_create_user_command("PasteImage", function()
+				vim.fn["mdip#MarkdownClipboardImage"]()
+			end, {})
+		end,
+	})
 end)
