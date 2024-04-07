@@ -52,18 +52,23 @@ require("lazy").setup({
 	{ "tpope/vim-commentary" },
 
 	{
-		"voldikss/vim-translator",
+		"williamboman/mason.nvim",
 
 		config = function()
-			vim.g.translator_target_lang = "ja"
+			require("mason").setup()
 		end,
+	},
+
+	{
+		"hrsh7th/cmp-nvim-lsp",
+		dependencies = { "hrsh7th/nvim-cmp" },
 	},
 
 	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = {
-			"neovim/nvim-lspconfig",
 			"williamboman/mason.nvim",
+			"neovim/nvim-lspconfig",
 			"hrsh7th/cmp-nvim-lsp",
 		},
 
@@ -71,8 +76,6 @@ require("lazy").setup({
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local mason_lspconfig = require("mason-lspconfig")
 			local lspconfig = require("lspconfig")
-
-			require("mason").setup()
 
 			mason_lspconfig.setup({
 				ensure_installed = { "pyright" },
@@ -95,12 +98,8 @@ require("lazy").setup({
 	},
 
 	{
-		"jay-babu/mason-null-ls.nvim",
-		dependencies = {
-			"nvimtools/none-ls.nvim",
-			"nvim-lua/plenary.nvim",
-			"williamboman/mason.nvim",
-		},
+		"nvimtools/none-ls.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
 
 		config = function()
 			local null_ls = require("null-ls")
@@ -111,7 +110,17 @@ require("lazy").setup({
 					null_ls.builtins.formatting.prettier,
 				},
 			})
+		end,
+	},
 
+	{
+		"jay-babu/mason-null-ls.nvim",
+		dependencies = {
+			"williamboman/mason.nvim",
+			"nvimtools/none-ls.nvim",
+		},
+
+		config = function()
 			require("mason-null-ls").setup({
 				ensure_installed = nil,
 				automatic_installation = true,
@@ -249,8 +258,7 @@ require("lazy").setup({
 	},
 
 	{
-		"junegunn/gv.vim",
-		dependencies = { "tpope/vim-fugitive" },
+		"tpope/vim-fugitive",
 
 		config = function()
 			vim.api.nvim_create_autocmd("FileType", {
@@ -268,6 +276,14 @@ require("lazy").setup({
 					vim.cmd("close")
 				end
 			end, {})
+		end,
+	},
+
+	{
+		"junegunn/gv.vim",
+		dependencies = { "tpope/vim-fugitive" },
+
+		config = function()
 			vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
 			vim.keymap.set("n", "mf", function()
 				vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
@@ -328,6 +344,14 @@ require("lazy").setup({
 				style = "dark",
 				border = "",
 			})
+		end,
+	},
+
+	{
+		"voldikss/vim-translator",
+
+		config = function()
+			vim.g.translator_target_lang = "ja"
 		end,
 	},
 
