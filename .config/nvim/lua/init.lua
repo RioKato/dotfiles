@@ -116,6 +116,23 @@ require("lazy").setup({
 		end,
 	},
 
+	{
+		"jay-babu/mason-null-ls.nvim",
+		dependencies = {
+			"williamboman/mason.nvim",
+			"jose-elias-alvarez/null-ls.nvim",
+			-- "nvimtools/none-ls.nvim",
+		},
+		event = { "BufReadPre", "BufNewFile" },
+
+		config = function()
+			require("mason-null-ls").setup({
+				ensure_installed = nil,
+				automatic_installation = true,
+			})
+		end,
+	},
+
 	{ "nvim-treesitter/nvim-treesitter" },
 
 	{
