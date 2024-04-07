@@ -335,9 +335,19 @@ require("lazy").setup({
 		"img-paste-devs/img-paste.vim",
 
 		config = function()
+			vim.g.mdip_imgdir = "image"
+			vim.g.mdip_imgdir_intext = "image"
+
 			vim.api.nvim_create_user_command("ImagePaste", function()
 				vim.fn["mdip#MarkdownClipboardImage"]()
 			end, {})
+
+			vim.api.nvim_create_autocmd({ "FileType" }, {
+				pattern = "markdown",
+				callback = function()
+					vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", { buffer = true })
+				end,
+			})
 		end,
 	},
 
