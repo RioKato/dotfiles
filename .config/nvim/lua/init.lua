@@ -240,8 +240,8 @@ require("lazy").setup({
 				pattern = "qf",
 				callback = function()
 					vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
-					vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", { buffer = true, silent = true })
-					vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", { buffer = true, silent = true })
+					vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", { buffer = true })
+					vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", { buffer = true })
 					vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
 					vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
 					vim.keymap.set("v", "d", ":'<,'>Reject<cr>", { buffer = true })
@@ -342,10 +342,15 @@ require("lazy").setup({
 				vim.fn["mdip#MarkdownClipboardImage"]()
 			end, {})
 
+			vim.api.nvim_create_user_command("ImageOpen", function()
+				vim.fn.system({ "xdg-open", vim.fn.expand("<cfile>") })
+			end, {})
+
 			vim.api.nvim_create_autocmd({ "FileType" }, {
 				pattern = "markdown",
 				callback = function()
 					vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", { buffer = true })
+					vim.keymap.set("n", "go", "<cmd>ImageOpen<cr>", { buffer = true })
 				end,
 			})
 		end,
