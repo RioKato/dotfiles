@@ -98,7 +98,8 @@ require("lazy").setup({
 	},
 
 	{
-		"nvimtools/none-ls.nvim",
+		"jose-elias-alvarez/null-ls.nvim",
+		-- "nvimtools/none-ls.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 
 		config = function()
@@ -111,22 +112,6 @@ require("lazy").setup({
 					null_ls.builtins.formatting.autopep8,
 					null_ls.builtins.formatting.prettier,
 				},
-			})
-		end,
-	},
-
-	{
-		"jay-babu/mason-null-ls.nvim",
-		dependencies = {
-			"williamboman/mason.nvim",
-			"nvimtools/none-ls.nvim",
-		},
-		event = { "BufReadPre", "BufNewFile" },
-
-		config = function()
-			require("mason-null-ls").setup({
-				ensure_installed = nil,
-				automatic_installation = true,
 			})
 		end,
 	},
