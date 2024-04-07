@@ -103,7 +103,7 @@ require("lazy").setup({
 
 		config = function()
 			local null_ls = require("null-ls")
-			null_ls.builtins.formatting.prettier = { "markdown" }
+			null_ls.builtins.formatting.prettier.filetypes = { "markdown" }
 
 			null_ls.setup({
 				sources = {
