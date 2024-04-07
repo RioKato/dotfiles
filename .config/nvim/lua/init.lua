@@ -119,6 +119,7 @@ require("lazy").setup({
 			"williamboman/mason.nvim",
 			"nvimtools/none-ls.nvim",
 		},
+		event = { "BufReadPre", "BufNewFile" },
 
 		config = function()
 			require("mason-null-ls").setup({
