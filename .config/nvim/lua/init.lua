@@ -33,7 +33,7 @@ vim.keymap.set("n", "<C-n>", function()
 	end
 end)
 vim.keymap.set("n", "<C-p>", function()
-	local ok, exception = pcall(vim.cmd, "cprev")
+	local ok, exception = pcall(vim.cmd, "cprevious")
 	if not ok and string.find(exception, "E553") then
 		vim.cmd("clast")
 	end
@@ -44,8 +44,12 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = "qf",
 	callback = function()
 		vim.keymap.set("n", "q", "<cmd>cclose<cr>", { buffer = true })
-		vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", { buffer = true })
-		vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", { buffer = true })
+		vim.keymap.set("n", "<C-o>", function()
+			pcall(vim.cmd, "colder")
+		end, { buffer = true })
+		vim.keymap.set("n", "<C-i>", function()
+			pcall(vim.cmd, "cnewer")
+		end, { buffer = true })
 		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
 	end,
 })
