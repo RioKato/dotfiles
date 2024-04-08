@@ -232,10 +232,12 @@ require("lazy").setup({
 
 		config = function()
 			require("qf_helper").setup()
+
 			vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
 			vim.keymap.set("n", "<C-n>", "<cmd>QNext<cr>", { silent = true })
 			vim.keymap.set("n", "<C-p>", "<cmd>QPrev<cr>", { silent = true })
 			vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
+
 			vim.api.nvim_create_autocmd({ "FileType" }, {
 				pattern = "qf",
 				callback = function()
@@ -352,17 +354,6 @@ require("lazy").setup({
 					vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", { buffer = true })
 					vim.keymap.set("n", "go", "<cmd>ImageOpen<cr>", { buffer = true })
 				end,
-			})
-		end,
-	},
-
-	{
-		"ellisonleao/glow.nvim",
-
-		config = function()
-			require("glow").setup({
-				style = "dark",
-				border = "",
 			})
 		end,
 	},
