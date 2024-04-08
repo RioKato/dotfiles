@@ -23,7 +23,7 @@ vim.keymap.set("n", "<C-l>", function()
 	if vim.bo.filetype ~= "qf" then
 		vim.cmd("copen")
 	else
-		vim.cmd("close")
+		vim.cmd("cclose")
 	end
 end)
 vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>")
@@ -33,7 +33,7 @@ vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line
 vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = "qf",
 	callback = function()
-		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = true })
+		vim.keymap.set("n", "q", "<cmd>cclose<cr>", { buffer = true })
 		vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", { buffer = true })
 		vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", { buffer = true })
 		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
