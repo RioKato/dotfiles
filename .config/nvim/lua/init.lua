@@ -195,7 +195,7 @@ require("lazy").setup({
 			})
 
 			vim.api.nvim_create_autocmd("ColorScheme", {
-				callback = function(opts)
+				callback = function()
 					vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Normal" })
 					vim.api.nvim_set_hl(0, "TreesitterContextSeparator", { link = "Normal" })
 				end,
