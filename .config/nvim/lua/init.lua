@@ -182,9 +182,11 @@ require("lazy").setup({
 			require("treesitter-context").setup({
 				max_lines = 1,
 				mode = "topline",
+				separator = "━",
 			})
 
-			vim.cmd("hi TreesitterContextBottom gui=bold guibg=#313244")
+			vim.cmd("highlight TreesitterContextBottom gui=bold guibg=#313244")
+			vim.cmd("highlight TreesitterContextSeparator guibg=#313244")
 		end,
 	},
 
