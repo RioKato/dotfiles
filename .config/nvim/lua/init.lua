@@ -371,8 +371,8 @@ require("lazy").setup({
 			vim.g.translator_default_engines = { "google" }
 			vim.g.translator_target_lang = "ja"
 			vim.g.translator_window_type = "preview"
-			vim.keymap.set("n", "gt", "<cmd>TranslateW<cr>")
-			vim.keymap.set("x", "gt", ":'<,'>TranslateW<cr>")
+			vim.keymap.set("n", "gt", "<plug>TranslateW")
+			vim.keymap.set("v", "gt", "<plug>TranslateWV")
 		end,
 	},
 
