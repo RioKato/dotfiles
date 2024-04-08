@@ -26,8 +26,18 @@ vim.keymap.set("n", "<C-l>", function()
 		vim.cmd("cclose")
 	end
 end)
-vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>")
-vim.keymap.set("n", "<C-p>", "<cmd>cprev<cr>")
+vim.keymap.set("n", "<C-n>", function()
+	local ok, exception = pcall(vim.cmd, "cnext")
+	if not ok and string.find(exception, "E553") then
+		vim.cmd("cfirst")
+	end
+end)
+vim.keymap.set("n", "<C-p>", function()
+	local ok, exception = pcall(vim.cmd, "cprev")
+	if not ok and string.find(exception, "E553") then
+		vim.cmd("clast")
+	end
+end)
 vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d:%s', expand('%'), line('.'), col('.'), getline('.'))<cr>")
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
