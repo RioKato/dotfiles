@@ -164,7 +164,29 @@ require("lazy").setup({
 		end,
 	},
 
-	{ "nvim-treesitter/nvim-treesitter" },
+	{
+		"nvim-treesitter/nvim-treesitter",
+
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = { "c", "python", "rust", "java", "vim" },
+			})
+		end,
+	},
+
+	{
+		"nvim-treesitter/nvim-treesitter-context",
+		dependencies = { "nvim-treesitter/nvim-treesitter" },
+
+		config = function()
+			require("treesitter-context").setup({
+				max_lines = 1,
+				mode = "topline",
+			})
+
+			vim.cmd("hi TreesitterContextBottom gui=bold guibg=#313244")
+		end,
+	},
 
 	{
 		"nvim-telescope/telescope.nvim",
