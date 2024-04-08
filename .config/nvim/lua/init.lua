@@ -72,6 +72,8 @@ require("lazy").setup({
 
 	{ "tpope/vim-commentary" },
 
+	{ "itchyny/vim-qfedit" },
+
 	{
 		"williamboman/mason.nvim",
 
