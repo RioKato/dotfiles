@@ -19,13 +19,7 @@ vim.diagnostic.config({
 	underline = true,
 })
 
-vim.keymap.set("n", "<C-l>", function()
-	if vim.bo.filetype ~= "qf" then
-		vim.cmd("copen")
-	else
-		vim.cmd("cclose")
-	end
-end)
+vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
 vim.keymap.set("n", "<C-n>", function()
 	local ok, exception = pcall(vim.cmd, "cnext")
 	if not ok and string.find(exception, "E553") then
