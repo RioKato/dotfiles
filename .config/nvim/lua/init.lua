@@ -26,8 +26,8 @@ vim.keymap.set("n", "<C-l>", function()
 		vim.cmd("close")
 	end
 end)
-vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>", { silent = true })
-vim.keymap.set("n", "<C-p>", "<cmd>cprev<cr>", { silent = true })
+vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>")
+vim.keymap.set("n", "<C-p>", "<cmd>cprev<cr>")
 vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
