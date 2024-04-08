@@ -66,6 +66,8 @@ require("lazy").setup({
 
 	{
 		"sainnhe/sonokai",
+		dependencies = { "nvim-treesitter/nvim-treesitter-context" },
+
 		config = function()
 			vim.cmd("colorscheme sonokai")
 		end,
@@ -193,7 +195,7 @@ require("lazy").setup({
 			})
 
 			vim.api.nvim_create_autocmd("ColorScheme", {
-				callback = function()
+				callback = function(opts)
 					vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Normal" })
 					vim.api.nvim_set_hl(0, "TreesitterContextSeparator", { link = "Normal" })
 				end,
