@@ -65,6 +65,13 @@ require("lazy").setup({
 	{ "folke/lazy.nvim" },
 
 	{
+		"sainnhe/sonokai",
+		config = function()
+			vim.cmd("colorscheme sonokai")
+		end,
+	},
+
+	{
 		"t9md/vim-quickhl",
 
 		config = function()
@@ -185,8 +192,12 @@ require("lazy").setup({
 				separator = "━",
 			})
 
-			vim.cmd("highlight TreesitterContextBottom gui=bold guibg=#313244")
-			vim.cmd("highlight TreesitterContextSeparator guibg=#313244")
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				callback = function()
+					vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Normal" })
+					vim.api.nvim_set_hl(0, "TreesitterContextSeparator", { link = "Normal" })
+				end,
+			})
 		end,
 	},
 
