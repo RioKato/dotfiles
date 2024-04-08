@@ -181,6 +181,7 @@ require("lazy").setup({
 		config = function()
 			require("treesitter-context").setup({
 				max_lines = 1,
+				trim_scope = "inner",
 				mode = "topline",
 				separator = "━",
 			})
