@@ -19,6 +19,27 @@ vim.diagnostic.config({
 	underline = true,
 })
 
+vim.keymap.set("n", "<C-l>", function()
+	if vim.bo.filetype ~= "qf" then
+		vim.cmd("copen")
+	else
+		vim.cmd("close")
+	end
+end)
+vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>", { silent = true })
+vim.keymap.set("n", "<C-p>", "<cmd>cprev<cr>", { silent = true })
+vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	pattern = "qf",
+	callback = function()
+		vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = true })
+		vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", { buffer = true })
+		vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", { buffer = true })
+		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
+	end,
+})
+
 local lazypath = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	vim.fn.system({
@@ -223,31 +244,6 @@ require("lazy").setup({
 				}, {
 					{ name = "buffer" },
 				}),
-			})
-		end,
-	},
-
-	{
-		"stevearc/qf_helper.nvim",
-
-		config = function()
-			require("qf_helper").setup()
-
-			vim.keymap.set("n", "<C-l>", "<cmd>QFToggle!<cr>")
-			vim.keymap.set("n", "<C-n>", "<cmd>QNext<cr>", { silent = true })
-			vim.keymap.set("n", "<C-p>", "<cmd>QPrev<cr>", { silent = true })
-			vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d', expand('%'), line('.'), getline('.'))<cr>")
-
-			vim.api.nvim_create_autocmd({ "FileType" }, {
-				pattern = "qf",
-				callback = function()
-					vim.keymap.set("n", "q", "<cmd>QFToggle!<cr>", { buffer = true })
-					vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", { buffer = true })
-					vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", { buffer = true })
-					vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
-					vim.keymap.set("n", "dd", "<cmd>Reject<cr>", { buffer = true })
-					vim.keymap.set("v", "d", ":'<,'>Reject<cr>", { buffer = true })
-				end,
 			})
 		end,
 	},
