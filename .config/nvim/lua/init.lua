@@ -66,7 +66,10 @@ require("lazy").setup({
 
 	{
 		"sainnhe/sonokai",
-		dependencies = { "nvim-treesitter/nvim-treesitter-context" },
+		dependencies = {
+			-- after --
+			"nvim-treesitter/nvim-treesitter-context",
+		},
 
 		config = function()
 			vim.cmd("colorscheme sonokai")
@@ -142,7 +145,7 @@ require("lazy").setup({
 		-- "nvimtools/none-ls.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			-- Setting up null-ls must be done after lspconfig completes
+			-- after --
 			"williamboman/mason-lspconfig.nvim",
 		},
 
