@@ -140,7 +140,11 @@ require("lazy").setup({
 	{
 		"jose-elias-alvarez/null-ls.nvim",
 		-- "nvimtools/none-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			-- Setting up null-ls must be done after lspconfig completes
+			"williamboman/mason-lspconfig.nvim",
+		},
 
 		config = function()
 			local null_ls = require("null-ls")
