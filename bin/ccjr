@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from typing import Any
+from typing import Any, TextIO
 
 
 def load(path: str) -> Any:
@@ -16,26 +16,32 @@ def replace(cc: Any, old: str, cwd: str) -> Any:
             v['directory'] = cwd + v['directory'][len(old):]
 
 
-def dump(cc: Any):
+def dump(cc: Any, fd: TextIO):
     from json import dump
-    from sys import stdout
 
-    dump(cc, stdout, indent=2)
+    dump(cc, fd, indent=2)
 
 
 def main():
     from argparse import ArgumentParser
     from os import getcwd
+    from sys import stdout
 
     parser = ArgumentParser()
     parser.add_argument('compile_commands')
     parser.add_argument('old')
+    parser.add_argument('-i', action='store_true')
 
     args = parser.parse_args()
 
     cc = load(args.compile_commands)
     replace(cc, args.old, getcwd())
-    dump(cc)
+
+    if args.i:
+        with open(args.compile_commands, 'w') as fd:
+            dump(cc, fd)
+    else:
+        dump(cc, stdout)
 
 
 if __name__ == '__main__':
