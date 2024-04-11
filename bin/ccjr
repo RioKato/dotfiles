@@ -1,0 +1,42 @@
+#!/usr/bin/python
+
+from typing import Any
+
+
+def load(path: str) -> Any:
+    from json import load
+
+    with open(path) as fd:
+        return load(fd)
+
+
+def replace(cc: Any, old: str, cwd: str) -> Any:
+    for v in cc:
+        if v['directory'].startswith(old):
+            v['directory'] = cwd + v['directory'][len(old):]
+
+
+def dump(cc: Any):
+    from json import dump
+    from sys import stdout
+
+    dump(cc, stdout, indent=2)
+
+
+def main():
+    from argparse import ArgumentParser
+    from os import getcwd
+
+    parser = ArgumentParser()
+    parser.add_argument('compile_commands')
+    parser.add_argument('old')
+
+    args = parser.parse_args()
+
+    cc = load(args.compile_commands)
+    replace(cc, args.old, getcwd())
+    dump(cc)
+
+
+if __name__ == '__main__':
+    main()
