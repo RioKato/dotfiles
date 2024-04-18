@@ -10,9 +10,16 @@ class PostCheckout:
     @classmethod
     def do(cls, commit0: str, commit1: str, branch: int):
         from subprocess import run
+        from os import chdir
+        from os.path import isfile
 
         if commit0 == commit1:
             return
+
+        root = run(['git', 'rev-parse', '--show-toplevel'],
+                   check=True, capture_output=True, text=True).stdout.rstrip('\n')
+
+        chdir(root)
 
         url = run(['git', 'config', '--get', 'remote.origin.url'],
                   check=True, capture_output=True, text=True).stdout.rstrip('\n')
@@ -21,14 +28,12 @@ class PostCheckout:
             cls.handlers[url](commit0, commit1, branch)
             return
 
-        root = run(['git', 'rev-parse', '--show-toplevel'],
-                   check=True, capture_output=True, text=True).stdout.rstrip('\n')
+        if isfile('Makefile'):
+            run(['git', '--no-pager', 'diff', '--stat', commit0, commit1], check=True)
+            run(['make', '-n'], check=True)
 
-        if Path(root).joinpath('Makefile').is_file():
-            run(['git', '--no-pager', 'diff', '--stat', commit0, commit1])
-            run(['make', '-n'])
             if yes_or_no('build'):
-                run(['make'])
+                run(['make'], check=True)
             return
 
     @classmethod
@@ -44,8 +49,19 @@ class PostCheckout:
 
 
 @PostCheckout.url('https://chromium.googlesource.com/v8/v8.git')
-def post_checkout_v8(commit0: str, commit1: str, branch: int):
-    pass
+def post_checkout_v8(commit0: str, commit1: str, _: int):
+    from subprocess import run
+    from glob import iglob
+    from os.path import dirname
+
+    for out in iglob('out.gn/*/d8'):
+        out = dirname(out)
+        print(f'[*] {out}')
+        run(['git', '--no-pager', 'diff', '--stat', commit0, commit1], check=True)
+        run(['ninja', '-C', out, '-n'], check=True)
+
+        if yes_or_no('build'):
+            run(['ninja', '-C', out, 'd8'], check=True)
 
 
 def yes_or_no(message: str):
