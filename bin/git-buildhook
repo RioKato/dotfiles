@@ -1,0 +1,113 @@
+#!/usr/bin/env python
+
+from collections.abc import Callable
+from pathlib import Path
+
+
+class PostCheckout:
+    handlers: dict[str, Callable[[str, str, int], None]] = {}
+
+    @classmethod
+    def do(cls, commit0: str, commit1: str, branch: int):
+        from subprocess import run
+
+        if commit0 == commit1:
+            return
+
+        url = run(['git', 'config', '--get', 'remote.origin.url'],
+                  check=True, capture_output=True, text=True).stdout.rstrip('\n')
+
+        if url in cls.handlers:
+            cls.handlers[url](commit0, commit1, branch)
+            return
+
+        root = run(['git', 'rev-parse', '--show-toplevel'],
+                   check=True, capture_output=True, text=True).stdout.rstrip('\n')
+
+        if Path(root).joinpath('Makefile').is_file():
+            run(['git', '--no-pager', 'diff', '--stat', commit0, commit1])
+            run(['make', '-n'])
+            if yes_or_no('build'):
+                run(['make'])
+            return
+
+    @classmethod
+    def register(cls, url: str, handler: Callable[[str, str, int], None]):
+        cls.handlers[url] = handler
+
+    @classmethod
+    def url(cls, key: str):
+        def inner(handler):
+            cls.register(key, handler)
+            return handler
+        return inner
+
+
+@PostCheckout.url('https://chromium.googlesource.com/v8/v8.git')
+def post_checkout_v8(commit0: str, commit1: str, branch: int):
+    pass
+
+
+def yes_or_no(message: str):
+    while True:
+        yn = input(f'{message} [Y/N]: ')
+
+        if yn in ['Y', 'N']:
+            return yn == 'Y'
+
+
+def hook(src: Path):
+    from shutil import copy
+    from subprocess import run
+
+    root = run(['git', 'rev-parse', '--show-toplevel'],
+               check=True, capture_output=True, text=True).stdout.rstrip('\n')
+    dst = Path(root).joinpath('.git', 'hooks', 'post-checkout')
+    copy(src, dst)
+
+
+def unhook():
+    from subprocess import run
+
+    root = run(['git', 'rev-parse', '--show-toplevel'],
+               check=True, capture_output=True, text=True).stdout.rstrip('\n')
+    hook = Path(root).joinpath('.git', 'hooks', 'post-checkout')
+    hook.unlink()
+
+
+def main():
+    from sys import argv
+    from argparse import ArgumentParser
+
+    this = Path(argv[0])
+    parser = ArgumentParser()
+    print(this.name)
+
+    match this.name:
+        case 'post-checkout':
+            parser.add_argument('commit0')
+            parser.add_argument('commit1')
+            parser.add_argument('branch', type=int)
+            args = parser.parse_args()
+            PostCheckout.do(args.commit0, args.commit1, args.branch)
+
+        case _:
+            subpersers = parser.add_subparsers(dest='command')
+            subpersers.add_parser('hook')
+            subpersers.add_parser('unhook')
+            args = parser.parse_args()
+
+            match args.command:
+                case 'hook':
+                    hook(this)
+
+                case 'unhook':
+                    unhook()
+
+                case _:
+                    parser.print_usage()
+                    exit(1)
+
+
+if __name__ == '__main__':
+    main()
