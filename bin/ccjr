@@ -30,10 +30,12 @@ def replace(cc: Any, base: Path):
 
         if not directory.is_dir():
             print(f'[NOT FOUND] {directory}', file=stderr)
+
         v['directory'] = str(directory)
 
         file = Path(v['file'])
         file = directory.joinpath(file).resolve()
+
         if not file.is_file():
             print(f'[NOT FOUND] {file}', file=stderr)
 
