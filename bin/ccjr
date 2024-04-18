@@ -29,15 +29,14 @@ def replace(cc: Any, base: Path):
             directory = base.joinpath(directory).resolve()
 
         if not directory.is_dir():
-            print(f'[NOT FOUND] {directory}', file=stderr)
+            print(f'[DIR NOT FOUND] {directory}', file=stderr)
 
         v['directory'] = str(directory)
 
-        file = Path(v['file'])
-        file = directory.joinpath(file).resolve()
+        file = directory.joinpath(v['file']).resolve()
 
         if not file.is_file():
-            print(f'[NOT FOUND] {file}', file=stderr)
+            print(f'[FILE NOT FOUND] {file}', file=stderr)
 
 
 def main():
