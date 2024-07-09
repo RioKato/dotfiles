@@ -8,7 +8,6 @@ function RunPython()
   elseif ext == "idapy"
     let l:command = printf("python3 ~/.idapro/plugins/idapy.py %s", shellescape(@%, 1))
     write
-    echo command
     call RunTmux('idapy', command)
   endif
 endfunction
