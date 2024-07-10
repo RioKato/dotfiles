@@ -23,8 +23,8 @@ def PLUGIN_ENTRY():
             from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
             from idaapi import IDAPython_ExecScript, execute_sync, MFF_WRITE
 
-            def execute(script: str):
-                def task():
+            def execute(script: str) -> str:
+                def task() -> int:
                     env = {'__name__': '__main__'}
                     IDAPython_ExecScript(script, env)
                     return 0
