@@ -1,21 +1,5 @@
-from multiprocessing.managers import BaseManager
-
 DEFAULT_HOST = 'localhost'
 DEFAULT_PORT = 12345
-DEFAULT_AUTHKEY = b''
-
-
-def serve(host: str, port: int, authkey: bytes):
-    from idaapi import IDAPython_ExecScript, execute_sync, MFF_WRITE
-
-    def execute(script: str) -> str:
-        env = {'__name__': '__main__'}
-        result = IDAPython_ExecScript(script, env)
-        return result if result else ''
-
-    BaseManager.register('execute', execute)
-    manager = BaseManager((host, port), authkey)
-    execute_sync(lambda: manager.get_server().serve_forever(), MFF_WRITE)
 
 
 def PLUGIN_ENTRY():
@@ -27,13 +11,30 @@ def PLUGIN_ENTRY():
         help = "IDAPy"
         wanted_name = "IDAPy"
         wanted_hotkey = ""
+        host = DEFAULT_HOST
+        port = DEFAULT_PORT
 
         def init(self):
             return PLUGIN_OK
 
         def run(self, _):
             print('[IDAPy] start')
-            serve(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_AUTHKEY)
+
+            from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
+            from idaapi import IDAPython_ExecScript, execute_sync, MFF_WRITE
+
+            def execute(script: str):
+                def task():
+                    env = {'__name__': '__main__'}
+                    IDAPython_ExecScript(script, env)
+                    return 0
+
+                execute_sync(task, MFF_WRITE)
+                return ''
+
+            with SimpleXMLRPCServer((self.host, self.port), SimpleXMLRPCRequestHandler) as server:
+                server.register_function(execute)
+                server.serve_forever()
 
         def term(self):
             print('[IDAPy] stop')
@@ -41,11 +42,10 @@ def PLUGIN_ENTRY():
     return Plugin()
 
 
-def execute(host: str, port: int, authkey: bytes, script: str) -> str:
-    BaseManager.register('execute')
-    manager = BaseManager((host, port), authkey)
-    manager.connect()
-    return manager.execute(script)
+def execute(host: str, port: int, script: str):
+    from xmlrpc.client import ServerProxy
+    client = ServerProxy(f'http://{host}:{port}')
+    client.execute(script)
 
 
 def main():
@@ -58,8 +58,7 @@ def main():
 
     script = args.script
     script = str(Path(script).absolute())
-    result = execute(DEFAULT_HOST, DEFAULT_PORT, DEFAULT_AUTHKEY, script)
-    print(result)
+    execute(DEFAULT_HOST, DEFAULT_PORT, script)
 
 
 if __name__ == '__main__':
