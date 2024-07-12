@@ -129,11 +129,11 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
 
         decompile(ptr, flags=DECOMP_NO_CACHE)
 
-        fun = tinfo_t()
-        if get_tinfo(fun, ptr):
-            funptr = tinfo_t()
-            funptr.create_ptr(fun)
-            set_member_tinfo(struc, struc.get_last_member(), 0, funptr, 0)
+        ti_fun = tinfo_t()
+        if get_tinfo(ti_fun, ptr):
+            ti_funptr = tinfo_t()
+            ti_funptr.create_ptr(ti_fun)
+            set_member_tinfo(struc, struc.get_last_member(), 0, ti_funptr, 0)
 
         i += 1
 
@@ -174,6 +174,7 @@ def run(start_ea: int, end_ea: int):
     typeinfo = parse_typeinfo(
         typeinfo_ea, vtable_class_type_info, vtable_si_class_type_info, vtable_vmi_class_type_info)
     print(f'[RTTI] typeinfo = {typeinfo}')
+
     vtable = parse_vtable(start_ea, end_ea, typeinfo)
     print(f'[RTTI] vtable = {vtable}')
 
