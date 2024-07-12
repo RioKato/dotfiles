@@ -42,8 +42,7 @@ def parse_typeinfo(ea: int) -> dict[int, str]:
 
     def create_name(ea: int):
         from re import fullmatch
-        from idaapi import get_name, demangle_name, INF_SHORT_DEMNAMES
-
+        from idaapi import INF_SHORT_DEMNAMES, get_name, demangle_name
         if name := get_name(ea):
             if name := demangle_name(name, INF_SHORT_DEMNAMES):
                 if match := fullmatch(TYPEINFO_NAME_PATTERN, name):
@@ -153,14 +152,14 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
     apply_type(start_ea, parse_decl(name, 0), 0)
 
 
-def run(start_ea: int, end_ea: int):
+def popup_main(start_ea: int, end_ea: int):
     from re import fullmatch
     from struct import calcsize
-    from idaapi import get_name, demangle_name, INF_LONG_DEMNAMES
+    from idaapi import INF_SHORT_DEMNAMES, get_name, demangle_name
 
     name = get_name(start_ea)
     assert (name)
-    name = demangle_name(name, INF_LONG_DEMNAMES)
+    name = demangle_name(name, INF_SHORT_DEMNAMES)
     assert (name)
     match = fullmatch(VTABLE_NAME_PATTERN, name)
     assert (match)
@@ -181,7 +180,7 @@ def run(start_ea: int, end_ea: int):
         create_vtable(f'{name}::{subname}::vtable', start_ea, end_ea)
 
 
-class Hooks(UI_Hooks):
+class PopupHooks(UI_Hooks):
     def finish_populating_widget_popup(self, form, popup):
         from idaapi import BWN_DISASMS, SETMENU_INS, get_widget_type, action_handler_t, action_desc_t, attach_dynamic_action_to_popup
 
@@ -193,7 +192,7 @@ class Hooks(UI_Hooks):
 
                     ok, start_ea, end_ea = read_range_selection(None)
                     if ok:
-                        run(start_ea, end_ea)
+                        popup_main(start_ea, end_ea)
 
             name = 'Create vtable from selection'
             desc = action_desc_t(None, name, handler())
@@ -201,5 +200,100 @@ class Hooks(UI_Hooks):
                 form, popup, desc, name, SETMENU_INS)
 
 
-hooks = Hooks()
+hooks = PopupHooks()
 hooks.hook()
+
+
+############################################################################
+
+
+def typeinfo_paths() -> set[tuple[str, str, bool]]:
+    from struct import calcsize
+    from re import fullmatch
+    from idautils import Names
+    from idaapi import INF_SHORT_DEMNAMES, get_name, demangle_name
+    from idc import BADADDR, get_name_ea_simple
+
+    vtable_si_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO)
+    assert (vtable_si_class_type_info != BADADDR)
+
+    vtable_vmi_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO)
+    assert (vtable_vmi_class_type_info != BADADDR)
+
+    paths = set()
+
+    for ea, child in Names():
+        if child := demangle_name(child, INF_SHORT_DEMNAMES):
+            if match := fullmatch(TYPEINFO_NAME_PATTERN, child):
+                child = match.group(1)
+
+                _, vtable, _ = get_unpacked(ea, CLASS_TYPE_INFO)
+                vtable -= calcsize(VTABLE_HEADER)
+
+                if vtable == vtable_si_class_type_info:
+                    _, _, _, base_type = get_unpacked(ea, SI_CLASS_TYPE_INFO)
+
+                    if paren := get_name(base_type):
+                        if paren := demangle_name(paren, INF_SHORT_DEMNAMES):
+                            if match := fullmatch(TYPEINFO_NAME_PATTERN, paren):
+                                paren = match.group(1)
+                                paths.add((paren, child, True))
+
+                elif vtable == vtable_vmi_class_type_info:
+                    ea, _, _, _, base_count = get_unpacked(
+                        ea, VMI_CLASS_TYPE_INFO)
+
+                    primary = True
+
+                    for _ in range(base_count):
+                        ea, base_type, _ = get_unpacked(
+                            ea, BASE_CLASS_TYPE_INFO)
+
+                        if paren := get_name(base_type):
+                            if paren := demangle_name(paren, INF_SHORT_DEMNAMES):
+                                if match := fullmatch(TYPEINFO_NAME_PATTERN, paren):
+                                    paren = match.group(1)
+                                    paths.add((paren, child, primary))
+                                    primary = False
+
+    return paths
+
+
+def typeinfo_graphiz():
+    from idaapi import ask_file
+
+    file = ask_file(0, '~', 'typeinfo_graphiz')
+
+    with open(file, 'w') as fd:
+        print('digraph {', file=fd)
+
+        for (src, dst, primary) in typeinfo_paths():
+            if primary:
+                arrow = f'"{src}" -> "{dst}"'
+            else:
+                arrow = f'"{src}" -> "{dst}" [style="dotted"]'
+
+            print(arrow, file=fd)
+
+        print('}', file=fd)
+
+
+def PLUGIN_ENTRY():
+    from idaapi import plugin_t, PLUGIN_UNL, PLUGIN_OK
+
+    class RTTIPlugin(plugin_t):
+        flags = PLUGIN_UNL
+        wanted_name = 'Create graph by RTTI'
+
+        def init(self):
+            return PLUGIN_OK
+
+        def run(self, _):
+            typeinfo_graphiz()
+
+        def term(self):
+            pass
+
+    return RTTIPlugin()
