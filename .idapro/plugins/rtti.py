@@ -12,7 +12,7 @@ TYPEINFO_NAME_PATTERN = r"`typeinfo for'(.+)"
 MANGLED_NAME_VTABLE_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv117__class_type_infoE"
 MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv120__si_class_type_infoE"
 MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv121__vmi_class_type_infoE"
-POINTER_MASK = 1
+FUNCTION_POINTER_MASK = 1
 
 
 def get_unpacked(ea: int, fmt: str) -> Any:
@@ -124,7 +124,7 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
 
     while ea < end_ea:
         ea, ptr = get_unpacked(ea, VTABLE_POINTER)
-        ptr -= ptr & POINTER_MASK
+        ptr -= ptr & FUNCTION_POINTER_MASK
         add_struc_member(struc, f'vmethod{i}', BADADDR, flag, None, size)
 
         decompile(ptr, flags=DECOMP_NO_CACHE)
