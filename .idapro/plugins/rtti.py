@@ -108,6 +108,7 @@ def parse_vtable(start_ea: int, end_ea: int, typeinfo: dict[int, str]) -> dict[s
 
 
 def create_vtable(name: str, start_ea: int, end_ea: int):
+    from contextlib import suppress
     from struct import calcsize
     from idaapi import BADADDR, FF_DWORD, FF_QWORD, get_struc_id, get_struc, add_struc, del_struc, add_struc_member, set_member_tinfo, tinfo_t, get_tinfo
     from ida_hexrays import DECOMP_NO_CACHE, decompile
@@ -139,7 +140,8 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
         ptr -= ptr & FUNCTION_POINTER_MASK
         add_struc_member(struc, f'vmethod{i}', BADADDR, flag, None, size)
 
-        decompile(ptr, flags=DECOMP_NO_CACHE)
+        with suppress(Exception):
+            decompile(ptr, flags=DECOMP_NO_CACHE)
 
         ti_fun = tinfo_t()
         if get_tinfo(ti_fun, ptr):
@@ -261,11 +263,7 @@ def typeinfo_paths() -> set[tuple[str, str, bool]]:
     return paths
 
 
-def typeinfo_graphiz():
-    from idaapi import ask_file
-
-    file = ask_file(0, '~', 'typeinfo_graphiz')
-
+def typeinfo_graphiz(file: str):
     with open(file, 'w') as fd:
         print('digraph {', file=fd)
 
@@ -281,7 +279,7 @@ def typeinfo_graphiz():
 
 
 def PLUGIN_ENTRY():
-    from idaapi import plugin_t, PLUGIN_UNL, PLUGIN_OK
+    from idaapi import PLUGIN_UNL, PLUGIN_OK, plugin_t, ask_file
 
     class RTTIPlugin(plugin_t):
         flags = PLUGIN_UNL
@@ -291,7 +289,8 @@ def PLUGIN_ENTRY():
             return PLUGIN_OK
 
         def run(self, _):
-            typeinfo_graphiz()
+            file = ask_file(0, '~', 'typeinfo_graphiz')
+            typeinfo_graphiz(file)
 
         def term(self):
             pass
