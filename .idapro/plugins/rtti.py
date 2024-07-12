@@ -24,8 +24,21 @@ def get_unpacked(ea: int, fmt: str) -> Any:
     return (ea+size,)+unpack(fmt, data)
 
 
-def parse_typeinfo(ea: int, vtable_class_type_info: int, vtable_si_class_type_info: int, vtable_vmi_class_type_info: int) -> dict[int, str]:
+def parse_typeinfo(ea: int) -> dict[int, str]:
     from struct import calcsize
+    from idc import BADADDR, get_name_ea_simple
+
+    vtable_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_CLASS_TYPE_INFO)
+    assert (vtable_class_type_info != BADADDR)
+
+    vtable_si_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO)
+    assert (vtable_si_class_type_info != BADADDR)
+
+    vtable_vmi_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO)
+    assert (vtable_vmi_class_type_info != BADADDR)
 
     def create_name(ea: int):
         from re import fullmatch
@@ -143,8 +156,7 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
 def run(start_ea: int, end_ea: int):
     from re import fullmatch
     from struct import calcsize
-    from idaapi import BADADDR, get_name, demangle_name, INF_LONG_DEMNAMES
-    from idc import get_name_ea_simple
+    from idaapi import get_name, demangle_name, INF_LONG_DEMNAMES
 
     name = get_name(start_ea)
     assert (name)
@@ -159,20 +171,7 @@ def run(start_ea: int, end_ea: int):
     _, ofs, typeinfo_ea = get_unpacked(start_ea, VTABLE_HEADER)
     assert (ofs == 0)
 
-    vtable_class_type_info = get_name_ea_simple(
-        MANGLED_NAME_VTABLE_CLASS_TYPE_INFO)
-    assert (vtable_class_type_info != BADADDR)
-
-    vtable_si_class_type_info = get_name_ea_simple(
-        MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO)
-    assert (vtable_si_class_type_info != BADADDR)
-
-    vtable_vmi_class_type_info = get_name_ea_simple(
-        MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO)
-    assert (vtable_vmi_class_type_info != BADADDR)
-
-    typeinfo = parse_typeinfo(
-        typeinfo_ea, vtable_class_type_info, vtable_si_class_type_info, vtable_vmi_class_type_info)
+    typeinfo = parse_typeinfo(typeinfo_ea)
     print(f'[RTTI] typeinfo = {typeinfo}')
 
     vtable = parse_vtable(start_ea, end_ea, typeinfo)
