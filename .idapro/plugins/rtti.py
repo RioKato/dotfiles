@@ -9,9 +9,9 @@ VMI_CLASS_TYPE_INFO = 'IIII'
 BASE_CLASS_TYPE_INFO = 'II'
 VTABLE_NAME_PATTERN = r"`vtable for'(.+)"
 TYPEINFO_NAME_PATTERN = r"`typeinfo for'(.+)"
-NAME_VTABLE_CLASS_TYPE_INFO = "`vtable for'__cxxabiv1::__class_type_info"
-NAME_VTABLE_SI_CLASS_TYPE_INFO = "`vtable for'__cxxabiv1::__si_class_type_info"
-NAME_VTABLE_VMI_CLASS_TYPE_INFO = "`vtable for'__cxxabiv1::__vmi_class_type_info"
+MANGLED_NAME_VTABLE_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv117__class_type_infoE"
+MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv120__si_class_type_infoE"
+MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv121__vmi_class_type_infoE"
 POINTER_MASK = 1
 
 
@@ -95,32 +95,6 @@ def parse_vtable(start_ea: int, end_ea: int, typeinfo: dict[int, str]) -> dict[s
     return vtable
 
 
-def lookup_vtable_xx_class_type_info() -> tuple[int, int, int]:
-    from idautils import Names
-    from idaapi import demangle_name, INF_LONG_DEMNAMES
-
-    vtable_class_type_info = 0
-    vtable_si_class_type_info = 0
-    vtable_vmi_class_type_info = 0
-
-    for ea, name in Names():
-        if name := demangle_name(name, INF_LONG_DEMNAMES):
-            if name == NAME_VTABLE_CLASS_TYPE_INFO:
-                vtable_class_type_info = ea
-
-            elif name == NAME_VTABLE_SI_CLASS_TYPE_INFO:
-                vtable_si_class_type_info = ea
-
-            elif name == NAME_VTABLE_VMI_CLASS_TYPE_INFO:
-                vtable_vmi_class_type_info = ea
-
-    assert (vtable_class_type_info)
-    assert (vtable_si_class_type_info)
-    assert (vtable_vmi_class_type_info)
-
-    return vtable_class_type_info, vtable_si_class_type_info, vtable_vmi_class_type_info
-
-
 def create_vtable(name: str, start_ea: int, end_ea: int):
     from struct import calcsize
     from idaapi import BADADDR, FF_DWORD, FF_QWORD, get_struc_id, get_struc, add_struc, del_struc, add_struc_member, set_member_tinfo, tinfo_t, get_tinfo
@@ -169,7 +143,8 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
 def run(start_ea: int, end_ea: int):
     from re import fullmatch
     from struct import calcsize
-    from idaapi import get_name, demangle_name, INF_LONG_DEMNAMES
+    from idaapi import BADADDR, get_name, demangle_name, INF_LONG_DEMNAMES
+    from idc import get_name_ea_simple
 
     name = get_name(start_ea)
     assert (name)
@@ -184,7 +159,18 @@ def run(start_ea: int, end_ea: int):
     _, ofs, typeinfo_ea = get_unpacked(start_ea, VTABLE_HEADER)
     assert (ofs == 0)
 
-    vtable_class_type_info, vtable_si_class_type_info, vtable_vmi_class_type_info = lookup_vtable_xx_class_type_info()
+    vtable_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_CLASS_TYPE_INFO)
+    assert (vtable_class_type_info != BADADDR)
+
+    vtable_si_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO)
+    assert (vtable_si_class_type_info != BADADDR)
+
+    vtable_vmi_class_type_info = get_name_ea_simple(
+        MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO)
+    assert (vtable_vmi_class_type_info != BADADDR)
+
     typeinfo = parse_typeinfo(
         typeinfo_ea, vtable_class_type_info, vtable_si_class_type_info, vtable_vmi_class_type_info)
     print(f'[RTTI] typeinfo = {typeinfo}')
