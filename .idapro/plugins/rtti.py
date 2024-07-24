@@ -2,7 +2,7 @@ from typing import Any
 from idaapi import UI_Hooks
 
 
-def fmt32_64(bit32: str, bit64: str):
+def binfmt_32_or_64(bit32: str, bit64: str):
     from idaapi import get_inf_structure
 
     inf = get_inf_structure()
@@ -13,18 +13,29 @@ def fmt32_64(bit32: str, bit64: str):
         return bit32
 
 
-VTABLE_HEADER = fmt32_64('iI', 'qQ')
-VTABLE_POINTER = fmt32_64('I', 'Q')
-CLASS_TYPE_INFO = fmt32_64('II', 'QQ')
-SI_CLASS_TYPE_INFO = fmt32_64('III', 'QQQ')
-VMI_CLASS_TYPE_INFO = fmt32_64('IIII', 'QQII')
-BASE_CLASS_TYPE_INFO = fmt32_64('II', 'QQ')
+def cpu_intel_or_arm(intel: int, arm: int):
+    from idaapi import get_inf_structure
+
+    inf = get_inf_structure()
+
+    if inf.procname == 'ARM':
+        return arm
+
+    return intel
+
+
+VTABLE_HEADER = binfmt_32_or_64('iI', 'qQ')
+VTABLE_POINTER = binfmt_32_or_64('I', 'Q')
+CLASS_TYPE_INFO = binfmt_32_or_64('II', 'QQ')
+SI_CLASS_TYPE_INFO = binfmt_32_or_64('III', 'QQQ')
+VMI_CLASS_TYPE_INFO = binfmt_32_or_64('IIII', 'QQII')
+BASE_CLASS_TYPE_INFO = binfmt_32_or_64('II', 'QQ')
 VTABLE_NAME_PATTERN = r"`vtable for'(.+)"
 TYPEINFO_NAME_PATTERN = r"`typeinfo for'(.+)"
 MANGLED_NAME_VTABLE_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv117__class_type_infoE"
 MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv120__si_class_type_infoE"
 MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv121__vmi_class_type_infoE"
-FUNCTION_POINTER_MASK = 1
+FUNCTION_POINTER_MASK = cpu_intel_or_arm(0, 1)
 
 
 def get_unpacked(ea: int, fmt: str) -> Any:
