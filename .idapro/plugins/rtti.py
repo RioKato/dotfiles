@@ -1,12 +1,24 @@
 from typing import Any
 from idaapi import UI_Hooks
 
-VTABLE_HEADER = 'iI'
-VTABLE_POINTER = 'I'
-CLASS_TYPE_INFO = 'II'
-SI_CLASS_TYPE_INFO = 'III'
-VMI_CLASS_TYPE_INFO = 'IIII'
-BASE_CLASS_TYPE_INFO = 'II'
+
+def fmt32_64(bit32: str, bit64: str):
+    from idaapi import get_inf_structure
+
+    inf = get_inf_structure()
+
+    if inf.is_64bit():
+        return bit64
+    else:
+        return bit32
+
+
+VTABLE_HEADER = fmt32_64('iI', 'qQ')
+VTABLE_POINTER = fmt32_64('I', 'Q')
+CLASS_TYPE_INFO = fmt32_64('II', 'QQ')
+SI_CLASS_TYPE_INFO = fmt32_64('III', 'QQQ')
+VMI_CLASS_TYPE_INFO = fmt32_64('IIII', 'QQII')
+BASE_CLASS_TYPE_INFO = fmt32_64('II', 'QQ')
 VTABLE_NAME_PATTERN = r"`vtable for'(.+)"
 TYPEINFO_NAME_PATTERN = r"`typeinfo for'(.+)"
 MANGLED_NAME_VTABLE_CLASS_TYPE_INFO = "_ZTVN10__cxxabiv117__class_type_infoE"
@@ -30,15 +42,18 @@ def parse_typeinfo(ea: int) -> dict[int, str]:
 
     vtable_class_type_info = get_name_ea_simple(
         MANGLED_NAME_VTABLE_CLASS_TYPE_INFO)
-    assert (vtable_class_type_info != BADADDR)
+    if vtable_class_type_info == BADADDR:
+        print('[RTTI] vtable_class_type_info not found')
 
     vtable_si_class_type_info = get_name_ea_simple(
         MANGLED_NAME_VTABLE_SI_CLASS_TYPE_INFO)
-    assert (vtable_si_class_type_info != BADADDR)
+    if vtable_si_class_type_info == BADADDR:
+        print('[RTTI] vtable_si_class_type_info not found')
 
     vtable_vmi_class_type_info = get_name_ea_simple(
         MANGLED_NAME_VTABLE_VMI_CLASS_TYPE_INFO)
-    assert (vtable_vmi_class_type_info != BADADDR)
+    if vtable_vmi_class_type_info == BADADDR:
+        print('[RTTI] vtable_vmi_class_type_info not found')
 
     def create_name(ea: int):
         from re import fullmatch
