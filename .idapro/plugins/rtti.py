@@ -164,7 +164,8 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
     while ea < end_ea:
         ea, ptr = get_unpacked(ea, VTABLE_POINTER)
         ptr -= ptr & FUNCTION_POINTER_MASK
-        add_struc_member(struc, f'vmethod{i}', BADADDR, flag, None, size)
+        add_struc_member(
+            struc, f'virtual{i}_{ptr:X}', BADADDR, flag, None, size)
 
         with suppress(Exception):
             decompile(ptr, flags=DECOMP_NO_CACHE)
