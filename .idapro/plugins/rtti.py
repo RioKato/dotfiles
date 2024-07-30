@@ -77,7 +77,7 @@ def parse_typeinfo(ea: int) -> dict[int, str]:
         return f'ADDR_{ea:X}'
 
     _, vtable, _ = get_unpacked(ea, CLASS_TYPE_INFO)
-    vtable -= calcsize(VTABLE_HEADER)
+    # vtable -= calcsize(VTABLE_HEADER)
     assert (vtable in
             [vtable_class_type_info, vtable_si_class_type_info, vtable_vmi_class_type_info])
 
@@ -136,7 +136,7 @@ def parse_vtable(start_ea: int, end_ea: int, typeinfo: dict[int, str]) -> dict[s
 def create_vtable(name: str, start_ea: int, end_ea: int):
     from contextlib import suppress
     from struct import calcsize
-    from idaapi import BADADDR, FF_DWORD, FF_QWORD, get_struc_id, get_struc, add_struc, del_struc, add_struc_member, set_member_tinfo, tinfo_t, get_tinfo
+    from idaapi import BADADDR, FF_DWORD, FF_QWORD, get_struc_id, get_struc, add_struc, get_max_offset, add_struc_member, del_struc_members, set_member_tinfo, tinfo_t, get_tinfo
     from ida_hexrays import DECOMP_NO_CACHE, decompile
     from idc import apply_type, parse_decl
 
@@ -147,10 +147,10 @@ def create_vtable(name: str, start_ea: int, end_ea: int):
 
     if sid != BADADDR:
         struc = get_struc(sid)
-        del_struc(struc)
-
-    sid = add_struc(-1, name)
-    struc = get_struc(sid)
+        del_struc_members(struc, 0, get_max_offset(struc))
+    else:
+        sid = add_struc(-1, name)
+        struc = get_struc(sid)
 
     size = calcsize(VTABLE_POINTER)
     flag = {
