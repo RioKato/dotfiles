@@ -7,4 +7,5 @@ RR_CONF=/etc/sysctl.d/10-rr.conf
 
 cp system/zen_workaround.py /usr/local/bin
 
+cp system/aslr /usr/local/bin
 update-binfmts --enable jar
