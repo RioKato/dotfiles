@@ -1,6 +1,6 @@
 set auto-load safe-path /
 set disassembly-flavor intel
-set disable-randomization on
+set disable-randomization off
 set follow-fork-mode parent
 set history filename ~/.gdb_history
 set pagination off
