@@ -132,7 +132,7 @@ require("lazy").setup({
 				end,
 			})
 
-			for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls" }) do
+			for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls", "ts_ls" }) do
 				lspconfig[server].setup({
 					capabilities = capabilities,
 				})
