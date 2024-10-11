@@ -157,7 +157,7 @@ require("lazy").setup({
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.autopep8.with({
-						extra_args = { "--max-line-length=256" },
+						extra_args = { "--max-line-length=256", "--ignore=E731" },
 					}),
 					null_ls.builtins.formatting.prettier,
 				},
