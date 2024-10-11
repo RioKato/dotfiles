@@ -2,7 +2,7 @@
 
 xhost +local:$(id -nu)
 
-sudo -E docker run --rm -ti \
+docker run --rm -ti \
   --network host \
   -e DISPLAY \
   --device=/dev/dri:/dev/dri \
