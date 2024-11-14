@@ -296,10 +296,28 @@ require("lazy").setup({
 				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "vsnip" },
+					{ name = "frida" },
 				}, {
 					{ name = "buffer" },
 				}),
 			})
+
+			local frida_items = {
+				{ label = "Interceptor" },
+				{ label = "attach" },
+				{ label = "onEenter" },
+				{ label = "onLeave" },
+				{ label = "DebugSymbol" },
+				{ label = "fromName" },
+			}
+
+			local frida_source = {
+				complete = function(_, _, callback)
+					callback(frida_items)
+				end,
+			}
+
+			cmp.register_source("frida", frida_source)
 		end,
 	},
 
