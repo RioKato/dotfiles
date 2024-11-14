@@ -303,12 +303,15 @@ require("lazy").setup({
 			})
 
 			local frida_items = {
-				{ label = "Interceptor" },
-				{ label = "attach" },
+				{ label = "Interceptor.attach" },
 				{ label = "onEenter" },
 				{ label = "onLeave" },
-				{ label = "DebugSymbol" },
-				{ label = "fromName" },
+				{ label = "this.context" },
+				{ label = "DebugSymbol.fromName" },
+				{ label = "address" },
+				{ label = "Process.findModuleByName" },
+				{ label = "base" },
+				{ label = "Process.enumerateModules" },
 			}
 
 			local frida_source = {
