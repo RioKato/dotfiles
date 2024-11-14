@@ -121,7 +121,7 @@ require("lazy").setup({
 			local lspconfig = require("lspconfig")
 
 			mason_lspconfig.setup({
-				ensure_installed = { "pyright" },
+				ensure_installed = { "pyright", "ts_ls" },
 			})
 
 			mason_lspconfig.setup_handlers({
