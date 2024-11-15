@@ -443,4 +443,5 @@ require("lazy").setup({
 	},
 
 	{ "liuchengxu/graphviz.vim" },
+	{ "heavenshell/vim-jsdoc" },
 })
