@@ -304,7 +304,7 @@ require("lazy").setup({
 
 			local frida_items = {
 				{ label = "Interceptor.attach" },
-				{ label = "onEenter" },
+				{ label = "onEnter" },
 				{ label = "onLeave" },
 				{ label = "this.context" },
 				{ label = "DebugSymbol.fromName" },
