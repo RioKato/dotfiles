@@ -3,5 +3,5 @@
 npm init -y
 npm install --save-dev @types/frida-gum
 npm pkg delete 'scripts.test'
-npm pkg set 'scripts.frida'='frida -l script.js'
-touch script.js
+npm pkg set 'scripts.frida'='frida -l trace.js'
+touch trace.js
