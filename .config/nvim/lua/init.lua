@@ -422,17 +422,4 @@ require("lazy").setup({
 	},
 
 	{ "liuchengxu/graphviz.vim" },
-
-	{
-		"heavenshell/vim-jsdoc",
-
-		config = function()
-			vim.api.nvim_create_autocmd({ "FileType" }, {
-				pattern = "javascript",
-				callback = function()
-					vim.keymap.set("n", "gd", "<cmd>JsDoc<cr>", { buffer = true })
-				end,
-			})
-		end,
-	},
 })
