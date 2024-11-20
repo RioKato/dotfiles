@@ -4,6 +4,6 @@ npm init -y
 npm install --save-dev typescript @types/frida-gum
 npx tsc --init
 npm pkg delete 'scripts.test'
+npm pkg set 'scripts.start'="frida-compile trace.ts -o trace.js && frida -l trace.js -- $*"
 npm pkg set 'scripts.watch'='frida-compile trace.ts -o trace.js -w'
-npm pkg set 'scripts.start'='frida -l trace.js COMMAND'
 touch trace.ts
