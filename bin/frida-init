@@ -6,4 +6,5 @@ npx tsc --init
 npm pkg delete 'scripts.test'
 npm pkg set 'scripts.start'="frida-compile trace.ts -o trace.js && frida -l trace.js -- $*"
 npm pkg set 'scripts.watch'='frida-compile trace.ts -o trace.js -w'
+npm pkg set 'scripts.android'="frida-compile trace.ts -o trace.js && frida -l trace.js -U -f $*"
 touch trace.ts
