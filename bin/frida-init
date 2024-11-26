@@ -2,6 +2,7 @@
 
 npm init -y
 npm install --save-dev typescript @types/frida-gum
+npm install --save-dev frida-compile
 npx tsc --init
 npm pkg delete 'scripts'
 npm pkg set 'scripts.prelocal'='frida-compile trace.ts -o trace.js'
