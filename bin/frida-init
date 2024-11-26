@@ -3,10 +3,9 @@
 npm init -y
 npm install --save-dev typescript @types/frida-gum
 npx tsc --init
-npm pkg delete 'scripts.test'
+npm pkg delete 'scripts'
 npm pkg set 'scripts.prelocal'="frida-compile trace.ts -o trace.js"
-npm pkg set 'scripts.local'="frida -l trace.js -- $*"
+npm pkg set 'scripts.local'="frida -l trace.js --"
 npm pkg set 'scripts.preandroid'="frida-compile trace.ts -o trace.js"
-npm pkg set 'scripts.android'="frida -l trace.js -U -f $*"
-npm pkg set 'scripts.watch'='frida-compile trace.ts -o trace.js -w'
+npm pkg set 'scripts.android'="frida -l trace.js -U -f"
 touch trace.ts
