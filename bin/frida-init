@@ -5,10 +5,12 @@ npm install --save-dev typescript @types/frida-gum
 npm install --save-dev frida-compile
 npx tsc --init
 npm pkg delete 'scripts'
-npm pkg set 'scripts.build'='find src -name "*.ts" -type f -printf "npx frida-compile %p -o build/%f.js\0" | xargs -0 -I {} sh -c {}'
-npm pkg set 'scripts.frida'='frida $(find build -name "*.js" -type f -printf "-l %p ")'
+npm pkg set 'scripts.build'='npx frida-compile src/main.ts -o build/main.js'
+npm pkg set 'scripts.frida'='frida -l build/main.js'
 npm pkg set 'scripts.prelocal'='npm run build'
 npm pkg set 'scripts.local'='npm run frida --'
 npm pkg set 'scripts.preandroid'='npm run build'
 npm pkg set 'scripts.android'='npm run frida -U -f'
+npm pkg set 'scripts.start'='npm run'
 mkdir src
+touch src/main.ts
