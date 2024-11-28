@@ -4,7 +4,7 @@ npm init -y
 npm pkg delete 'scripts'
 npm pkg set 'scripts.build'='npx tsc'
 npm pkg set 'scripts.compile'='npx frida-compile build/main.js -o build/_main.js'
-npm pkg set 'scripts.clean'='rm -rf build/*'
+npm pkg set 'scripts.clean'='rm -rf build'
 npm pkg set 'scripts.frida'='frida -l build/_main.js'
 npm pkg set 'scripts.prelocal'='npm run build && npm run compile'
 npm pkg set 'scripts.local'='npm run frida --'
