@@ -2,6 +2,7 @@
 
 npm init -y
 npm pkg delete 'scripts'
+npm pkg set 'main'='build/main.js'
 npm pkg set 'scripts.build'='npx tsc'
 npm pkg set 'scripts.compile'='npx frida-compile build/main.js -o build/_main.js'
 npm pkg set 'scripts.clean'='rm -rf build'
