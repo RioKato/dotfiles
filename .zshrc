@@ -156,6 +156,7 @@ export PATH=$PATH:/opt/idapro-8.2
 export PYTHONPATH=$PYTHONPATH:/opt/idapro-8.2/python/3
 export PATH=$PATH:/opt/jdtls/bin
 export PATH=$PATH:~/bin/codeql
+export PATH=$PATH:/opt/binaryninja
 
 ###############################################################################################
 
