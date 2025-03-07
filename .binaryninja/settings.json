@@ -1,6 +1,6 @@
 {
     "Binja-RPyC.serviceRpycListenPort": 8888,
-    "ui.font.view.size": 16,
-    "ui.font.app.size": 14,
-    "ui.theme.name": "Slushee Dark"
+    "ui.font.view.size": 11,
+    "ui.font.app.size": 11,
+    "ui.theme.name": "Classic"
 }
