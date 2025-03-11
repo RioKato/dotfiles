@@ -42,7 +42,6 @@ inoremap <C-d> <del>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd BufNewFile,BufRead *.gdb set filetype=gdb
-autocmd BufNewFile,BufRead *.idapy set filetype=python
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
