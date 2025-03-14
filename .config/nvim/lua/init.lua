@@ -121,7 +121,7 @@ require("lazy").setup({
 			local lspconfig = require("lspconfig")
 
 			mason_lspconfig.setup({
-				ensure_installed = { "pyright", "ts_ls" },
+				ensure_installed = { "pyright", "ts_ls", "cmake" },
 			})
 
 			mason_lspconfig.setup_handlers({
@@ -313,6 +313,11 @@ require("lazy").setup({
 				hint_prefix = "",
 			})
 		end,
+	},
+
+	{
+		"Civitasv/cmake-tools.nvim",
+		opts = {},
 	},
 
 	{
