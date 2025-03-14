@@ -316,11 +316,6 @@ require("lazy").setup({
 	},
 
 	{
-		"Civitasv/cmake-tools.nvim",
-		opts = {},
-	},
-
-	{
 		"tpope/vim-fugitive",
 
 		config = function()
