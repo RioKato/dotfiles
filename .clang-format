@@ -9,3 +9,5 @@ ForEachMacros:
   - "hash_for_each"
   - "hash_for_each_possible"
   - "hash_for_each_safe"
+
+NamespaceIndentation: All
