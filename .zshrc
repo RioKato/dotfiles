@@ -120,7 +120,6 @@ alias clang='clang -MJ compile_commands.json'
 alias gcc-cov='gcc -coverage'
 alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias make='bear -- make'
-alias cmake='cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'
 alias callgrind='valgrind --tool=callgrind'
 alias git-pclone='git clone --filter=blob:none -n'
 
