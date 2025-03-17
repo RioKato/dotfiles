@@ -123,6 +123,22 @@ alias make='bear -- make'
 alias callgrind='valgrind --tool=callgrind'
 alias git-pclone='git clone --filter=blob:none -n'
 
+function cmake-all() {
+  if [ $# -eq 0 ]
+  then
+    src=.
+  else
+    src="$1"
+  fi
+
+  if [ ! -d build ]
+  then
+    cmake -S "$1" -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja
+  fi
+
+  cmake --build build
+}
+
 if command -v nvim &> /dev/null
 then
   EDITOR=nvim
