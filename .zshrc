@@ -133,7 +133,7 @@ function cmake-all() {
 
   if [ ! -d build ]
   then
-    cmake -S "$1" -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja
+    cmake -S "$src" -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja
   fi
 
   cmake --build build
