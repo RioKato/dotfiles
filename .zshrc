@@ -122,6 +122,7 @@ alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias make='bear -- make'
 alias callgrind='valgrind --tool=callgrind'
 alias git-pclone='git clone --filter=blob:none -n'
+alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
 
 function cmake-all() {
   if [ $# -eq 0 ]
