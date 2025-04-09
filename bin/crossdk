@@ -15,7 +15,7 @@ def crossdk(platform: str, image: str, options: list[str]):
 
     try:
         command = ['docker', 'run', '--name', name, *options, '--platform', platform, f'{PLATFORM[platform]}/{image}']
-        subprocess.run(command, check=True)
+        subprocess.run(command)
         command = ['docker', 'cp', f'{name}:/', 'fs']
         subprocess.run(command, check=True)
     finally:
