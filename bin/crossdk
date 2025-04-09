@@ -3,10 +3,11 @@
 import subprocess
 import uuid
 
-PLATFORM: dict[str, str] = {
-    'linux/arm64': 'arm64v8',
-    'linux/arm/v7': 'arm32v7',
-    'linux/386': 'i386'
+
+PLATFORM: dict[str, tuple[str, str]] = {
+    'arm64': ('linux/arm64', 'arm64v8'),
+    'arm32': ('linux/arm/v7', 'arm32v7'),
+    'x86': ('linux/386', 'i386')
 }
 
 
@@ -14,7 +15,7 @@ def crossdk(platform: str, image: str, options: list[str]):
     name = str(uuid.uuid1())
 
     try:
-        command = ['docker', 'run', '--name', name, *options, '--platform', platform, f'{PLATFORM[platform]}/{image}']
+        command = ['docker', 'run', '--name', name, *options, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
         subprocess.run(command)
         command = ['docker', 'cp', f'{name}:/', 'fs']
         subprocess.run(command, check=True)
@@ -26,8 +27,8 @@ def crossdk(platform: str, image: str, options: list[str]):
 def main():
     from argparse import ArgumentParser
     parser = ArgumentParser()
+    parser.add_argument('--image', '-i', default='ubuntu')
     parser.add_argument('platform', choices=PLATFORM.keys())
-    parser.add_argument('image')
     args = parser.parse_args()
 
     crossdk(args.platform, args.image, ['-it'])
