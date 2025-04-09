@@ -47,6 +47,8 @@ p7zip
 docker
 docker-buildx
 qemu-base
+qemu-user-static
+qemu-user-static-binfmt
 swtpm
 libvirt
 virt-manager

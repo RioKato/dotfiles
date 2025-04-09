@@ -26,7 +26,6 @@ set cursorline
 set cursorlineopt=number
 set termguicolors
 set clipboard+=unnamedplus
-set pastetoggle=<F3>
 set splitright
 set mouse=
 let g:loaded_matchparen = 1
