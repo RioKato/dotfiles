@@ -10,6 +10,7 @@ FSDIR: str = 'fs'
 PLATFORM: dict[str, tuple[str, str]] = {
     'arm64': ('linux/arm64', 'arm64v8'),
     'arm32': ('linux/arm/v7', 'arm32v7'),
+    'x64': ('linux/amd64', 'amd64'),
     'x86': ('linux/386', 'i386')
 }
 
@@ -47,6 +48,15 @@ IDACLANG_OPTS: dict[str, list[str]] = {
         '-I', '=/usr/local/include'
     ],
 
+    'x64': [
+        '-target', 'x86_64-pc-linux',
+        '-nostdinc',
+        '-isysroot', FSDIR,
+        '-I', '=/usr/include',
+        '-I', '=/usr/include/x86_64-linux-gnu',
+        '-I', '=/usr/local/include'
+    ],
+
     'x86': [
         '-target', 'i386-pc-linux',
         '-nostdinc',
@@ -66,6 +76,11 @@ IDACLANG_GCC_INCDIR: dict[str, list[str]] = {
     'arm32': [
         '/usr/lib/gcc/arm-linux-gnueabihf/*/include',
         '/usr/lib/gcc/arm-linux-gnueabihf/*/include-fixed'
+    ],
+
+    'x64': [
+        '/usr/lib/gcc/x86_64-linux-gnu/*/include',
+        '/usr/lib/gcc/x86_64-linux-gnu/*/include-fixed'
     ],
 
     'x86': [
