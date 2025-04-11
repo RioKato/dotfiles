@@ -13,11 +13,11 @@ PLATFORM: dict[str, tuple[str, str]] = {
 }
 
 
-def docker(platform: str, image: str, options: list[str]):
+def docker(platform: str, image: str, opts: list[str]):
     name = str(uuid.uuid1())
 
     try:
-        command = ['docker', 'run', '--name', name, *options, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
+        command = ['docker', 'run', '--name', name, '-it', *opts, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
         subprocess.run(command)
         command = ['docker', 'cp', f'{name}:/', FSDIR]
         subprocess.run(command, check=True)
@@ -96,6 +96,7 @@ def main():
     docker_parser = subparsers.add_parser('docker')
     docker_parser.add_argument('--image', '-i', default='ubuntu')
     docker_parser.add_argument('platform', choices=PLATFORM.keys())
+    docker_parser.add_argument('opts', nargs='*')
     idaclang_parser = subparsers.add_parser('idaclang')
     idaclang_parser.add_argument('platform', choices=PLATFORM.keys())
     idaclang_parser.add_argument('opts', nargs='+')
@@ -107,7 +108,7 @@ def main():
                 print(f'[*] {FSDIR} already exists')
                 exit(1)
 
-            docker(args.platform, args.image, ['-it'])
+            docker(args.platform, args.image, args.opts)
 
         case 'idaclang':
             idaclang(args.platform, args.opts)
