@@ -14,10 +14,6 @@ PLATFORM: dict[str, tuple[str, str]] = {
 
 
 def docker(platform: str, image: str, options: list[str]):
-    if pathlib.Path(FSDIR).is_dir():
-        print(f'[*] {FSDIR} already exists')
-        exit(1)
-
     name = str(uuid.uuid1())
 
     try:
@@ -85,6 +81,8 @@ def idaclang(platform: str, opts: list[str]):
 
     for pattern in IDACLANG_GCC_INCDIR[platform]:
         for path in pathlib.Path(FSDIR).glob(pattern[1:]):
+            path = path.relative_to(path.root)
+            path = pathlib.Path('=').joinpath(path)
             command += ['-I', path]
 
     command += opts
@@ -105,6 +103,10 @@ def main():
 
     match args.name:
         case 'docker':
+            if pathlib.Path(FSDIR).is_dir():
+                print(f'[*] {FSDIR} already exists')
+                exit(1)
+
             docker(args.platform, args.image, ['-it'])
 
         case 'idaclang':
