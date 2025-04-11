@@ -128,10 +128,15 @@ def main():
             docker(args.platform, args.image, args.opts)
 
         case 'idaclang':
+            if not pathlib.Path(FSDIR).is_dir():
+                print(f'[*] {FSDIR} not found')
+                exit(1)
+
             idaclang(args.platform, args.opts)
 
         case _:
             parser.print_help()
+            exit(1)
 
 
 if __name__ == '__main__':
