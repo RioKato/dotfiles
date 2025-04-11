@@ -110,17 +110,16 @@ def idaclang(platform: str, opts: list[str]):
 def main():
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    subparsers = parser.add_subparsers(dest='name')
+    parser.add_argument('platform', choices=PLATFORM.keys())
+    subparsers = parser.add_subparsers(dest='tool')
     docker_parser = subparsers.add_parser('docker')
     docker_parser.add_argument('--image', '-i', default='ubuntu')
-    docker_parser.add_argument('platform', choices=PLATFORM.keys())
     docker_parser.add_argument('opts', nargs='*')
     idaclang_parser = subparsers.add_parser('idaclang')
-    idaclang_parser.add_argument('platform', choices=PLATFORM.keys())
     idaclang_parser.add_argument('opts', nargs='+')
     args = parser.parse_args()
 
-    match args.name:
+    match args.tool:
         case 'docker':
             if pathlib.Path(FSDIR).is_dir():
                 print(f'[*] {FSDIR} already exists')
