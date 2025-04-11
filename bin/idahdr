@@ -4,6 +4,7 @@ import pathlib
 import subprocess
 import uuid
 
+FSDIR: str = 'fs'
 
 PLATFORM: dict[str, tuple[str, str]] = {
     'arm64': ('linux/arm64', 'arm64v8'),
@@ -13,12 +14,16 @@ PLATFORM: dict[str, tuple[str, str]] = {
 
 
 def docker(platform: str, image: str, options: list[str]):
+    if pathlib.Path(FSDIR).is_dir():
+        print(f'[*] {FSDIR} already exists')
+        exit(1)
+
     name = str(uuid.uuid1())
 
     try:
         command = ['docker', 'run', '--name', name, *options, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
         subprocess.run(command)
-        command = ['docker', 'cp', f'{name}:/', 'fs']
+        command = ['docker', 'cp', f'{name}:/', FSDIR]
         subprocess.run(command, check=True)
     finally:
         command = ['docker', 'rm', name]
@@ -29,43 +34,60 @@ IDACLANG_OPTS: dict[str, list[str]] = {
     'arm64': [
         '-target', 'arm64-pc-linux',
         '-nostdinc',
-        '-isysroot', 'fs',
+        '-isysroot', FSDIR,
         '-I', '=/usr/include',
         '-I', '=/usr/include/aarch64-linux-gnu',
-        '-I', '=/usr/lib/gcc/aarch64-linux-gnu/13/include',
-        '-I', '=/usr/lib/gcc/aarch64-linux-gnu/13/include-fixed',
         '-I', '=/usr/local/include'
     ],
 
     'arm32': [
         '-target', 'arm-pc-linux', '-mfloat-abi=hard',
         '-nostdinc',
-        '-isysroot', 'fs',
+        '-isysroot', FSDIR,
         '-I', '=/usr/include',
         '-I', '=/usr/include/arm-linux-gnueabihf',
-        '-I', '=/usr/lib/gcc/arm-linux-gnueabihf/13/include',
-        '-I', '=/usr/lib/gcc/arm-linux-gnueabihf/13/include-fixed',
         '-I', '=/usr/local/include'
     ],
 
     'x86': [
         '-target', 'i386-pc-linux',
         '-nostdinc',
-        '-isysroot', 'fs',
+        '-isysroot', FSDIR,
         '-I', '=/usr/include',
         '-I', '=/usr/include/i386-linux-gnu',
-        '-I', '=/usr/lib/gcc/i686-linux-gnu/7/include',
-        '-I', '=/usr/lib/gcc/i686-linux-gnu/7/include-fixed',
         '-I', '=/usr/local/include'
     ]
 }
 
+IDACLANG_GCC_INCDIR: dict[str, list[str]] = {
+    'arm64': [
+        '/usr/lib/gcc/aarch64-linux-gnu/*/include',
+        '/usr/lib/gcc/aarch64-linux-gnu/*/include-fixed'
+    ],
 
-def idaclang(platform: str, header: str):
-    tilname = pathlib.Path(header).with_suffix('.til').name
+    'arm32': [
+        '/usr/lib/gcc/arm-linux-gnueabihf/*/include',
+        '/usr/lib/gcc/arm-linux-gnueabihf/*/include-fixed'
+    ],
+
+    'x86': [
+        '/usr/lib/gcc/i686-linux-gnu/*/include',
+        '/usr/lib/gcc/i686-linux-gnu/*/include-fixed'
+    ]
+}
+
+
+def idaclang(platform: str, opts: list[str]):
+    assert (opts)
+    tilname = pathlib.Path(opts[-1]).with_suffix('.til').name
     command = ['idaclang', '--idaclang-tilname', tilname]
     command += IDACLANG_OPTS[platform]
-    command += [header]
+
+    for pattern in IDACLANG_GCC_INCDIR[platform]:
+        for path in pathlib.Path(FSDIR).glob(pattern[1:]):
+            command += ['-I', path]
+
+    command += opts
     subprocess.run(command, check=True)
 
 
@@ -78,7 +100,7 @@ def main():
     docker_parser.add_argument('platform', choices=PLATFORM.keys())
     idaclang_parser = subparsers.add_parser('idaclang')
     idaclang_parser.add_argument('platform', choices=PLATFORM.keys())
-    idaclang_parser.add_argument('header')
+    idaclang_parser.add_argument('opts', nargs='+')
     args = parser.parse_args()
 
     match args.name:
@@ -86,7 +108,7 @@ def main():
             docker(args.platform, args.image, ['-it'])
 
         case 'idaclang':
-            idaclang(args.platform, args.header)
+            idaclang(args.platform, args.opts)
 
         case _:
             parser.print_help()
