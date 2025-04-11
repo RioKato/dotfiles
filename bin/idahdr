@@ -1,6 +1,7 @@
 #!python3
 
 import pathlib
+import shlex
 import subprocess
 import uuid
 
@@ -18,6 +19,7 @@ def docker(platform: str, image: str, opts: list[str]):
 
     try:
         command = ['docker', 'run', '--name', name, '-it', *opts, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
+        print(f'[*] {shlex.join(command)}')
         subprocess.run(command)
         command = ['docker', 'cp', f'{name}:/', FSDIR]
         subprocess.run(command, check=True)
@@ -83,9 +85,10 @@ def idaclang(platform: str, opts: list[str]):
         for path in pathlib.Path(FSDIR).glob(pattern[1:]):
             path = path.relative_to(path.root)
             path = pathlib.Path('=').joinpath(path)
-            command += ['-I', path]
+            command += ['-I', str(path)]
 
     command += opts
+    print(f'[*] {shlex.join(command)}')
     subprocess.run(command, check=True)
 
 
