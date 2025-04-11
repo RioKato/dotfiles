@@ -1,0 +1,96 @@
+#!python3
+
+import pathlib
+import subprocess
+import uuid
+
+
+PLATFORM: dict[str, tuple[str, str]] = {
+    'arm64': ('linux/arm64', 'arm64v8'),
+    'arm32': ('linux/arm/v7', 'arm32v7'),
+    'x86': ('linux/386', 'i386')
+}
+
+
+def docker(platform: str, image: str, options: list[str]):
+    name = str(uuid.uuid1())
+
+    try:
+        command = ['docker', 'run', '--name', name, *options, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
+        subprocess.run(command)
+        command = ['docker', 'cp', f'{name}:/', 'fs']
+        subprocess.run(command, check=True)
+    finally:
+        command = ['docker', 'rm', name]
+        subprocess.run(command, stdout=subprocess.DEVNULL)
+
+
+IDACLANG_OPTS: dict[str, list[str]] = {
+    'arm64': [
+        '-target', 'arm64-pc-linux',
+        '-nostdinc',
+        '-isysroot', 'fs',
+        '-I', '=/usr/include',
+        '-I', '=/usr/include/aarch64-linux-gnu',
+        '-I', '=/usr/lib/gcc/aarch64-linux-gnu/13/include',
+        '-I', '=/usr/lib/gcc/aarch64-linux-gnu/13/include-fixed',
+        '-I', '=/usr/local/include'
+    ],
+
+    'arm32': [
+        '-target', 'arm-pc-linux', '-mfloat-abi=hard',
+        '-nostdinc',
+        '-isysroot', 'fs',
+        '-I', '=/usr/include',
+        '-I', '=/usr/include/arm-linux-gnueabihf',
+        '-I', '=/usr/lib/gcc/arm-linux-gnueabihf/13/include',
+        '-I', '=/usr/lib/gcc/arm-linux-gnueabihf/13/include-fixed',
+        '-I', '=/usr/local/include'
+    ],
+
+    'x86': [
+        '-target', 'i386-pc-linux',
+        '-nostdinc',
+        '-isysroot', 'fs',
+        '-I', '=/usr/include',
+        '-I', '=/usr/include/i386-linux-gnu',
+        '-I', '=/usr/lib/gcc/i686-linux-gnu/7/include',
+        '-I', '=/usr/lib/gcc/i686-linux-gnu/7/include-fixed',
+        '-I', '=/usr/local/include'
+    ]
+}
+
+
+def idaclang(platform: str, header: str):
+    tilname = pathlib.Path(header).with_suffix('.til').name
+    command = ['idaclang', '--idaclang-tilname', tilname]
+    command += IDACLANG_OPTS[platform]
+    command += [header]
+    subprocess.run(command, check=True)
+
+
+def main():
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    subparsers = parser.add_subparsers(dest='name')
+    docker_parser = subparsers.add_parser('docker')
+    docker_parser.add_argument('--image', '-i', default='ubuntu')
+    docker_parser.add_argument('platform', choices=PLATFORM.keys())
+    idaclang_parser = subparsers.add_parser('idaclang')
+    idaclang_parser.add_argument('platform', choices=PLATFORM.keys())
+    idaclang_parser.add_argument('header')
+    args = parser.parse_args()
+
+    match args.name:
+        case 'docker':
+            docker(args.platform, args.image, ['-it'])
+
+        case 'idaclang':
+            idaclang(args.platform, args.header)
+
+        case _:
+            parser.print_help()
+
+
+if __name__ == '__main__':
+    main()
