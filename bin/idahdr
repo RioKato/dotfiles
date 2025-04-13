@@ -98,7 +98,7 @@ def idaclang(platform: str, opts: list[str]):
 
     for pattern in IDACLANG_GCC_INCDIR[platform]:
         for path in pathlib.Path(FSDIR).glob(pattern[1:]):
-            path = path.relative_to(path.root)
+            path = path.relative_to(FSDIR)
             path = pathlib.Path('=').joinpath(path)
             command += ['-isystem', str(path)]
 
