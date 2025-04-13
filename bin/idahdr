@@ -34,8 +34,8 @@ IDACLANG_OPTS: dict[str, list[str]] = {
         '-target', 'arm64-pc-linux',
         '-nostdinc',
         '-isysroot', FSDIR,
-        '-I', '=/usr/include',
-        '-I', '=/usr/include/aarch64-linux-gnu',
+        '-isystem', '=/usr/include',
+        '-isystem', '=/usr/include/aarch64-linux-gnu',
         '-I', '=/usr/local/include'
     ],
 
@@ -43,8 +43,8 @@ IDACLANG_OPTS: dict[str, list[str]] = {
         '-target', 'arm-pc-linux', '-mfloat-abi=hard',
         '-nostdinc',
         '-isysroot', FSDIR,
-        '-I', '=/usr/include',
-        '-I', '=/usr/include/arm-linux-gnueabihf',
+        '-isystem', '=/usr/include',
+        '-isystem', '=/usr/include/arm-linux-gnueabihf',
         '-I', '=/usr/local/include'
     ],
 
@@ -52,8 +52,8 @@ IDACLANG_OPTS: dict[str, list[str]] = {
         '-target', 'x86_64-pc-linux',
         '-nostdinc',
         '-isysroot', FSDIR,
-        '-I', '=/usr/include',
-        '-I', '=/usr/include/x86_64-linux-gnu',
+        '-isystem', '=/usr/include',
+        '-isystem', '=/usr/include/x86_64-linux-gnu',
         '-I', '=/usr/local/include'
     ],
 
@@ -61,8 +61,8 @@ IDACLANG_OPTS: dict[str, list[str]] = {
         '-target', 'i386-pc-linux',
         '-nostdinc',
         '-isysroot', FSDIR,
-        '-I', '=/usr/include',
-        '-I', '=/usr/include/i386-linux-gnu',
+        '-isystem', '=/usr/include',
+        '-isystem', '=/usr/include/i386-linux-gnu',
         '-I', '=/usr/local/include'
     ]
 }
@@ -100,7 +100,7 @@ def idaclang(platform: str, opts: list[str]):
         for path in pathlib.Path(FSDIR).glob(pattern[1:]):
             path = path.relative_to(path.root)
             path = pathlib.Path('=').joinpath(path)
-            command += ['-I', str(path)]
+            command += ['-isystem', str(path)]
 
     command += opts
     print(f'[*] {shlex.join(command)}')
