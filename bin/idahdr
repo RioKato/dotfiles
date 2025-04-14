@@ -73,7 +73,7 @@ ARCH_OPTS: dict[str, tuple[list[str], list[str], list[str]]] = {
     )
 }
 
-UBUNTU_PREFIX: dict[str, str] = {
+UBUNTU_IMG_PREFIX: dict[str, str] = {
     'arm64': 'arm64v8',
     'arm32': 'arm32v7',
     'x64': 'amd64',
@@ -85,7 +85,7 @@ def docker(sysroot: str, arch: str, image: str, opts: list[str]):
     name = str(uuid.uuid1())
 
     if image.startswith('ubuntu'):
-        image = f'{UBUNTU_PREFIX[arch]}/{image}'
+        image = f'{UBUNTU_IMG_PREFIX[arch]}/{image}'
 
     try:
         command = ['docker', 'run', '--name', name, '-it', *ARCH_OPTS[arch][0], *opts, image]
@@ -98,9 +98,7 @@ def docker(sysroot: str, arch: str, image: str, opts: list[str]):
         subprocess.run(command, stdout=subprocess.DEVNULL)
 
 
-def idaclang(sysroot: str, arch: str, opts: list[str]):
-    assert (opts)
-    tilname = pathlib.Path(opts[-1]).with_suffix('.til').name
+def idaclang(sysroot: str, tilname: str, arch: str, opts: list[str]):
     command = ['idaclang', '--idaclang-tilname', tilname]
     command += ARCH_OPTS[arch][1]
     sysroot = pathlib.Path(sysroot)
@@ -125,6 +123,7 @@ def main():
     docker_parser.add_argument('--image', '-i', default='ubuntu')
     docker_parser.add_argument('opts', nargs='*')
     idaclang_parser = subparsers.add_parser('idaclang')
+    idaclang_parser.add_argument('tilname')
     idaclang_parser.add_argument('opts', nargs='+')
     args = parser.parse_args()
     sysroot = pathlib.Path(args.sysroot)
@@ -142,7 +141,7 @@ def main():
                 print(f'[*] {args.sysroot} not found')
                 exit(1)
 
-            idaclang(args.sysroot, args.arch, args.opts)
+            idaclang(args.sysroot, args.tilname, args.arch, args.opts)
 
         case _:
             parser.print_help()
