@@ -6,7 +6,7 @@ import subprocess
 import uuid
 
 
-COMMAND_OPTS: dict[str, tuple[list[str], list[str], list[str]]] = {
+ARCH_OPTS: dict[str, tuple[list[str], list[str], list[str]]] = {
     'arm64': (
         [
             '--platform', 'linux/arm64'
@@ -73,8 +73,6 @@ COMMAND_OPTS: dict[str, tuple[list[str], list[str], list[str]]] = {
     )
 }
 
-SYSROOT: str = 'fs'
-
 UBUNTU_PREFIX: dict[str, str] = {
     'arm64': 'arm64v8',
     'arm32': 'arm32v7',
@@ -83,31 +81,31 @@ UBUNTU_PREFIX: dict[str, str] = {
 }
 
 
-def docker(platform: str, image: str, opts: list[str]):
+def docker(sysroot: str, arch: str, image: str, opts: list[str]):
     name = str(uuid.uuid1())
 
     if image.startswith('ubuntu'):
-        image = f'{UBUNTU_PREFIX[platform]}/{image}'
+        image = f'{UBUNTU_PREFIX[arch]}/{image}'
 
     try:
-        command = ['docker', 'run', '--name', name, '-it', *COMMAND_OPTS[platform][0], *opts, image]
+        command = ['docker', 'run', '--name', name, '-it', *ARCH_OPTS[arch][0], *opts, image]
         print(f'[*] {shlex.join(command)}')
         subprocess.run(command)
-        command = ['docker', 'cp', f'{name}:/', SYSROOT]
+        command = ['docker', 'cp', f'{name}:/', sysroot]
         subprocess.run(command, check=True)
     finally:
         command = ['docker', 'rm', name]
         subprocess.run(command, stdout=subprocess.DEVNULL)
 
 
-def idaclang(platform: str, opts: list[str]):
+def idaclang(sysroot: str, arch: str, opts: list[str]):
     assert (opts)
     tilname = pathlib.Path(opts[-1]).with_suffix('.til').name
     command = ['idaclang', '--idaclang-tilname', tilname]
-    command += COMMAND_OPTS[platform][1]
-    sysroot = pathlib.Path(SYSROOT)
+    command += ARCH_OPTS[arch][1]
+    sysroot = pathlib.Path(sysroot)
 
-    for pattern in COMMAND_OPTS[platform][2]:
+    for pattern in ARCH_OPTS[arch][2]:
         assert (pattern.startswith('/'))
         for path in sysroot.glob(pattern[1:]):
             command += ['-isystem', str(path)]
@@ -120,7 +118,8 @@ def idaclang(platform: str, opts: list[str]):
 def main():
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument('platform', choices=COMMAND_OPTS.keys())
+    parser.add_argument('--sysroot', default='fs')
+    parser.add_argument('arch', choices=ARCH_OPTS.keys())
     subparsers = parser.add_subparsers(dest='tool')
     docker_parser = subparsers.add_parser('docker')
     docker_parser.add_argument('--image', '-i', default='ubuntu')
@@ -128,22 +127,22 @@ def main():
     idaclang_parser = subparsers.add_parser('idaclang')
     idaclang_parser.add_argument('opts', nargs='+')
     args = parser.parse_args()
-    sysroot = pathlib.Path(SYSROOT)
+    sysroot = pathlib.Path(args.sysroot)
 
     match args.tool:
         case 'docker':
             if sysroot.is_dir():
-                print(f'[*] {SYSROOT} already exists')
+                print(f'[*] {args.sysroot} already exists')
                 exit(1)
 
-            docker(args.platform, args.image, args.opts)
+            docker(args.sysroot, args.arch, args.image, args.opts)
 
         case 'idaclang':
             if not sysroot.is_dir():
-                print(f'[*] {SYSROOT} not found')
+                print(f'[*] {args.sysroot} not found')
                 exit(1)
 
-            idaclang(args.platform, args.opts)
+            idaclang(args.sysroot, args.arch, args.opts)
 
         case _:
             parser.print_help()
