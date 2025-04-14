@@ -99,8 +99,7 @@ def docker(sysroot: str, arch: str, image: str, opts: list[str]):
 
 
 def idaclang(sysroot: str, tilname: str, arch: str, opts: list[str]):
-    command = ['idaclang', '--idaclang-tilname', tilname]
-    command += ARCH_OPTS[arch][1]
+    command = ['idaclang', '--idaclang-tilname', tilname, *ARCH_OPTS[arch][1]]
     sysroot = pathlib.Path(sysroot)
 
     for pattern in ARCH_OPTS[arch][2]:
