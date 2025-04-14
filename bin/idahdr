@@ -5,7 +5,7 @@ import shlex
 import subprocess
 import uuid
 
-FSDIR: str = 'fs'
+ISYSROOT: str = 'fs'
 
 PLATFORM: dict[str, tuple[str, str]] = {
     'arm64': ('linux/arm64', 'arm64v8'),
@@ -22,7 +22,7 @@ def docker(platform: str, image: str, opts: list[str]):
         command = ['docker', 'run', '--name', name, '-it', *opts, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
         print(f'[*] {shlex.join(command)}')
         subprocess.run(command)
-        command = ['docker', 'cp', f'{name}:/', FSDIR]
+        command = ['docker', 'cp', f'{name}:/', ISYSROOT]
         subprocess.run(command, check=True)
     finally:
         command = ['docker', 'rm', name]
@@ -33,7 +33,7 @@ IDACLANG_OPTS: dict[str, list[str]] = {
     'arm64': [
         '-target', 'arm64-pc-linux',
         '-nostdinc',
-        '-isysroot', FSDIR,
+        '-isysroot', ISYSROOT,
         '-isystem', '=/usr/include',
         '-isystem', '=/usr/include/aarch64-linux-gnu',
         '-I', '=/usr/local/include'
@@ -42,7 +42,7 @@ IDACLANG_OPTS: dict[str, list[str]] = {
     'arm32': [
         '-target', 'arm-pc-linux', '-mfloat-abi=hard',
         '-nostdinc',
-        '-isysroot', FSDIR,
+        '-isysroot', ISYSROOT,
         '-isystem', '=/usr/include',
         '-isystem', '=/usr/include/arm-linux-gnueabihf',
         '-I', '=/usr/local/include'
@@ -51,7 +51,7 @@ IDACLANG_OPTS: dict[str, list[str]] = {
     'x64': [
         '-target', 'x86_64-pc-linux',
         '-nostdinc',
-        '-isysroot', FSDIR,
+        '-isysroot', ISYSROOT,
         '-isystem', '=/usr/include',
         '-isystem', '=/usr/include/x86_64-linux-gnu',
         '-I', '=/usr/local/include'
@@ -60,7 +60,7 @@ IDACLANG_OPTS: dict[str, list[str]] = {
     'x86': [
         '-target', 'i386-pc-linux',
         '-nostdinc',
-        '-isysroot', FSDIR,
+        '-isysroot', ISYSROOT,
         '-isystem', '=/usr/include',
         '-isystem', '=/usr/include/i386-linux-gnu',
         '-I', '=/usr/local/include'
@@ -95,11 +95,13 @@ def idaclang(platform: str, opts: list[str]):
     tilname = pathlib.Path(opts[-1]).with_suffix('.til').name
     command = ['idaclang', '--idaclang-tilname', tilname]
     command += IDACLANG_OPTS[platform]
+    isysroot = pathlib.Path(ISYSROOT)
+    equal = pathlib.Path('=')
 
     for pattern in IDACLANG_GCC_INCDIR[platform]:
-        for path in pathlib.Path(FSDIR).glob(pattern[1:]):
-            path = path.relative_to(FSDIR)
-            path = pathlib.Path('=').joinpath(path)
+        for path in isysroot.glob(pattern[1:]):
+            path = path.relative_to(isysroot)
+            path = equal.joinpath(path)
             command += ['-isystem', str(path)]
 
     command += opts
@@ -121,15 +123,15 @@ def main():
 
     match args.tool:
         case 'docker':
-            if pathlib.Path(FSDIR).is_dir():
-                print(f'[*] {FSDIR} already exists')
+            if pathlib.Path(ISYSROOT).is_dir():
+                print(f'[*] {ISYSROOT} already exists')
                 exit(1)
 
             docker(args.platform, args.image, args.opts)
 
         case 'idaclang':
-            if not pathlib.Path(FSDIR).is_dir():
-                print(f'[*] {FSDIR} not found')
+            if not pathlib.Path(ISYSROOT).is_dir():
+                print(f'[*] {ISYSROOT} not found')
                 exit(1)
 
             idaclang(args.platform, args.opts)
