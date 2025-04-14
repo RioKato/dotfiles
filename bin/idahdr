@@ -5,32 +5,12 @@ import shlex
 import subprocess
 import uuid
 
-SYSROOT: str = 'fs'
 
-PLATFORM: dict[str, tuple[str, str]] = {
-    'arm64': ('linux/arm64', 'arm64v8'),
-    'arm32': ('linux/arm/v7', 'arm32v7'),
-    'x64': ('linux/amd64', 'amd64'),
-    'x86': ('linux/386', 'i386')
-}
-
-
-def docker(platform: str, image: str, opts: list[str]):
-    name = str(uuid.uuid1())
-
-    try:
-        command = ['docker', 'run', '--name', name, '-it', *opts, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
-        print(f'[*] {shlex.join(command)}')
-        subprocess.run(command)
-        command = ['docker', 'cp', f'{name}:/', SYSROOT]
-        subprocess.run(command, check=True)
-    finally:
-        command = ['docker', 'rm', name]
-        subprocess.run(command, stdout=subprocess.DEVNULL)
-
-
-IDACLANG_OPTS: dict[str, tuple[list[str], list[str]]] = {
+COMMAND_OPTS: dict[str, tuple[list[str], list[str], list[str]]] = {
     'arm64': (
+        [
+            '--platform', 'linux/arm64'
+        ],
         [
             '-target', 'arm64-pc-linux',
             '-nostdinc',
@@ -44,6 +24,9 @@ IDACLANG_OPTS: dict[str, tuple[list[str], list[str]]] = {
     ),
 
     'arm32': (
+        [
+            '--platform', 'linux/arm/v7'
+        ],
         [
             '-target', 'arm-pc-linux',
             '-mfloat-abi=hard',
@@ -59,6 +42,9 @@ IDACLANG_OPTS: dict[str, tuple[list[str], list[str]]] = {
 
     'x64': (
         [
+            '--platform', 'linux/amd64'
+        ],
+        [
             '-target', 'x86_64-pc-linux',
             '-nostdinc',
         ],
@@ -72,6 +58,9 @@ IDACLANG_OPTS: dict[str, tuple[list[str], list[str]]] = {
 
     'x86': (
         [
+            '--platform', 'linux/386'
+        ],
+        [
             '-target', 'i386-pc-linux',
             '-nostdinc',
         ],
@@ -84,15 +73,41 @@ IDACLANG_OPTS: dict[str, tuple[list[str], list[str]]] = {
     )
 }
 
+SYSROOT: str = 'fs'
+
+UBUNTU_PREFIX: dict[str, str] = {
+    'arm64': 'arm64v8',
+    'arm32': 'arm32v7',
+    'x64': 'amd64',
+    'x86': 'i386'
+}
+
+
+def docker(platform: str, image: str, opts: list[str]):
+    name = str(uuid.uuid1())
+
+    if image.startswith('ubuntu'):
+        image = f'{UBUNTU_PREFIX[platform]}/{image}'
+
+    try:
+        command = ['docker', 'run', '--name', name, '-it', *COMMAND_OPTS[platform][0], *opts, image]
+        print(f'[*] {shlex.join(command)}')
+        subprocess.run(command)
+        command = ['docker', 'cp', f'{name}:/', SYSROOT]
+        subprocess.run(command, check=True)
+    finally:
+        command = ['docker', 'rm', name]
+        subprocess.run(command, stdout=subprocess.DEVNULL)
+
 
 def idaclang(platform: str, opts: list[str]):
     assert (opts)
     tilname = pathlib.Path(opts[-1]).with_suffix('.til').name
     command = ['idaclang', '--idaclang-tilname', tilname]
-    command += IDACLANG_OPTS[platform][0]
+    command += COMMAND_OPTS[platform][1]
     sysroot = pathlib.Path(SYSROOT)
 
-    for pattern in IDACLANG_OPTS[platform][1]:
+    for pattern in COMMAND_OPTS[platform][2]:
         assert (pattern.startswith('/'))
         for path in sysroot.glob(pattern[1:]):
             command += ['-isystem', str(path)]
@@ -105,7 +120,7 @@ def idaclang(platform: str, opts: list[str]):
 def main():
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument('platform', choices=PLATFORM.keys())
+    parser.add_argument('platform', choices=COMMAND_OPTS.keys())
     subparsers = parser.add_subparsers(dest='tool')
     docker_parser = subparsers.add_parser('docker')
     docker_parser.add_argument('--image', '-i', default='ubuntu')
