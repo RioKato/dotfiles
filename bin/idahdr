@@ -5,7 +5,7 @@ import shlex
 import subprocess
 import uuid
 
-ISYSROOT: str = 'fs'
+SYSROOT: str = 'fs'
 
 PLATFORM: dict[str, tuple[str, str]] = {
     'arm64': ('linux/arm64', 'arm64v8'),
@@ -22,71 +22,66 @@ def docker(platform: str, image: str, opts: list[str]):
         command = ['docker', 'run', '--name', name, '-it', *opts, '--platform', f'{PLATFORM[platform][0]}', f'{PLATFORM[platform][1]}/{image}']
         print(f'[*] {shlex.join(command)}')
         subprocess.run(command)
-        command = ['docker', 'cp', f'{name}:/', ISYSROOT]
+        command = ['docker', 'cp', f'{name}:/', SYSROOT]
         subprocess.run(command, check=True)
     finally:
         command = ['docker', 'rm', name]
         subprocess.run(command, stdout=subprocess.DEVNULL)
 
 
-IDACLANG_OPTS: dict[str, list[str]] = {
-    'arm64': [
-        '-target', 'arm64-pc-linux',
-        '-nostdinc',
-        '-isysroot', ISYSROOT,
-        '-isystem', '=/usr/include',
-        '-isystem', '=/usr/include/aarch64-linux-gnu',
-        '-I', '=/usr/local/include'
-    ],
+IDACLANG_OPTS: dict[str, tuple[list[str], list[str]]] = {
+    'arm64': (
+        [
+            '-target', 'arm64-pc-linux',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/aarch64-linux-gnu',
+            '/usr/lib/gcc/aarch64-linux-gnu/*/include',
+            '/usr/lib/gcc/aarch64-linux-gnu/*/include-fixed'
+        ]
+    ),
 
-    'arm32': [
-        '-target', 'arm-pc-linux', '-mfloat-abi=hard',
-        '-nostdinc',
-        '-isysroot', ISYSROOT,
-        '-isystem', '=/usr/include',
-        '-isystem', '=/usr/include/arm-linux-gnueabihf',
-        '-I', '=/usr/local/include'
-    ],
+    'arm32': (
+        [
+            '-target', 'arm-pc-linux',
+            '-mfloat-abi=hard',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/arm-linux-gnueabihf',
+            '/usr/lib/gcc/arm-linux-gnueabihf/*/include',
+            '/usr/lib/gcc/arm-linux-gnueabihf/*/include-fixed'
+        ]
+    ),
 
-    'x64': [
-        '-target', 'x86_64-pc-linux',
-        '-nostdinc',
-        '-isysroot', ISYSROOT,
-        '-isystem', '=/usr/include',
-        '-isystem', '=/usr/include/x86_64-linux-gnu',
-        '-I', '=/usr/local/include'
-    ],
+    'x64': (
+        [
+            '-target', 'x86_64-pc-linux',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/x86_64-linux-gnu',
+            '/usr/lib/gcc/x86_64-linux-gnu/*/include',
+            '/usr/lib/gcc/x86_64-linux-gnu/*/include-fixed'
+        ]
+    ),
 
-    'x86': [
-        '-target', 'i386-pc-linux',
-        '-nostdinc',
-        '-isysroot', ISYSROOT,
-        '-isystem', '=/usr/include',
-        '-isystem', '=/usr/include/i386-linux-gnu',
-        '-I', '=/usr/local/include'
-    ]
-}
-
-IDACLANG_GCC_INCDIR: dict[str, list[str]] = {
-    'arm64': [
-        '/usr/lib/gcc/aarch64-linux-gnu/*/include',
-        '/usr/lib/gcc/aarch64-linux-gnu/*/include-fixed'
-    ],
-
-    'arm32': [
-        '/usr/lib/gcc/arm-linux-gnueabihf/*/include',
-        '/usr/lib/gcc/arm-linux-gnueabihf/*/include-fixed'
-    ],
-
-    'x64': [
-        '/usr/lib/gcc/x86_64-linux-gnu/*/include',
-        '/usr/lib/gcc/x86_64-linux-gnu/*/include-fixed'
-    ],
-
-    'x86': [
-        '/usr/lib/gcc/i686-linux-gnu/*/include',
-        '/usr/lib/gcc/i686-linux-gnu/*/include-fixed'
-    ]
+    'x86': (
+        [
+            '-target', 'i386-pc-linux',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/i386-linux-gnu',
+            '/usr/lib/gcc/i686-linux-gnu/*/include',
+            '/usr/lib/gcc/i686-linux-gnu/*/include-fixed'
+        ]
+    )
 }
 
 
@@ -94,14 +89,12 @@ def idaclang(platform: str, opts: list[str]):
     assert (opts)
     tilname = pathlib.Path(opts[-1]).with_suffix('.til').name
     command = ['idaclang', '--idaclang-tilname', tilname]
-    command += IDACLANG_OPTS[platform]
-    isysroot = pathlib.Path(ISYSROOT)
-    equal = pathlib.Path('=')
+    command += IDACLANG_OPTS[platform][0]
+    sysroot = pathlib.Path(SYSROOT)
 
-    for pattern in IDACLANG_GCC_INCDIR[platform]:
-        for path in isysroot.glob(pattern[1:]):
-            path = path.relative_to(isysroot)
-            path = equal.joinpath(path)
+    for pattern in IDACLANG_OPTS[platform][1]:
+        assert (pattern.startswith('/'))
+        for path in sysroot.glob(pattern[1:]):
             command += ['-isystem', str(path)]
 
     command += opts
@@ -120,18 +113,19 @@ def main():
     idaclang_parser = subparsers.add_parser('idaclang')
     idaclang_parser.add_argument('opts', nargs='+')
     args = parser.parse_args()
+    sysroot = pathlib.Path(SYSROOT)
 
     match args.tool:
         case 'docker':
-            if pathlib.Path(ISYSROOT).is_dir():
-                print(f'[*] {ISYSROOT} already exists')
+            if sysroot.is_dir():
+                print(f'[*] {SYSROOT} already exists')
                 exit(1)
 
             docker(args.platform, args.image, args.opts)
 
         case 'idaclang':
-            if not pathlib.Path(ISYSROOT).is_dir():
-                print(f'[*] {ISYSROOT} not found')
+            if not sysroot.is_dir():
+                print(f'[*] {SYSROOT} not found')
                 exit(1)
 
             idaclang(args.platform, args.opts)
