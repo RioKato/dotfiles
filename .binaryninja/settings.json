@@ -7,5 +7,6 @@
     "ui.featureMap.enable": false,
     "ui.files.detection.database": "disable",
     "ui.view.linear.gutterWidth": 10,
-    "corePlugins.languages.pseudoRust": false
+    "corePlugins.languages.pseudoRust": false,
+    "python.interpreter": "/usr/lib/libpython3.so"
 }
