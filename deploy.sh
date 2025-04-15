@@ -2,14 +2,15 @@
 
 cd $(dirname $0)
 
+IFS=$'\n'
 for FILE in $(git ls-files)
 do
   if [[ $FILE == .* ]] || [[ $FILE == bin/* ]]
   then
     SRC=`pwd`/$FILE
     DST=~/$FILE
-    mkdir -p $(dirname $DST)
-    ln -snf $SRC $DST
+    mkdir -p $(dirname "$DST")
+    ln -snf "$SRC" "$DST"
   fi
 done
 
