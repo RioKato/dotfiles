@@ -1,7 +1,11 @@
 {
     "Binja-RPyC.serviceRpycListenPort": 8888,
     "ui.font.view.size": 11,
-    "ui.font.app.size": 11,
-    "ui.theme.name": "Classic",
-    "ui.theme.transientScrollbars": true
+    "ui.view.linear.il": "PseudoC",
+    "ui.theme.transientScrollbars": true,
+    "ui.theme.name": "Slushee Light",
+    "ui.featureMap.enable": false,
+    "ui.files.detection.database": "disable",
+    "ui.view.linear.gutterWidth": 10,
+    "corePlugins.languages.pseudoRust": false
 }
