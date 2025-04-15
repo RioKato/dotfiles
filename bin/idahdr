@@ -112,6 +112,23 @@ def idaclang(sysroot: str, tilname: str, arch: str, opts: list[str]):
     subprocess.run(command, check=True)
 
 
+def binja(sysroot: str, arch: str):
+    flags = []
+    flags += ARCH_OPTS[arch][1]
+    sysroot = pathlib.Path(sysroot)
+
+    for pattern in ARCH_OPTS[arch][2]:
+        assert (pattern.startswith('/'))
+        for path in sysroot.glob(pattern[1:]):
+            path = path.resolve()
+            flags += ['-isystem', str(path)]
+
+    print('==================flags==================')
+
+    for f in flags:
+        print(f)
+
+
 def main():
     from argparse import ArgumentParser
     parser = ArgumentParser()
@@ -124,6 +141,7 @@ def main():
     idaclang_parser = subparsers.add_parser('idaclang')
     idaclang_parser.add_argument('tilname')
     idaclang_parser.add_argument('opts', nargs='+')
+    binja_parser = subparsers.add_parser('binja')
     args = parser.parse_args()
     sysroot = pathlib.Path(args.sysroot)
 
@@ -141,6 +159,13 @@ def main():
                 exit(1)
 
             idaclang(args.sysroot, args.tilname, args.arch, args.opts)
+
+        case 'binja':
+            if not sysroot.is_dir():
+                print(f'[*] {args.sysroot} not found')
+                exit(1)
+
+            binja(args.sysroot, args.arch)
 
         case _:
             parser.print_help()
