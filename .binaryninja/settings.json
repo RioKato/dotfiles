@@ -1,5 +1,4 @@
 {
-    "Binja-RPyC.serviceRpycListenPort": 8888,
     "ui.font.view.size": 11,
     "ui.view.linear.il": "PseudoC",
     "ui.theme.transientScrollbars": true,
