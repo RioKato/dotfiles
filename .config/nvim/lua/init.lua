@@ -107,39 +107,50 @@ require("lazy").setup({
 
 		config = function()
 			local mason_lspconfig = require("mason-lspconfig")
-			local ensure = { "pyright", "ts_ls", "cmake" }
-			local manual = { "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls" }
+			local ensure = {
+				"pyright",
+				"ts_ls",
+				"cmake",
+			}
+			local lss = {
+				"pyright",
+				"ts_ls",
+				"cmake",
+				"clangd",
+				"rust_analyzer",
+				"gopls",
+				"codeqlls",
+				"jdtls",
+			}
 
 			mason_lspconfig.setup({
 				ensure_installed = ensure,
 			})
 
-			for _, servers in ipairs({ ensure, manual }) do
-				for _, server in ipairs(servers) do
-					vim.lsp.config(server, {
-						on_attach = function(client, bufnr)
-							vim.lsp.completion.enable(true, client.id, bufnr, {
-								autotrigger = true,
-								convert = function(item)
-									return { abbr = item.label:gsub("%b()", "") }
-								end,
-							})
+			for _, name in ipairs(lss) do
+				vim.lsp.config(name, {
+					on_attach = function(client, bufnr)
+						vim.lsp.completion.enable(true, client.id, bufnr, {
+							autotrigger = true,
+							convert = function(item)
+								return { abbr = item.label:gsub("%b()", "") }
+							end,
+						})
 
-							local opts = { buffer = bufnr, expr = true }
+						local opts = { buffer = bufnr, expr = true }
 
-							vim.keymap.set("i", "<Tab>", function()
-								if vim.fn.pumvisible() == 0 then
-									return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
-								else
-									return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
-								end
-							end, opts)
-						end,
-					})
-				end
-
-				vim.lsp.enable(servers)
+						vim.keymap.set("i", "<Tab>", function()
+							if vim.fn.pumvisible() == 0 then
+								return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
+							else
+								return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
+							end
+						end, opts)
+					end,
+				})
 			end
+
+			vim.lsp.enable(lss)
 		end,
 	},
 
