@@ -2,6 +2,7 @@ xorg-xmodmap
 xorg-xhost
 xsel
 xclip
+xdotool
 gnome-keyring
 fcitx5-im
 fcitx5-mozc
@@ -15,8 +16,6 @@ clang
 bear
 llvm
 lcov
-valgrind
-kcachegrind
 ccache
 linux-headers
 gdb
