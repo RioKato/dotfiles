@@ -1,3 +1,0 @@
-[submodule ".binaryninja/plugins/binja-headless"]
-	path = .binaryninja/plugins/binja-headless
-	url = https://github.com/hugsy/binja-headless.git
