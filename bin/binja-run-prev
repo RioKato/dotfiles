@@ -1,0 +1,5 @@
+#!/bin/sh
+
+xdotool windowactivate $(xdotool search --onlyvisible --name 'Binary Ninja')
+# "Run Previous Script" is assigned to control+r.
+xdotool key control+r
