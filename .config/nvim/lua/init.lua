@@ -67,7 +67,6 @@ require("lazy").setup({
 	{
 		"sainnhe/sonokai",
 		dependencies = {
-			-- after --
 			"nvim-treesitter/nvim-treesitter-context",
 		},
 
@@ -102,21 +101,14 @@ require("lazy").setup({
 		end,
 	},
 
-	-- {
-	-- 	"hrsh7th/cmp-nvim-lsp",
-	-- 	dependencies = { "hrsh7th/nvim-cmp" },
-	-- },
-
 	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = {
 			"williamboman/mason.nvim",
 			"neovim/nvim-lspconfig",
-			-- "hrsh7th/cmp-nvim-lsp",
 		},
 
 		config = function()
-			-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local mason_lspconfig = require("mason-lspconfig")
 			local ensure = { "pyright", "ts_ls", "cmake" }
 			local manual = { "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls", "ts_ls" }
@@ -128,7 +120,6 @@ require("lazy").setup({
 			for _, servers in ipairs({ ensure, manual }) do
 				for _, server in ipairs(servers) do
 					vim.lsp.config(server, {
-						-- capabilities = capabilities,
 						on_attach = function(client, bufnr)
 							vim.lsp.completion.enable(true, client.id, bufnr, {
 								autotrigger = true,
@@ -136,27 +127,22 @@ require("lazy").setup({
 									return { abbr = item.label:gsub("%b()", "") }
 								end,
 							})
+
+							local opts = { buffer = bufnr, expr = true }
+
+							vim.keymap.set("i", "<Tab>", function()
+								if vim.fn.pumvisible() == 0 then
+									return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
+								else
+									return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
+								end
+							end, opts)
 						end,
 					})
 				end
 
 				vim.lsp.enable(servers)
 			end
-
-			-- local lspconfig = require("lspconfig")
-			-- mason_lspconfig.setup_handlers({
-			-- 	function(server)
-			-- 		lspconfig[server].setup({
-			-- 			capabilities = capabilities,
-			-- 		})
-			-- 	end,
-			-- })
-
-			-- for _, server in ipairs(manual) do
-			-- 	lspconfig[server].setup({
-			-- 		capabilities = capabilities,
-			-- 	})
-			-- end
 		end,
 	},
 
@@ -164,7 +150,6 @@ require("lazy").setup({
 		"nvimtools/none-ls.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			-- after --
 			"williamboman/mason-lspconfig.nvim",
 		},
 
@@ -275,49 +260,6 @@ require("lazy").setup({
 			})
 		end,
 	},
-
-	-- {
-	-- 	"hrsh7th/cmp-vsnip",
-	-- 	dependencies = { "hrsh7th/vim-vsnip" },
-	-- },
-
-	-- {
-	-- 	"hrsh7th/nvim-cmp",
-	-- 	dependencies = {
-	-- 		"hrsh7th/cmp-vsnip",
-	-- 		"hrsh7th/cmp-buffer",
-	-- 	},
-
-	-- 	config = function()
-	-- 		local cmp = require("cmp")
-	-- 		cmp.setup({
-	-- 			snippet = {
-	-- 				expand = function(args)
-	-- 					vim.fn["vsnip#anonymous"](args.body)
-	-- 				end,
-	-- 			},
-	-- 			window = {},
-	-- 			mapping = {
-	-- 				["<C-b>"] = cmp.mapping.scroll_docs(-4),
-	-- 				["<C-f>"] = cmp.mapping.scroll_docs(4),
-	-- 				["<cr>"] = cmp.mapping.confirm({ select = true }),
-	-- 				["<tab>"] = cmp.mapping(function(fallback)
-	-- 					if cmp.visible() then
-	-- 						cmp.select_next_item()
-	-- 					else
-	-- 						fallback()
-	-- 					end
-	-- 				end),
-	-- 			},
-	-- 			sources = cmp.config.sources({
-	-- 				{ name = "nvim_lsp" },
-	-- 				{ name = "vsnip" },
-	-- 			}, {
-	-- 				{ name = "buffer" },
-	-- 			}),
-	-- 		})
-	-- 	end,
-	-- },
 
 	{
 		"ray-x/lsp_signature.nvim",
