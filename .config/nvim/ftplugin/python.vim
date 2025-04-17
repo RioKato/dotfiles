@@ -4,4 +4,10 @@ function RunPython()
   call RunTmux('python', command)
 endfunction
 
+function RunBinja()
+  write
+  call system('binja-runprev')
+endfunction
+
 noremap r :call RunPython()<cr>
+command! RunBinja call RunBinja()
