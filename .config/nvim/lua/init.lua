@@ -111,7 +111,7 @@ require("lazy").setup({
 		config = function()
 			local mason_lspconfig = require("mason-lspconfig")
 			local ensure = { "pyright", "ts_ls", "cmake" }
-			local manual = { "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls", "ts_ls" }
+			local manual = { "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls" }
 
 			mason_lspconfig.setup({
 				ensure_installed = ensure,
