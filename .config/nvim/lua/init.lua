@@ -102,21 +102,21 @@ require("lazy").setup({
 		end,
 	},
 
-	{
-		"hrsh7th/cmp-nvim-lsp",
-		dependencies = { "hrsh7th/nvim-cmp" },
-	},
+	-- {
+	-- 	"hrsh7th/cmp-nvim-lsp",
+	-- 	dependencies = { "hrsh7th/nvim-cmp" },
+	-- },
 
 	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = {
 			"williamboman/mason.nvim",
 			"neovim/nvim-lspconfig",
-			"hrsh7th/cmp-nvim-lsp",
+			-- "hrsh7th/cmp-nvim-lsp",
 		},
 
 		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			-- local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local mason_lspconfig = require("mason-lspconfig")
 			local ensure = { "pyright", "ts_ls", "cmake" }
 			local manual = { "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls", "ts_ls" }
@@ -128,7 +128,15 @@ require("lazy").setup({
 			for _, servers in ipairs({ ensure, manual }) do
 				for _, server in ipairs(servers) do
 					vim.lsp.config(server, {
-						capabilities = capabilities,
+						-- capabilities = capabilities,
+						on_attach = function(client, bufnr)
+							vim.lsp.completion.enable(true, client.id, bufnr, {
+								autotrigger = true,
+								convert = function(item)
+									return { abbr = item.label:gsub("%b()", "") }
+								end,
+							})
+						end,
 					})
 				end
 
@@ -271,48 +279,48 @@ require("lazy").setup({
 		end,
 	},
 
-	{
-		"hrsh7th/cmp-vsnip",
-		dependencies = { "hrsh7th/vim-vsnip" },
-	},
+	-- {
+	-- 	"hrsh7th/cmp-vsnip",
+	-- 	dependencies = { "hrsh7th/vim-vsnip" },
+	-- },
 
-	{
-		"hrsh7th/nvim-cmp",
-		dependencies = {
-			"hrsh7th/cmp-vsnip",
-			"hrsh7th/cmp-buffer",
-		},
+	-- {
+	-- 	"hrsh7th/nvim-cmp",
+	-- 	dependencies = {
+	-- 		"hrsh7th/cmp-vsnip",
+	-- 		"hrsh7th/cmp-buffer",
+	-- 	},
 
-		config = function()
-			local cmp = require("cmp")
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						vim.fn["vsnip#anonymous"](args.body)
-					end,
-				},
-				window = {},
-				mapping = {
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<cr>"] = cmp.mapping.confirm({ select = true }),
-					["<tab>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
-							cmp.select_next_item()
-						else
-							fallback()
-						end
-					end),
-				},
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-					{ name = "vsnip" },
-				}, {
-					{ name = "buffer" },
-				}),
-			})
-		end,
-	},
+	-- 	config = function()
+	-- 		local cmp = require("cmp")
+	-- 		cmp.setup({
+	-- 			snippet = {
+	-- 				expand = function(args)
+	-- 					vim.fn["vsnip#anonymous"](args.body)
+	-- 				end,
+	-- 			},
+	-- 			window = {},
+	-- 			mapping = {
+	-- 				["<C-b>"] = cmp.mapping.scroll_docs(-4),
+	-- 				["<C-f>"] = cmp.mapping.scroll_docs(4),
+	-- 				["<cr>"] = cmp.mapping.confirm({ select = true }),
+	-- 				["<tab>"] = cmp.mapping(function(fallback)
+	-- 					if cmp.visible() then
+	-- 						cmp.select_next_item()
+	-- 					else
+	-- 						fallback()
+	-- 					end
+	-- 				end),
+	-- 			},
+	-- 			sources = cmp.config.sources({
+	-- 				{ name = "nvim_lsp" },
+	-- 				{ name = "vsnip" },
+	-- 			}, {
+	-- 				{ name = "buffer" },
+	-- 			}),
+	-- 		})
+	-- 	end,
+	-- },
 
 	{
 		"ray-x/lsp_signature.nvim",
