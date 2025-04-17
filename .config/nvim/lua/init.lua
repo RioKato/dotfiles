@@ -66,9 +66,7 @@ require("lazy").setup({
 
 	{
 		"sainnhe/sonokai",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter-context",
-		},
+		dependencies = { "nvim-treesitter/nvim-treesitter-context" },
 
 		config = function()
 			vim.cmd("colorscheme sonokai")
@@ -148,10 +146,7 @@ require("lazy").setup({
 
 	{
 		"nvimtools/none-ls.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"williamboman/mason-lspconfig.nvim",
-		},
+		dependencies = { "nvim-lua/plenary.nvim" },
 
 		config = function()
 			local null_ls = require("null-ls")
@@ -173,6 +168,7 @@ require("lazy").setup({
 			"williamboman/mason.nvim",
 			"nvimtools/none-ls.nvim",
 		},
+
 		event = { "BufReadPre", "BufNewFile" },
 
 		config = function()
