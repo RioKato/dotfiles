@@ -9,6 +9,5 @@ chsh -s /bin/zsh
 rustup default stable
 rustup component add rust-analyzer
 go install golang.org/x/tools/gopls@latest
-pip install python-lsp-server
 
 exit 0
