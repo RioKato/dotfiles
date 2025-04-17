@@ -66,7 +66,6 @@ require("lazy").setup({
 
 	{
 		"sainnhe/sonokai",
-		dependencies = { "nvim-treesitter/nvim-treesitter-context" },
 
 		config = function()
 			vim.cmd("colorscheme sonokai")
