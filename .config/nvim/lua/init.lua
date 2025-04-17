@@ -118,25 +118,37 @@ require("lazy").setup({
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 			local mason_lspconfig = require("mason-lspconfig")
-			local lspconfig = require("lspconfig")
+			local ensure = { "pyright", "ts_ls", "cmake" }
+			local manual = { "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls", "ts_ls" }
 
 			mason_lspconfig.setup({
-				ensure_installed = { "pyright", "ts_ls", "cmake" },
+				ensure_installed = ensure,
 			})
 
-			mason_lspconfig.setup_handlers({
-				function(server)
-					lspconfig[server].setup({
+			for _, servers in ipairs({ ensure, manual }) do
+				for _, server in ipairs(servers) do
+					vim.lsp.config(server, {
 						capabilities = capabilities,
 					})
-				end,
-			})
+				end
 
-			for _, server in ipairs({ "clangd", "rust_analyzer", "gopls", "codeqlls", "jdtls", "ts_ls" }) do
-				lspconfig[server].setup({
-					capabilities = capabilities,
-				})
+				vim.lsp.enable(servers)
 			end
+
+			-- local lspconfig = require("lspconfig")
+			-- mason_lspconfig.setup_handlers({
+			-- 	function(server)
+			-- 		lspconfig[server].setup({
+			-- 			capabilities = capabilities,
+			-- 		})
+			-- 	end,
+			-- })
+
+			-- for _, server in ipairs(manual) do
+			-- 	lspconfig[server].setup({
+			-- 		capabilities = capabilities,
+			-- 	})
+			-- end
 		end,
 	},
 
