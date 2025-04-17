@@ -175,9 +175,7 @@ require("lazy").setup({
 			null_ls.setup({
 				sources = {
 					null_ls.builtins.formatting.stylua,
-					null_ls.builtins.formatting.autopep8.with({
-						extra_args = { "--max-line-length=256", "--ignore=E731" },
-					}),
+					null_ls.builtins.formatting.black,
 					null_ls.builtins.formatting.prettier,
 				},
 			})
@@ -188,7 +186,6 @@ require("lazy").setup({
 		"jay-babu/mason-null-ls.nvim",
 		dependencies = {
 			"williamboman/mason.nvim",
-			"jose-elias-alvarez/null-ls.nvim",
 			"nvimtools/none-ls.nvim",
 		},
 		event = { "BufReadPre", "BufNewFile" },
