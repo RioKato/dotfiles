@@ -106,12 +106,12 @@ require("lazy").setup({
 		},
 
 		config = function()
-			local mason_lspconfig = require("mason-lspconfig")
 			local ensure = {
 				"pyright",
 				"ts_ls",
 				"cmake",
 			}
+
 			local lss = {
 				"pyright",
 				"ts_ls",
@@ -123,7 +123,7 @@ require("lazy").setup({
 				"jdtls",
 			}
 
-			mason_lspconfig.setup({
+			require("mason-lspconfig").setup({
 				ensure_installed = ensure,
 			})
 
@@ -160,13 +160,14 @@ require("lazy").setup({
 
 		config = function()
 			local null_ls = require("null-ls")
-			null_ls.builtins.formatting.prettier.filetypes = { "markdown" }
 
 			null_ls.setup({
 				sources = {
 					null_ls.builtins.formatting.stylua,
 					null_ls.builtins.formatting.black,
-					null_ls.builtins.formatting.prettier,
+					null_ls.builtins.formatting.prettier.with({
+						filetypes = { "markdown" },
+					}),
 				},
 			})
 		end,
