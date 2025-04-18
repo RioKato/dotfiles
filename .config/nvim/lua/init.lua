@@ -38,18 +38,20 @@ local function setup_quickfix()
 
     vim.api.nvim_create_autocmd({ "FileType" }, {
         pattern = "qf",
-        callback = function()
-            vim.keymap.set("n", "q", "<cmd>cclose<cr>", { buffer = true })
+        callback = function(ev)
+            local opts = { buffer = ev.bufnr }
+
+            vim.keymap.set("n", "q", "<cmd>cclose<cr>", opts)
 
             vim.keymap.set("n", "<C-o>", function()
                 pcall(vim.cmd, "colder")
-            end, { buffer = true })
+            end, opts)
 
             vim.keymap.set("n", "<C-i>", function()
                 pcall(vim.cmd, "cnewer")
-            end, { buffer = true })
+            end, opts)
 
-            vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
+            vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", opts)
         end,
     })
 end
