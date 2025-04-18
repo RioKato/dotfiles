@@ -138,23 +138,21 @@ require("lazy").setup({
 						})
 
 						vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
+
 						local opts = { buffer = bufnr, expr = true }
+						local keymaps = {}
+						keymaps["<Tab>"] = "<C-n>"
+						keymaps["<C-h>"] = "<C-h><C-x><C-o>"
 
-						vim.keymap.set("i", "<Tab>", function()
-							if vim.fn.pumvisible() == 0 then
-								return vim.api.nvim_replace_termcodes("<Tab>", true, true, true)
-							else
-								return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
-							end
-						end, opts)
-
-						vim.keymap.set("i", "<C-h>", function()
-							if vim.fn.pumvisible() == 0 then
-								return vim.api.nvim_replace_termcodes("<C-h>", true, true, true)
-							else
-								return vim.api.nvim_replace_termcodes("<C-h><C-x><C-o>", true, true, true)
-							end
-						end, opts)
+						for key, replace in pairs(keymaps) do
+							vim.keymap.set("i", key, function()
+								if vim.fn.pumvisible() == 0 then
+									return vim.api.nvim_replace_termcodes(key, true, true, true)
+								else
+									return vim.api.nvim_replace_termcodes(replace, true, true, true)
+								end
+							end, opts)
+						end
 					end,
 				})
 			end
