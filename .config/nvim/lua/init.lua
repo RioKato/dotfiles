@@ -103,6 +103,13 @@ require("lazy").setup({
 
     { "tpope/vim-commentary" },
 
+    {
+        "Goose97/timber.nvim",
+        config = function()
+            require("timber").setup()
+        end,
+    },
+
     { "itchyny/vim-qfedit" },
 
     {
