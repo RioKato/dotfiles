@@ -138,7 +138,6 @@ require("lazy").setup({
 						})
 
 						vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
-						local opts = { buffer = bufnr, expr = true }
 
 						vim.keymap.set("i", "<Tab>", function()
 							if vim.fn.pumvisible() == 0 then
@@ -146,7 +145,7 @@ require("lazy").setup({
 							else
 								return vim.api.nvim_replace_termcodes("<C-n>", true, true, true)
 							end
-						end, opts)
+						end, { buffer = bufnr, expr = true })
 					end,
 				})
 			end
