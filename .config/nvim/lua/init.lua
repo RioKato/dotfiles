@@ -271,8 +271,7 @@ require("lazy").setup({
                 },
             })
 
-            local opts = { noremap = true, silent = true }
-
+            local opts = { silent = true }
             vim.keymap.set("n", "<space>f", builtin.find_files, opts)
             vim.keymap.set("n", "<space>b", builtin.buffers, opts)
             vim.keymap.set("n", "<space>g", builtin.live_grep, opts)
@@ -314,9 +313,18 @@ require("lazy").setup({
         config = function()
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "fugitiveblame",
-                callback = function()
-                    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = true })
-                    vim.keymap.set("n", "<tab>", "~", { buffer = true, remap = true })
+                callback = function(ev)
+                    local opts = { buffer = ev.bufnr, remap = true }
+                    vim.keymap.set("n", "q", "<cmd>close<cr>", opts)
+                    vim.keymap.set("n", "<C-i>", "~", opts)
+                end,
+            })
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "git",
+                callback = function(ev)
+                    local opts = { buffer = ev.bufnr }
+                    vim.keymap.set("n", "q", "<cmd>bd<cr>", opts)
                 end,
             })
 
@@ -394,9 +402,10 @@ require("lazy").setup({
 
             vim.api.nvim_create_autocmd({ "FileType" }, {
                 pattern = "markdown",
-                callback = function()
-                    vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", { buffer = true })
-                    vim.keymap.set("n", "go", "<cmd>ImageOpen<cr>", { buffer = true })
+                callback = function(ev)
+                    local opts = { buffer = ev.bufnr }
+                    vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", opts)
+                    vim.keymap.set("n", "go", "<cmd>ImageOpen<cr>", opts)
                 end,
             })
         end,
