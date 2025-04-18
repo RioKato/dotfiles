@@ -329,12 +329,8 @@ require("lazy").setup({
             })
 
             vim.keymap.set("n", "mt", function()
-                if vim.bo.filetype ~= "fugitiveblame" then
-                    vim.cmd("Git blame -w")
-                else
-                    vim.cmd("close")
-                end
-            end, {})
+                vim.cmd("Git blame -w")
+            end)
         end,
     },
 
@@ -343,13 +339,13 @@ require("lazy").setup({
         dependencies = { "tpope/vim-fugitive" },
 
         config = function()
-            vim.keymap.set("n", "ml", "<cmd>GV<cr>", {})
+            vim.keymap.set("n", "ml", "<cmd>GV<cr>")
             vim.keymap.set("n", "mf", function()
                 vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
-            end, {})
+            end)
             vim.keymap.set("n", "ms", function()
                 vim.cmd(string.format("GV -S %s", vim.fn.expand("<cword>")))
-            end, {})
+            end)
         end,
     },
 
