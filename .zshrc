@@ -145,6 +145,7 @@ then
   EDITOR=nvim
   alias vim=nvim
   alias view='nvim -R'
+  export PATH=/opt/nvim-linux-x86_64/bin:$PATH
 fi
 
 if command -v xdg-open &> /dev/null
