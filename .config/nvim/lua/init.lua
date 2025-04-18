@@ -1,5 +1,5 @@
-vim.o.inccommand = "split"
-vim.o.jumpoptions = "stack"
+vim.opt.inccommand = "split"
+vim.opt.jumpoptions = "stack"
 
 vim.api.nvim_create_autocmd("VimEnter", {
 	callback = function()
@@ -13,53 +13,66 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
-vim.diagnostic.config({
-	virtual_text = false,
-	signs = false,
-	underline = true,
-})
+local function setup_quickfix()
+	vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
 
-vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
-vim.keymap.set("n", "<C-n>", function()
-	local ok, exception = pcall(vim.cmd, "cnext")
-	if not ok and string.find(exception, "E553") then
-		vim.cmd("cfirst")
-	end
-end)
-vim.keymap.set("n", "<C-p>", function()
-	local ok, exception = pcall(vim.cmd, "cprevious")
-	if not ok and string.find(exception, "E553") then
-		vim.cmd("clast")
-	end
-end)
-vim.keymap.set("n", "<C-a>", "<cmd>caddexpr printf('%s:%d:%d:%s', expand('%'), line('.'), col('.'), getline('.'))<cr>")
+	vim.keymap.set("n", "<C-n>", function()
+		local ok, exception = pcall(vim.cmd, "cnext")
+		if not ok and string.find(exception, "E553") then
+			vim.cmd("cfirst")
+		end
+	end)
 
-vim.api.nvim_create_autocmd({ "FileType" }, {
-	pattern = "qf",
-	callback = function()
-		vim.keymap.set("n", "q", "<cmd>cclose<cr>", { buffer = true })
-		vim.keymap.set("n", "<C-o>", function()
-			pcall(vim.cmd, "colder")
-		end, { buffer = true })
-		vim.keymap.set("n", "<C-i>", function()
-			pcall(vim.cmd, "cnewer")
-		end, { buffer = true })
-		vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
-	end,
-})
+	vim.keymap.set("n", "<C-p>", function()
+		local ok, exception = pcall(vim.cmd, "cprevious")
+		if not ok and string.find(exception, "E553") then
+			vim.cmd("clast")
+		end
+	end)
 
-local lazypath = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"https://github.com/folke/lazy.nvim.git",
-		"--branch=stable",
-		lazypath,
+	vim.keymap.set(
+		"n",
+		"<C-a>",
+		"<cmd>caddexpr printf('%s:%d:%d:%s', expand('%'), line('.'), col('.'), getline('.'))<cr>"
+	)
+
+	vim.api.nvim_create_autocmd({ "FileType" }, {
+		pattern = "qf",
+		callback = function()
+			vim.keymap.set("n", "q", "<cmd>cclose<cr>", { buffer = true })
+
+			vim.keymap.set("n", "<C-o>", function()
+				pcall(vim.cmd, "colder")
+			end, { buffer = true })
+
+			vim.keymap.set("n", "<C-i>", function()
+				pcall(vim.cmd, "cnewer")
+			end, { buffer = true })
+
+			vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", { buffer = true })
+		end,
 	})
 end
-vim.opt.rtp:prepend(lazypath)
+
+local function install_lazy()
+	local lazypath = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
+
+	if not (vim.uv or vim.loop).fs_stat(lazypath) then
+		vim.fn.system({
+			"git",
+			"clone",
+			"--filter=blob:none",
+			"https://github.com/folke/lazy.nvim.git",
+			"--branch=stable",
+			lazypath,
+		})
+	end
+
+	vim.opt.rtp:prepend(lazypath)
+end
+
+setup_quickfix()
+install_lazy()
 
 require("lazy").setup({
 	{ "folke/lazy.nvim" },
@@ -127,6 +140,14 @@ require("lazy").setup({
 				ensure_installed = ensure,
 			})
 
+			vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
+
+			vim.diagnostic.config({
+				virtual_text = false,
+				signs = false,
+				underline = true,
+			})
+
 			for _, name in ipairs(lss) do
 				vim.lsp.config(name, {
 					on_attach = function(client, bufnr)
@@ -136,8 +157,6 @@ require("lazy").setup({
 								return { abbr = item.label:gsub("%b()", "") }
 							end,
 						})
-
-						vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
 
 						local opts = { buffer = bufnr, expr = true }
 						local keymaps = {}
