@@ -108,7 +108,14 @@ require("lazy").setup({
         dependencies = { "nvim-treesitter/nvim-treesitter" },
 
         config = function()
-            require("timber").setup()
+            require("timber").setup({
+                log_templates = {
+                    default = {
+                        python = [[print(f"[%filename:%line_number] {%log_target=}")]],
+                        c = [[printf("[%filename:%line_number] %log_target=%s\n", %log_target);]],
+                    },
+                },
+            })
         end,
     },
 
