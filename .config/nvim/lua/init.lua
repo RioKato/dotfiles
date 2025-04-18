@@ -105,6 +105,8 @@ require("lazy").setup({
 
     {
         "Goose97/timber.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+
         config = function()
             require("timber").setup()
         end,
