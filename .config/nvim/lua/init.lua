@@ -137,6 +137,7 @@ require("lazy").setup({
 							end,
 						})
 
+						vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
 						local opts = { buffer = bufnr, expr = true }
 
 						vim.keymap.set("i", "<Tab>", function()
