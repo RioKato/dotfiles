@@ -57,20 +57,20 @@ local function setup_quickfix()
 end
 
 local function install_lazy()
-    local lazypath = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
+    local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
-    if not vim.loop.fs_stat(lazypath) then
+    if not vim.loop.fs_stat(path) then
         vim.fn.system({
             "git",
             "clone",
             "--filter=blob:none",
             "https://github.com/folke/lazy.nvim.git",
             "--branch=stable",
-            lazypath,
+            path,
         })
     end
 
-    vim.opt.rtp:prepend(lazypath)
+    vim.opt.rtp:prepend(path)
 end
 
 setup_quickfix()
