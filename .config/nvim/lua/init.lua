@@ -99,9 +99,13 @@ require("lazy").setup({
 
     { "deris/vim-shot-f" },
 
-    { "machakann/vim-sandwich" },
+    {
+        "windwp/nvim-autopairs",
 
-    { "tpope/vim-commentary" },
+        config = function()
+            require("nvim-autopairs").setup()
+        end,
+    },
 
     {
         "Goose97/timber.nvim",
@@ -223,8 +227,6 @@ require("lazy").setup({
             "williamboman/mason.nvim",
             "nvimtools/none-ls.nvim",
         },
-
-        event = { "BufReadPre", "BufNewFile" },
 
         config = function()
             require("mason-null-ls").setup({
