@@ -119,33 +119,14 @@ alias view='vim -R'
 alias clang='clang -MJ compile_commands.json'
 alias gcc-cov='gcc -coverage'
 alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
-alias make='bear -- make'
-alias callgrind='valgrind --tool=callgrind'
 alias git-pclone='git clone --filter=blob:none -n'
 alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
-
-function cmake-all() {
-  if [ $# -eq 0 ]
-  then
-    src=.
-  else
-    src="$1"
-  fi
-
-  if [ ! -d build ]
-  then
-    cmake -S "$src" -B build -D CMAKE_EXPORT_COMPILE_COMMANDS=ON -G Ninja
-  fi
-
-  cmake --build build
-}
 
 if command -v nvim &> /dev/null
 then
   EDITOR=nvim
   alias vim=nvim
   alias view='nvim -R'
-  export PATH=/opt/nvim-linux-x86_64/bin:$PATH
 fi
 
 if command -v xdg-open &> /dev/null
@@ -161,6 +142,7 @@ esac
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
+export PATH=/opt/nvim-linux-x86_64/bin:$PATH
 export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
