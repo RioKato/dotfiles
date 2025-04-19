@@ -59,7 +59,7 @@ end
 local function install_lazy()
     local lazypath = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
-    if not (vim.uv or vim.loop).fs_stat(lazypath) then
+    if not vim.loop.fs_stat(lazypath) then
         vim.fn.system({
             "git",
             "clone",

@@ -48,8 +48,6 @@ autocmd Colorscheme * highlight EndOfBuffer ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Visual ctermbg=Grey guibg=Grey
 autocmd Colorscheme * highlight LineNr ctermbg=NONE guibg=NONE ctermfg=Grey guifg=Grey
 autocmd Colorscheme * highlight MatchParen ctermbg=Grey guibg=Grey cterm=reverse,bold gui=reverse,bold
-
-" colorscheme desert
 syntax on
 
 lua require('init')
