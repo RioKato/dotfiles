@@ -163,6 +163,7 @@ require("lazy").setup({
             })
 
             vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
+            vim.opt.updatetime = 500
 
             vim.diagnostic.config({
                 virtual_text = false,
@@ -194,6 +195,16 @@ require("lazy").setup({
                                 end
                             end, opts)
                         end
+
+                        vim.api.nvim_create_autocmd("CursorHoldI", {
+                            buffer = bufnr,
+                            callback = function()
+                                if vim.fn.pumvisible() == 0 then
+                                    local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true)
+                                    vim.api.nvim_feedkeys(key, "m", false)
+                                end
+                            end,
+                        })
                     end,
                 })
             end
