@@ -36,7 +36,7 @@ local function setup_quickfix()
         "<cmd>caddexpr printf('%s:%d:%d:%s', expand('%'), line('.'), col('.'), getline('.'))<cr>"
     )
 
-    vim.api.nvim_create_autocmd({ "FileType" }, {
+    vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = function(ev)
             local opts = { buffer = ev.bufnr }
@@ -401,7 +401,7 @@ require("lazy").setup({
                 vim.fn.system({ "xdg-open", vim.fn.expand("<cfile>") })
             end, {})
 
-            vim.api.nvim_create_autocmd({ "FileType" }, {
+            vim.api.nvim_create_autocmd("FileType", {
                 pattern = "markdown",
                 callback = function(ev)
                     local opts = { buffer = ev.bufnr }
