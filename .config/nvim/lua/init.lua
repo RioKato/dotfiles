@@ -56,6 +56,34 @@ local function setup_quickfix()
     })
 end
 
+local function setup_completion()
+    vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
+    vim.opt.updatetime = 500
+
+    local keymaps = {}
+    keymaps["<Tab>"] = "<C-n>"
+    keymaps["<C-h>"] = "<C-h><C-x><C-o>"
+
+    for key, replace in pairs(keymaps) do
+        vim.keymap.set("i", key, function()
+            if vim.o.omnifunc == "" or vim.fn.pumvisible() == 0 then
+                return vim.api.nvim_replace_termcodes(key, true, true, true)
+            else
+                return vim.api.nvim_replace_termcodes(replace, true, true, true)
+            end
+        end, { expr = true })
+    end
+
+    vim.api.nvim_create_autocmd("CursorHoldI", {
+        callback = function()
+            if vim.o.omnifunc ~= "" and vim.fn.pumvisible() == 0 then
+                local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true)
+                vim.api.nvim_feedkeys(key, "n", false)
+            end
+        end,
+    })
+end
+
 local function install_lazy()
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
@@ -74,6 +102,7 @@ local function install_lazy()
 end
 
 setup_quickfix()
+setup_completion()
 install_lazy()
 
 require("lazy").setup({
@@ -162,9 +191,6 @@ require("lazy").setup({
                 ensure_installed = ensure,
             })
 
-            vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
-            vim.opt.updatetime = 500
-
             vim.diagnostic.config({
                 virtual_text = false,
                 signs = false,
@@ -178,31 +204,6 @@ require("lazy").setup({
                             autotrigger = true,
                             convert = function(item)
                                 return { abbr = item.label:gsub("%b()", "") }
-                            end,
-                        })
-
-                        local opts = { buffer = bufnr, expr = true }
-                        local keymaps = {}
-                        keymaps["<Tab>"] = "<C-n>"
-                        keymaps["<C-h>"] = "<C-h><C-x><C-o>"
-
-                        for key, replace in pairs(keymaps) do
-                            vim.keymap.set("i", key, function()
-                                if vim.o.omnifunc == "" or vim.fn.pumvisible() == 0 then
-                                    return vim.api.nvim_replace_termcodes(key, true, true, true)
-                                else
-                                    return vim.api.nvim_replace_termcodes(replace, true, true, true)
-                                end
-                            end, opts)
-                        end
-
-                        vim.api.nvim_create_autocmd("CursorHoldI", {
-                            buffer = bufnr,
-                            callback = function()
-                                if vim.o.omnifunc ~= "" and vim.fn.pumvisible() == 0 then
-                                    local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true)
-                                    vim.api.nvim_feedkeys(key, "n", false)
-                                end
                             end,
                         })
                     end,
