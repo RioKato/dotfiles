@@ -15,42 +15,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 local function setup_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
-
-    vim.keymap.set("n", "<C-n>", function()
-        local ok, exception = pcall(vim.cmd, "cnext")
-        if not ok and string.find(exception, "E553") then
-            vim.cmd("cfirst")
-        end
-    end)
-
-    vim.keymap.set("n", "<C-p>", function()
-        local ok, exception = pcall(vim.cmd, "cprevious")
-        if not ok and string.find(exception, "E553") then
-            vim.cmd("clast")
-        end
-    end)
-
-    vim.keymap.set(
-        "n",
-        "<C-a>",
-        "<cmd>caddexpr printf('%s:%d:%d:%s', expand('%'), line('.'), col('.'), getline('.'))<cr>"
-    )
+    vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>")
+    vim.keymap.set("n", "<C-p>", "<cmd>cprevious<cr>")
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = function(ev)
             local opts = { buffer = ev.bufnr }
-
             vim.keymap.set("n", "q", "<cmd>cclose<cr>", opts)
-
-            vim.keymap.set("n", "<C-o>", function()
-                pcall(vim.cmd, "colder")
-            end, opts)
-
-            vim.keymap.set("n", "<C-i>", function()
-                pcall(vim.cmd, "cnewer")
-            end, opts)
-
+            vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", opts)
+            vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", opts)
             vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", opts)
         end,
     })
@@ -58,7 +32,6 @@ end
 
 local function setup_completion()
     vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
-    vim.opt.updatetime = 500
 
     local keymaps = {}
     keymaps["<Tab>"] = "<C-n>"
@@ -69,15 +42,6 @@ local function setup_completion()
             return vim.fn.pumvisible() == 0 and key or replace
         end, { expr = true })
     end
-
-    vim.api.nvim_create_autocmd("CursorHoldI", {
-        callback = function()
-            if vim.o.omnifunc ~= "" and vim.fn.pumvisible() == 0 then
-                local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true)
-                vim.api.nvim_feedkeys(key, "n", false)
-            end
-        end,
-    })
 end
 
 local function install_lazy()
