@@ -66,11 +66,7 @@ local function setup_completion()
 
     for key, replace in pairs(keymaps) do
         vim.keymap.set("i", key, function()
-            if vim.o.omnifunc == "" or vim.fn.pumvisible() == 0 then
-                return vim.api.nvim_replace_termcodes(key, true, true, true)
-            else
-                return vim.api.nvim_replace_termcodes(replace, true, true, true)
-            end
+            return vim.fn.pumvisible() == 0 and key or replace
         end, { expr = true })
     end
 
