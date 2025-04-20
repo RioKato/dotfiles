@@ -15,16 +15,16 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 local function setup_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
-    vim.keymap.set("n", "<C-n>", "<cmd>cnext<cr>")
-    vim.keymap.set("n", "<C-p>", "<cmd>cprevious<cr>")
+    vim.keymap.set("n", "<C-n>", "<cmd>silent! cnext<cr>")
+    vim.keymap.set("n", "<C-p>", "<cmd>silent! cprevious<cr>")
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = function(ev)
             local opts = { buffer = ev.bufnr }
             vim.keymap.set("n", "q", "<cmd>cclose<cr>", opts)
-            vim.keymap.set("n", "<C-o>", "<cmd>colder<cr>", opts)
-            vim.keymap.set("n", "<C-i>", "<cmd>cnewer<cr>", opts)
+            vim.keymap.set("n", "<C-o>", "<cmd>silent! colder<cr>", opts)
+            vim.keymap.set("n", "<C-i>", "<cmd>silent! cnewer<cr>", opts)
             vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", opts)
         end,
     })
