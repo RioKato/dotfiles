@@ -201,7 +201,7 @@ require("lazy").setup({
                             callback = function()
                                 if vim.fn.pumvisible() == 0 then
                                     local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true)
-                                    vim.api.nvim_feedkeys(key, "m", false)
+                                    vim.api.nvim_feedkeys(key, "n", false)
                                 end
                             end,
                         })
