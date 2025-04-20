@@ -188,7 +188,7 @@ require("lazy").setup({
 
                         for key, replace in pairs(keymaps) do
                             vim.keymap.set("i", key, function()
-                                if vim.fn.pumvisible() == 0 then
+                                if vim.o.omnifunc == "" or vim.fn.pumvisible() == 0 then
                                     return vim.api.nvim_replace_termcodes(key, true, true, true)
                                 else
                                     return vim.api.nvim_replace_termcodes(replace, true, true, true)
@@ -199,7 +199,7 @@ require("lazy").setup({
                         vim.api.nvim_create_autocmd("CursorHoldI", {
                             buffer = bufnr,
                             callback = function()
-                                if vim.fn.pumvisible() == 0 then
+                                if vim.o.omnifunc ~= "" and vim.fn.pumvisible() == 0 then
                                     local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, true, true)
                                     vim.api.nvim_feedkeys(key, "n", false)
                                 end
