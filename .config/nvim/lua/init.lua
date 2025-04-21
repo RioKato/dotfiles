@@ -19,7 +19,7 @@ local function setup_quickfix()
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = function(ev)
-            local opts = { buffer = ev.bufnr }
+            local opts = { buffer = ev.buf }
             vim.keymap.set("n", "q", "<cmd>cclose<cr>", opts)
             vim.keymap.set("n", "<C-o>", "<cmd>silent! colder<cr>", opts)
             vim.keymap.set("n", "<C-i>", "<cmd>silent! cnewer<cr>", opts)
@@ -268,7 +268,7 @@ require("lazy").setup({
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspConfig", {}),
                 callback = function(ev)
-                    local opts = { buffer = ev.bufnr }
+                    local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
                     vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
@@ -289,7 +289,7 @@ require("lazy").setup({
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = { "fugitiveblame", "git" },
                 callback = function(ev)
-                    local opts = { buffer = ev.bufnr }
+                    local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "q", "<cmd>close<cr>", opts)
                 end,
             })
@@ -365,7 +365,7 @@ require("lazy").setup({
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "markdown",
                 callback = function(ev)
-                    local opts = { buffer = ev.bufnr }
+                    local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", opts)
                     vim.keymap.set("n", "go", "<cmd>ImageOpen<cr>", opts)
                 end,
