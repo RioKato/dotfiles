@@ -290,7 +290,7 @@ require("lazy").setup({
                 pattern = { "fugitiveblame", "git" },
                 callback = function(ev)
                     local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "q", "<cmd>close<cr>", opts)
+                    vim.keymap.set("n", "q", "<cmd>bd<cr>", opts)
                 end,
             })
 
