@@ -30,9 +30,10 @@ end
 
 local function setup_completion()
     vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
-    local keymaps = {}
-    keymaps["<Tab>"] = "<C-n>"
-    keymaps["<C-h>"] = "<C-h><C-x><C-o>"
+    local keymaps = {
+        ["<Tab>"] = "<C-n>",
+        ["<C-h>"] = "<C-h><C-x><C-o>",
+    }
 
     for key, replace in pairs(keymaps) do
         vim.keymap.set("i", key, function()
