@@ -286,18 +286,10 @@ require("lazy").setup({
 
         config = function()
             vim.api.nvim_create_autocmd("FileType", {
-                pattern = "fugitiveblame",
+                pattern = { "fugitiveblame", "git" },
                 callback = function(ev)
                     local opts = { buffer = ev.bufnr }
                     vim.keymap.set("n", "q", "<cmd>close<cr>", opts)
-                end,
-            })
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "git",
-                callback = function(ev)
-                    local opts = { buffer = ev.bufnr }
-                    vim.keymap.set("n", "q", "<cmd>bd<cr>", opts)
                 end,
             })
 
