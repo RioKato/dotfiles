@@ -294,6 +294,17 @@ require("lazy").setup({
                 end,
             })
 
+            vim.api.nvim_create_autocmd("FileType", {
+                callback = function(ev)
+                    local opts = { buffer = ev.buf }
+                    local path = vim.fn.expand("%:p")
+
+                    if path:find("^fugitive://") then
+                        vim.keymap.set("n", "q", "<cmd>bd<cr>", opts)
+                    end
+                end,
+            })
+
             vim.keymap.set("n", "mt", "<cmd>Git blame -w<cr>")
         end,
     },
