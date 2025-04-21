@@ -304,12 +304,14 @@ require("lazy").setup({
 
         config = function()
             vim.keymap.set("n", "ml", "<cmd>GV<cr>")
+
             vim.keymap.set("n", "mf", function()
-                vim.cmd(string.format("GV -- %s", vim.fn.expand("%:p")))
-            end)
+                return string.format("<cmd>GV -- %s<cr>", vim.fn.expand("%:p"))
+            end, { expr = true })
+
             vim.keymap.set("n", "ms", function()
-                vim.cmd(string.format("GV -S %s", vim.fn.expand("<cword>")))
-            end)
+                return string.format("<cmd>GV -S %s<cr>", vim.fn.expand("<cword>"))
+            end, { expr = true })
         end,
     },
 
