@@ -2,9 +2,7 @@ vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
 
 vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        vim.cmd("clearjumps")
-    end,
+    command = "clearjumps",
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -32,7 +30,6 @@ end
 
 local function setup_completion()
     vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
-
     local keymaps = {}
     keymaps["<Tab>"] = "<C-n>"
     keymaps["<C-h>"] = "<C-h><C-x><C-o>"
@@ -261,12 +258,11 @@ require("lazy").setup({
                 },
             })
 
-            local opts = { silent = true }
-            vim.keymap.set("n", "<space>f", builtin.find_files, opts)
-            vim.keymap.set("n", "<space>b", builtin.buffers, opts)
-            vim.keymap.set("n", "<space>g", builtin.live_grep, opts)
-            vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find, opts)
-            vim.keymap.set("n", "<C-s>", builtin.grep_string, opts)
+            vim.keymap.set("n", "<space>f", builtin.find_files)
+            vim.keymap.set("n", "<space>b", builtin.buffers)
+            vim.keymap.set("n", "<space>g", builtin.live_grep)
+            vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find)
+            vim.keymap.set("n", "<C-s>", builtin.grep_string)
 
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -305,9 +301,7 @@ require("lazy").setup({
                 end,
             })
 
-            vim.keymap.set("n", "mt", function()
-                vim.cmd("Git blame -w")
-            end)
+            vim.keymap.set("n", "mt", "<cmd>Git blame -w<cr>")
         end,
     },
 
