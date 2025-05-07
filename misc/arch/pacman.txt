@@ -29,7 +29,6 @@ nodejs
 npm
 php
 ruby
-mono
 
 zsh
 zsh-completions
