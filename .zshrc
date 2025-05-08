@@ -121,6 +121,7 @@ alias gcc-cov='gcc -coverage'
 alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias git-pclone='git clone --filter=blob:none -n'
 alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
+alias rrrecord='rr record --bind-to-cpu=0'
 
 if command -v nvim &> /dev/null
 then
@@ -142,7 +143,6 @@ esac
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
-export PATH=/opt/nvim-linux-x86_64/bin:$PATH
 export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
