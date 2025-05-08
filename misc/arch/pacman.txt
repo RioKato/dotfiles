@@ -10,6 +10,7 @@ plank
 picom
 cutefish-icons
 paru
+vivaldi
 
 gcc
 clang
