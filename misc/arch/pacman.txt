@@ -9,7 +9,7 @@ fcitx5-mozc
 plank
 picom
 cutefish-icons
-paru
+yay
 vivaldi
 
 gcc
