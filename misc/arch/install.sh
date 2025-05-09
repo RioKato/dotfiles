@@ -10,4 +10,6 @@ rustup default stable
 rustup component add rust-analyzer
 go install golang.org/x/tools/gopls@latest
 
+gsettings set org.gnome.desktop.interface gtk-key-theme "Emacs"
+
 exit 0
