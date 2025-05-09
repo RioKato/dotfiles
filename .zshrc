@@ -140,6 +140,8 @@ case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
   Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
 esac
 
+export WWW_HOME=https://www.google.com
+
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
