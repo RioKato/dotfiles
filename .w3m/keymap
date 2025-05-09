@@ -1,5 +1,26 @@
+# Navigation
+keymap $ LINE_END
+keymap ^ LINE_BEGIN
+keymap 0 LINE_BEGIN
+keymap G END
+keymap gg BEGIN
+keymap ESC-g GOTO_LINE
+keymap w NEXT_WORD
+keymap b PREV_WORD
+
+# Search
+keymap / WHEREIS
+keymap ? SEARCH_BACK
+keymap n SEARCH_NEXT
+keymap N SEARCH_PREV
+
+# Link
 keymap C-n NEXT_LINK
 keymap C-p PREV_LINK
+
+# History
 keymap C-o BACK
-keymap b PREV_WORD
+
+# Etc
 keymap SPC EXTERN
+keymap yy EXTERN 'printf %s | xclip -selection clipboard'
