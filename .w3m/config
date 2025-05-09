@@ -1,0 +1,6 @@
+display_image 0
+anchor_color cyan
+image_color white
+form_color white
+mark_color white
+extbrowser xdg-open %s
