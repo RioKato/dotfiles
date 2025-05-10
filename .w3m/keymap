@@ -30,3 +30,4 @@ keymap C-w CLOSE_TAB
 keymap SPC EXTERN
 keymap yy EXTERN 'printf %s | xclip -selection clipboard'
 keymap s COMMAND "SET_OPTION dictcommand=file:///cgi-bin/google.cgi; DICT_WORD"
+keymap S COMMAND "SET_OPTION dictcommand=file:///cgi-bin/google_tab.cgi; DICT_WORD"
