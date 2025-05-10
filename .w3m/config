@@ -4,3 +4,4 @@ image_color white
 form_color white
 mark_color white
 extbrowser xdg-open %s
+cgi_bin ~/.w3m/cgi-bin
