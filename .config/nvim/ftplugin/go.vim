@@ -1,5 +1,5 @@
 function RunGo()
-  let l:command = printf("go run %s", shellescape(@%, 1))
+  let l:command = 'go run "$(dirname $(go env GOMOD))/main.go"'
   write
   call RunTmux('go', command)
 endfunction
