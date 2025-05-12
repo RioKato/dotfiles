@@ -9,7 +9,8 @@ def chrome(url: str):
     params = urllib.parse.urlencode(params)
     url = f"https://translate.google.com/translate?{params}"
     command = ["/opt/google/chrome/chrome", "--headless", "--dump-dom", url]
-    subprocess.run(command, stderr=subprocess.DEVNULL, text=True, check=True)
+    stdin = stderr = subprocess.DEVNULL
+    subprocess.run(command, stdin=stdin, stderr=stderr, text=True, check=True)
 
 
 def main():
