@@ -4,31 +4,46 @@ import subprocess
 import urllib.parse
 
 
-def chrome(url: str):
+def chrome(url: str) -> str:
     params = {"hl": "en", "sl": "auto", "tl": "ja", "u": url}
     params = urllib.parse.urlencode(params)
     url = f"https://translate.google.com/translate?{params}"
     command = ["/opt/google/chrome/chrome", "--headless", "--dump-dom", url]
     stdin = stderr = subprocess.DEVNULL
-    subprocess.run(command, stdin=stdin, stderr=stderr, text=True, check=True)
+    stdout = subprocess.PIPE
+    return subprocess.run(
+        command,
+        stdin=stdin,
+        stdout=stdout,
+        stderr=stderr,
+        text=True,
+        check=True,
+    ).stdout
 
 
 def main():
     import argparse
     import os
 
-    url = os.getenv("W3M_URL")
+    w3murl = os.getenv("W3M_URL")
 
-    if not url:
+    if w3murl:
+        url = w3murl
+    else:
         parser = argparse.ArgumentParser()
         parser.add_argument("url")
         args = parser.parse_args()
         url = args.url
-    else:
-        print("Content-Type: text/html")
-        print()
 
-    chrome(url)
+    html = chrome(url)
+
+    if w3murl:
+        print("Content-Type: text/html")
+        print(f"Content-Lenght: {len(html)}")
+        print()
+        print(html)
+    else:
+        print(html)
 
 
 if __name__ == "__main__":
