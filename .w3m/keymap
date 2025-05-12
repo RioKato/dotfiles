@@ -32,5 +32,4 @@ keymap Q EXIT
 
 # Etc
 keymap SPC EXTERN
-keymap s COMMAND "SET_OPTION dictcommand=file:///cgi-bin/google.cgi; DICT_WORD"
-keymap S COMMAND "SET_OPTION dictcommand=file:///cgi-bin/google_tab.cgi; DICT_WORD"
+keymap s DICT_WORD

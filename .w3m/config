@@ -6,6 +6,8 @@ form_color white
 mark_color white
 extbrowser xdg-open %s > /dev/null 2>&1
 cgi_bin ~/.w3m/cgi-bin
+dictcommand file:///cgi-bin/google.cgi
+
 # http_proxy http://localhost:8080
 # ssl_ca_file ~/.mitmproxy/mitmproxy-ca-cert.pem
 
