@@ -1,4 +1,4 @@
-#!env python
+#!/usr/bin/python
 
 import subprocess
 import urllib.parse
@@ -9,22 +9,25 @@ def chrome(url: str):
     params = urllib.parse.urlencode(params)
     url = f"https://translate.google.com/translate?{params}"
     command = ["/opt/google/chrome/chrome", "--headless", "--dump-dom", url]
-    subprocess.run(command, stderr=subprocess.DEVNULL, check=True)
+    subprocess.run(command, stderr=subprocess.DEVNULL, text=True, check=True)
 
 
 def main():
     import argparse
     import os
 
-    parser = argparse.ArgumentParser()
+    url = os.getenv("W3M_URL")
 
-    if w3m_url := os.getenv("W3M_URL"):
-        parser.add_argument("--url", "-u", default=w3m_url)
-    else:
+    if not url:
+        parser = argparse.ArgumentParser()
         parser.add_argument("url")
+        args = parser.parse_args()
+        url = args.url
+    else:
+        print("Content-Type: text/html")
+        print()
 
-    args = parser.parse_args()
-    chrome(args.url)
+    chrome(url)
 
 
 if __name__ == "__main__":
