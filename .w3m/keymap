@@ -24,7 +24,11 @@ keymap C-p PREV_LINK
 keymap C-o BACK
 
 # Tab
-keymap C-w CLOSE_TAB
+keymap t NEW_TAB
+keymap q CLOSE_TAB
+
+# EXIT
+keymap Q EXIT
 
 # Etc
 keymap SPC EXTERN
