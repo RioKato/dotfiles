@@ -42,6 +42,7 @@ jq
 bc
 wget
 p7zip
+w3m
 
 docker
 docker-buildx
