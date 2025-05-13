@@ -34,3 +34,5 @@ keymap Q EXIT
 keymap SPC EXTERN
 keymap s DICT_WORD
 keymap 1 GOTO file:///cgi-bin/trans.cgi
+keymap 2 VIEW_BOOKMARK
+keymap 3 ADD_BOOKMARK
