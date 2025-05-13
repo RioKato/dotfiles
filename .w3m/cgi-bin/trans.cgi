@@ -14,17 +14,16 @@ def trans(url: str) -> str:
         raise FileNotFoundError("chrome not found")
 
     URL = "https://translate.google.com/website"
-    params = {"hl": "en", "sl": "auto", "tl": "ja", "u": url}
-    params = urllib.parse.urlencode(params)
-    command = [
-        chrome,
-        "--headless",
-        "--dump-dom",
-        f"{URL}?{params}",
-    ]
 
+    if not url.startswith(URL):
+        params = {"hl": "en", "sl": "auto", "tl": "ja", "u": url}
+        params = urllib.parse.urlencode(params)
+        url = f"{URL}?{params}"
+
+    command = [chrome, "--headless", "--dump-dom", url]
     stdin = stderr = subprocess.DEVNULL
     stdout = subprocess.PIPE
+
     return subprocess.run(
         command,
         stdin=stdin,
