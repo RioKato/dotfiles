@@ -1,18 +1,9 @@
 #!/usr/bin/python
 
-import os
-import subprocess
 import urllib.parse
-import shutil
 
 
-def trans(url: str) -> str:
-    chrome = os.getenv("CHROME_PATH") or "chrome"
-    chrome = shutil.which(chrome)
-
-    if not chrome:
-        raise FileNotFoundError("chrome not found")
-
+def transurl(url: str) -> str:
     netloc = urllib.parse.urlparse(url).netloc
 
     if not netloc.endswith(".translate.goog"):
@@ -20,18 +11,7 @@ def trans(url: str) -> str:
         params = urllib.parse.urlencode(params)
         url = f"https://translate.google.com/website?{params}"
 
-    command = [chrome, "--headless", "--dump-dom", url]
-    stdin = stderr = subprocess.DEVNULL
-    stdout = subprocess.PIPE
-
-    return subprocess.run(
-        command,
-        stdin=stdin,
-        stdout=stdout,
-        stderr=stderr,
-        text=True,
-        check=True,
-    ).stdout
+    return url
 
 
 def main():
@@ -48,12 +28,17 @@ def main():
         args = parser.parse_args()
         url = args.url
 
-    html = trans(url)
+    url = transurl(url)
 
     if w3murl:
-        html = f"Content-Type: text/html\nContent-Length: {len(html)}\n\n{html}"
+        url = [
+            "w3m-control: BACK",
+            f"w3m-control: GOTO {url}",
+            "w3m-control: EXTERN",
+        ]
+        url = "\n".join(url)
 
-    print(html)
+    print(url)
 
 
 if __name__ == "__main__":
