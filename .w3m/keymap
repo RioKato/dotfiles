@@ -27,7 +27,7 @@ keymap C-o BACK
 keymap t NEW_TAB
 keymap q CLOSE_TAB
 
-# EXIT
+# Exit
 keymap Q EXIT
 
 # Etc
