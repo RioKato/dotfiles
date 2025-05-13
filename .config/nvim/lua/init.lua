@@ -30,6 +30,7 @@ end
 
 local function setup_completion()
     vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
+
     local keymaps = {
         ["<Tab>"] = "<C-n>",
         ["<C-h>"] = "<C-h><C-x><C-o>",
@@ -40,6 +41,15 @@ local function setup_completion()
             return vim.fn.pumvisible() == 0 and key or replace
         end, { expr = true })
     end
+
+    vim.api.nvim_create_autocmd("InsertCharPre", {
+        callback = function()
+            if vim.fn.pumvisible() == 0 then
+                local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true)
+                vim.api.nvim_feedkeys(key, "n", false)
+            end
+        end,
+    })
 end
 
 local function install_lazy()
