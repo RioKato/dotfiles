@@ -13,12 +13,12 @@ def trans(url: str) -> str:
     if not chrome:
         raise FileNotFoundError("chrome not found")
 
-    URL = "https://translate.google.com/website"
+    netloc = urllib.parse.urlparse(url).netloc
 
-    if not url.startswith(URL):
+    if not netloc.endswith(".translate.goog"):
         params = {"hl": "en", "sl": "auto", "tl": "ja", "u": url}
         params = urllib.parse.urlencode(params)
-        url = f"{URL}?{params}"
+        url = f"https://translate.google.com/website?{params}"
 
     command = [chrome, "--headless", "--dump-dom", url]
     stdin = stderr = subprocess.DEVNULL
