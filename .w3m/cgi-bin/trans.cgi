@@ -51,12 +51,9 @@ def main():
     html = trans(url)
 
     if w3murl:
-        print("Content-Type: text/html")
-        print(f"Content-Lenght: {len(html)}")
-        print()
-        print(html)
-    else:
-        print(html)
+        html = f"Content-Type: text/html\nContent-Length: {len(html)}\n\n{html}"
+
+    print(html)
 
 
 if __name__ == "__main__":
