@@ -41,17 +41,6 @@ local function setup_completion()
             return vim.fn.pumvisible() == 0 and key or replace
         end, { expr = true })
     end
-
-    vim.api.nvim_create_autocmd("InsertCharPre", {
-        callback = function()
-            if vim.o.omnifunc ~= "" then
-                if vim.fn.pumvisible() == 0 then
-                    local key = vim.api.nvim_replace_termcodes("<C-x><C-o>", true, false, true)
-                    vim.api.nvim_feedkeys(key, "n", false)
-                end
-            end
-        end,
-    })
 end
 
 local function install_lazy()
