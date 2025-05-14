@@ -61,7 +61,7 @@ local function install_lazy()
 end
 
 setup_quickfix()
-setup_completion()
+-- setup_completion()
 install_lazy()
 
 require("lazy").setup({
@@ -160,10 +160,10 @@ require("lazy").setup({
                 vim.lsp.config(name, {
                     on_attach = function(client, bufnr)
                         vim.lsp.completion.enable(true, client.id, bufnr, {
-                            autotrigger = true,
-                            convert = function(item)
-                                return { abbr = item.label:gsub("%b()", "") }
-                            end,
+                            -- autotrigger = true,
+                            -- convert = function(item)
+                            --     return { abbr = item.label:gsub("%b()", "") }
+                            -- end,
                         })
                     end,
                 })
@@ -171,6 +171,17 @@ require("lazy").setup({
 
             vim.lsp.enable(lss)
         end,
+    },
+
+    {
+        "saghen/blink.cmp",
+        version = "1.*",
+
+        opts = {
+            keymap = {
+                ["<Tab>"] = { "select_next" },
+            },
+        },
     },
 
     {
