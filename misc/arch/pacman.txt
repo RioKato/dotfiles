@@ -43,6 +43,7 @@ bc
 wget
 p7zip
 w3m
+nerd-fonts
 
 docker
 docker-buildx
