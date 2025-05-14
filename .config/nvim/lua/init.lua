@@ -178,8 +178,9 @@ require("lazy").setup({
         version = "1.*",
 
         opts = {
-            keymap = {
-                ["<Tab>"] = { "select_next" },
+            keymap = { preset = "super-tab" },
+            sources = {
+                default = { "lsp", "path", "buffer" },
             },
         },
     },
