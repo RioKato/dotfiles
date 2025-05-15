@@ -224,7 +224,6 @@ require("lazy").setup({
         config = function()
             local actions = require("telescope.actions")
             local builtin = require("telescope.builtin")
-            local lsputils = require("lsputils")
 
             require("telescope").setup({
                 defaults = {
@@ -254,7 +253,6 @@ require("lazy").setup({
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
                     vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
-                    vim.keymap.set("n", "<space>h", lsputils.symbols, opts)
                     vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
                     vim.keymap.set("n", "<space><space>", function()
                         vim.lsp.buf.format({ async = true })
