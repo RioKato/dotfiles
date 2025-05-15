@@ -334,6 +334,7 @@ require("lazy").setup({
         config = function()
             vim.g.graphviz_output_format = "jpg"
             vim.g.graphviz_viewer = "xdg-open"
+
             vim.api.nvim_create_autocmd("FileType", {
                 pattern = "dot",
                 callback = function(ev)
