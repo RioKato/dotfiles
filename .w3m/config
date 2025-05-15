@@ -1,5 +1,6 @@
 display_image 0
 use_mouse 0
+use_history 0
 anchor_color cyan
 image_color white
 form_color white
