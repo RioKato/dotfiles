@@ -73,36 +73,28 @@ require("lazy").setup({
 
     {
         "windwp/nvim-autopairs",
-
-        config = function()
-            require("nvim-autopairs").setup()
-        end,
+        opts = {},
     },
 
     {
         "Goose97/timber.nvim",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
 
-        config = function()
-            require("timber").setup({
-                log_templates = {
-                    default = {
-                        python = [[print(f"[%filename:%line_number] {%log_target=}")]],
-                        c = [[printf("[%filename:%line_number] %log_target=%s\n", %log_target);]],
-                    },
+        opts = {
+            log_templates = {
+                default = {
+                    python = [[print(f"[%filename:%line_number] {%log_target=}")]],
+                    c = [[printf("[%filename:%line_number] %log_target=%s\n", %log_target);]],
                 },
-            })
-        end,
+            },
+        },
     },
 
     { "itchyny/vim-qfedit" },
 
     {
         "williamboman/mason.nvim",
-
-        config = function()
-            require("mason").setup()
-        end,
+        opts = {},
     },
 
     {
@@ -190,22 +182,18 @@ require("lazy").setup({
             "nvimtools/none-ls.nvim",
         },
 
-        config = function()
-            require("mason-null-ls").setup({
-                ensure_installed = nil,
-                automatic_installation = true,
-            })
-        end,
+        opts = {
+            ensure_installed = nil,
+            automatic_installation = true,
+        },
     },
 
     {
         "nvim-treesitter/nvim-treesitter",
 
-        config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = { "c", "cpp", "python", "rust", "java", "vim" },
-            })
-        end,
+        opts = {
+            ensure_installed = { "c", "cpp", "python", "rust", "java", "vim" },
+        },
     },
 
     {
@@ -320,10 +308,7 @@ require("lazy").setup({
 
     {
         "linrongbin16/gitlinker.nvim",
-
-        config = function()
-            require("gitlinker").setup()
-        end,
+        opts = {},
     },
 
     {
@@ -351,29 +336,8 @@ require("lazy").setup({
     },
 
     {
-        "img-paste-devs/img-paste.vim",
-
-        config = function()
-            vim.g.mdip_imgdir = "image"
-            vim.g.mdip_imgdir_intext = "image"
-
-            vim.api.nvim_create_user_command("ImagePaste", function()
-                vim.fn["mdip#MarkdownClipboardImage"]()
-            end, {})
-
-            vim.api.nvim_create_user_command("ImageOpen", function()
-                vim.fn.system({ "xdg-open", vim.fn.expand("<cfile>") })
-            end, {})
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "markdown",
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "gp", "<cmd>ImagePaste<cr>", opts)
-                    vim.keymap.set("n", "go", "<cmd>ImageOpen<cr>", opts)
-                end,
-            })
-        end,
+        "HakonHarnes/img-clip.nvim",
+        opts = {},
     },
 
     {
