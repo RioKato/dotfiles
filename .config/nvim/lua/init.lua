@@ -337,4 +337,23 @@ require("lazy").setup({
             vim.keymap.set("n", "r", "<cmd>Graphviz!<cr>")
         end,
     },
+
+    {
+        "mracos/mermaid.vim",
+
+        config = function()
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "mermaid",
+                callback = function(ev)
+                    local opts = { buffer = ev.buf }
+                    vim.keymap.set("n", "r", function()
+                        local mmd = vim.fn.expand("%:p")
+                        local png = vim.fn.expand("%:p:r") .. ".png"
+                        vim.fn.system({ "mmdc", "-i", mmd, "-o", png })
+                        vim.fn.system({ "xdg-open", png })
+                    end, opts)
+                end,
+            })
+        end,
+    },
 })
