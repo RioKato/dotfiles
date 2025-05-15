@@ -328,5 +328,13 @@ require("lazy").setup({
         end,
     },
 
-    { "liuchengxu/graphviz.vim" },
+    {
+        "liuchengxu/graphviz.vim",
+
+        config = function()
+            vim.g.graphviz_output_format = "jpg"
+            vim.g.graphviz_viewer = "xdg-open"
+            vim.keymap.set("n", "r", "<cmd>Graphviz!<cr>")
+        end,
+    },
 })
