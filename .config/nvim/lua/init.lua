@@ -28,21 +28,6 @@ local function setup_quickfix()
     })
 end
 
-local function setup_completion()
-    vim.opt.completeopt = { "menu", "menuone", "noselect", "fuzzy" }
-
-    local keymaps = {
-        ["<Tab>"] = "<C-n>",
-        ["<C-h>"] = "<C-h><C-x><C-o>",
-    }
-
-    for key, replace in pairs(keymaps) do
-        vim.keymap.set("i", key, function()
-            return vim.fn.pumvisible() == 0 and key or replace
-        end, { expr = true })
-    end
-end
-
 local function install_lazy()
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
@@ -61,7 +46,6 @@ local function install_lazy()
 end
 
 setup_quickfix()
--- setup_completion()
 install_lazy()
 
 require("lazy").setup({
@@ -159,12 +143,7 @@ require("lazy").setup({
             for _, name in ipairs(lss) do
                 vim.lsp.config(name, {
                     on_attach = function(client, bufnr)
-                        vim.lsp.completion.enable(true, client.id, bufnr, {
-                            -- autotrigger = true,
-                            -- convert = function(item)
-                            --     return { abbr = item.label:gsub("%b()", "") }
-                            -- end,
-                        })
+                        vim.lsp.completion.enable(true, client.id, bufnr)
                     end,
                 })
             end
