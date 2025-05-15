@@ -314,18 +314,23 @@ require("lazy").setup({
     },
 
     {
-        "HakonHarnes/img-clip.nvim",
-        opts = {},
+        "iamcco/markdown-preview.nvim",
+        build = ":call mkdp#util#install()",
+
+        config = function()
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "markdown",
+                callback = function(ev)
+                    local opts = { buffer = ev.buf }
+                    vim.keymap.set("n", "r", "<cmd>MarkdownPreview<cr>", opts)
+                end,
+            })
+        end,
     },
 
     {
-        "voldikss/vim-translator",
-
-        config = function()
-            vim.g.translator_default_engines = { "google" }
-            vim.g.translator_target_lang = "ja"
-            vim.g.translator_window_type = "preview"
-        end,
+        "HakonHarnes/img-clip.nvim",
+        opts = {},
     },
 
     {
@@ -346,21 +351,12 @@ require("lazy").setup({
     },
 
     {
-        "mracos/mermaid.vim",
+        "voldikss/vim-translator",
 
         config = function()
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "mermaid",
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "r", function()
-                        local mmd = vim.fn.expand("%:p")
-                        local png = vim.fn.expand("%:p:r") .. ".png"
-                        vim.fn.system({ "mmdc", "-i", mmd, "-o", png })
-                        vim.fn.system({ "xdg-open", png })
-                    end, opts)
-                end,
-            })
+            vim.g.translator_default_engines = { "google" }
+            vim.g.translator_target_lang = "ja"
+            vim.g.translator_window_type = "preview"
         end,
     },
 })
