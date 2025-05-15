@@ -76,6 +76,8 @@ require("lazy").setup({
         opts = {},
     },
 
+    { "machakann/vim-sandwich" },
+
     {
         "Goose97/timber.nvim",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
