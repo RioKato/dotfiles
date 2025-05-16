@@ -135,18 +135,15 @@ require("lazy").setup({
             })
 
             vim.diagnostic.config({
-                virtual_text = false,
                 signs = false,
                 underline = true,
             })
 
-            for _, name in ipairs(servers) do
-                vim.lsp.config(name, {
-                    on_attach = function(client, bufnr)
-                        vim.lsp.completion.enable(true, client.id, bufnr)
-                    end,
-                })
-            end
+            vim.lsp.config("*", {
+                on_attach = function(client, bufnr)
+                    vim.lsp.completion.enable(true, client.id, bufnr)
+                end,
+            })
 
             vim.lsp.enable(servers)
         end,
