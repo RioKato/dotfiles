@@ -69,7 +69,13 @@ require("lazy").setup({
         end,
     },
 
-    { "deris/vim-shot-f" },
+    {
+        "unblevable/quick-scope",
+
+        init = function()
+            vim.g.qs_highlight_on_keys = { "f", "F", "t", "T" }
+        end,
+    },
 
     {
         "windwp/nvim-autopairs",
@@ -93,6 +99,8 @@ require("lazy").setup({
     },
 
     { "itchyny/vim-qfedit" },
+
+    { "jghauser/mkdir.nvim" },
 
     {
         "williamboman/mason.nvim",
@@ -310,6 +318,22 @@ require("lazy").setup({
     },
 
     {
+        "MeanderingProgrammer/render-markdown.nvim",
+        dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+
+        config = function()
+            require("render-markdown").setup({
+                sign = { enabled = false },
+            })
+        end,
+    },
+
+    {
+        "HakonHarnes/img-clip.nvim",
+        opts = {},
+    },
+
+    {
         "iamcco/markdown-preview.nvim",
         build = ":call mkdp#util#install()",
 
@@ -322,11 +346,6 @@ require("lazy").setup({
                 end,
             })
         end,
-    },
-
-    {
-        "HakonHarnes/img-clip.nvim",
-        opts = {},
     },
 
     {
