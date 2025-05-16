@@ -114,14 +114,12 @@ require("lazy").setup({
             }
 
             local lss = {
-                "pyright",
-                "ts_ls",
-                "cmake",
                 "clangd",
                 "rust_analyzer",
                 "gopls",
                 "codeqlls",
                 "jdtls",
+                unpack(ensure),
             }
 
             require("mason-lspconfig").setup({
