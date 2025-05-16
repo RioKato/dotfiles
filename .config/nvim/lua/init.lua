@@ -107,23 +107,23 @@ require("lazy").setup({
         },
 
         config = function()
-            local ensure = {
+            local ensure_installed = {
                 "pyright",
                 "ts_ls",
                 "cmake",
             }
 
-            local lss = {
+            local servers = {
                 "clangd",
                 "rust_analyzer",
                 "gopls",
                 "codeqlls",
                 "jdtls",
-                unpack(ensure),
+                unpack(ensure_installed),
             }
 
             require("mason-lspconfig").setup({
-                ensure_installed = ensure,
+                ensure_installed = ensure_installed,
             })
 
             vim.diagnostic.config({
@@ -132,7 +132,7 @@ require("lazy").setup({
                 underline = true,
             })
 
-            for _, name in ipairs(lss) do
+            for _, name in ipairs(servers) do
                 vim.lsp.config(name, {
                     on_attach = function(client, bufnr)
                         vim.lsp.completion.enable(true, client.id, bufnr)
@@ -140,7 +140,7 @@ require("lazy").setup({
                 })
             end
 
-            vim.lsp.enable(lss)
+            vim.lsp.enable(servers)
         end,
     },
 
