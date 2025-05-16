@@ -28,6 +28,32 @@ local function setup_quickfix()
     })
 end
 
+local function setup_lsp()
+    local servers = {
+        "pyright",
+        "ts_ls",
+        "cmake",
+        "clangd",
+        "rust_analyzer",
+        "gopls",
+        "codeqlls",
+        "jdtls",
+    }
+
+    vim.diagnostic.config({
+        signs = false,
+        underline = true,
+    })
+
+    vim.lsp.config("*", {
+        on_attach = function(client, bufnr)
+            vim.lsp.completion.enable(true, client.id, bufnr)
+        end,
+    })
+
+    vim.lsp.enable(servers)
+end
+
 local function install_lazy()
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
@@ -46,6 +72,7 @@ local function install_lazy()
 end
 
 setup_quickfix()
+setup_lsp()
 install_lazy()
 
 require("lazy").setup({
@@ -114,39 +141,9 @@ require("lazy").setup({
             "neovim/nvim-lspconfig",
         },
 
-        config = function()
-            local ensure_installed = {
-                "pyright",
-                "ts_ls",
-                "cmake",
-            }
-
-            local servers = {
-                "clangd",
-                "rust_analyzer",
-                "gopls",
-                "codeqlls",
-                "jdtls",
-                unpack(ensure_installed),
-            }
-
-            require("mason-lspconfig").setup({
-                ensure_installed = ensure_installed,
-            })
-
-            vim.diagnostic.config({
-                signs = false,
-                underline = true,
-            })
-
-            vim.lsp.config("*", {
-                on_attach = function(client, bufnr)
-                    vim.lsp.completion.enable(true, client.id, bufnr)
-                end,
-            })
-
-            vim.lsp.enable(servers)
-        end,
+        opts = {
+            ensure_installed = { "pyright", "ts_ls", "cmake" },
+        },
     },
 
     {
