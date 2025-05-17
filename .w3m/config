@@ -6,7 +6,7 @@ image_color white
 form_color white
 mark_color white
 extbrowser xdg-open %s > /dev/null 2>&1
-editor nvim -R %s
+editor nvim --server localhost:55555 --remote %s
 cgi_bin ~/.w3m/cgi-bin
 dictcommand file:///cgi-bin/search.cgi
 
