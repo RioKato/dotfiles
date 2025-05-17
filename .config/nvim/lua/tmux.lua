@@ -5,7 +5,11 @@ M.popup = function(name, command, directory)
         error("run inside a tmux session")
     end
 
-    directory = vim.fn.expand(directory)
+    if directory == nil then
+        directory = vim.fn.expand(directory)
+    else
+        directory = vim.fn.expand("%:p:h")
+    end
 
     command = string.format(
         "tmux new -A -s %s -c %s %s \\; set -w remain-on-exit on",
