@@ -128,10 +128,6 @@ then
   EDITOR=nvim
   alias vim=nvim
   alias view='nvim -R'
-
-  function send() {
-    nvim --server localhost:55555 --remote $(realpath $1)
-  }
 fi
 
 if command -v xdg-open &> /dev/null
