@@ -6,9 +6,9 @@ M.popup = function(name, command, directory)
     end
 
     if directory == nil then
-        directory = vim.fn.expand(directory)
-    else
         directory = vim.fn.expand("%:p:h")
+    else
+        directory = vim.fn.expand(directory)
     end
 
     command = string.format(
