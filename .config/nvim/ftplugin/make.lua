@@ -2,5 +2,5 @@ vim.bo.expandtab = false
 local tmux = require("tmux")
 
 vim.keymap.set("n", "r", function()
-    tmux.popup("make", "make", vim.fn.expand("%:p:h"))
+    tmux.popup("make", "make")
 end)
