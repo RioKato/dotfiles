@@ -2,7 +2,7 @@ local M = {}
 
 M.popup = function(name, command, directory)
     if vim.fn.getenv("TMUX") == nil then
-        error("Not in tmux session")
+        error("run inside a tmux session")
     end
 
     directory = vim.fn.expand(directory)
