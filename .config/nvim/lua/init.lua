@@ -28,6 +28,11 @@ local function setup_quickfix()
     })
 end
 
+local function setup_folding()
+    vim.opt.foldmethod = "expr"
+    vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+end
+
 local function setup_lsp()
     local servers = {
         "pyright",
@@ -72,6 +77,7 @@ local function install_lazy()
 end
 
 setup_quickfix()
+setup_folding()
 setup_lsp()
 install_lazy()
 
