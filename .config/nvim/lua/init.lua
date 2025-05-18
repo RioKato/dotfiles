@@ -31,6 +31,7 @@ end
 local function setup_folding()
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+
     vim.keymap.set("n", "zC", "<cmd>%foldclose!<cr>")
     vim.keymap.set("n", "zA", function()
         if vim.fn.foldclosed(".") >= 0 then
