@@ -34,6 +34,7 @@ local function setup_folding()
     vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
     vim.keymap.set("n", "zj", function()
+        vim.opt.foldenable = true
         vim.opt.foldlevel = vim.fn.foldlevel(".")
     end, { desc = "Set foldlevel" })
 end
