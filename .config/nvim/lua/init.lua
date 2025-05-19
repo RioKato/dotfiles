@@ -129,6 +129,8 @@ require("lazy").setup({
 
     { "itchyny/vim-qfedit" },
 
+    { "jrudess/vim-foldtext" },
+
     { "jghauser/mkdir.nvim" },
 
     {
