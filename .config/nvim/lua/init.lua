@@ -1,5 +1,6 @@
 vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
+vim.opt.foldenable = false
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
