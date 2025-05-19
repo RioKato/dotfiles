@@ -28,6 +28,41 @@ local function setup_quickfix()
     })
 end
 
+local function setup_mark()
+    vim.api.nvim_create_autocmd("FileType", {
+        callback = function(ev)
+            vim.keymap.set("n", "mm", function()
+                local qflist = {}
+
+                for _, mark in ipairs(vim.fn.getmarklist()) do
+                    if mark.mark:match("'[A-Z]") then
+                        table.insert(qflist, {
+                            filename = vim.fn.fnamemodify(mark.file, ":p"),
+                            lnum = mark.pos[2],
+                            col = mark.pos[3],
+                            text = mark.mark:sub(2),
+                        })
+                    end
+                end
+
+                for _, mark in ipairs(vim.fn.getmarklist(ev.buf)) do
+                    if mark.mark:match("'[a-z]") then
+                        table.insert(qflist, {
+                            bufnr = ev.buf,
+                            filename = mark.file,
+                            lnum = mark.pos[2],
+                            col = mark.pos[3],
+                            text = mark.mark:sub(2),
+                        })
+                    end
+                end
+
+                vim.fn.setqflist(qflist, "u")
+            end, { buffer = ev.buf })
+        end,
+    })
+end
+
 local function setup_folding()
     vim.opt.foldenable = false
     vim.opt.foldmethod = "expr"
@@ -87,6 +122,7 @@ local function install_lazy()
 end
 
 setup_quickfix()
+setup_mark()
 setup_folding()
 setup_lsp()
 install_lazy()
