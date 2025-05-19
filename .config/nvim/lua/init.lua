@@ -35,7 +35,11 @@ local function setup_folding()
 
     vim.keymap.set("n", "zj", function()
         vim.opt.foldenable = true
-        vim.opt.foldlevel = vim.fn.foldlevel(".")
+        local foldlevel = vim.fn.foldlevel(".")
+
+        if foldlevel ~= -1 then
+            vim.opt.foldlevel = foldlevel
+        end
     end, { desc = "Set foldlevel" })
 end
 
