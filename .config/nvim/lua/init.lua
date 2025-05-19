@@ -379,6 +379,7 @@ require("lazy").setup({
             triggers = {
                 { "<C-w>" },
                 { "z" },
+                { "m" },
             },
         },
     },

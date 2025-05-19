@@ -5,7 +5,7 @@ M.popup = function(name, command, directory)
         error("run inside a tmux session")
     end
 
-    directory = directory or vim.fn.expand("%:p:h")
+    directory = directory or vim.fn.getcwd()
 
     return vim.fn.system({
         "tmux",
