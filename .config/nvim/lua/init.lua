@@ -49,7 +49,6 @@ local function setup_mark()
                     if mark.mark:match("'[a-z]") then
                         table.insert(qflist, {
                             bufnr = ev.buf,
-                            filename = mark.file,
                             lnum = mark.pos[2],
                             col = mark.pos[3],
                             text = mark.mark:sub(2),
