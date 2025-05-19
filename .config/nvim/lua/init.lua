@@ -302,11 +302,11 @@ require("lazy").setup({
 
             vim.keymap.set("n", "mf", function()
                 return string.format("<cmd>GV -- %s<cr>", vim.fn.expand("%:p"))
-            end, { expr = true })
+            end, { expr = true, desc = "GV -- %:p" })
 
             vim.keymap.set("n", "ms", function()
                 return string.format("<cmd>GV -S %s<cr>", vim.fn.expand("<cword>"))
-            end, { expr = true })
+            end, { expr = true, desc = "GV -S <cword>" })
         end,
     },
 
