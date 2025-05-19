@@ -1,5 +1,7 @@
 vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 
 vim.api.nvim_create_autocmd("VimEnter", {
     command = "clearjumps",
@@ -26,20 +28,6 @@ local function setup_quickfix()
             vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", opts)
         end,
     })
-end
-
-local function setup_folding()
-    vim.opt.foldmethod = "expr"
-    vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-
-    vim.keymap.set("n", "zC", "<cmd>%foldclose!<cr>")
-    vim.keymap.set("n", "zA", function()
-        if vim.fn.foldclosed(".") >= 0 then
-            return "<cmd>foldopen!<cr>"
-        else
-            return "<cmd>%foldclose!<cr>"
-        end
-    end, { expr = true })
 end
 
 local function setup_lsp()
@@ -86,7 +74,6 @@ local function install_lazy()
 end
 
 setup_quickfix()
-setup_folding()
 setup_lsp()
 install_lazy()
 
