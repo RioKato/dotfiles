@@ -381,4 +381,14 @@ require("lazy").setup({
             vim.g.translator_window_type = "preview"
         end,
     },
+
+    {
+        "folke/which-key.nvim",
+
+        opts = {
+            triggers = {
+                { "z" },
+            },
+        },
+    },
 })
