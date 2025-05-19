@@ -104,7 +104,7 @@ require("lazy").setup({
         config = function()
             vim.keymap.set("n", "<C-t>", "<plug>(quickhl-manual-this)")
             vim.keymap.set("x", "<C-t>", "<plug>(quickhl-manual-this)")
-            vim.keymap.set("n", "<space>m", "<plug>(quickhl-manual-reset)")
+            vim.keymap.set("n", "gm", "<plug>(quickhl-manual-reset)")
         end,
     },
 
@@ -299,7 +299,7 @@ require("lazy").setup({
                 end,
             })
 
-            vim.keymap.set("n", "mt", "<cmd>Git blame -w<cr>")
+            vim.keymap.set("n", "gt", "<cmd>Git blame -w<cr>")
         end,
     },
 
@@ -308,13 +308,13 @@ require("lazy").setup({
         dependencies = { "tpope/vim-fugitive" },
 
         config = function()
-            vim.keymap.set("n", "ml", "<cmd>GV<cr>")
+            vim.keymap.set("n", "gl", "<cmd>GV<cr>")
 
-            vim.keymap.set("n", "mf", function()
+            vim.keymap.set("n", "gf", function()
                 return string.format("<cmd>GV -- %s<cr>", vim.fn.expand("%:p"))
             end, { expr = true, desc = "GV -- %:p" })
 
-            vim.keymap.set("n", "ms", function()
+            vim.keymap.set("n", "gs", function()
                 return string.format("<cmd>GV -S %s<cr>", vim.fn.expand("<cword>"))
             end, { expr = true, desc = "GV -S <cword>" })
         end,
@@ -389,7 +389,7 @@ require("lazy").setup({
             triggers = {
                 { "<C-w>" },
                 { "z" },
-                { "m" },
+                { "g" },
             },
         },
     },
