@@ -384,9 +384,11 @@ require("lazy").setup({
 
     {
         "folke/which-key.nvim",
+        enabled = true,
 
         opts = {
             triggers = {
+                { "<C-w>" },
                 { "z" },
             },
         },
