@@ -57,6 +57,7 @@ local function setup_mark()
                 end
 
                 vim.fn.setqflist(qflist, "u")
+                vim.cmd("copen")
             end, { buffer = ev.buf })
         end,
     })
