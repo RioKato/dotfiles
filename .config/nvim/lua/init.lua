@@ -73,6 +73,16 @@ local function setup_lsp()
         end,
     })
 
+    vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(ev)
+            local opts = { buffer = ev.buf }
+            vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
+            vim.keymap.set("n", "<space><space>", function()
+                vim.lsp.buf.format({ async = true })
+            end, opts)
+        end,
+    })
+
     vim.lsp.enable(servers)
 end
 
@@ -277,16 +287,11 @@ require("lazy").setup({
             vim.keymap.set("n", "``", builtin.marks)
 
             vim.api.nvim_create_autocmd("LspAttach", {
-                group = vim.api.nvim_create_augroup("UserLspConfig", {}),
                 callback = function(ev)
                     local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-                    vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
                     vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
-                    vim.keymap.set("n", "<space><space>", function()
-                        vim.lsp.buf.format({ async = true })
-                    end, opts)
                 end,
             })
         end,
