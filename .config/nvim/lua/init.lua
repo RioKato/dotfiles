@@ -407,6 +407,10 @@ require("lazy").setup({
                 { "z" },
                 { "g" },
             },
+            plugins = {
+                marks = false,
+                registers = false,
+            },
         },
     },
 })
