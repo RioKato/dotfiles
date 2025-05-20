@@ -40,12 +40,21 @@ local function setup_mark()
 
                 for _, mark in ipairs(vim.fn.getmarklist()) do
                     if mark.mark:match("'[A-Z]") then
-                        table.insert(qflist, {
-                            filename = vim.fn.fnamemodify(mark.file, ":p"),
-                            lnum = mark.pos[2],
-                            col = mark.pos[3],
-                            text = mark.mark:sub(2),
-                        })
+                        local entry = {}
+                        local filename = vim.fn.fnamemodify(mark.file, ":p")
+
+                        if filename == vim.fn.expand("%:p") then
+                            entry.bufnr = ev.buf
+                            local line = vim.fn.getline(mark.pos[2])
+                            entry.text = string.format("%s %s", mark.mark:sub(2), line)
+                        else
+                            entry.filename = filename
+                            entry.text = mark.mark:sub(2)
+                        end
+
+                        entry.lnum = mark.pos[2]
+                        entry.col = mark.pos[3]
+                        table.insert(qflist, entry)
                     end
                 end
 
