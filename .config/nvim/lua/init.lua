@@ -302,6 +302,10 @@ require("lazy").setup({
                         height = 0.99,
                     },
                 },
+                pickers = {
+                    lsp_definitions = { jump_type = "never" },
+                    lsp_references = { jump_type = "never" },
+                },
             })
 
             vim.keymap.set("n", "<space>f", builtin.find_files)
@@ -316,12 +320,6 @@ require("lazy").setup({
                     local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-                    vim.keymap.set("n", "<space>s", function()
-                        builtin.lsp_definitions({ jump_type = "split" })
-                    end, opts)
-                    vim.keymap.set("n", "<space>v", function()
-                        builtin.lsp_definitions({ jump_type = "vsplit" })
-                    end, opts)
                     vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
                     vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
                     vim.keymap.set("n", "<space><space>", function()
