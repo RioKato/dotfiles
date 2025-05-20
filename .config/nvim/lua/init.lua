@@ -33,7 +33,7 @@ local function setup_mark()
         command = "delmarks A-Za-z",
     })
 
-    vim.api.nvim_create_autocmd("FileType", {
+    vim.api.nvim_create_autocmd("BufEnter", {
         callback = function(ev)
             vim.keymap.set("n", "``", function()
                 local qflist = {}
