@@ -29,6 +29,10 @@ local function setup_quickfix()
 end
 
 local function setup_mark()
+    vim.api.nvim_create_autocmd("VimEnter", {
+        command = "delmarks A-Za-z",
+    })
+
     vim.api.nvim_create_autocmd("FileType", {
         callback = function(ev)
             vim.keymap.set("n", "mm", function()
@@ -47,17 +51,22 @@ local function setup_mark()
 
                 for _, mark in ipairs(vim.fn.getmarklist(ev.buf)) do
                     if mark.mark:match("'[a-z]") then
+                        local line = vim.fn.getline(mark.pos[2])
+                        local text = string.format("%s %s", mark.mark:sub(2), line)
+
                         table.insert(qflist, {
                             bufnr = ev.buf,
                             lnum = mark.pos[2],
                             col = mark.pos[3],
-                            text = mark.mark:sub(2),
+                            text = text,
                         })
                     end
                 end
 
-                vim.fn.setqflist(qflist, "u")
-                vim.cmd("copen")
+                if #qflist > 0 then
+                    vim.fn.setqflist(qflist, "u")
+                    vim.cmd("copen")
+                end
             end, { buffer = ev.buf })
         end,
     })
