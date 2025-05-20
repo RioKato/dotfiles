@@ -49,12 +49,11 @@ local function setup_mark()
 
                             if mark.file ~= nil then
                                 qf.filename = vim.fn.fnamemodify(mark.file, ":p")
-
-                                if qf.filename == vim.fn.expand("%:p") then
-                                    qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum))
-                                end
                             else
                                 qf.bufnr = ev.buf
+                            end
+
+                            if qf.bufnr ~= nil or qf.filename == vim.fn.expand("%:p") then
                                 qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum))
                             end
 
