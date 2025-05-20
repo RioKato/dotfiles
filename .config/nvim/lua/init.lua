@@ -41,23 +41,23 @@ local function setup_mark()
                 for _, marklist in ipairs({ vim.fn.getmarklist(), vim.fn.getmarklist(ev.buf) }) do
                     for _, mark in ipairs(marklist) do
                         if mark.mark:match("'[A-Za-z]") then
-                            local qf = {}
+                            local qf = {
+                                lnum = mark.pos[2],
+                                col = mark.pos[3],
+                                text = mark.mark:sub(2),
+                            }
 
                             if mark.file ~= nil then
                                 qf.filename = vim.fn.fnamemodify(mark.file, ":p")
 
                                 if qf.filename == vim.fn.expand("%:p") then
-                                    qf.text = string.format("%s %s", mark.mark:sub(2), vim.fn.getline(mark.pos[2]))
-                                else
-                                    qf.text = mark.mark:sub(2)
+                                    qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum))
                                 end
                             else
                                 qf.bufnr = ev.buf
-                                qf.text = string.format("%s %s", mark.mark:sub(2), vim.fn.getline(mark.pos[2]))
+                                qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum))
                             end
 
-                            qf.lnum = mark.pos[2]
-                            qf.col = mark.pos[3]
                             table.insert(qflist, qf)
                         end
                     end
