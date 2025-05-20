@@ -54,7 +54,7 @@ local function setup_mark()
                             end
 
                             if qf.bufnr ~= nil or qf.filename == vim.fn.expand("%:p") then
-                                qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum))
+                                qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum):sub(qf.col))
                             end
 
                             table.insert(qflist, qf)
@@ -62,10 +62,8 @@ local function setup_mark()
                     end
                 end
 
-                if #qflist > 0 then
-                    vim.fn.setqflist(qflist, "u")
-                    vim.cmd("copen")
-                end
+                vim.fn.setqflist(qflist, "u")
+                vim.cmd("copen")
             end, { buffer = ev.buf })
         end,
     })
