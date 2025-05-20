@@ -50,18 +50,7 @@ local function setup_folding()
     end, { desc = "Set foldlevel" })
 end
 
-local function setup_lsp()
-    local servers = {
-        "pyright",
-        "ts_ls",
-        "cmake",
-        "clangd",
-        "rust_analyzer",
-        "gopls",
-        "codeqlls",
-        "jdtls",
-    }
-
+local function setup_lsp(servers)
     vim.diagnostic.config({
         signs = false,
         underline = true,
@@ -103,9 +92,20 @@ local function install_lazy()
     vim.opt.rtp:prepend(path)
 end
 
+local servers = {
+    "pyright",
+    "ts_ls",
+    "cmake",
+    "clangd",
+    "rust_analyzer",
+    "gopls",
+    "codeqlls",
+    "jdtls",
+}
+
 setup_quickfix()
 setup_folding()
-setup_lsp()
+setup_lsp(servers)
 install_lazy()
 
 require("lazy").setup({
