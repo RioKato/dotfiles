@@ -2,7 +2,6 @@ xorg-xmodmap
 xorg-xhost
 xsel
 xclip
-xdotool
 gnome-keyring
 fcitx5-im
 fcitx5-mozc
