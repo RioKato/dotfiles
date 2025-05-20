@@ -5,6 +5,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
     command = "clearjumps",
 })
 
+vim.api.nvim_create_autocmd("VimEnter", {
+    command = "delmarks 0-9A-Za-z^[]",
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
@@ -24,48 +28,6 @@ local function setup_quickfix()
             vim.keymap.set("n", "<C-o>", "<cmd>silent! colder<cr>", opts)
             vim.keymap.set("n", "<C-i>", "<cmd>silent! cnewer<cr>", opts)
             vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", opts)
-        end,
-    })
-end
-
-local function setup_mark()
-    vim.api.nvim_create_autocmd("VimEnter", {
-        command = "delmarks A-Za-z",
-    })
-
-    vim.api.nvim_create_autocmd("BufEnter", {
-        callback = function(ev)
-            vim.keymap.set("n", "``", function()
-                local qflist = {}
-
-                for _, marklist in ipairs({ vim.fn.getmarklist(), vim.fn.getmarklist(ev.buf) }) do
-                    for _, mark in ipairs(marklist) do
-                        if mark.mark:match("'[A-Za-z]") then
-                            local qf = {
-                                lnum = mark.pos[2],
-                                col = mark.pos[3],
-                                text = mark.mark:sub(2),
-                            }
-
-                            if mark.file ~= nil then
-                                qf.filename = vim.fn.fnamemodify(mark.file, ":p")
-                            else
-                                qf.bufnr = ev.buf
-                            end
-
-                            if qf.bufnr ~= nil or qf.filename == vim.fn.expand("%:p") then
-                                local message = vim.fn.getline(qf.lnum):sub(qf.col)
-                                qf.text = string.format("%s | %s", qf.text, message)
-                            end
-
-                            table.insert(qflist, qf)
-                        end
-                    end
-                end
-
-                vim.fn.setqflist(qflist, "u")
-                vim.cmd("copen")
-            end, { buffer = ev.buf })
         end,
     })
 end
@@ -132,7 +94,6 @@ local function install_lazy()
 end
 
 setup_quickfix()
-setup_mark()
 setup_folding()
 setup_lsp()
 install_lazy()
@@ -313,6 +274,7 @@ require("lazy").setup({
             vim.keymap.set("n", "<space>g", builtin.live_grep)
             vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find)
             vim.keymap.set("n", "<C-s>", builtin.grep_string)
+            vim.keymap.set("n", "``", builtin.marks)
 
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = vim.api.nvim_create_augroup("UserLspConfig", {}),
