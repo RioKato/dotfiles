@@ -35,7 +35,7 @@ local function setup_mark()
 
     vim.api.nvim_create_autocmd("FileType", {
         callback = function(ev)
-            vim.keymap.set("n", "mm", function()
+            vim.keymap.set("n", "``", function()
                 local qflist = {}
 
                 for _, marklist in ipairs({ vim.fn.getmarklist(), vim.fn.getmarklist(ev.buf) }) do
@@ -54,7 +54,8 @@ local function setup_mark()
                             end
 
                             if qf.bufnr ~= nil or qf.filename == vim.fn.expand("%:p") then
-                                qf.text = string.format("%s %s", qf.text, vim.fn.getline(qf.lnum):sub(qf.col))
+                                local message = vim.fn.getline(qf.lnum):sub(qf.col)
+                                qf.text = string.format("%s | %s", qf.text, message)
                             end
 
                             table.insert(qflist, qf)
