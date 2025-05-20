@@ -316,10 +316,10 @@ require("lazy").setup({
                     local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-                    vim.keymap.set("n", "gds", function()
+                    vim.keymap.set("n", "<space>s", function()
                         builtin.lsp_definitions({ jump_type = "split" })
                     end, opts)
-                    vim.keymap.set("n", "gdv", function()
+                    vim.keymap.set("n", "<space>v", function()
                         builtin.lsp_definitions({ jump_type = "vsplit" })
                     end, opts)
                     vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
