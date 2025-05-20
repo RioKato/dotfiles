@@ -38,37 +38,28 @@ local function setup_mark()
             vim.keymap.set("n", "mm", function()
                 local qflist = {}
 
-                for _, mark in ipairs(vim.fn.getmarklist()) do
-                    if mark.mark:match("'[A-Z]") then
-                        local entry = {}
-                        local filename = vim.fn.fnamemodify(mark.file, ":p")
+                for _, marklist in ipairs({ vim.fn.getmarklist(), vim.fn.getmarklist(ev.buf) }) do
+                    for _, mark in ipairs(marklist) do
+                        if mark.mark:match("'[A-Za-z]") then
+                            local qf = {}
 
-                        if filename == vim.fn.expand("%:p") then
-                            entry.bufnr = ev.buf
-                            local line = vim.fn.getline(mark.pos[2])
-                            entry.text = string.format("%s %s", mark.mark:sub(2), line)
-                        else
-                            entry.filename = filename
-                            entry.text = mark.mark:sub(2)
+                            if mark.file ~= nil then
+                                qf.filename = vim.fn.fnamemodify(mark.file, ":p")
+
+                                if qf.filename == vim.fn.expand("%:p") then
+                                    qf.text = string.format("%s %s", mark.mark:sub(2), vim.fn.getline(mark.pos[2]))
+                                else
+                                    qf.text = mark.mark:sub(2)
+                                end
+                            else
+                                qf.bufnr = ev.buf
+                                qf.text = string.format("%s %s", mark.mark:sub(2), vim.fn.getline(mark.pos[2]))
+                            end
+
+                            qf.lnum = mark.pos[2]
+                            qf.col = mark.pos[3]
+                            table.insert(qflist, qf)
                         end
-
-                        entry.lnum = mark.pos[2]
-                        entry.col = mark.pos[3]
-                        table.insert(qflist, entry)
-                    end
-                end
-
-                for _, mark in ipairs(vim.fn.getmarklist(ev.buf)) do
-                    if mark.mark:match("'[a-z]") then
-                        local line = vim.fn.getline(mark.pos[2])
-                        local text = string.format("%s %s", mark.mark:sub(2), line)
-
-                        table.insert(qflist, {
-                            bufnr = ev.buf,
-                            lnum = mark.pos[2],
-                            col = mark.pos[3],
-                            text = text,
-                        })
                     end
                 end
 
