@@ -66,17 +66,7 @@ local function setup_lsp(servers)
         callback = function(ev)
             local opts = { buffer = ev.buf }
             vim.keymap.set("n", "<C-o>", "<cmd>silent! pop<cr>", opts)
-            vim.keymap.set("n", "<C-i>", function()
-                local stack = vim.fn.gettagstack()
-
-                if stack.curidx > stack.length then
-                    return
-                end
-
-                local next = stack.items[stack.curidx]
-                vim.fn.settagstack(vim.fn.win_getid(), { curidx = stack.curidx + 1 })
-                print(vim.inspect(next))
-            end, opts)
+            vim.keymap.set("n", "<C-i>", "<cmd>silent! tag<cr>", opts)
             vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
             vim.keymap.set("n", "<space><space>", function()
                 vim.lsp.buf.format({ async = true })
