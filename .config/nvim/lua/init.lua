@@ -122,6 +122,15 @@ require("lazy").setup({
     },
 
     {
+        "folke/zen-mode.nvim",
+
+        config = function()
+            require("zen-mode").setup({ window = { width = 0.95 } })
+            vim.keymap.set("n", "<C-w>z", "<cmd>ZenMode<cr>")
+        end,
+    },
+
+    {
         "t9md/vim-quickhl",
 
         config = function()
@@ -139,10 +148,7 @@ require("lazy").setup({
         end,
     },
 
-    {
-        "windwp/nvim-autopairs",
-        opts = {},
-    },
+    { "windwp/nvim-autopairs", opts = {} },
 
     { "machakann/vim-sandwich" },
 
@@ -166,10 +172,7 @@ require("lazy").setup({
 
     { "jghauser/mkdir.nvim" },
 
-    {
-        "williamboman/mason.nvim",
-        opts = {},
-    },
+    { "williamboman/mason.nvim", opts = {} },
 
     {
         "williamboman/mason-lspconfig.nvim",
@@ -343,10 +346,7 @@ require("lazy").setup({
         end,
     },
 
-    {
-        "linrongbin16/gitlinker.nvim",
-        opts = {},
-    },
+    { "linrongbin16/gitlinker.nvim", opts = {} },
 
     {
         "MeanderingProgrammer/render-markdown.nvim",
@@ -357,10 +357,7 @@ require("lazy").setup({
         },
     },
 
-    {
-        "HakonHarnes/img-clip.nvim",
-        opts = {},
-    },
+    { "HakonHarnes/img-clip.nvim", opts = {} },
 
     {
         "iamcco/markdown-preview.nvim",
