@@ -410,6 +410,8 @@ require("lazy").setup({
         end,
     },
 
+    { "nvim-tree/nvim-tree.lua", opts = {} },
+
     {
         "folke/which-key.nvim",
         enabled = true,
