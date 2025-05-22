@@ -195,6 +195,11 @@ then
   fi
 fi
 
+if command -v direnv >& /dev/null
+then
+  eval "$(direnv hook zsh)"
+fi
+
 ###############################################################################################
 
 alias rnc="rlwrap nc"

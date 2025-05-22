@@ -1,0 +1,20 @@
+#!/bin/sh
+
+if [ ! -e bin/activate ]
+then
+  echo 'Not the venv project directory'
+  exit 1
+fi
+
+cat <<END > pyrightconfig.json
+{
+  "venvPath": ".",
+  "venv": ".venv"
+}
+END
+
+cat <<END > .envrc
+source bin/activate
+END
+
+direnv allow
