@@ -17,6 +17,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
+vim.api.nvim_create_user_command("Wd", "cd %:h", {})
+
 local function setup_tab()
     vim.keymap.set("n", "<C-w>t", "<cmd>tabnew<cr>")
     vim.keymap.set("n", "<C-w>p", "<cmd>tabnext<cr>")
