@@ -17,6 +17,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
+if vim.fn.executable("fcitx5-remote") == 1 then
+    vim.api.nvim_create_autocmd("InsertLeave", {
+        callback = function()
+            vim.fn.system({ "fcitx5-remote", "-c" })
+        end,
+    })
+end
+
 local function setup_tab()
     vim.keymap.set("n", "<C-w>t", "<cmd>tabnew<cr>")
     vim.keymap.set("n", "<C-w>p", "<cmd>tabnext<cr>")
