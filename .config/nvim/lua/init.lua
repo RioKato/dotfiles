@@ -1,3 +1,5 @@
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
 
@@ -14,6 +16,12 @@ vim.api.nvim_create_autocmd("TextYankPost", {
         vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
     end,
 })
+
+local function setup_tab()
+    vim.keymap.set("n", "<C-w>t", "<cmd>tabnew<cr>")
+    vim.keymap.set("n", "<C-w>p", "<cmd>tabnext<cr>")
+    vim.keymap.set("n", "<C-w>n", "<cmd>tabprevious<cr>")
+end
 
 local function setup_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
@@ -105,6 +113,7 @@ local servers = {
     "jdtls",
 }
 
+setup_tab()
 setup_quickfix()
 setup_folding()
 setup_lsp(servers)
