@@ -17,12 +17,14 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
-if vim.fn.executable("fcitx5-remote") == 1 then
-    vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave" }, {
-        callback = function()
-            vim.fn.system({ "fcitx5-remote", "-c" })
-        end,
-    })
+local function setup_ime()
+    if vim.fn.executable("fcitx5-remote") == 1 then
+        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave" }, {
+            callback = function()
+                vim.fn.system({ "fcitx5-remote", "-c" })
+            end,
+        })
+    end
 end
 
 local function setup_tab()
@@ -122,6 +124,7 @@ local servers = {
     "jdtls",
 }
 
+setup_ime()
 setup_tab()
 setup_quickfix()
 setup_folding()
