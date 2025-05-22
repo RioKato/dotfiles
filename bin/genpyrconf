@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cat <<END > pyrightconfig.json
+{
+  "venvPath": ".",
+  "venv": ".venv"
+}
+END
