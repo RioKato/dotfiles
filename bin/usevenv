@@ -12,9 +12,3 @@ cat <<END > pyrightconfig.json
   "venv": ".venv"
 }
 END
-
-cat <<END > .envrc
-source bin/activate
-END
-
-direnv allow
