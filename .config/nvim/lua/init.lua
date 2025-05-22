@@ -410,7 +410,14 @@ require("lazy").setup({
         end,
     },
 
-    { "nvim-tree/nvim-tree.lua", opts = {} },
+    {
+        "nvim-tree/nvim-tree.lua",
+
+        config = function()
+            require("nvim-tree").setup({})
+            vim.keymap.set("n", "gn", "<cmd>NvimTreeToggle<cr>")
+        end,
+    },
 
     {
         "folke/which-key.nvim",
