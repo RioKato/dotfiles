@@ -93,7 +93,7 @@ local function setup_lsp(servers)
     vim.lsp.enable(servers)
 end
 
-local function install_lazy()
+local function lazy()
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
     if not vim.loop.fs_stat(path) then
@@ -108,6 +108,7 @@ local function install_lazy()
     end
 
     vim.opt.rtp:prepend(path)
+    return require("lazy")
 end
 
 local servers = {
@@ -125,9 +126,8 @@ setup_tab()
 setup_quickfix()
 setup_folding()
 setup_lsp(servers)
-install_lazy()
 
-require("lazy").setup({
+lazy().setup({
     { "folke/lazy.nvim" },
 
     {
