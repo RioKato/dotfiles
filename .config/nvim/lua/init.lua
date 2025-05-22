@@ -428,6 +428,25 @@ lazy().setup({
     },
 
     {
+        "vim-denops/denops.vim",
+        enabled = vim.fn.executable("deno") == 1,
+    },
+
+    {
+        "lambdalisue/kensaku.vim",
+        dependencies = { "vim-denops/denops.vim" },
+    },
+
+    {
+        "lambdalisue/kensaku-search.vim",
+        dependencies = { "lambdalisue/kensaku.vim" },
+
+        config = function()
+            vim.keymap.set("c", "<cr>", "<plug>(kensaku-search-replace)<cr>")
+        end,
+    },
+
+    {
         "folke/which-key.nvim",
         enabled = true,
 
