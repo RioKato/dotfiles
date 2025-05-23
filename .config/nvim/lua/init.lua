@@ -32,7 +32,7 @@ local function setup_ime()
 end
 
 local function setup_tab()
-    vim.keymap.set("n", "<C-w>t", "<cmd>tabnew<cr>")
+    vim.keymap.set("n", "<C-w>t", "<cmd>tabnew .<cr>")
     vim.keymap.set("n", "<C-w>p", "<cmd>tabnext<cr>")
     vim.keymap.set("n", "<C-w>n", "<cmd>tabprevious<cr>")
 end
