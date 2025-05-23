@@ -1,6 +1,6 @@
-vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-c>", function()
-    error("Don't use C-c")
-end)
+-- For practice
+vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
+
 vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-g>", "<esc>", { remap = false })
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
