@@ -1,7 +1,7 @@
 vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-c>", function()
     error("Don't use C-c")
 end)
-vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-g>", "<esc>")
+vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-g>", "<esc>", { remap = false })
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.inccommand = "split"
