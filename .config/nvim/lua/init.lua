@@ -3,7 +3,7 @@ vim.keymap.set({ "", "i", "t", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr
 
 vim.keymap.set({ "", "i" }, "<C-u>", "<esc>", { remap = false })
 vim.keymap.set("c", "<C-u>", "<C-c>", { remap = false })
-vim.keymap.set("t", "<C-u>", "<c-\\><c-n>", { remap = false })
+vim.keymap.set("t", "<C-u>", "<C-\\><C-n>", { remap = false })
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
