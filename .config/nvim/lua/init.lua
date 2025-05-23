@@ -292,7 +292,12 @@ lazy().setup({
                 defaults = {
                     mappings = {
                         i = {
+                            ["<C-u>"] = false,
                             ["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
+                        },
+                        n = {
+                            ["q"] = actions.close,
+                            ["<esc>"] = actions.nop,
                         },
                     },
                     path_display = { "shorten" },
