@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 local function setup_ime()
     if vim.fn.executable("fcitx5-remote") == 1 then
-        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave" }, {
+        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
             callback = function()
                 vim.fn.system({ "fcitx5-remote", "-c" })
             end,
