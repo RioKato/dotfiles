@@ -154,8 +154,7 @@ lazy().setup({
         "t9md/vim-quickhl",
 
         config = function()
-            vim.keymap.set("n", "<C-t>", "<plug>(quickhl-manual-this)")
-            vim.keymap.set("x", "<C-t>", "<plug>(quickhl-manual-this)")
+            vim.keymap.set({ "n", "x" }, "<C-t>", "<plug>(quickhl-manual-this)")
             vim.keymap.set("n", "gm", "<plug>(quickhl-manual-reset)")
         end,
     },
