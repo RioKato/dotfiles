@@ -1,7 +1,9 @@
 -- For practice
 vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 
-vim.keymap.set({ "n", "i", "c", "v", "o", "t", "l" }, "<C-u>", "<esc>", { remap = false })
+vim.keymap.set({ "n", "i", "v", "o", "t", "l" }, "<C-u>", "<esc>", { remap = false })
+vim.keymap.set("c", "<C-u>", "<C-c>", { remap = false })
+
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.inccommand = "split"
@@ -432,7 +434,7 @@ lazy().setup({
         "nvim-tree/nvim-tree.lua",
 
         config = function()
-            require("nvim-tree").setup({})
+            require("nvim-tree").setup()
             vim.keymap.set("n", "gn", "<cmd>NvimTreeToggle<cr>")
 
             vim.api.nvim_create_autocmd("TabNewEntered", {
