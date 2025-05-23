@@ -117,7 +117,11 @@ local function lazy()
     return require("lazy")
 end
 
-local servers = {
+setup_ime()
+setup_tab()
+setup_quickfix()
+setup_folding()
+setup_lsp({
     "pyright",
     "ts_ls",
     "cmake",
@@ -126,13 +130,7 @@ local servers = {
     "gopls",
     "codeqlls",
     "jdtls",
-}
-
-setup_ime()
-setup_tab()
-setup_quickfix()
-setup_folding()
-setup_lsp(servers)
+})
 
 lazy().setup({
     { "folke/lazy.nvim" },
@@ -286,7 +284,6 @@ lazy().setup({
 
         config = function()
             local actions = require("telescope.actions")
-            local builtin = require("telescope.builtin")
 
             require("telescope").setup({
                 defaults = {
@@ -312,6 +309,7 @@ lazy().setup({
                 },
             })
 
+            local builtin = require("telescope.builtin")
             vim.keymap.set("n", "<space>f", builtin.find_files)
             vim.keymap.set("n", "<space>b", builtin.buffers)
             vim.keymap.set("n", "<space>g", builtin.live_grep)
