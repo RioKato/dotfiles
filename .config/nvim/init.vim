@@ -18,7 +18,6 @@ set hlsearch
 set hidden
 set virtualedit=block
 set completeopt=menu,menuone,noselect
-set tags=./tags;$HOME
 set showmatch
 set matchtime=1
 set number
@@ -39,7 +38,6 @@ nnoremap <esc><esc> <cmd>nohlsearch<cr>
 inoremap <C-d> <del>
 tnoremap <esc> <C-\><C-n>
 autocmd BufNewFile,BufRead *.md set filetype=markdown
-autocmd BufNewFile,BufRead *.gdb set filetype=gdb
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE
