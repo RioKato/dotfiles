@@ -58,24 +58,6 @@ local function setup_quickfix()
     })
 end
 
-local function setup_folding()
-    vim.opt.foldenable = false
-    vim.opt.foldmethod = "expr"
-    vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-
-    vim.keymap.set("n", "zj", function()
-        if not vim.opt.foldenable:get() then
-            vim.opt.foldenable = true
-        end
-
-        local foldlevel = vim.fn.foldlevel(".")
-
-        if foldlevel ~= -1 then
-            vim.opt.foldlevel = foldlevel
-        end
-    end)
-end
-
 local function setup_lsp(servers)
     vim.diagnostic.config({
         signs = false,
@@ -124,7 +106,6 @@ end
 setup_ime()
 setup_tab()
 setup_quickfix()
-setup_folding()
 setup_lsp({
     "pyright",
     "ts_ls",
@@ -192,8 +173,6 @@ lazy().setup({
     },
 
     { "itchyny/vim-qfedit" },
-
-    { "jrudess/vim-foldtext" },
 
     { "jghauser/mkdir.nvim" },
 
