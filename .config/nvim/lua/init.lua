@@ -434,7 +434,14 @@ lazy().setup({
     {
         "stevearc/oil.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = {},
+
+        config = function()
+            local oil = require("oil")
+            oil.setup()
+            vim.keymap.set("n", "go", function()
+                oil.toggle_float(vim.fn.expand("%:h"))
+            end)
+        end,
     },
 
     {
