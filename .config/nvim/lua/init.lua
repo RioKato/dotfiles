@@ -432,16 +432,9 @@ lazy().setup({
     },
 
     {
-        "nvim-tree/nvim-tree.lua",
-
-        config = function()
-            require("nvim-tree").setup()
-            vim.keymap.set("n", "gn", "<cmd>NvimTreeToggle<cr>")
-
-            vim.api.nvim_create_autocmd("TabNewEntered", {
-                command = "NvimTreeOpen",
-            })
-        end,
+        "stevearc/oil.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {},
     },
 
     {
