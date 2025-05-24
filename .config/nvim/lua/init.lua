@@ -438,6 +438,7 @@ lazy().setup({
         config = function()
             local oil = require("oil")
             oil.setup({
+                default_file_explorer = false,
                 keymaps = {
                     ["<C-v>"] = { "actions.select", opts = { vertical = true } },
                     ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
