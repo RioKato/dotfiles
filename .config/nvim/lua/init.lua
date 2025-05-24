@@ -228,6 +228,11 @@ lazy().setup({
                         auto_insert = true,
                     },
                 },
+                accept = {
+                    auto_brackets = {
+                        enabled = false,
+                    },
+                },
             },
             sources = {
                 default = { "lsp", "path", "buffer" },
