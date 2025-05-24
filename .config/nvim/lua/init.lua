@@ -437,6 +437,7 @@ lazy().setup({
 
         config = function()
             local oil = require("oil")
+
             oil.setup({
                 default_file_explorer = false,
                 view_options = {
@@ -448,6 +449,7 @@ lazy().setup({
                     ["<space><space>"] = { "actions.cd", mode = "n" },
                 },
             })
+
             vim.keymap.set("n", "go", function()
                 oil.toggle_float(vim.fn.expand("%:h"))
             end)
