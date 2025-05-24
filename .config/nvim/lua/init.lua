@@ -437,7 +437,13 @@ lazy().setup({
 
         config = function()
             local oil = require("oil")
-            oil.setup()
+            oil.setup({
+                keymaps = {
+                    ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+                    ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
+                    ["<space><space>"] = { "actions.cd", mode = "n" },
+                },
+            })
             vim.keymap.set("n", "go", function()
                 oil.toggle_float(vim.fn.expand("%:h"))
             end)
