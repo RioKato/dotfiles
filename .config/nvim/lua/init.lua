@@ -216,7 +216,19 @@ lazy().setup({
         version = "1.*",
 
         opts = {
-            keymap = { preset = "super-tab" },
+            keymap = {
+                preset = "default",
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+            },
+            completion = {
+                list = {
+                    selection = {
+                        preselect = false,
+                        auto_insert = true,
+                    },
+                },
+            },
             sources = {
                 default = { "lsp", "path", "buffer" },
             },
