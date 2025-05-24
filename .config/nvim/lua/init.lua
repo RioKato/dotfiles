@@ -73,7 +73,7 @@ local function setup_folding()
         if foldlevel ~= -1 then
             vim.opt.foldlevel = foldlevel
         end
-    end, { desc = "Set foldlevel" })
+    end)
 end
 
 local function setup_lsp(servers)
@@ -372,11 +372,11 @@ lazy().setup({
 
             vim.keymap.set("n", "gf", function()
                 return string.format("<cmd>GV -- %s<cr>", vim.fn.expand("%:p"))
-            end, { expr = true, desc = "GV -- %:p" })
+            end, { expr = true })
 
             vim.keymap.set("n", "gs", function()
                 return string.format("<cmd>GV -S %s<cr>", vim.fn.expand("<cword>"))
-            end, { expr = true, desc = "GV -S <cword>" })
+            end, { expr = true })
         end,
     },
 
