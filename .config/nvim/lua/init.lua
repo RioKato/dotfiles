@@ -176,20 +176,6 @@ lazy().setup({
 
     { "machakann/vim-sandwich" },
 
-    {
-        "Goose97/timber.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-
-        opts = {
-            log_templates = {
-                default = {
-                    python = [[print(f"[%filename:%line_number] {%log_target=}")]],
-                    c = [[printf("[%filename:%line_number] %log_target=%s\n", %log_target);]],
-                },
-            },
-        },
-    },
-
     { "itchyny/vim-qfedit" },
 
     {
