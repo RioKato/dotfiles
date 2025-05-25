@@ -6,6 +6,7 @@ vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+vim.g.loaded_matchparen = 1
 
 vim.keymap.set({ "", "i" }, "<C-u>", "<esc>")
 vim.keymap.set("c", "<C-u>", "<C-c>")
