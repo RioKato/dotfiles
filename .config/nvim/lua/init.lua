@@ -444,16 +444,6 @@ lazy().setup({
     },
 
     {
-        "voldikss/vim-translator",
-
-        config = function()
-            vim.g.translator_default_engines = { "google" }
-            vim.g.translator_target_lang = "ja"
-            vim.g.translator_window_type = "preview"
-        end,
-    },
-
-    {
         "vim-denops/denops.vim",
         enabled = vim.fn.executable("deno") == 1,
     },
@@ -470,6 +460,26 @@ lazy().setup({
         config = function()
             vim.keymap.set("c", "<cr>", "<plug>(kensaku-search-replace)<cr>")
         end,
+    },
+
+    {
+        "potamides/pantran.nvim",
+
+        opts = {
+            default_engine = "google",
+            engines = {
+                google = {
+                    fallback = {
+                        default_source = "en",
+                        default_target = "ja",
+                    },
+                },
+            },
+            ui = {
+                width_percentage = 0.9,
+                height_percentage = 0.9,
+            },
+        },
     },
 
     {
