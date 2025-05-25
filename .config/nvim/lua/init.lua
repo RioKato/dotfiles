@@ -163,12 +163,6 @@ lazy().setup({
             vim.keymap.set("n", "*", function()
                 lasterisk.search()
             end)
-            vim.keymap.set("n", "g*", function()
-                lasterisk.search({ is_whole = false })
-            end)
-            vim.keymap.set("x", "g*", function()
-                lasterisk.search({ is_whole = false })
-            end)
         end,
     },
 
@@ -177,6 +171,33 @@ lazy().setup({
     { "machakann/vim-sandwich" },
 
     { "itchyny/vim-qfedit" },
+
+    {
+        "nvim-treesitter/nvim-treesitter",
+
+        opts = {
+            ensure_installed = { "c", "cpp", "python", "rust", "java", "vim" },
+        },
+    },
+
+    {
+        "nvim-treesitter/nvim-treesitter-context",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+
+        config = function()
+            require("treesitter-context").setup({
+                multiline_threshold = 1,
+                separator = "━",
+            })
+
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                callback = function()
+                    vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Normal" })
+                    vim.api.nvim_set_hl(0, "TreesitterContextSeparator", { link = "Normal" })
+                end,
+            })
+        end,
+    },
 
     {
         "saghen/blink.cmp",
@@ -205,33 +226,6 @@ lazy().setup({
                 default = { "lsp", "path", "buffer" },
             },
         },
-    },
-
-    {
-        "nvim-treesitter/nvim-treesitter",
-
-        opts = {
-            ensure_installed = { "c", "cpp", "python", "rust", "java", "vim" },
-        },
-    },
-
-    {
-        "nvim-treesitter/nvim-treesitter-context",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
-
-        config = function()
-            require("treesitter-context").setup({
-                multiline_threshold = 1,
-                separator = "━",
-            })
-
-            vim.api.nvim_create_autocmd("ColorScheme", {
-                callback = function()
-                    vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Normal" })
-                    vim.api.nvim_set_hl(0, "TreesitterContextSeparator", { link = "Normal" })
-                end,
-            })
-        end,
     },
 
     {
