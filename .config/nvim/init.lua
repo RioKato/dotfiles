@@ -1,7 +1,34 @@
 -- For practice
 vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 
-vim.opt.clipboard = { "unnamedplus" }
+vim.opt.encoding = "utf-8"
+vim.opt.autoindent = true
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.wrap = false
+vim.opt.swapfile = false
+vim.opt.backup = false
+vim.opt.undofile = false
+vim.opt.autoread = true
+vim.opt.wildmenu = true
+vim.opt.gdefault = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+vim.opt.wrapscan = true
+vim.opt.incsearch = true
+vim.opt.hlsearch = true
+vim.opt.hidden = true
+vim.opt.virtualedit = "block"
+vim.opt.showmatch = true
+vim.opt.matchtime = 1
+vim.opt.number = true
+vim.opt.cursorline = true
+vim.opt.cursorlineopt = "number"
+vim.opt.termguicolors = true
+vim.opt.syntax = "on"
+vim.opt.splitright = true
+vim.opt.clipboard = "unnamedplus"
 vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
 vim.g.loaded_netrw = 1
