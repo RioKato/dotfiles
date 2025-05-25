@@ -1,6 +1,11 @@
 -- For practice
 vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 
+vim.opt.inccommand = "split"
+vim.opt.jumpoptions = "stack"
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.keymap.set({ "", "i" }, "<C-u>", "<esc>")
 vim.keymap.set("c", "<C-u>", "<C-c>")
 vim.keymap.set("t", "<C-u>", "<C-\\><C-n>")
@@ -11,11 +16,6 @@ vim.keymap.set("n", "gk", "k")
 vim.keymap.set("n", "x", '"_x')
 vim.keymap.set("i", "<C-d>", "<del>")
 vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
-
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.opt.inccommand = "split"
-vim.opt.jumpoptions = "stack"
 
 vim.api.nvim_create_autocmd("VimEnter", {
     command = "clearjumps",
@@ -269,8 +269,12 @@ lazy().setup({
                     },
                 },
                 pickers = {
-                    lsp_definitions = { jump_type = "never" },
-                    lsp_references = { jump_type = "never" },
+                    lsp_definitions = {
+                        jump_type = "never",
+                    },
+                    lsp_references = {
+                        jump_type = "never",
+                    },
                 },
             })
 
