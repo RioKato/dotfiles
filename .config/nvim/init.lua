@@ -1,64 +1,66 @@
 -- For practice
 vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 
-vim.opt.encoding = "utf-8"
-vim.opt.autoindent = true
-vim.opt.expandtab = true
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.wrap = false
-vim.opt.swapfile = false
-vim.opt.backup = false
-vim.opt.undofile = false
-vim.opt.autoread = true
-vim.opt.wildmenu = true
-vim.opt.gdefault = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.wrapscan = true
-vim.opt.incsearch = true
-vim.opt.hlsearch = true
-vim.opt.hidden = true
-vim.opt.virtualedit = "block"
-vim.opt.showmatch = true
-vim.opt.matchtime = 1
-vim.opt.number = true
-vim.opt.cursorline = true
-vim.opt.cursorlineopt = "number"
-vim.opt.termguicolors = true
-vim.opt.syntax = "on"
-vim.opt.splitright = true
-vim.opt.clipboard = "unnamedplus"
-vim.opt.inccommand = "split"
-vim.opt.jumpoptions = "stack"
-vim.g.loaded_matchparen = 1
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
+local function setup_editor()
+    vim.opt.encoding = "utf-8"
+    vim.opt.autoindent = true
+    vim.opt.expandtab = true
+    vim.opt.tabstop = 2
+    vim.opt.shiftwidth = 2
+    vim.opt.wrap = false
+    vim.opt.swapfile = false
+    vim.opt.backup = false
+    vim.opt.undofile = false
+    vim.opt.autoread = true
+    vim.opt.wildmenu = true
+    vim.opt.gdefault = true
+    vim.opt.ignorecase = true
+    vim.opt.smartcase = true
+    vim.opt.wrapscan = true
+    vim.opt.incsearch = true
+    vim.opt.hlsearch = true
+    vim.opt.inccommand = "split"
+    vim.opt.hidden = true
+    vim.opt.jumpoptions = "stack"
+    vim.opt.splitright = true
+    vim.opt.virtualedit = "block"
+    vim.opt.showmatch = true
+    vim.opt.matchtime = 1
+    vim.opt.number = true
+    vim.opt.cursorline = true
+    vim.opt.cursorlineopt = "number"
+    vim.opt.termguicolors = true
+    vim.opt.syntax = "on"
+    vim.opt.clipboard = "unnamedplus"
+    vim.g.loaded_matchparen = 1
+    vim.g.loaded_netrw = 1
+    vim.g.loaded_netrwPlugin = 1
 
-vim.keymap.set({ "", "i" }, "<C-u>", "<esc>")
-vim.keymap.set("c", "<C-u>", "<C-c>")
-vim.keymap.set("t", "<C-u>", "<C-\\><C-n>")
-vim.keymap.set({ "n", "x" }, "j", "gj")
-vim.keymap.set({ "n", "x" }, "k", "gk")
-vim.keymap.set({ "n", "x" }, "gj", "j")
-vim.keymap.set({ "n", "x" }, "gk", "k")
-vim.keymap.set({ "n", "x" }, "x", '"_x')
-vim.keymap.set("i", "<C-d>", "<del>")
-vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
+    vim.keymap.set({ "", "i" }, "<C-u>", "<esc>")
+    vim.keymap.set("c", "<C-u>", "<C-c>")
+    vim.keymap.set("t", "<C-u>", "<C-\\><C-n>")
+    vim.keymap.set({ "n", "x" }, "j", "gj")
+    vim.keymap.set({ "n", "x" }, "k", "gk")
+    vim.keymap.set({ "n", "x" }, "gj", "j")
+    vim.keymap.set({ "n", "x" }, "gk", "k")
+    vim.keymap.set({ "n", "x" }, "x", '"_x')
+    vim.keymap.set("i", "<C-d>", "<del>")
+    vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
 
-vim.api.nvim_create_autocmd("VimEnter", {
-    command = "clearjumps",
-})
+    vim.api.nvim_create_autocmd("TextYankPost", {
+        callback = function()
+            vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+        end,
+    })
 
-vim.api.nvim_create_autocmd("VimEnter", {
-    command = "delmarks 0-9A-Za-z^[]",
-})
+    vim.api.nvim_create_autocmd("VimEnter", {
+        command = "clearjumps",
+    })
 
-vim.api.nvim_create_autocmd("TextYankPost", {
-    callback = function()
-        vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
-    end,
-})
+    vim.api.nvim_create_autocmd("VimEnter", {
+        command = "delmarks 0-9A-Za-z^[]",
+    })
+end
 
 local function setup_ime()
     if vim.fn.executable("fcitx5-remote") == 1 then
@@ -139,6 +141,7 @@ local function lazy()
     return require("lazy")
 end
 
+setup_editor()
 setup_ime()
 setup_tab()
 setup_quickfix()
