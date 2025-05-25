@@ -1,7 +1,7 @@
 -- For practice
 vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 
-local function setup_editor()
+local function init_editor()
     vim.opt.encoding = "utf-8"
     vim.opt.autoindent = true
     vim.opt.expandtab = true
@@ -60,9 +60,7 @@ local function setup_editor()
     vim.api.nvim_create_autocmd("VimEnter", {
         command = "delmarks 0-9A-Za-z^[]",
     })
-end
 
-local function setup_ime()
     if vim.fn.executable("fcitx5-remote") == 1 then
         vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
             callback = function()
@@ -72,14 +70,14 @@ local function setup_ime()
     end
 end
 
-local function setup_tab()
+local function init_tab()
     vim.keymap.set("n", "<C-w>t", "<cmd>tabnew %<cr>")
     vim.keymap.set("n", "<C-w>C", "<cmd>tabclose<cr>")
     vim.keymap.set("n", "<C-w>p", "<cmd>tabnext<cr>")
     vim.keymap.set("n", "<C-w>n", "<cmd>tabprevious<cr>")
 end
 
-local function setup_quickfix()
+local function init_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
     vim.keymap.set("n", "<C-n>", "<cmd>silent! cnext<cr>")
     vim.keymap.set("n", "<C-p>", "<cmd>silent! cprevious<cr>")
@@ -96,7 +94,7 @@ local function setup_quickfix()
     })
 end
 
-local function setup_lsp(servers)
+local function init_lsp(servers)
     vim.diagnostic.config({
         signs = false,
         underline = true,
@@ -141,18 +139,16 @@ local function lazy()
     return require("lazy")
 end
 
-setup_editor()
-setup_ime()
-setup_tab()
-setup_quickfix()
-setup_lsp({
+init_editor()
+init_tab()
+init_quickfix()
+init_lsp({
     "pyright",
     "ts_ls",
     "cmake",
     "clangd",
     "rust_analyzer",
     "gopls",
-    "codeqlls",
     "jdtls",
 })
 
