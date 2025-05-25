@@ -336,6 +336,7 @@ lazy().setup({
             vim.keymap.set("n", "<space>b", builtin.buffers)
             vim.keymap.set("n", "<space>g", builtin.live_grep)
             vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find)
+            vim.keymap.set("n", "<space>t", builtin.tagstack)
             vim.keymap.set("n", "<C-s>", builtin.grep_string)
             vim.keymap.set("n", "``", builtin.marks)
 
