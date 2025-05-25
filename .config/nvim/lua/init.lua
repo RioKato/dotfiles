@@ -1,6 +1,7 @@
 -- For practice
 vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 
+vim.opt.clipboard = { "unnamedplus" }
 vim.opt.inccommand = "split"
 vim.opt.jumpoptions = "stack"
 vim.g.loaded_netrw = 1

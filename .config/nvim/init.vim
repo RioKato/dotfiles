@@ -17,14 +17,12 @@ set incsearch
 set hlsearch
 set hidden
 set virtualedit=block
-set completeopt=menu,menuone,noselect
 set showmatch
 set matchtime=1
 set number
 set cursorline
 set cursorlineopt=number
 set termguicolors
-set clipboard+=unnamedplus
 set splitright
 set mouse=
 let g:loaded_matchparen = 1
