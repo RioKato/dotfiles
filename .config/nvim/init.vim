@@ -28,15 +28,6 @@ set clipboard+=unnamedplus
 set splitright
 set mouse=
 let g:loaded_matchparen = 1
-nnoremap j gj
-nnoremap k gk
-nnoremap gj j
-nnoremap gk k
-nnoremap Y y$
-nnoremap x "_x
-nnoremap <esc><esc> <cmd>nohlsearch<cr>
-inoremap <C-d> <del>
-autocmd BufNewFile,BufRead *.md set filetype=markdown
 autocmd Colorscheme * highlight Normal ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight NonText ctermbg=NONE guibg=NONE
 autocmd Colorscheme * highlight Folded ctermbg=NONE guibg=NONE

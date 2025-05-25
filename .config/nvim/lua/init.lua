@@ -4,6 +4,11 @@ vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
 vim.keymap.set({ "", "i" }, "<C-u>", "<esc>")
 vim.keymap.set("c", "<C-u>", "<C-c>")
 vim.keymap.set("t", "<C-u>", "<C-\\><C-n>")
+vim.keymap.set("n", "j", "gj")
+vim.keymap.set("n", "k", "gk")
+vim.keymap.set("n", "x", '"_x')
+vim.keymap.set("i", "<C-d>", "<del>")
+vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
 
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
