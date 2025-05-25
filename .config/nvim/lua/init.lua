@@ -192,22 +192,6 @@ lazy().setup({
 
     { "itchyny/vim-qfedit" },
 
-    { "jghauser/mkdir.nvim" },
-
-    { "williamboman/mason.nvim", opts = {} },
-
-    {
-        "williamboman/mason-lspconfig.nvim",
-        dependencies = {
-            "williamboman/mason.nvim",
-            "neovim/nvim-lspconfig",
-        },
-
-        opts = {
-            ensure_installed = { "pyright", "ts_ls", "cmake" },
-        },
-    },
-
     {
         "saghen/blink.cmp",
         version = "1.*",
@@ -234,38 +218,6 @@ lazy().setup({
             sources = {
                 default = { "lsp", "path", "buffer" },
             },
-        },
-    },
-
-    {
-        "nvimtools/none-ls.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-
-        config = function()
-            local null_ls = require("null-ls")
-
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.prettier.with({
-                        filetypes = { "markdown" },
-                    }),
-                },
-            })
-        end,
-    },
-
-    {
-        "jay-babu/mason-null-ls.nvim",
-        dependencies = {
-            "williamboman/mason.nvim",
-            "nvimtools/none-ls.nvim",
-        },
-
-        opts = {
-            ensure_installed = nil,
-            automatic_installation = true,
         },
     },
 
@@ -349,6 +301,77 @@ lazy().setup({
                 end,
             })
         end,
+    },
+
+    {
+        "stevearc/oil.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+
+        config = function()
+            local oil = require("oil")
+
+            oil.setup({
+                default_file_explorer = false,
+                view_options = {
+                    show_hidden = true,
+                },
+                keymaps = {
+                    ["<C-v>"] = { "actions.select", opts = { vertical = true } },
+                    ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
+                    ["<space><space>"] = { "actions.cd", mode = "n" },
+                },
+            })
+
+            vim.keymap.set("n", "go", function()
+                oil.toggle_float(vim.fn.expand("%:h"))
+            end)
+        end,
+    },
+
+    { "williamboman/mason.nvim", opts = {} },
+
+    {
+        "williamboman/mason-lspconfig.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "neovim/nvim-lspconfig",
+        },
+
+        opts = {
+            ensure_installed = { "pyright", "ts_ls", "cmake" },
+        },
+    },
+
+    {
+        "nvimtools/none-ls.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+
+        config = function()
+            local null_ls = require("null-ls")
+
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = { "markdown" },
+                    }),
+                },
+            })
+        end,
+    },
+
+    {
+        "jay-babu/mason-null-ls.nvim",
+        dependencies = {
+            "williamboman/mason.nvim",
+            "nvimtools/none-ls.nvim",
+        },
+
+        opts = {
+            ensure_installed = nil,
+            automatic_installation = true,
+        },
     },
 
     {
@@ -447,31 +470,6 @@ lazy().setup({
             vim.g.translator_default_engines = { "google" }
             vim.g.translator_target_lang = "ja"
             vim.g.translator_window_type = "preview"
-        end,
-    },
-
-    {
-        "stevearc/oil.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-
-        config = function()
-            local oil = require("oil")
-
-            oil.setup({
-                default_file_explorer = false,
-                view_options = {
-                    show_hidden = true,
-                },
-                keymaps = {
-                    ["<C-v>"] = { "actions.select", opts = { vertical = true } },
-                    ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
-                    ["<space><space>"] = { "actions.cd", mode = "n" },
-                },
-            })
-
-            vim.keymap.set("n", "go", function()
-                oil.toggle_float(vim.fn.expand("%:h"))
-            end)
         end,
     },
 
