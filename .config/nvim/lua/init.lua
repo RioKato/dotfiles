@@ -427,23 +427,6 @@ lazy().setup({
     },
 
     {
-        "liuchengxu/graphviz.vim",
-
-        config = function()
-            vim.g.graphviz_output_format = "jpg"
-            vim.g.graphviz_viewer = "xdg-open"
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "dot",
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "r", "<cmd>Graphviz!<cr>", opts)
-                end,
-            })
-        end,
-    },
-
-    {
         "vim-denops/denops.vim",
         enabled = vim.fn.executable("deno") == 1,
     },
