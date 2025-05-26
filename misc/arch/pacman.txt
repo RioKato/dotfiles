@@ -9,7 +9,6 @@ plank
 picom
 cutefish-icons
 yay
-vivaldi
 
 gcc
 clang
@@ -33,7 +32,6 @@ ruby
 zsh
 zsh-completions
 tmux
-vim
 neovim
 fzf
 ripgrep
@@ -42,6 +40,7 @@ bc
 wget
 p7zip
 w3m
+gitui
 nerd-fonts
 
 docker
