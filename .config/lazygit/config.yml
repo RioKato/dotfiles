@@ -1,0 +1,10 @@
+gui:
+  nerdFontsVersion: "3"
+keybinding:
+  universal:
+    quit: Q
+    return: q
+    nextPage: <C-f>
+    prevPage: <C-b>
+    gotoTop-alt: g
+    gotoBottom-alt: G
