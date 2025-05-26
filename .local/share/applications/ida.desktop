@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Application
-Terminal=false
-Name=IDA Pro
-Exec=/opt/idapro-8.2/ida
-Icon=/opt/idapro-8.2/appico.png
