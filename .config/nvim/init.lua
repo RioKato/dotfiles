@@ -154,6 +154,7 @@ init_lsp({
 
 lazy().setup({
     { "folke/lazy.nvim" },
+    { import = "plugins" },
 
     {
         "sainnhe/sonokai",
@@ -465,23 +466,6 @@ lazy().setup({
             ui = {
                 width_percentage = 0.9,
                 height_percentage = 0.9,
-            },
-        },
-    },
-
-    {
-        "folke/which-key.nvim",
-        enabled = true,
-
-        opts = {
-            triggers = {
-                { "<C-w>" },
-                { "z" },
-                { "g" },
-            },
-            plugins = {
-                marks = false,
-                registers = false,
             },
         },
     },
