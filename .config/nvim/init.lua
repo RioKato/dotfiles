@@ -276,6 +276,7 @@ lazy().setup({
 
             require("telescope").setup({
                 defaults = {
+                    initial_mode = "normal",
                     mappings = {
                         i = {
                             ["<C-u>"] = false,
