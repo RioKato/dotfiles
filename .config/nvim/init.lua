@@ -285,8 +285,10 @@ lazy().setup({
                             ["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
                         },
                         n = {
+                            ["<C-u>"] = false,
                             ["<C-x>"] = actions.nop,
                             ["<C-s>"] = actions.select_horizontal,
+                            ["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
                             ["q"] = actions.close,
                             ["<esc>"] = actions.nop,
                         },
