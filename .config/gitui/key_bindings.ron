@@ -1,7 +1,7 @@
 (
     quit: Some(( code: Char('Q'), modifiers: "SHIFT")),
     exit_popup: Some(( code: Char('q'), modifiers: "")),
-    
+
     move_up: Some(( code: Char('k'), modifiers: "")),
     move_down: Some(( code: Char('j'), modifiers: "")),
     move_left: Some(( code: Char('h'), modifiers: "")),
