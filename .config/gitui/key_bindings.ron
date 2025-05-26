@@ -11,7 +11,7 @@
 
     page_up: Some(( code: Char('b'), modifiers: "CONTROL")),
     page_down: Some(( code: Char('f'), modifiers: "CONTROL")),
-    toggle_verify: Some(( code: F(3), modifiers: "CONTROL")),
+    toggle_verify: Some(( code: F(3), modifiers: "")),
 
     home: Some(( code: Char('g'), modifiers: "")),
     end: Some(( code: Char('G'), modifiers: "SHIFT"))
