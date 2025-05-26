@@ -400,50 +400,6 @@ lazy().setup({
         },
     },
 
-    {
-        "tpope/vim-fugitive",
-
-        config = function()
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "fugitiveblame", "git" },
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "q", "<cmd>bd<cr>", opts)
-                end,
-            })
-
-            vim.api.nvim_create_autocmd("FileType", {
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    local path = vim.fn.expand("%:p")
-
-                    if path:find("^fugitive://") then
-                        vim.keymap.set("n", "q", "<cmd>bd<cr>", opts)
-                    end
-                end,
-            })
-
-            vim.keymap.set("n", "gt", "<cmd>Git blame -w<cr>")
-        end,
-    },
-
-    {
-        "junegunn/gv.vim",
-        dependencies = { "tpope/vim-fugitive" },
-
-        config = function()
-            vim.keymap.set("n", "gl", "<cmd>GV<cr>")
-
-            vim.keymap.set("n", "gf", function()
-                return string.format("<cmd>GV -- %s<cr>", vim.fn.expand("%:p"))
-            end, { expr = true })
-
-            vim.keymap.set("n", "gs", function()
-                return string.format("<cmd>GV -S %s<cr>", vim.fn.expand("<cword>"))
-            end, { expr = true })
-        end,
-    },
-
     { "linrongbin16/gitlinker.nvim", opts = {} },
 
     {
