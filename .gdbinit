@@ -14,19 +14,19 @@ set debuginfod enabled on
 alias -a rf = reverse-finish
 
 
-define a
+define S
   source breakpoints.gdb
 
-  define aa
+  define S
     save breakpoints breakpoints.gdb
   end
 
   define hook-quit
-    aa
+    S
   end
 end
 
-define declare
+define I
   shell gcc -g -fno-eliminate-unused-debug-types -x c -c -o /tmp/gdb $arg0
   add-symbol-file /tmp/gdb
   shell rm -f /tmp/gdb
