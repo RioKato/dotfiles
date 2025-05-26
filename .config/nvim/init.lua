@@ -10,6 +10,7 @@ local function init_editor()
     vim.opt.wrap = false
     vim.opt.swapfile = false
     vim.opt.backup = false
+    vim.opt.shadafile = "NONE"
     vim.opt.undofile = false
     vim.opt.autoread = true
     vim.opt.wildmenu = true
@@ -51,10 +52,6 @@ local function init_editor()
         callback = function()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
         end,
-    })
-
-    vim.api.nvim_create_autocmd("VimEnter", {
-        command = "clearjumps | delmarks 0-9A-Za-z^[]",
     })
 
     if vim.fn.executable("fcitx5-remote") == 1 then
