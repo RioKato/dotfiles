@@ -54,11 +54,7 @@ local function init_editor()
     })
 
     vim.api.nvim_create_autocmd("VimEnter", {
-        command = "clearjumps",
-    })
-
-    vim.api.nvim_create_autocmd("VimEnter", {
-        command = "delmarks 0-9A-Za-z^[]",
+        command = "clearjumps | delmarks 0-9A-Za-z^[]",
     })
 
     if vim.fn.executable("fcitx5-remote") == 1 then
