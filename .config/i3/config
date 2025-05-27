@@ -1,4 +1,3 @@
-font pango:monospace 8
 set $mod Mod4
 
 bindsym $mod+h focus left
@@ -39,8 +38,8 @@ bindsym $mod+r mode "resize"
 bindsym $mod+v split h
 bindsym $mod+s split v
 bindsym $mod+z fullscreen toggle
+bindsym $mod+c kill
 
-bindsym $mod+Shift+q kill
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
@@ -75,13 +74,23 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-bindsym $mod+Return exec i3-sensible-terminal
+#############################################################################
+font pango:monospace 8
+title_align center
+client.focused          #272c33 #404552 #ffffff #5294e2 #3e646f
+client.focused_inactive #313742 #29303a #ffffff #484e50 #313742
+client.unfocused        #313742 #29303a #888888 #292d2e #313742
+client.urgent           #2f343a #5294e2 #ffffff #5294e2 #3e646f
+client.placeholder      #000000 #0c0c0c #ffffff #000000 #0c0c0c
 
+#############################################################################
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id xfce4-panel -d
+exec --no-startup-id picom -CGbm 0.75
 exec --no-startup-id feh --bg-scale $HOME/.config/i3/wallpaper.png
 
 #############################################################################
+bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+d exec rofi -combi-modi drun -show combi
 bindsym $mod+b exec /usr/bin/google-chrome-stable
