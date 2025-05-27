@@ -54,16 +54,10 @@ qemu-user-static-binfmt
 libvirt
 virt-manager
 
-smbclient
-openldap
-nfs-utils
-mariadb
-postgresql
-net-snmp
-openvpn
 
 nmap
 gnu-netcat
 proxychains-ng
+openvpn
 tcpdump
 wireshark-qt
