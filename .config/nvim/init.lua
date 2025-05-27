@@ -199,8 +199,6 @@ lazy().setup({
         end,
     },
 
-    { "windwp/nvim-autopairs", opts = {} },
-
     { "machakann/vim-sandwich" },
 
     { "itchyny/vim-qfedit" },
