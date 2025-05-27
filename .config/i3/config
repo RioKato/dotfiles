@@ -83,4 +83,5 @@ exec --no-startup-id xfce4-panel -d
 exec --no-startup-id feh --bg-scale $HOME/.config/i3/wallpaper.png
 
 #############################################################################
+bindsym $mod+d exec rofi -combi-modi drun -show combi
 bindsym $mod+b exec /usr/bin/google-chrome-stable
