@@ -4,8 +4,6 @@ xsel
 xclip
 fcitx5-im
 fcitx5-mozc
-plank
-cutefish-icons
 yay
 
 gcc
