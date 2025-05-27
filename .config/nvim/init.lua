@@ -350,6 +350,25 @@ lazy().setup({
     },
 
     {
+        "nvimtools/none-ls.nvim",
+        dependencies = { "nvim-lua/plenary.nvim" },
+
+        config = function()
+            local null_ls = require("null-ls")
+
+            null_ls.setup({
+                sources = {
+                    null_ls.builtins.formatting.stylua,
+                    null_ls.builtins.formatting.black,
+                    null_ls.builtins.formatting.prettier.with({
+                        filetypes = { "markdown" },
+                    }),
+                },
+            })
+        end,
+    },
+
+    {
         "stevearc/oil.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
 
@@ -374,52 +393,6 @@ lazy().setup({
         end,
     },
 
-    { "williamboman/mason.nvim", opts = {} },
-
-    {
-        "williamboman/mason-lspconfig.nvim",
-        dependencies = {
-            "williamboman/mason.nvim",
-            "neovim/nvim-lspconfig",
-        },
-
-        opts = {
-            ensure_installed = { "pyright", "ts_ls", "cmake" },
-        },
-    },
-
-    {
-        "nvimtools/none-ls.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-
-        config = function()
-            local null_ls = require("null-ls")
-
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.black,
-                    null_ls.builtins.formatting.prettier.with({
-                        filetypes = { "markdown" },
-                    }),
-                },
-            })
-        end,
-    },
-
-    {
-        "jay-babu/mason-null-ls.nvim",
-        dependencies = {
-            "williamboman/mason.nvim",
-            "nvimtools/none-ls.nvim",
-        },
-
-        opts = {
-            ensure_installed = nil,
-            automatic_installation = true,
-        },
-    },
-
     { "linrongbin16/gitlinker.nvim", opts = {} },
 
     {
@@ -431,23 +404,6 @@ lazy().setup({
                 enabled = false,
             },
         },
-    },
-
-    { "HakonHarnes/img-clip.nvim", opts = {} },
-
-    {
-        "iamcco/markdown-preview.nvim",
-        build = ":call mkdp#util#install()",
-
-        config = function()
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "markdown",
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "r", "<cmd>MarkdownPreview<cr>", opts)
-                end,
-            })
-        end,
     },
 
     {
