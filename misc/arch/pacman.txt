@@ -31,6 +31,7 @@ nodejs
 npm
 php
 ruby
+deno
 
 zsh
 zsh-completions
