@@ -17,6 +17,5 @@ done
 if command -v gdb >& /dev/null
 then
   wget -O ~/.gef.py -q https://gef.blah.cat/py
-  # wget -q -O- https://github.com/hugsy/gef/raw/main/scripts/gef-extras.sh | sh
   ln -snf ~/dotfiles/.gdbinit ~/.gdbinit
 fi
