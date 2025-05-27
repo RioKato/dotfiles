@@ -241,26 +241,8 @@ lazy().setup({
                 preset = "none",
                 ["<Tab>"] = { "select_next", "fallback" },
                 ["<S-Tab>"] = { "select_prev", "fallback" },
-            },
-            cmdline = {
-                keymap = {
-                    preset = "inherit",
-                    ["<Tab>"] = { "show_and_insert", "select_next" },
-                    ["<S-Tab>"] = { "show_and_insert", "select_prev" },
-                    ["<C-n>"] = { "select_next", "fallback" },
-                    ["<C-p>"] = { "select_prev", "fallback" },
-                },
-                completion = {
-                    list = {
-                        selection = {
-                            preselect = false,
-                            auto_insert = true,
-                        },
-                    },
-                    menu = {
-                        auto_show = true,
-                    },
-                },
+                ["<C-n>"] = { "select_next", "fallback" },
+                ["<C-p>"] = { "select_prev", "fallback" },
             },
             completion = {
                 list = {
@@ -277,6 +259,26 @@ lazy().setup({
                 documentation = {
                     auto_show = true,
                     auto_show_delay_ms = 500,
+                },
+            },
+            cmdline = {
+                keymap = {
+                    preset = "inherit",
+                    ["<Tab>"] = { "select_next", "fallback" },
+                    ["<S-Tab>"] = { "select_prev", "fallback" },
+                    ["<C-n>"] = { "select_next", "fallback" },
+                    ["<C-p>"] = { "select_prev", "fallback" },
+                },
+                completion = {
+                    list = {
+                        selection = {
+                            preselect = false,
+                            auto_insert = true,
+                        },
+                    },
+                    menu = {
+                        auto_show = true,
+                    },
                 },
             },
             sources = {
