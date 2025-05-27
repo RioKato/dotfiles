@@ -80,7 +80,6 @@ bindsym $mod+d exec --no-startup-id dmenu_run
 
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id fcitx5
 
 #############################################################################
 bindsym $mod+b exec /usr/bin/google-chrome-stable
