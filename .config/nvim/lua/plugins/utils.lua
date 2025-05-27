@@ -1,15 +1,17 @@
 return {
-    "folke/which-key.nvim",
+    {
+        "folke/which-key.nvim",
 
-    opts = {
-        triggers = {
-            { "<C-w>" },
-            { "z" },
-            { "g" },
-        },
-        plugins = {
-            marks = false,
-            registers = false,
+        opts = {
+            triggers = {
+                { "<C-w>" },
+                { "z" },
+                { "g" },
+            },
+            plugins = {
+                marks = false,
+                registers = false,
+            },
         },
     },
 }
