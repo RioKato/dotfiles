@@ -116,12 +116,6 @@ export LESS="-R"
 
 export EDITOR=vim
 alias view='vim -R'
-alias clang='clang -MJ compile_commands.json'
-alias gcc-cov='gcc -coverage'
-alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
-alias git-pclone='git clone --filter=blob:none -n'
-alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
-alias rrrecord='rr record --bind-to-cpu=0'
 
 if command -v nvim &> /dev/null
 then
@@ -140,8 +134,13 @@ case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
   Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
 esac
 
+alias clang='clang -MJ compile_commands.json'
+alias gcc-cov='gcc -coverage'
+alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
+alias git-pclone='git clone --filter=blob:none -n'
+alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
+alias rrrecord='rr record --bind-to-cpu=0'
 export WWW_HOME=https://www.google.com
-
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
