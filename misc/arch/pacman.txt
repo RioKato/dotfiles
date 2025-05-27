@@ -5,6 +5,7 @@ xclip
 fcitx5-im
 fcitx5-mozc
 xfce4-panel
+xfce4-whiskermenu-plugin
 yay
 
 gcc
