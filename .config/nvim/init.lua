@@ -1,6 +1,3 @@
--- For practice
-vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
-
 local function init_editor()
     vim.opt.encoding = "utf-8"
     vim.opt.autoindent = true
