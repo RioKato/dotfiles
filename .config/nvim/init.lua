@@ -45,8 +45,12 @@ local function init_editor()
     vim.keymap.set({ "n", "x" }, "gj", "j")
     vim.keymap.set({ "n", "x" }, "gk", "k")
     vim.keymap.set({ "n", "x" }, "x", '"_x')
-    vim.keymap.set("i", "<C-d>", "<del>")
+    vim.keymap.set({ "i", "c" }, "<C-d>", "<del>")
     vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
+    vim.keymap.set("c", "<C-f>", "<right>")
+    vim.keymap.set("c", "<C-b>", "<left>")
+    vim.keymap.set("c", "<C-a>", "<home>")
+    vim.keymap.set("c", "<C-e>", "<end>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
@@ -234,9 +238,29 @@ lazy().setup({
 
         opts = {
             keymap = {
-                preset = "default",
+                preset = "none",
                 ["<Tab>"] = { "select_next", "fallback" },
                 ["<S-Tab>"] = { "select_prev", "fallback" },
+            },
+            cmdline = {
+                keymap = {
+                    preset = "inherit",
+                    ["<Tab>"] = { "show_and_insert", "select_next" },
+                    ["<S-Tab>"] = { "show_and_insert", "select_prev" },
+                    ["<C-n>"] = { "select_next", "fallback" },
+                    ["<C-p>"] = { "select_prev", "fallback" },
+                },
+                completion = {
+                    list = {
+                        selection = {
+                            preselect = false,
+                            auto_insert = true,
+                        },
+                    },
+                    menu = {
+                        auto_show = true,
+                    },
+                },
             },
             completion = {
                 list = {
