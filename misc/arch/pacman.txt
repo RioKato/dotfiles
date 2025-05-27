@@ -54,7 +54,6 @@ qemu-user-static-binfmt
 libvirt
 virt-manager
 
-
 nmap
 gnu-netcat
 proxychains-ng
