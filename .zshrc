@@ -140,7 +140,7 @@ alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias git-pclone='git clone --filter=blob:none -n'
 alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
 alias rrrecord='rr record --bind-to-cpu=0'
-export WWW_HOME=https://www.google.com
+export WWW_HOME='https://www.google.com?gl=ja&hl=ja'
 export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin

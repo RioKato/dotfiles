@@ -2,5 +2,5 @@
 
 cat <<END
 w3m-control: BACK
-w3m-control: GOTO https://www.google.com/search?q=$QUERY_STRING
+w3m-control: GOTO https://www.google.com/search?gl=ja&hl=ja&q=$QUERY_STRING
 END
