@@ -7,7 +7,6 @@ fcitx5-mozc
 dex
 xss-lock
 blueman
-pulseaudio
 picom
 feh
 rofi
