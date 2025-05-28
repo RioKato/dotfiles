@@ -11,6 +11,8 @@ pulseaudio
 picom
 feh
 rofi
+scrot
+arandr
 yay
 
 gcc
