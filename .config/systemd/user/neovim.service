@@ -1,0 +1,12 @@
+[Unit]
+Description=neovim
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/nvim --headless --listen /tmp/nvim.pipe
+ExecStop=/bin/kill -INT ${MAINPID}
+ExecStopPost=/usr/bin/rm /tmp/nvim.pipe
+
+[Install]
+WantedBy=multi-user.target
