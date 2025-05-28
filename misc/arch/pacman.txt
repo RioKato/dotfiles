@@ -6,8 +6,7 @@ fcitx5-im
 fcitx5-mozc
 dex
 xss-lock
-xfce4-panel
-xfce4-whiskermenu-plugin
+blueman
 picom
 feh
 rofi

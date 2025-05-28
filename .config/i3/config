@@ -76,7 +76,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 #############################################################################
-font pango:monospace 8
+font pango:monospace 10
 title_align center
 client.focused          #272c33 #404552 #ffffff #5294e2 #3e646f
 client.focused_inactive #313742 #29303a #ffffff #484e50 #313742
@@ -87,14 +87,12 @@ focus_follows_mouse no
 
 bar {
   status_command i3status
+  position top
 }
 
 #############################################################################
 exec --no-startup-id dex --autostart --environment i3
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-exec --no-startup-id nm-applet
-exec --no-startup-id blueman-applet
-exec --no-startup-id picom -CGbm 0.75
 exec --no-startup-id feh --bg-scale $HOME/.config/i3/wallpaper.png
 
 #############################################################################
