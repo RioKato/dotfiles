@@ -83,12 +83,11 @@ client.focused_inactive #313742 #29303a #ffffff #484e50 #313742
 client.unfocused        #313742 #29303a #888888 #292d2e #313742
 client.urgent           #2f343a #5294e2 #ffffff #5294e2 #3e646f
 client.placeholder      #000000 #0c0c0c #ffffff #000000 #0c0c0c
+focus_follows_mouse no
 
 bar {
   status_command i3status
 }
-
-focus_follows_mouse no
 
 #############################################################################
 exec --no-startup-id dex --autostart --environment i3
