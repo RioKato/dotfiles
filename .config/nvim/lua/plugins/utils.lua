@@ -14,6 +14,7 @@ return {
             },
         },
     },
+
     {
         "Goose97/timber.nvim",
         version = "*",
