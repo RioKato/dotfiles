@@ -63,13 +63,28 @@ local function init_editor()
             io.write("\7")
         end,
     })
+end
 
+local function init_ime()
     if vim.fn.executable("fcitx5-remote") == 1 then
         vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
             callback = function()
                 vim.fn.system({ "fcitx5-remote", "-c" })
             end,
         })
+
+        vim.api.nvim_create_user_command("IME", function()
+            if vim.g.ime == nil then
+                vim.g.ime = vim.api.nvim_create_autocmd("InsertEnter", {
+                    callback = function()
+                        vim.fn.system({ "fcitx5-remote", "-o" })
+                    end,
+                })
+            else
+                vim.api.nvim_del_autocmd(vim.g.ime)
+                vim.g.ime = nil
+            end
+        end, {})
     end
 end
 
@@ -143,6 +158,7 @@ local function lazy()
 end
 
 init_editor()
+init_ime()
 init_tab()
 init_quickfix()
 init_lsp({
