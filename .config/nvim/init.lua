@@ -36,9 +36,21 @@ local function init_editor()
     vim.g.loaded_netrwPlugin = 1
 
     local esc = "<C-u>"
-    vim.keymap.set({ "", "i" }, esc, "<esc>")
-    vim.keymap.set("c", esc, "<C-c>")
-    vim.keymap.set("t", esc, "<C-\\><C-n>")
+    vim.keymap.set({ "", "i" }, esc, function()
+        local key = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
+        vim.api.nvim_feedkeys(key, "m", false)
+        io.write("\7")
+    end)
+    vim.keymap.set("c", esc, function()
+        local key = vim.api.nvim_replace_termcodes("<C-c>", true, false, true)
+        vim.api.nvim_feedkeys(key, "m", false)
+        io.write("\7")
+    end)
+    vim.keymap.set("t", esc, function()
+        local key = vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true)
+        vim.api.nvim_feedkeys(key, "m", false)
+        io.write("\7")
+    end)
 
     vim.keymap.set({ "n", "x" }, "j", "gj")
     vim.keymap.set({ "n", "x" }, "k", "gk")
@@ -55,12 +67,6 @@ local function init_editor()
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
-        end,
-    })
-
-    vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
-        callback = function()
-            io.write("\7")
         end,
     })
 end

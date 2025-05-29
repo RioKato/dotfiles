@@ -1,1 +1,1 @@
-vim.keymap.set({ "", "i", "c" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
+vim.keymap.set({ "", "i" }, "<C-c>", '<cmd>echoerr "Don\'t use C-c"<cr>')
