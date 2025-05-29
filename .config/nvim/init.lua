@@ -35,23 +35,6 @@ local function init_editor()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
-    local esc = "<C-u>"
-    vim.keymap.set({ "", "i" }, esc, function()
-        local key = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
-        vim.api.nvim_feedkeys(key, "n", false)
-        io.write("\7")
-    end)
-    vim.keymap.set("c", esc, function()
-        local key = vim.api.nvim_replace_termcodes("<C-c>", true, false, true)
-        vim.api.nvim_feedkeys(key, "n", false)
-        io.write("\7")
-    end)
-    vim.keymap.set("t", esc, function()
-        local key = vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true)
-        vim.api.nvim_feedkeys(key, "n", false)
-        io.write("\7")
-    end)
-
     vim.keymap.set({ "n", "x" }, "j", "gj")
     vim.keymap.set({ "n", "x" }, "k", "gk")
     vim.keymap.set({ "n", "x" }, "gj", "j")
@@ -69,6 +52,26 @@ local function init_editor()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
         end,
     })
+end
+
+local function init_esc(esc)
+    vim.keymap.set({ "", "i" }, esc, function()
+        local key = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
+        vim.api.nvim_feedkeys(key, "n", false)
+        io.write("\7")
+    end)
+
+    vim.keymap.set("c", esc, function()
+        local key = vim.api.nvim_replace_termcodes("<C-c>", true, false, true)
+        vim.api.nvim_feedkeys(key, "n", false)
+        io.write("\7")
+    end)
+
+    vim.keymap.set("t", esc, function()
+        local key = vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true)
+        vim.api.nvim_feedkeys(key, "n", false)
+        io.write("\7")
+    end)
 end
 
 local function init_ime()
@@ -164,6 +167,7 @@ local function lazy()
 end
 
 init_editor()
+init_esc("<C-u>")
 init_ime()
 init_tab()
 init_quickfix()
