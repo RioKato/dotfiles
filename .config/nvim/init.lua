@@ -58,6 +58,12 @@ local function init_editor()
         end,
     })
 
+    vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
+        callback = function()
+            io.write("\7")
+        end,
+    })
+
     if vim.fn.executable("fcitx5-remote") == 1 then
         vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
             callback = function()
