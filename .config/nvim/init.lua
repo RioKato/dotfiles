@@ -30,6 +30,7 @@ local function init_editor()
     vim.opt.termguicolors = true
     vim.opt.syntax = "on"
     vim.opt.clipboard = "unnamedplus"
+    vim.opt.mouse = ""
     vim.g.loaded_matchparen = 1
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
