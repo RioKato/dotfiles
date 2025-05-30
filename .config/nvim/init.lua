@@ -46,6 +46,12 @@ local function init_editor()
     vim.keymap.set("c", "<C-b>", "<left>")
     vim.keymap.set("c", "<C-a>", "<home>")
     vim.keymap.set("c", "<C-e>", "<end>")
+    vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
+    vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
+    vim.keymap.set("n", "g^", "<cmd>tabfirst<cr>")
+    vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
+    vim.keymap.set("n", "gn", "<cmd>tab sbuffer<cr>")
+    vim.keymap.set("n", "gc", "<cmd>tabclose<cr>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
@@ -81,13 +87,6 @@ local function init_ime()
             end
         end)
     end
-end
-
-local function init_tab()
-    vim.keymap.set("n", "<C-w>t", "<cmd>tabnew %<cr>")
-    vim.keymap.set("n", "<C-w>C", "<cmd>tabclose<cr>")
-    vim.keymap.set("n", "<C-w>f", "<cmd>silent! +tabnext<cr>")
-    vim.keymap.set("n", "<C-w>b", "<cmd>silent! -tabnext<cr>")
 end
 
 local function init_quickfix()
@@ -155,7 +154,6 @@ end
 init_editor()
 init_esc("<C-u>")
 init_ime()
-init_tab()
 init_quickfix()
 init_lsp({
     "pyright",
