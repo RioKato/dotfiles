@@ -27,8 +27,14 @@ local function init_editor()
     vim.opt.number = true
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
-    vim.opt.statusline = "%{repeat('─',winwidth('.'))}"
     vim.opt.laststatus = 0
+    vim.opt.statusline = "─"
+    vim.opt.fillchars = {
+        stl = "─",
+        stlnc = "─",
+        vert = "│",
+        eob = " ",
+    }
     vim.opt.showtabline = 2
     vim.opt.termguicolors = true
     vim.opt.syntax = "on"
