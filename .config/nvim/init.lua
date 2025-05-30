@@ -109,7 +109,7 @@ local function init_tabline()
     function tabline()
         local curnr = vim.fn.tabpagenr()
         local lastnr = vim.fn.tabpagenr("$")
-        local tabline = ""
+        local tabs = ""
         local lower = 0
         local upper = 0
         local header = "  "
@@ -136,18 +136,17 @@ local function init_tabline()
 
         for i = 1, lastnr do
             if i == curnr then
-                tabline = tabline .. "%#TabLineSel#"
+                tabs = tabs .. "%#TabLineSel#"
             else
-                tabline = tabline .. "%#TabLine#"
+                tabs = tabs .. "%#TabLine#"
             end
 
             if i >= lower and i <= upper then
-                tabline = tabline .. "[%{pathshorten(getcwd())}]"
+                tabs = tabs .. "[%{pathshorten(getcwd())}]"
             end
         end
 
-        tabline = string.format("%s%s%%#TabLineFill#%s%%=(%d/%d)", header, tabline, hooter, curnr, lastnr)
-        return tabline
+        return string.format("%%=%s%s%%#TabLineFill#%s%%=(%d/%d)", header, tabs, hooter, curnr, lastnr)
     end
 
     vim.opt.tabline = "%!v:lua.tabline()"
