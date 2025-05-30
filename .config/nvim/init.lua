@@ -55,23 +55,9 @@ local function init_editor()
 end
 
 local function init_esc(esc)
-    vim.keymap.set({ "", "i" }, esc, function()
-        local key = vim.api.nvim_replace_termcodes("<esc>", true, false, true)
-        vim.api.nvim_feedkeys(key, "n", false)
-        io.write("\7")
-    end)
-
-    vim.keymap.set("c", esc, function()
-        local key = vim.api.nvim_replace_termcodes("<C-c>", true, false, true)
-        vim.api.nvim_feedkeys(key, "n", false)
-        io.write("\7")
-    end)
-
-    vim.keymap.set("t", esc, function()
-        local key = vim.api.nvim_replace_termcodes("<C-\\><C-n>", true, false, true)
-        vim.api.nvim_feedkeys(key, "n", false)
-        io.write("\7")
-    end)
+    vim.keymap.set({ "", "i" }, esc, "<esc>")
+    vim.keymap.set("c", esc, "<C-c>")
+    vim.keymap.set("t", esc, "<C-\\><C-n>")
 end
 
 local function init_ime()
