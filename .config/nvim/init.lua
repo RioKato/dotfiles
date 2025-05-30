@@ -91,6 +91,23 @@ local function init_ime()
     end
 end
 
+local function init_tabline()
+    function tabline()
+        local tabline = ""
+        local lastnr = vim.fn.tabpagenr("$")
+
+        for i = 1, lastnr do
+            tabline = tabline .. (i == vim.fn.tabpagenr() and "%#TabLineSel#" or "%#TabLine#")
+            tabline = tabline .. "[%{pathshorten(getcwd())}]"
+        end
+
+        tabline = tabline .. "%#TabLineFill#"
+        return tabline
+    end
+
+    vim.opt.tabline = "%!v:lua.tabline()"
+end
+
 local function init_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
     vim.keymap.set("n", "<C-n>", "<cmd>silent! cnext<cr>")
@@ -156,6 +173,7 @@ end
 init_editor()
 init_esc("<C-u>")
 init_ime()
+init_tabline()
 init_quickfix()
 init_lsp({
     "pyright",
