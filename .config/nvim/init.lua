@@ -61,7 +61,6 @@ local function init_appearance()
     vim.opt.number = true
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
-    vim.opt.laststatus = 0
     vim.opt.statusline = "─"
     vim.opt.fillchars = {
         stl = "─",
