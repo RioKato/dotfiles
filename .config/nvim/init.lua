@@ -113,8 +113,6 @@ local function init_appearance()
         local tabs = ""
         local lower = 0
         local upper = 0
-        local header = "  "
-        local hooter = "  "
 
         if curnr == 1 then
             lower = curnr
@@ -125,14 +123,6 @@ local function init_appearance()
         else
             lower = curnr - 1
             upper = curnr + 1
-        end
-
-        if lower > 1 then
-            header = "❮❮"
-        end
-
-        if upper < lastnr then
-            hooter = "❯❯"
         end
 
         for i = 1, lastnr do
@@ -147,7 +137,14 @@ local function init_appearance()
             end
         end
 
-        return string.format("%%=%s%s%%#TabLineFill#%s%%=(%d/%d)", header, tabs, hooter, curnr, lastnr)
+        return string.format(
+            "%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
+            lower > 1 and "❮❮ " or "   ",
+            tabs,
+            upper < lastnr and " ❯❯" or "   ",
+            curnr,
+            lastnr
+        )
     end
 
     vim.opt.showtabline = 2
