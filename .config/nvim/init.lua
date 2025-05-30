@@ -127,11 +127,11 @@ local function init_tabline()
         end
 
         if lower > 1 then
-            header = "<="
+            header = "❮❮"
         end
 
         if upper < lastnr then
-            hooter = "=>"
+            hooter = "❯❯"
         end
 
         for i = 1, lastnr do
