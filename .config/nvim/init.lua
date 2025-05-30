@@ -82,18 +82,18 @@ local function init_ime()
             end,
         })
 
-        vim.api.nvim_create_user_command("IME", function()
-            if vim.g.ime == nil then
-                vim.g.ime = vim.api.nvim_create_autocmd("InsertEnter", {
+        vim.keymap.set("n", "gj", function()
+            if vim.g.ime_autocmd == nil then
+                vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
                     callback = function()
                         vim.fn.system({ "fcitx5-remote", "-o" })
                     end,
                 })
             else
-                vim.api.nvim_del_autocmd(vim.g.ime)
-                vim.g.ime = nil
+                vim.api.nvim_del_autocmd(vim.g.ime_autocmd)
+                vim.g.ime_autocmd = nil
             end
-        end, {})
+        end)
     end
 end
 
