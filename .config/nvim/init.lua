@@ -35,6 +35,13 @@ local function init_editor()
         vert = "│",
         eob = " ",
     }
+    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+        callback = function()
+            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "VertSplit" }) do
+                vim.api.nvim_set_hl(0, hl, { link = "Normal" })
+            end
+        end,
+    })
     vim.opt.showtabline = 2
     vim.opt.termguicolors = true
     vim.opt.syntax = "on"
