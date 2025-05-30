@@ -72,18 +72,10 @@ local function init_appearance()
     vim.opt.showtabline = 2
     vim.opt.tabline = "%!v:lua.tabline()"
 
-    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-        callback = function()
-            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "VertSplit" }) do
-                vim.api.nvim_set_hl(0, hl, { link = "Normal" })
-            end
-        end,
-    })
-
     function tabline()
         local curnr = vim.fn.tabpagenr()
         local lastnr = vim.fn.tabpagenr("$")
-        local tabs = ""
+        local elems = {}
         local lower = 0
         local upper = 0
 
@@ -100,25 +92,33 @@ local function init_appearance()
 
         for i = 1, lastnr do
             if i == curnr then
-                tabs = tabs .. "%#TabLineSel#"
+                table.insert(elems, "%#TabLineSel#")
             else
-                tabs = tabs .. "%#TabLine#"
+                table.insert(elems, "%#TabLine#")
             end
 
             if i >= lower and i <= upper then
-                tabs = tabs .. "[%{pathshorten(getcwd())}]"
+                table.insert(elems, "[%{pathshorten(getcwd())}]")
             end
         end
 
         return string.format(
             "%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
             lower > 1 and "❮❮ " or "   ",
-            tabs,
+            table.concat(elems, ""),
             upper < lastnr and " ❯❯" or "   ",
             curnr,
             lastnr
         )
     end
+
+    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+        callback = function()
+            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "VertSplit" }) do
+                vim.api.nvim_set_hl(0, hl, { link = "Normal" })
+            end
+        end,
+    })
 end
 
 local function init_esc(esc)
