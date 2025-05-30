@@ -24,27 +24,6 @@ local function init_editor()
     vim.opt.virtualedit = "block"
     vim.opt.showmatch = true
     vim.opt.matchtime = 1
-    vim.opt.number = true
-    vim.opt.cursorline = true
-    vim.opt.cursorlineopt = "number"
-    vim.opt.laststatus = 0
-    vim.opt.statusline = "─"
-    vim.opt.fillchars = {
-        stl = "─",
-        stlnc = "─",
-        vert = "│",
-        eob = " ",
-    }
-    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-        callback = function()
-            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "VertSplit" }) do
-                vim.api.nvim_set_hl(0, hl, { link = "Normal" })
-            end
-        end,
-    })
-    vim.opt.showtabline = 2
-    vim.opt.termguicolors = true
-    vim.opt.syntax = "on"
     vim.opt.clipboard = "unnamedplus"
     vim.opt.mouse = ""
     vim.g.loaded_matchparen = 1
@@ -105,7 +84,29 @@ local function init_ime()
     end
 end
 
-local function init_tabline()
+local function init_appearance()
+    vim.opt.termguicolors = true
+    vim.opt.syntax = "on"
+    vim.opt.number = true
+    vim.opt.cursorline = true
+    vim.opt.cursorlineopt = "number"
+    vim.opt.laststatus = 0
+    vim.opt.statusline = "─"
+    vim.opt.fillchars = {
+        stl = "─",
+        stlnc = "─",
+        vert = "│",
+        eob = " ",
+    }
+
+    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+        callback = function()
+            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "VertSplit" }) do
+                vim.api.nvim_set_hl(0, hl, { link = "Normal" })
+            end
+        end,
+    })
+
     function tabline()
         local curnr = vim.fn.tabpagenr()
         local lastnr = vim.fn.tabpagenr("$")
@@ -149,6 +150,7 @@ local function init_tabline()
         return string.format("%%=%s%s%%#TabLineFill#%s%%=(%d/%d)", header, tabs, hooter, curnr, lastnr)
     end
 
+    vim.opt.showtabline = 2
     vim.opt.tabline = "%!v:lua.tabline()"
 end
 
@@ -217,7 +219,7 @@ end
 init_editor()
 init_esc("<C-u>")
 init_ime()
-init_tabline()
+init_appearance()
 init_quickfix()
 init_lsp({
     "pyright",
