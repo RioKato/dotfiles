@@ -397,9 +397,25 @@ lazy().setup({
                     show_hidden = true,
                 },
                 keymaps = {
-                    ["<C-v>"] = { "actions.select", opts = { vertical = true } },
-                    ["<C-s>"] = { "actions.select", opts = { horizontal = true } },
-                    ["<space><space>"] = { "actions.cd", mode = "n" },
+                    ["<C-v>"] = {
+                        "actions.select",
+                        opts = {
+                            vertical = true,
+                        },
+                    },
+                    ["<C-s>"] = {
+                        "actions.select",
+                        opts = {
+                            horizontal = true,
+                        },
+                    },
+                    ["<space><space>"] = {
+                        "actions.cd",
+                        opts = {
+                            scope = "tab",
+                        },
+                        mode = "n",
+                    },
                 },
             })
 
