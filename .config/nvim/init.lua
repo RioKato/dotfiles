@@ -51,7 +51,7 @@ local function init_editor()
     vim.keymap.set("n", "g^", "<cmd>tabfirst<cr>")
     vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
     vim.keymap.set("n", "gn", "<cmd>tab sbuffer<cr>")
-    vim.keymap.set("n", "gc", "<cmd>tabclose<cr>")
+    vim.keymap.set("n", "gx", "<cmd>tabclose<cr>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
