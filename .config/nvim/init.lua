@@ -55,35 +55,6 @@ local function init_editor()
     })
 end
 
-local function init_esc(esc)
-    vim.keymap.set({ "", "i" }, esc, "<esc>")
-    vim.keymap.set("c", esc, "<C-c>")
-    vim.keymap.set("t", esc, "<C-\\><C-n>")
-end
-
-local function init_ime()
-    if vim.fn.executable("fcitx5-remote") == 1 then
-        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
-            callback = function()
-                vim.fn.system({ "fcitx5-remote", "-c" })
-            end,
-        })
-
-        vim.keymap.set("n", "gj", function()
-            if vim.g.ime_autocmd == nil then
-                vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
-                    callback = function()
-                        vim.fn.system({ "fcitx5-remote", "-o" })
-                    end,
-                })
-            else
-                vim.api.nvim_del_autocmd(vim.g.ime_autocmd)
-                vim.g.ime_autocmd = nil
-            end
-        end)
-    end
-end
-
 local function init_appearance()
     vim.opt.termguicolors = true
     vim.opt.syntax = "on"
@@ -98,6 +69,8 @@ local function init_appearance()
         vert = "│",
         eob = " ",
     }
+    vim.opt.showtabline = 2
+    vim.opt.tabline = "%!v:lua.tabline()"
 
     vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         callback = function()
@@ -146,9 +119,35 @@ local function init_appearance()
             lastnr
         )
     end
+end
 
-    vim.opt.showtabline = 2
-    vim.opt.tabline = "%!v:lua.tabline()"
+local function init_esc(esc)
+    vim.keymap.set({ "", "i" }, esc, "<esc>")
+    vim.keymap.set("c", esc, "<C-c>")
+    vim.keymap.set("t", esc, "<C-\\><C-n>")
+end
+
+local function init_ime()
+    if vim.fn.executable("fcitx5-remote") == 1 then
+        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
+            callback = function()
+                vim.fn.system({ "fcitx5-remote", "-c" })
+            end,
+        })
+
+        vim.keymap.set("n", "gj", function()
+            if vim.g.ime_autocmd == nil then
+                vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
+                    callback = function()
+                        vim.fn.system({ "fcitx5-remote", "-o" })
+                    end,
+                })
+            else
+                vim.api.nvim_del_autocmd(vim.g.ime_autocmd)
+                vim.g.ime_autocmd = nil
+            end
+        end)
+    end
 end
 
 local function init_quickfix()
@@ -214,9 +213,9 @@ local function lazy()
 end
 
 init_editor()
+init_appearance()
 init_esc("<C-u>")
 init_ime()
-init_appearance()
 init_quickfix()
 init_lsp({
     "pyright",
