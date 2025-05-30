@@ -86,8 +86,8 @@ end
 local function init_tab()
     vim.keymap.set("n", "<C-w>t", "<cmd>tabnew %<cr>")
     vim.keymap.set("n", "<C-w>C", "<cmd>tabclose<cr>")
-    vim.keymap.set("n", "<C-w>p", "<cmd>tabnext<cr>")
-    vim.keymap.set("n", "<C-w>n", "<cmd>tabprevious<cr>")
+    vim.keymap.set("n", "<C-w>f", "<cmd>silent! +tabnext<cr>")
+    vim.keymap.set("n", "<C-w>b", "<cmd>silent! -tabnext<cr>")
 end
 
 local function init_quickfix()
