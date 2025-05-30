@@ -94,10 +94,11 @@ end
 local function init_tabline()
     function tabline()
         local tabline = ""
+        local curnr = vim.fn.tabpagenr()
         local lastnr = vim.fn.tabpagenr("$")
 
         for i = 1, lastnr do
-            tabline = tabline .. (i == vim.fn.tabpagenr() and "%#TabLineSel#" or "%#TabLine#")
+            tabline = tabline .. (i == curnr and "%#TabLineSel#" or "%#TabLine#")
             tabline = tabline .. "[%{pathshorten(getcwd())}]"
         end
 
