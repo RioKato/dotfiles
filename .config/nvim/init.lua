@@ -27,6 +27,7 @@ local function init_editor()
     vim.opt.number = true
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
+    vim.opt.showtabline = 2
     vim.opt.termguicolors = true
     vim.opt.syntax = "on"
     vim.opt.clipboard = "unnamedplus"
