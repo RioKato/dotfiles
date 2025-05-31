@@ -93,9 +93,13 @@ local function init_appearance()
         upper = math.min(upper, lastnr)
 
         for i = lower, upper do
-            local format = i == curnr and "%%#TabLineSel#(%s)" or "%%#TabLine#(%s)"
-            local cwd = vim.fn.getcwd(vim.fn.tabpagewinnr(i), i)
-            table.insert(elems, string.format(format, vim.fn.pathshorten(cwd)))
+            table.insert(
+                elems,
+                string.format(
+                    i == curnr and "%%#TabLineSel#(%s)" or "%%#TabLine#(%s)",
+                    vim.fn.pathshorten(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i))
+                )
+            )
         end
 
         return string.format(
