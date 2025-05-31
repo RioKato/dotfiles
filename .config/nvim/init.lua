@@ -103,7 +103,7 @@ local function init_appearance()
         end
 
         return string.format(
-            "%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
+            "%%#TabLineFill#%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
             lower > 1 and "❮❮ " or "   ",
             table.concat(elems, ""),
             upper < lastnr and " ❯❯" or "   ",
