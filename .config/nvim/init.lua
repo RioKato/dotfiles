@@ -243,7 +243,12 @@ lazy().setup({
         "folke/zen-mode.nvim",
 
         config = function()
-            require("zen-mode").setup({ window = { width = 0.95 } })
+            require("zen-mode").setup({
+                window = {
+                    width = 0.95,
+                },
+            })
+
             vim.keymap.set("n", "<C-w>z", "<cmd>ZenMode<cr>")
         end,
     },

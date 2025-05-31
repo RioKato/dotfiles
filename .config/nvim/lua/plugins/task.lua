@@ -8,7 +8,7 @@ return {
                     external = {
                         python = "[ -e bin/activate ] && source bin/activate; python3 %",
                         rust = "cargo run",
-                        go = "go run $(dirname $(go env GOMOD))/main.go",
+                        go = 'go run "$(dirname $(go env GOMOD))/main.go"',
                         javascript = "npm start",
                         typescript = "npm start",
                     },
