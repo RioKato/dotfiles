@@ -89,17 +89,13 @@ local function init_appearance()
             upper = curnr + 1
         end
 
-        for i = 1, lastnr do
-            if i == curnr then
-                table.insert(elems, "%#TabLineSel#")
-            else
-                table.insert(elems, "%#TabLine#")
-            end
+        lower = math.max(lower, 1)
+        upper = math.min(upper, lastnr)
 
-            if i >= lower and i <= upper then
-                local cwd = vim.fn.getcwd(vim.fn.tabpagewinnr(i), i)
-                table.insert(elems, string.format("(%s)", vim.fn.pathshorten(cwd)))
-            end
+        for i = lower, upper do
+            local format = i == curnr and "%%#TabLineSel#(%s)" or "%%#TabLine#(%s)"
+            local cwd = vim.fn.getcwd(vim.fn.tabpagewinnr(i), i)
+            table.insert(elems, string.format(format, vim.fn.pathshorten(cwd)))
         end
 
         return string.format(
