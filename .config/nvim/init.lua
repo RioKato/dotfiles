@@ -74,7 +74,6 @@ local function init_appearance()
     function tabline()
         local curnr = vim.fn.tabpagenr()
         local lastnr = vim.fn.tabpagenr("$")
-        local elems = {}
         local lower = 0
         local upper = 0
 
@@ -91,10 +90,11 @@ local function init_appearance()
 
         lower = math.max(lower, 1)
         upper = math.min(upper, lastnr)
+        local tabs = {}
 
         for i = lower, upper do
             table.insert(
-                elems,
+                tabs,
                 string.format(
                     i == curnr and "%%#TabLineSel#(%s)" or "%%#TabLine#(%s)",
                     vim.fn.pathshorten(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i))
@@ -105,7 +105,7 @@ local function init_appearance()
         return string.format(
             "%%#TabLineFill#%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
             lower > 1 and "❮❮ " or "   ",
-            table.concat(elems, ""),
+            table.concat(tabs, ""),
             upper < lastnr and " ❯❯" or "   ",
             curnr,
             lastnr
