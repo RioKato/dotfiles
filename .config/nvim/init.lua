@@ -61,11 +61,11 @@ local function init_appearance()
     vim.opt.number = true
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
+    vim.opt.laststatus = 3
     vim.opt.statusline = "%= %t %="
     vim.opt.fillchars = {
         stl = "─",
         stlnc = "─",
-        vert = "│",
         eob = " ",
     }
     vim.opt.showtabline = 2
