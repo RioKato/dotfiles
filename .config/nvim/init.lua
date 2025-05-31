@@ -97,7 +97,7 @@ local function init_appearance()
                 tabs,
                 string.format(
                     i == curnr and "%%#TabLineSel#(%s)" or "%%#TabLine#(%s)",
-                    vim.fn.pathshorten(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i))
+                    vim.fn.fnamemodify(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i), ":t")
                 )
             )
         end
