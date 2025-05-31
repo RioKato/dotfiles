@@ -97,7 +97,8 @@ local function init_appearance()
             end
 
             if i >= lower and i <= upper then
-                table.insert(elems, "[%{pathshorten(getcwd())}]")
+                local cwd = vim.fn.getcwd(vim.fn.tabpagewinnr(i), i)
+                table.insert(elems, string.format("[%s]", vim.fn.pathshorten(cwd)))
             end
         end
 
