@@ -63,13 +63,13 @@ local function init_appearance()
     vim.opt.cursorlineopt = "number"
     vim.opt.laststatus = 3
     vim.opt.statusline = "%= %t %="
+    vim.opt.showtabline = 2
+    vim.opt.tabline = "%!v:lua.tabline()"
     vim.opt.fillchars = {
         stl = "─",
         stlnc = "─",
         eob = " ",
     }
-    vim.opt.showtabline = 2
-    vim.opt.tabline = "%!v:lua.tabline()"
 
     function tabline()
         local curnr = vim.fn.tabpagenr()
