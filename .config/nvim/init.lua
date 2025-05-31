@@ -232,10 +232,17 @@ lazy().setup({
     { import = "plugins" },
 
     {
-        "sainnhe/sonokai",
+        "rose-pine/neovim",
+        name = "rose-pine",
 
         config = function()
-            vim.cmd.colorscheme("sonokai")
+            require("rose-pine").setup({
+                styles = {
+                    transparency = true,
+                },
+            })
+
+            vim.cmd.colorscheme("rose-pine")
         end,
     },
 
