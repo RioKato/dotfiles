@@ -324,6 +324,7 @@ lazy().setup({
                 ["<S-Tab>"] = { "select_prev", "fallback" },
                 ["<C-n>"] = { "select_next", "fallback" },
                 ["<C-p>"] = { "select_prev", "fallback" },
+                ["<C-a>"] = { "accept" },
             },
             completion = {
                 list = {
@@ -349,6 +350,7 @@ lazy().setup({
                     ["<S-Tab>"] = { "select_prev", "fallback" },
                     ["<C-n>"] = { "select_next", "fallback" },
                     ["<C-p>"] = { "select_prev", "fallback" },
+                    ["<C-a>"] = { "accept" },
                 },
                 completion = {
                     list = {
