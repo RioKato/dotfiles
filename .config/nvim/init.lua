@@ -245,7 +245,7 @@ lazy().setup({
         config = function()
             require("zen-mode").setup({
                 window = {
-                    width = 0.95,
+                    backdrop = 1,
                 },
             })
 
