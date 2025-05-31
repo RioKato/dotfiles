@@ -61,7 +61,7 @@ local function init_appearance()
     vim.opt.number = true
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
-    vim.opt.statusline = "─"
+    vim.opt.statusline = "%= %f %="
     vim.opt.fillchars = {
         stl = "─",
         stlnc = "─",
@@ -102,7 +102,7 @@ local function init_appearance()
         end
 
         return string.format(
-            "%%f%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
+            "%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
             lower > 1 and "❮❮ " or "   ",
             table.concat(elems, ""),
             upper < lastnr and " ❯❯" or "   ",
