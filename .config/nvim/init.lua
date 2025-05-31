@@ -62,7 +62,7 @@ local function init_appearance()
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
     vim.opt.laststatus = 3
-    vim.opt.statusline = "%= %t %="
+    vim.opt.statusline = "%= [%{mode()}] %t %="
     vim.opt.showtabline = 2
     vim.opt.tabline = "%!v:lua.tabline()"
     vim.opt.fillchars = {
