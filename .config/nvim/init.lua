@@ -76,6 +76,7 @@ local function init_appearance()
         stlnc = "─",
         eob = " ",
     }
+    vim.g.qf_disable_statusline = 1
 
     function tabline()
         local curnr = vim.fn.tabpagenr()
