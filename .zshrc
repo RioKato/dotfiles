@@ -128,7 +128,7 @@ then
   }
 
   function nvrpwd() {
-    nvim --server ~/.cache/nvim/server.pipe --remote-send "<C-\><C-n>:tab sbuffer | tcd $(pwd)<cr>"
+    nvim --server ~/.cache/nvim/server.pipe --remote-send "<C-\><C-n>:tabnew $(pwd)<cr>"
   }
 
   zle -N nvrpwd

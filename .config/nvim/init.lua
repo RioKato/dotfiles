@@ -45,7 +45,7 @@ local function init_editor()
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "g^", "<cmd>tabfirst<cr>")
     vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
-    vim.keymap.set("n", "gn", "<cmd>tab sbuffer<cr>")
+    vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
     vim.keymap.set("n", "gx", "<cmd>tabclose<cr>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
@@ -458,7 +458,6 @@ lazy().setup({
             local oil = require("oil")
 
             oil.setup({
-                default_file_explorer = false,
                 view_options = {
                     show_hidden = true,
                 },
