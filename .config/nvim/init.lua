@@ -240,6 +240,12 @@ lazy().setup({
                 styles = {
                     transparency = true,
                 },
+                highlight_groups = {
+                    Visual = {
+                        bg = "muted",
+                        blend = 15,
+                    },
+                },
             })
 
             vim.cmd.colorscheme("rose-pine")
