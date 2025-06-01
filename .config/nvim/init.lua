@@ -114,7 +114,7 @@ local function init_appearance()
 
     vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         callback = function()
-            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "WinSeparator", "VertSplit", "TabLine", "TabLineFill" }) do
+            for _, hl in ipairs({ "StatusLine", "StatusLineNC", "TabLine", "TabLineFill", "WinSeparator" }) do
                 vim.api.nvim_set_hl(0, hl, { link = "Normal" })
             end
         end,
