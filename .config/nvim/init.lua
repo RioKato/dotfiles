@@ -131,29 +131,6 @@ local function init_appearance()
     })
 end
 
-local function init_ime()
-    if vim.fn.executable("fcitx5-remote") == 1 then
-        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
-            callback = function()
-                vim.fn.system({ "fcitx5-remote", "-c" })
-            end,
-        })
-
-        vim.keymap.set("n", "gj", function()
-            if vim.g.ime_autocmd == nil then
-                vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
-                    callback = function()
-                        vim.fn.system({ "fcitx5-remote", "-o" })
-                    end,
-                })
-            else
-                vim.api.nvim_del_autocmd(vim.g.ime_autocmd)
-                vim.g.ime_autocmd = nil
-            end
-        end)
-    end
-end
-
 local function init_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
     vim.keymap.set("n", "<C-n>", "<cmd>silent! cnext<cr>")
@@ -198,6 +175,43 @@ local function init_lsp(servers)
     vim.lsp.enable(servers)
 end
 
+local function init_ime()
+    if vim.fn.executable("fcitx5-remote") == 1 then
+        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
+            callback = function()
+                vim.fn.system({ "fcitx5-remote", "-c" })
+            end,
+        })
+
+        vim.keymap.set("n", "gj", function()
+            if vim.g.ime_autocmd == nil then
+                vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
+                    callback = function()
+                        vim.fn.system({ "fcitx5-remote", "-o" })
+                    end,
+                })
+            else
+                vim.api.nvim_del_autocmd(vim.g.ime_autocmd)
+                vim.g.ime_autocmd = nil
+            end
+        end)
+    end
+end
+
+init_editor()
+init_appearance()
+init_quickfix()
+init_lsp({
+    "pyright",
+    "ts_ls",
+    "cmake",
+    "clangd",
+    "rust_analyzer",
+    "gopls",
+    "jdtls",
+})
+init_ime()
+
 local function lazy()
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
@@ -215,20 +229,6 @@ local function lazy()
     vim.opt.rtp:prepend(path)
     return require("lazy")
 end
-
-init_editor()
-init_appearance()
-init_ime()
-init_quickfix()
-init_lsp({
-    "pyright",
-    "ts_ls",
-    "cmake",
-    "clangd",
-    "rust_analyzer",
-    "gopls",
-    "jdtls",
-})
 
 lazy().setup({
     { "folke/lazy.nvim" },
