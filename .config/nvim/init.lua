@@ -71,6 +71,7 @@ local function init_appearance()
     vim.opt.statusline = "%= [%{mode()}] %t %="
     vim.opt.showtabline = 2
     vim.opt.tabline = "%!v:lua.tabline()"
+    vim.opt.winborder = "single"
     vim.opt.fillchars = {
         stl = "─",
         stlnc = "─",
