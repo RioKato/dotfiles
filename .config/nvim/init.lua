@@ -36,7 +36,6 @@ local function init_editor()
     vim.keymap.set({ "n", "x" }, "gk", "k")
     vim.keymap.set({ "n", "x" }, "x", '"_x')
     vim.keymap.set({ "i", "c" }, "<C-d>", "<del>")
-    vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
     vim.keymap.set("c", "<C-f>", "<right>")
     vim.keymap.set("c", "<C-b>", "<left>")
     vim.keymap.set("c", "<C-a>", "<home>")
@@ -47,6 +46,13 @@ local function init_editor()
     vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
     vim.keymap.set("n", "gx", "<cmd>tabclose<cr>")
+
+    local esc = "<C-u>"
+    vim.keymap.set({ "", "i" }, esc, "<esc>")
+    vim.keymap.set("c", esc, "<C-c>")
+    vim.keymap.set("t", esc, "<C-\\><C-n>")
+
+    vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
@@ -123,12 +129,6 @@ local function init_appearance()
             end
         end,
     })
-end
-
-local function init_esc(esc)
-    vim.keymap.set({ "", "i" }, esc, "<esc>")
-    vim.keymap.set("c", esc, "<C-c>")
-    vim.keymap.set("t", esc, "<C-\\><C-n>")
 end
 
 local function init_ime()
@@ -218,7 +218,6 @@ end
 
 init_editor()
 init_appearance()
-init_esc("<C-u>")
 init_ime()
 init_quickfix()
 init_lsp({
