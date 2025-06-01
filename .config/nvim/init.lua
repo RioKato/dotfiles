@@ -497,7 +497,7 @@ lazy().setup({
             })
 
             vim.keymap.set("n", "go", function()
-                oil.toggle_float(vim.fn.expand("%:h"))
+                oil.toggle_float(vim.fn.getcwd())
             end)
         end,
     },
