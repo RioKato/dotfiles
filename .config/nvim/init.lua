@@ -114,6 +114,8 @@ local function init_appearance()
 
     vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         callback = function()
+            vim.api.nvim_set_hl(0, "Normal", { ctermfg = "None", ctermbg = "None" })
+
             for _, hl in ipairs({ "StatusLine", "StatusLineNC", "TabLine", "TabLineFill", "WinSeparator" }) do
                 vim.api.nvim_set_hl(0, hl, { link = "Normal" })
             end
@@ -232,23 +234,10 @@ lazy().setup({
     { import = "plugins" },
 
     {
-        "rose-pine/neovim",
-        name = "rose-pine",
+        "sainnhe/sonokai",
 
         config = function()
-            require("rose-pine").setup({
-                styles = {
-                    transparency = true,
-                },
-                highlight_groups = {
-                    Visual = {
-                        bg = "muted",
-                        blend = 15,
-                    },
-                },
-            })
-
-            vim.cmd.colorscheme("rose-pine")
+            vim.cmd.colorscheme("sonokai")
         end,
     },
 
