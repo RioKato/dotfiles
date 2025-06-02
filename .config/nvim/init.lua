@@ -74,8 +74,12 @@ local function init_editor()
         end,
     })
 
-    vim.api.nvim_create_autocmd("TermOpen", {
-        command = "startinsert",
+    vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
+        callback = function()
+            if vim.opt.buftype:get() == "terminal" then
+                vim.cmd.startinsert()
+            end
+        end,
     })
 end
 
