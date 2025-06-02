@@ -45,7 +45,6 @@ local function init_editor()
     for _, key in ipairs({
         "n", "s", "v",
         "q", "c",
-        "o",
         "j", "k", "h", "l",
         "J", "K", "H", "L",
         "-", "+", "<", ">", "=", "_", "|",
@@ -292,7 +291,7 @@ lazy().setup({
 
         config = function()
             require("zen-mode").setup()
-            vim.keymap.set("n", "<C-w>z", "<cmd>ZenMode<cr>")
+            vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>ZenMode<cr>")
         end,
     },
 
