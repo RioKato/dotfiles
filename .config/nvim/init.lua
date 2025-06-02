@@ -492,6 +492,7 @@ lazy().setup({
                         },
                         mode = "n",
                     },
+                    ["gx"] = false,
                 },
             })
 
