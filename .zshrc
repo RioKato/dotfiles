@@ -122,17 +122,6 @@ then
   EDITOR=nvim
   alias vim=nvim
   alias view='nvim -R'
-
-  function nvr() {
-    nvim --server ~/.cache/nvim/server.pipe --remote-ui
-  }
-
-  function nvrpwd() {
-    nvim --server ~/.cache/nvim/server.pipe --remote-send "<C-\><C-n>:tabnew $PWD | tcd $PWD<cr>"
-  }
-
-  zle -N nvrpwd
-  bindkey '^j' nvrpwd
 fi
 
 if command -v xdg-open &> /dev/null
