@@ -62,7 +62,7 @@ local function init_editor()
         end
 
         for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-            if not winbufs[bufnr] and vim.api.nvim_buf_is_loaded(bufnr) then
+            if not winbufs[bufnr] then
                 vim.api.nvim_buf_delete(bufnr, {})
             end
         end
