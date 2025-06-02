@@ -32,14 +32,6 @@ return {
                     vim.keymap.set("n", "r", "<cmd>Jaq<cr>", opts)
                 end,
             })
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "Jaq",
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "q", "<cmd>quit<cr>", opts)
-                end,
-            })
         end,
     },
 
