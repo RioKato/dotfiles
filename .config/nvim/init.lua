@@ -46,22 +46,6 @@ local function init_editor()
     vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
     vim.keymap.set("n", "gx", "<cmd>tabclose<cr>")
-    vim.keymap.set("n", "<C-w>d", function()
-        local bufnr = vim.api.nvim_get_current_buf()
-        local count = 0
-
-        for _, winid in ipairs(vim.api.nvim_list_wins()) do
-            if bufnr == vim.api.nvim_win_get_buf(winid) then
-                count = count + 1
-
-                if count > 1 then
-                    return "<cmd>close<cr>"
-                end
-            end
-        end
-
-        return "<cmd>bdelete<cr>"
-    end, { expr = true })
 
     local esc = "<C-u>"
     vim.keymap.set({ "", "i" }, esc, "<esc>")
@@ -69,6 +53,20 @@ local function init_editor()
     vim.keymap.set("t", esc, "<C-\\><C-n>")
 
     vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
+
+    vim.api.nvim_create_user_command("Clean", function()
+        local winbufs = {}
+
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+            winbufs[vim.api.nvim_win_get_buf(winid)] = true
+        end
+
+        for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+            if not winbufs[bufnr] and vim.api.nvim_buf_is_loaded(bufnr) then
+                vim.cmd(string.format("bdelete %d", bufnr))
+            end
+        end
+    end, {})
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
