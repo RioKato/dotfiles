@@ -66,7 +66,6 @@ local function init_editor()
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
     vim.keymap.set("n", "gc", "<cmd>tabclose<cr>")
 
-    vim.keymap.set("n", "mc", "gc")
     vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
 
     vim.api.nvim_create_user_command("Clean", function(opts)
