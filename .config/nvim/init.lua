@@ -59,6 +59,10 @@ local function init_editor()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
         end,
     })
+
+    vim.api.nvim_create_autocmd("TermOpen", {
+        command = "startinsert",
+    })
 end
 
 local function init_appearance()
