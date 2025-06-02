@@ -30,12 +30,16 @@ local function init_editor()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
+    local esc = "<C-u>"
+    vim.keymap.set({ "", "i" }, esc, "<esc>")
+    vim.keymap.set("c", esc, "<C-c>")
+    vim.keymap.set("t", esc, "<C-\\><C-n>")
+
     vim.keymap.set({ "n", "x" }, "j", "gj")
     vim.keymap.set({ "n", "x" }, "k", "gk")
     vim.keymap.set({ "n", "x" }, "gj", "j")
     vim.keymap.set({ "n", "x" }, "gk", "k")
     vim.keymap.set({ "n", "x" }, "x", '"_x')
-    vim.keymap.set({ "i", "c" }, "<C-d>", "<del>")
     vim.keymap.set("c", "<C-f>", "<right>")
     vim.keymap.set("c", "<C-b>", "<left>")
     vim.keymap.set("c", "<C-a>", "<home>")
@@ -47,7 +51,8 @@ local function init_editor()
         "q", "c",
         "j", "k", "h", "l",
         "J", "K", "H", "L",
-        "-", "+", "<", ">", "=", "_", "|",
+        "+", "-", "<", ">",
+        "=", "_", "|",
     }) do
         vim.keymap.set(
             { "n", "t" },
@@ -58,16 +63,10 @@ local function init_editor()
 
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
-    vim.keymap.set("n", "g^", "<cmd>tabfirst<cr>")
-    vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
-    vim.keymap.set("n", "gx", "<cmd>tabclose<cr>")
+    vim.keymap.set("n", "gc", "<cmd>tabclose<cr>")
 
-    local esc = "<C-u>"
-    vim.keymap.set({ "", "i" }, esc, "<esc>")
-    vim.keymap.set("c", esc, "<C-c>")
-    vim.keymap.set("t", esc, "<C-\\><C-n>")
-
+    vim.keymap.set("n", "mc", "gc")
     vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
 
     vim.api.nvim_create_user_command("Clean", function(opts)
