@@ -46,6 +46,22 @@ local function init_editor()
     vim.keymap.set("n", "g$", "<cmd>tablast<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
     vim.keymap.set("n", "gx", "<cmd>tabclose<cr>")
+    vim.keymap.set("n", "<C-w>d", function()
+        local bufnr = vim.api.nvim_get_current_buf()
+        local count = 0
+
+        for _, winid in ipairs(vim.api.nvim_list_wins()) do
+            if bufnr == vim.api.nvim_win_get_buf(winid) then
+                count = count + 1
+
+                if count > 1 then
+                    return "<cmd>close<cr>"
+                end
+            end
+        end
+
+        return "<cmd>bdelete<cr>"
+    end, { expr = true })
 
     local esc = "<C-u>"
     vim.keymap.set({ "", "i" }, esc, "<esc>")
