@@ -40,6 +40,23 @@ local function init_editor()
     vim.keymap.set("c", "<C-b>", "<left>")
     vim.keymap.set("c", "<C-a>", "<home>")
     vim.keymap.set("c", "<C-e>", "<end>")
+
+    -- stylua: ignore
+    for _, key in ipairs({
+        "n", "s", "v",
+        "q", "c",
+        "o",
+        "j", "k", "h", "l",
+        "J", "K", "H", "L",
+        "=", "-", "+", "<", ">", "_", "|",
+    }) do
+        vim.keymap.set(
+            { "n", "t" },
+            string.format("<C-w>%s", key),
+            string.format("<cmd>wincmd %s<cr>", key)
+        )
+    end
+
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "g^", "<cmd>tabfirst<cr>")
