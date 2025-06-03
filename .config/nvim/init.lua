@@ -61,6 +61,8 @@ local function init_editor()
         )
     end
 
+    vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>tab sbuffer<cr>")
+
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
@@ -283,15 +285,6 @@ lazy().setup({
 
         config = function()
             vim.cmd.colorscheme("sonokai")
-        end,
-    },
-
-    {
-        "folke/zen-mode.nvim",
-
-        config = function()
-            require("zen-mode").setup()
-            vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>ZenMode<cr>")
         end,
     },
 
