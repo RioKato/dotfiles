@@ -64,6 +64,10 @@ local function init_editor()
         )
     end
 
+    for _, key in ipairs({ "gg", "G" }) do
+        vim.keymap.set("n", key, string.format("<cmd>keepjumps normal! %s<cr>", key))
+    end
+
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
