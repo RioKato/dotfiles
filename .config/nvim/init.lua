@@ -66,10 +66,6 @@ local function init_editor()
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
-    vim.keymap.set("n", "gc", "<cmd>tabclose<cr>")
-    vim.keymap.del("n", "gcc")
-
-    vim.keymap.set("n", "<esc><esc>", "<cmd>nohlsearch<cr>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
