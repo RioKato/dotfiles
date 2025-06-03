@@ -34,7 +34,6 @@ local function init_editor()
     vim.keymap.set({ "", "i" }, esc, "<esc>")
     vim.keymap.set("c", esc, "<C-c>")
     vim.keymap.set("t", esc, "<C-\\><C-n>")
-
     vim.keymap.set({ "n", "x" }, "j", "gj")
     vim.keymap.set({ "n", "x" }, "k", "gk")
     vim.keymap.set({ "n", "x" }, "gj", "j")
@@ -44,6 +43,10 @@ local function init_editor()
     vim.keymap.set("c", "<C-b>", "<left>")
     vim.keymap.set("c", "<C-a>", "<home>")
     vim.keymap.set("c", "<C-e>", "<end>")
+    vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
+    vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
+    vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
+    vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>tab sbuffer<cr>")
 
     -- stylua: ignore
     for _, key in ipairs({
@@ -55,17 +58,11 @@ local function init_editor()
         "=", "_", "|",
     }) do
         vim.keymap.set(
-            { "n", "t" },
+            "t",
             string.format("<C-w>%s", key),
             string.format("<cmd>wincmd %s<cr>", key)
         )
     end
-
-    vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>tab sbuffer<cr>")
-
-    vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
-    vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
-    vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
