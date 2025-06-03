@@ -21,6 +21,7 @@ local function init_editor()
     vim.opt.hidden = true
     vim.opt.jumpoptions = "stack"
     vim.opt.splitright = true
+    vim.opt.splitbelow = true
     vim.opt.virtualedit = "block"
     vim.opt.showmatch = true
     vim.opt.matchtime = 1
@@ -62,10 +63,6 @@ local function init_editor()
             string.format("<C-w>%s", key),
             string.format("<cmd>wincmd %s<cr>", key)
         )
-    end
-
-    for _, key in ipairs({ "gg", "G", "L", "M", "H" }) do
-        vim.keymap.set("n", key, string.format("<cmd>keepjumps normal! %s<cr>", key))
     end
 
     vim.api.nvim_create_autocmd("TextYankPost", {
