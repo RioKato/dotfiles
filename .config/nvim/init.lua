@@ -7,7 +7,6 @@ local function init_editor()
     vim.opt.wrap = false
     vim.opt.swapfile = false
     vim.opt.backup = false
-    vim.opt.shadafile = "NONE"
     vim.opt.undofile = false
     vim.opt.autoread = true
     vim.opt.wildmenu = true
