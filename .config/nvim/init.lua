@@ -113,6 +113,8 @@ local function init_appearance()
         stlnc = "─",
         eob = " ",
     }
+    vim.opt.winminheight = 0
+    vim.opt.winminwidth = 0
     vim.g.qf_disable_statusline = 1
 
     function tabline()
