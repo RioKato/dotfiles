@@ -189,8 +189,6 @@ local function init_lsp(servers)
     vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(ev)
             local opts = { buffer = ev.buf }
-            vim.keymap.set("n", "<C-o>", "<cmd>silent! pop<cr>", opts)
-            vim.keymap.set("n", "<C-i>", "<cmd>silent! tag<cr>", opts)
             vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
             vim.keymap.set("n", "<space><space>", function()
                 vim.lsp.buf.format({ async = true })
