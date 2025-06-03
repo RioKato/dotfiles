@@ -64,7 +64,7 @@ local function init_editor()
         )
     end
 
-    for _, key in ipairs({ "gg", "G" }) do
+    for _, key in ipairs({ "gg", "G", "L", "M", "H" }) do
         vim.keymap.set("n", key, string.format("<cmd>keepjumps normal! %s<cr>", key))
     end
 
