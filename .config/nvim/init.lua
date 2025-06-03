@@ -164,6 +164,8 @@ local function init_appearance()
                 "StatusLineNC",
                 "TabLine",
                 "TabLineFill",
+                "StatusLineTerm",
+                "StatusLineTermNC",
                 "WinSeparator",
             }) do
                 vim.api.nvim_set_hl(0, hl, {})
