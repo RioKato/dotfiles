@@ -50,6 +50,10 @@ local function init_editor()
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
     vim.keymap.set({ "n", "t" }, "<C-w>z", "<C-w>|<C-w>_")
 
+    for _, key in ipairs({ "o", "T" }) do
+        vim.keymap.set("n", string.format("<C-w>%s", key), "<nop>")
+    end
+
     -- stylua: ignore
     for _, key in ipairs({
         "n", "s", "v",
