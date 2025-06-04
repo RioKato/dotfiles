@@ -46,7 +46,17 @@ local function init_editor()
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
-    vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>tab sbuffer<cr>")
+    vim.keymap.set({ "n", "t" }, "<C-w>z", function()
+        if vim.api.nvim_win_get_config(0).relative == "" then
+            vim.api.nvim_open_win(0, true, {
+                relative = "editor",
+                row = 0,
+                col = 0,
+                width = vim.o.columns,
+                height = vim.o.lines - 3,
+            })
+        end
+    end)
 
     -- stylua: ignore
     for _, key in ipairs({
@@ -150,6 +160,10 @@ local function init_appearance()
                 "StatusLineTerm",
                 "StatusLineTermNC",
                 "WinSeparator",
+                "NormalFloat",
+                "FloatBorder",
+                "FloatTitle",
+                "FloatFooter",
             }) do
                 vim.api.nvim_set_hl(0, hl, {})
             end
