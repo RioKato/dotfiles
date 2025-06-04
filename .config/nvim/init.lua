@@ -46,26 +46,6 @@ local function init_editor()
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
-    vim.keymap.set({ "n", "t" }, "<C-w>z", function()
-        if vim.api.nvim_win_get_config(0).relative == "" then
-            vim.api.nvim_open_win(0, true, {
-                relative = "editor",
-                row = 0,
-                col = 0,
-                width = vim.o.columns,
-                height = vim.o.lines - 3,
-            })
-        end
-    end)
-
-    vim.api.nvim_create_autocmd("VimResized", {
-        callback = function()
-            vim.api.nvim_win_set_config(0, {
-                width = vim.o.columns,
-                height = vim.o.lines - 3,
-            })
-        end,
-    })
 
     -- stylua: ignore
     for _, key in ipairs({
@@ -180,6 +160,33 @@ local function init_appearance()
     })
 end
 
+local function init_fullscreen()
+    local fswinid = nil
+
+    vim.keymap.set({ "n", "t" }, "<C-w>z", function()
+        if vim.api.nvim_win_get_config(0).relative == "" then
+            fswinid = vim.api.nvim_open_win(0, true, {
+                relative = "editor",
+                row = 0,
+                col = 0,
+                width = vim.o.columns,
+                height = vim.o.lines - 3,
+            })
+        end
+    end)
+
+    vim.api.nvim_create_autocmd("VimResized", {
+        callback = function()
+            if vim.api.nvim_get_current_win() == fswinid then
+                vim.api.nvim_win_set_config(fswinid, {
+                    width = vim.o.columns,
+                    height = vim.o.lines - 3,
+                })
+            end
+        end,
+    })
+end
+
 local function init_quickfix()
     vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
     vim.keymap.set("n", "<C-n>", "<cmd>silent! cnext<cr>")
@@ -255,6 +262,7 @@ end
 
 init_editor()
 init_appearance()
+init_fullscreen()
 init_quickfix()
 init_lsp()
 init_ime()
