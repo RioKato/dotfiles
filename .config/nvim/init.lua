@@ -48,7 +48,7 @@ local function init_editor()
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
-    vim.keymap.set("n", "<C-w>z", "<cmd>tab sbuffer<cr>")
+    vim.keymap.set("n", "<C-w>z", "<C-w>|<C-w>_")
 
     -- stylua: ignore
     for _, key in ipairs({
