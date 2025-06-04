@@ -175,16 +175,6 @@ local function init_quickfix()
 end
 
 local function init_lsp()
-    local servers = {
-        "pyright",
-        "ts_ls",
-        "cmake",
-        "clangd",
-        "rust_analyzer",
-        "gopls",
-        "jdtls",
-    }
-
     vim.diagnostic.config({
         signs = false,
         underline = true,
@@ -206,7 +196,15 @@ local function init_lsp()
         end,
     })
 
-    vim.lsp.enable(servers)
+    vim.lsp.enable({
+        "pyright",
+        "ts_ls",
+        "cmake",
+        "clangd",
+        "rust_analyzer",
+        "gopls",
+        "jdtls",
+    })
 end
 
 local function init_ime()
