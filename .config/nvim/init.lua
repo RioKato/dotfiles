@@ -161,30 +161,31 @@ local function init_appearance()
 end
 
 local function init_fullscreen()
-    local fswinid = nil
+    vim.api.nvim_create_augroup("init_fullscreen", {})
 
     vim.keymap.set({ "n", "t" }, "<C-w>z", function()
         if vim.api.nvim_win_get_config(0).relative == "" then
-            fswinid = vim.api.nvim_open_win(0, true, {
+            local winid = vim.api.nvim_open_win(0, true, {
                 relative = "editor",
                 row = 0,
                 col = 0,
                 width = vim.o.columns,
                 height = vim.o.lines - 3,
             })
+
+            vim.api.nvim_create_autocmd("VimResized", {
+                group = "init_fullscreen",
+                callback = function()
+                    if winid == vim.api.nvim_get_current_win() then
+                        vim.api.nvim_win_set_config(winid, {
+                            width = vim.o.columns,
+                            height = vim.o.lines - 3,
+                        })
+                    end
+                end,
+            })
         end
     end)
-
-    vim.api.nvim_create_autocmd("VimResized", {
-        callback = function()
-            if vim.api.nvim_get_current_win() == fswinid then
-                vim.api.nvim_win_set_config(fswinid, {
-                    width = vim.o.columns,
-                    height = vim.o.lines - 3,
-                })
-            end
-        end,
-    })
 end
 
 local function init_quickfix()
