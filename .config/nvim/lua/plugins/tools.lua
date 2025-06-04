@@ -6,7 +6,7 @@ return {
             require("jaq-nvim").setup({
                 cmds = {
                     external = {
-                        python = "[ -e bin/activate ] && source bin/activate; python3 %",
+                        python = "python3 %",
                         rust = "cargo run",
                         go = 'go run "$(dirname $(go env GOMOD))/main.go"',
                         javascript = "npm start",
