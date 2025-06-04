@@ -58,6 +58,15 @@ local function init_editor()
         end
     end)
 
+    vim.api.nvim_create_autocmd("VimResized", {
+        callback = function()
+            vim.api.nvim_win_set_config(0, {
+                width = vim.o.columns,
+                height = vim.o.lines - 3,
+            })
+        end,
+    })
+
     -- stylua: ignore
     for _, key in ipairs({
         "n", "s", "v",
