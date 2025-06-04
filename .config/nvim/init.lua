@@ -21,6 +21,8 @@ local function init_editor()
     vim.opt.jumpoptions = "stack"
     vim.opt.splitright = true
     vim.opt.splitbelow = true
+    vim.opt.winminwidth = 0
+    vim.opt.winminheight = 0
     vim.opt.virtualedit = "block"
     vim.opt.showmatch = true
     vim.opt.matchtime = 1
