@@ -464,7 +464,7 @@ lazy().setup({
                 sources = {
                     null_ls.builtins.formatting.stylua,
                     null_ls.builtins.formatting.black.with({
-                        extra_args = { "--max-line-length=256" },
+                        extra_args = { "--line-length=256" },
                     }),
                     null_ls.builtins.formatting.prettier.with({
                         filetypes = { "markdown" },
