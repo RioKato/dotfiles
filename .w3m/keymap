@@ -32,7 +32,6 @@ keymap Q EXIT
 
 # Etc
 keymap SPC EXTERN
-keymap C-e EDIT_SCREEN
 keymap s DICT_WORD
 keymap 1 GOTO file:///cgi-bin/paste.cgi
 keymap 2 GOTO file:///cgi-bin/trans.cgi
