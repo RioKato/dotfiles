@@ -19,16 +19,15 @@ vim.api.nvim_create_user_command("ChangeBase", function()
 
     if cword:match("^0x[a-fA-F0-9]+$") then
         base = 16
-        expr = "%d"
+        expr = "ciw%d"
     elseif cword:match("^[0-9]+$") then
         base = 10
-        expr = "0x%x"
+        expr = "ciw0x%x"
     else
         error("not number")
     end
 
-    vim.fn.setreg("", string.format(expr, tonumber(cword, base)))
-    vim.cmd.normal('"_diw""P')
+    vim.cmd.normal(string.format(expr, tonumber(cword, base)))
 end, {})
 
 vim.api.nvim_create_user_command("W3M", "terminal w3m", {})
