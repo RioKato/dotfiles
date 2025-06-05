@@ -28,10 +28,10 @@ local function init_editor()
     vim.opt.matchtime = 1
     vim.opt.clipboard = "unnamedplus"
     vim.opt.mouse = ""
+    vim.g.mapleader = " "
     vim.g.loaded_matchparen = 1
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
-    vim.g.mapleader = " "
 
     local esc = "<C-u>"
     vim.keymap.set({ "", "i" }, esc, "<esc>")
@@ -439,7 +439,6 @@ lazy().setup({
             vim.keymap.set("n", "<leader>b", builtin.buffers)
             vim.keymap.set("n", "<leader>g", builtin.live_grep)
             vim.keymap.set("n", "<leader>G", builtin.current_buffer_fuzzy_find)
-            vim.keymap.set("n", "<leader>t", builtin.tagstack)
             vim.keymap.set("n", "<C-s>", builtin.grep_string)
 
             vim.api.nvim_create_autocmd("LspAttach", {
