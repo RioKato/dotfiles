@@ -36,29 +36,6 @@ return {
     },
 
     {
-        "akinsho/toggleterm.nvim",
-        version = "*",
-
-        config = function()
-            require("toggleterm").setup({
-                direction = "tab",
-            })
-
-            local Terminal = require("toggleterm.terminal").Terminal
-
-            local w3m = Terminal:new({
-                cmd = "w3m",
-                dir = "~/Downloads",
-                close_on_exit = true,
-            })
-
-            vim.api.nvim_create_user_command("W3M", function()
-                w3m:toggle()
-            end, {})
-        end,
-    },
-
-    {
         "andythigpen/nvim-coverage",
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {},
