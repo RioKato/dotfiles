@@ -23,11 +23,11 @@ vim.api.nvim_create_user_command("ChangeBase", function()
     elseif cword:match("^[0-9]+$") then
         base = 10
         expr = "ciw0x%x"
-    else
-        error("not number")
     end
 
-    vim.cmd.normal(string.format(expr, tonumber(cword, base)))
+    if base ~= 0 then
+        vim.cmd.normal(string.format(expr, tonumber(cword, base)))
+    end
 end, {})
 
 vim.api.nvim_create_user_command("W3M", "terminal w3m", {})
