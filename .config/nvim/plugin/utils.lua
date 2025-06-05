@@ -12,4 +12,23 @@ vim.api.nvim_create_user_command("Clean", function(opts)
     end
 end, { bang = true })
 
+vim.api.nvim_create_user_command("ChangeBase", function()
+    local cword = vim.fn.expand("<cword>")
+    local base = 0
+    local expr = ""
+
+    if cword:match("^0x[a-fA-F0-9]+$") then
+        base = 16
+        expr = "%d"
+    elseif cword:match("^[0-9]+$") then
+        base = 10
+        expr = "0x%x"
+    else
+        error("not number")
+    end
+
+    vim.fn.setreg("", string.format(expr, tonumber(cword, base)))
+    vim.cmd.normal('"_diw""P')
+end, {})
+
 vim.api.nvim_create_user_command("W3M", "terminal w3m", {})
