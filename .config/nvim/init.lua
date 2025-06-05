@@ -31,6 +31,7 @@ local function init_editor()
     vim.g.loaded_matchparen = 1
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
+    vim.g.mapleader = " "
 
     local esc = "<C-u>"
     vim.keymap.set({ "", "i" }, esc, "<esc>")
@@ -198,7 +199,7 @@ local function init_lsp()
         callback = function(ev)
             local opts = { buffer = ev.buf }
             vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
-            vim.keymap.set("n", "<space><space>", function()
+            vim.keymap.set("n", "<leader><space>", function()
                 vim.lsp.buf.format({ async = true })
             end, opts)
         end,
@@ -434,20 +435,19 @@ lazy().setup({
             })
 
             local builtin = require("telescope.builtin")
-            vim.keymap.set("n", "<space>f", builtin.find_files)
-            vim.keymap.set("n", "<space>b", builtin.buffers)
-            vim.keymap.set("n", "<space>g", builtin.live_grep)
-            vim.keymap.set("n", "<space>G", builtin.current_buffer_fuzzy_find)
-            vim.keymap.set("n", "<space>t", builtin.tagstack)
+            vim.keymap.set("n", "<leader>f", builtin.find_files)
+            vim.keymap.set("n", "<leader>b", builtin.buffers)
+            vim.keymap.set("n", "<leader>g", builtin.live_grep)
+            vim.keymap.set("n", "<leader>G", builtin.current_buffer_fuzzy_find)
+            vim.keymap.set("n", "<leader>t", builtin.tagstack)
             vim.keymap.set("n", "<C-s>", builtin.grep_string)
-            vim.keymap.set("n", "``", builtin.marks)
 
             vim.api.nvim_create_autocmd("LspAttach", {
                 callback = function(ev)
                     local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-                    vim.keymap.set("n", "<space>d", builtin.diagnostics, opts)
+                    vim.keymap.set("n", "<leader>d", builtin.diagnostics, opts)
                 end,
             })
         end,
@@ -498,7 +498,7 @@ lazy().setup({
                             horizontal = true,
                         },
                     },
-                    ["<space><space>"] = {
+                    ["<leader><space>"] = {
                         "actions.cd",
                         opts = {
                             scope = "tab",
