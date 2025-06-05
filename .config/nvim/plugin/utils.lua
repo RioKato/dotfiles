@@ -29,5 +29,3 @@ vim.api.nvim_create_user_command("ChangeBase", function()
         vim.cmd.normal(string.format(expr, tonumber(cword, base)))
     end
 end, {})
-
-vim.api.nvim_create_user_command("W3M", "terminal w3m", {})
