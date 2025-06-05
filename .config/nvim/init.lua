@@ -224,7 +224,7 @@ local function init_ime()
             end,
         })
 
-        vim.keymap.set("n", "mj", function()
+        vim.keymap.set("n", "<leader>j", function()
             if vim.g.ime_autocmd == nil then
                 vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
                     callback = function()
@@ -280,7 +280,7 @@ lazy().setup({
 
         config = function()
             vim.keymap.set({ "n", "x" }, "<C-t>", "<plug>(quickhl-manual-this)")
-            vim.keymap.set("n", "mm", "<plug>(quickhl-manual-reset)")
+            vim.keymap.set("n", "<leader>m", "<plug>(quickhl-manual-reset)")
         end,
     },
 
@@ -509,7 +509,7 @@ lazy().setup({
                 },
             })
 
-            vim.keymap.set("n", "mo", function()
+            vim.keymap.set("n", "<leader>o", function()
                 oil.toggle_float(vim.fn.getcwd())
             end)
         end,
