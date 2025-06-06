@@ -1,22 +1,5 @@
 return {
     {
-        "folke/which-key.nvim",
-        enabled = false,
-
-        opts = {
-            triggers = {
-                { "<C-w>" },
-                { "z" },
-                { "g" },
-            },
-            plugins = {
-                marks = false,
-                registers = false,
-            },
-        },
-    },
-
-    {
         "windwp/nvim-autopairs",
 
         opts = {
