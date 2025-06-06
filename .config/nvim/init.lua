@@ -200,17 +200,18 @@ local function init_ime()
             end,
         })
 
+        local toggle = false
+
+        vim.api.nvim_create_autocmd("InsertEnter", {
+            callback = function()
+                if toggle then
+                    vim.fn.system({ "fcitx5-remote", "-o" })
+                end
+            end,
+        })
+
         vim.keymap.set("n", "<leader>j", function()
-            if vim.g.ime_autocmd == nil then
-                vim.g.ime_autocmd = vim.api.nvim_create_autocmd("InsertEnter", {
-                    callback = function()
-                        vim.fn.system({ "fcitx5-remote", "-o" })
-                    end,
-                })
-            else
-                vim.api.nvim_del_autocmd(vim.g.ime_autocmd)
-                vim.g.ime_autocmd = nil
-            end
+            toggle = not toggle
         end)
     end
 end
