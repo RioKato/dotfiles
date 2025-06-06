@@ -36,6 +36,7 @@ local function init_editor()
     local esc = "<C-u>"
     vim.keymap.set({ "", "i" }, esc, "<esc>")
     vim.keymap.set("c", esc, "<C-c>")
+    vim.keymap.set("t", esc, "<C-\\><C-n>")
     vim.keymap.set({ "n", "x" }, "j", "gj")
     vim.keymap.set({ "n", "x" }, "k", "gk")
     vim.keymap.set({ "n", "x" }, "gj", "j")
