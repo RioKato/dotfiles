@@ -300,7 +300,8 @@ lazy().setup({
 
         config = function()
             require("treesitter-context").setup({
-                separator = "━",
+                mode = "topline",
+                separator = "·",
             })
 
             vim.api.nvim_create_autocmd("ColorScheme", {
