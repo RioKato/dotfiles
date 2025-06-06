@@ -39,7 +39,9 @@ return {
         "numToStr/FTerm.nvim",
 
         config = function()
-            local w3m = require("FTerm"):new({
+            local fterm = require("FTerm")
+
+            local w3m = fterm:new({
                 cmd = "w3m",
                 dimensions = {
                     height = 0.95,
@@ -50,6 +52,18 @@ return {
             vim.keymap.set("n", "<leader>w", function()
                 w3m:toggle()
             end)
+
+            local gitui = fterm:new({
+                cmd = "gitui",
+                dimensions = {
+                    height = 0.95,
+                    width = 0.95,
+                },
+            })
+
+            vim.api.nvim_create_user_command("GitUI", function()
+                gitui:toggle()
+            end, {})
         end,
     },
 
