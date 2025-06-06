@@ -29,3 +29,6 @@ vim.api.nvim_create_user_command("ChangeBase", function()
         vim.cmd.normal(string.format(expr, tonumber(cword, base)))
     end
 end, {})
+
+vim.keymap.set("n", "<leader>tt", "<cmd>terminal<cr>")
+vim.keymap.set("n", "<leader>tw", "<cmd>terminal w3m<cr>")
