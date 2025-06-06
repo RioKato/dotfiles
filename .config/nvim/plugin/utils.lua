@@ -29,6 +29,3 @@ vim.api.nvim_create_user_command("ChangeBase", function()
         vim.cmd.normal(string.format(expr, tonumber(cword, base)))
     end
 end, {})
-
-vim.keymap.set("n", "<leader>ts", "<cmd>horizontal terminal<cr>")
-vim.keymap.set("n", "<leader>tv", "<cmd>vertical terminal<cr>")

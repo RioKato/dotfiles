@@ -36,7 +36,6 @@ local function init_editor()
     local esc = "<C-u>"
     vim.keymap.set({ "", "i" }, esc, "<esc>")
     vim.keymap.set("c", esc, "<C-c>")
-    vim.keymap.set("t", esc, "<C-\\><C-n>")
     vim.keymap.set({ "n", "x" }, "j", "gj")
     vim.keymap.set({ "n", "x" }, "k", "gk")
     vim.keymap.set({ "n", "x" }, "gj", "j")
@@ -49,45 +48,13 @@ local function init_editor()
     vim.keymap.set("n", "gt", "<cmd>silent! +tabnext<cr>")
     vim.keymap.set("n", "gT", "<cmd>silent! -tabnext<cr>")
     vim.keymap.set("n", "gn", "<cmd>tabnew .<cr>")
-    vim.keymap.set({ "n", "t" }, "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
+    vim.keymap.set("n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
     vim.keymap.set("n", "<C-w>o", "<nop>")
     vim.keymap.set("n", "<C-w>T", "<nop>")
-
-    -- stylua: ignore
-    for _, key in ipairs({
-        "n", "s", "v",
-        "q", "c",
-        "j", "k", "h", "l",
-        "J", "K", "H", "L",
-        "+", "-", "<", ">",
-        "=", "_", "|",
-    }) do
-        vim.keymap.set(
-            "t",
-            string.format("<C-w>%s", key),
-            string.format("<cmd>wincmd %s<cr>", key)
-        )
-    end
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
-        end,
-    })
-
-    vim.api.nvim_create_autocmd({ "TermOpen", "BufEnter" }, {
-        callback = function()
-            if vim.opt.buftype:get() == "terminal" then
-                vim.cmd.startinsert()
-            end
-        end,
-    })
-
-    vim.api.nvim_create_autocmd({ "TermLeave", "BufLeave" }, {
-        callback = function()
-            if vim.opt.buftype:get() == "terminal" then
-                vim.cmd.stopinsert()
-            end
         end,
     })
 end
