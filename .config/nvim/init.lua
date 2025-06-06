@@ -212,6 +212,7 @@ local function init_ime()
 
         vim.keymap.set("n", "<leader>j", function()
             toggle = not toggle
+            print(string.format("IME %s", toggle and "ON" or "OFF"))
         end)
     end
 end
