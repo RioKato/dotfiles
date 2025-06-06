@@ -15,4 +15,6 @@ return {
         version = "*",
         opts = {},
     },
+
+    { "linrongbin16/gitlinker.nvim", opts = {} },
 }
