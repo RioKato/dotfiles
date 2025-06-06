@@ -82,6 +82,14 @@ local function init_editor()
             end
         end,
     })
+
+    vim.api.nvim_create_autocmd({ "TermLeave", "BufLeave" }, {
+        callback = function()
+            if vim.opt.buftype:get() == "terminal" then
+                vim.cmd.stopinsert()
+            end
+        end,
+    })
 end
 
 local function init_appearance()
