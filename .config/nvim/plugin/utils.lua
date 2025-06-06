@@ -30,6 +30,5 @@ vim.api.nvim_create_user_command("ChangeBase", function()
     end
 end, {})
 
-vim.keymap.set("n", "<leader>s", "<cmd>horizontal terminal<cr>")
-vim.keymap.set("n", "<leader>v", "<cmd>vertical terminal<cr>")
-vim.keymap.set("n", "<leader>tw", "<cmd>terminal w3m<cr>")
+vim.keymap.set("n", "<leader>ts", "<cmd>horizontal terminal<cr>")
+vim.keymap.set("n", "<leader>tv", "<cmd>vertical terminal<cr>")

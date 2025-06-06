@@ -36,6 +36,24 @@ return {
     },
 
     {
+        "numToStr/FTerm.nvim",
+
+        config = function()
+            local w3m = require("FTerm"):new({
+                cmd = "w3m",
+                dimensions = {
+                    height = 0.95,
+                    width = 0.95,
+                },
+            })
+
+            vim.keymap.set("n", "<leader>w", function()
+                w3m:toggle()
+            end)
+        end,
+    },
+
+    {
         "andythigpen/nvim-coverage",
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {},
