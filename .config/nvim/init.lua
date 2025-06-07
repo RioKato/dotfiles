@@ -52,6 +52,8 @@ local function init_editor()
     vim.keymap.set("n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
     vim.keymap.set("n", "<C-w>o", "<nop>")
     vim.keymap.set("n", "<C-w>T", "<nop>")
+    vim.keymap.set("n", "gt", "<nop>")
+    vim.keymap.set("n", "gT", "<nop>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
