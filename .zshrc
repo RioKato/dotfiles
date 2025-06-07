@@ -75,6 +75,11 @@ then
 fi
 
 function precmd() {
+  if [ -n "$TMUX" ]
+  then
+    IFTMUX=@tmux
+  fi
+
   if [ -e /.dockerenv ]
   then
     local CONTAINER=$(echo $HOSTNAME | grep '[0-9a-f]\{12\}')
@@ -90,7 +95,7 @@ function precmd() {
   fi
 
   export PROMPT="
-%B%F{green}╭╴(%n$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b
+%B%F{green}╭╴(%n$IFTMUX$CONTAINER)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b
 %B%F{green}╰╴\$%f%b "
 }
 
