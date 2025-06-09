@@ -198,7 +198,7 @@ local function init_ime()
     if vim.fn.executable("fcitx5-remote") == 1 then
         vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
             callback = function()
-                vim.fn.system({ "fcitx5-remote", "-c" })
+                vim.system({ "fcitx5-remote", "-c" })
             end,
         })
 
@@ -207,7 +207,7 @@ local function init_ime()
         vim.api.nvim_create_autocmd("InsertEnter", {
             callback = function()
                 if toggle then
-                    vim.fn.system({ "fcitx5-remote", "-o" })
+                    vim.system({ "fcitx5-remote", "-o" })
                 end
             end,
         })
