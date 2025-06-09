@@ -50,12 +50,4 @@ return {
     },
 
     { "linrongbin16/gitlinker.nvim", opts = {} },
-
-    {
-        "rcarriga/nvim-notify",
-
-        config = function()
-            vim.notify = require("notify")
-        end,
-    },
 }
