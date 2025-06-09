@@ -246,6 +246,7 @@ end
 lazy().setup({
     { "folke/lazy.nvim" },
     { import = "plugins" },
+    { "neovim/nvim-lspconfig" },
 
     {
         "sainnhe/sonokai",
