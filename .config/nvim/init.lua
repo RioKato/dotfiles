@@ -249,14 +249,6 @@ lazy().setup({
     { "neovim/nvim-lspconfig" },
 
     {
-        "sainnhe/sonokai",
-
-        config = function()
-            vim.cmd.colorscheme("sonokai")
-        end,
-    },
-
-    {
         "nvim-treesitter/nvim-treesitter",
 
         opts = {
