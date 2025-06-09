@@ -434,27 +434,6 @@ lazy().setup({
     },
 
     {
-        "nvimtools/none-ls.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
-
-        config = function()
-            local null_ls = require("null-ls")
-
-            null_ls.setup({
-                sources = {
-                    null_ls.builtins.formatting.stylua,
-                    null_ls.builtins.formatting.black.with({
-                        extra_args = { "--line-length=256" },
-                    }),
-                    null_ls.builtins.formatting.prettier.with({
-                        filetypes = { "markdown" },
-                    }),
-                },
-            })
-        end,
-    },
-
-    {
         "stevearc/oil.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
 
