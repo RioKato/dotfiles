@@ -1,10 +1,10 @@
 return {
-    { "williamboman/mason.nvim", opts = {} },
+    { "mason-org/mason.nvim", opts = {} },
 
     {
-        "williamboman/mason-lspconfig.nvim",
+        "mason-org/mason-lspconfig.nvim",
         dependencies = {
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
             "neovim/nvim-lspconfig",
         },
 
@@ -16,7 +16,7 @@ return {
     {
         "jay-babu/mason-null-ls.nvim",
         dependencies = {
-            "williamboman/mason.nvim",
+            "mason-org/mason.nvim",
             "nvimtools/none-ls.nvim",
         },
 
