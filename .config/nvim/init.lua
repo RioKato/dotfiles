@@ -28,6 +28,7 @@ local function init_editor()
     vim.opt.matchtime = 1
     vim.opt.clipboard = "unnamedplus"
     vim.opt.mouse = ""
+    vim.opt.timeoutlen = 10000
     vim.g.mapleader = " "
     vim.g.loaded_matchparen = 1
     vim.g.loaded_netrw = 1
