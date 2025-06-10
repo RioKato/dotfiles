@@ -44,8 +44,10 @@ return {
             local w3m = fterm:new({
                 cmd = "w3m",
                 dimensions = {
-                    height = 0.95,
-                    width = 0.95,
+                    height = 1,
+                    width = 1,
+                    x = 0,
+                    y = 0,
                 },
             })
 
@@ -56,8 +58,10 @@ return {
             local gitui = fterm:new({
                 cmd = "gitui",
                 dimensions = {
-                    height = 0.95,
-                    width = 0.95,
+                    height = 1,
+                    width = 1,
+                    x = 0,
+                    y = 0,
                 },
             })
 
