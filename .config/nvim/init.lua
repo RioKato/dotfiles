@@ -121,7 +121,7 @@ local function init_appearance()
         )
     end
 
-    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+    vim.api.nvim_create_autocmd("ColorScheme", {
         callback = function()
             for _, hl in ipairs({
                 "Normal",
