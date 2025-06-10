@@ -102,19 +102,19 @@ local function init_appearance()
         local tabs = {}
 
         for i = lower, upper do
-            table.insert(
-                tabs,
-                string.format(
-                    i == curnr and "%%#TabLineSel#%s%%#TabLine#" or "%s",
-                    vim.fn.fnamemodify(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i), ":t")
-                )
-            )
+            local name = vim.fn.fnamemodify(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i), ":t")
+
+            if i == curnr then
+                name = string.format("%%#TabLineSel#%s%%#TabLine#", name)
+            end
+
+            table.insert(tabs, name)
         end
 
         return string.format(
-            "%%#TabLineFill#%%=%%#TabLine#%s|%s|%s%%#TabLineFill#%%=(%d/%d)",
+            "%%#TabLineFill#%%=%%#TabLine#%s│%s│%s%%#TabLineFill#%%=(%d/%d)",
             lower > 1 and "❮❮ " or "   ",
-            table.concat(tabs, "|"),
+            table.concat(tabs, "│"),
             upper < lastnr and " ❯❯" or "   ",
             curnr,
             lastnr
