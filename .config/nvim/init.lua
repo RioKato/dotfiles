@@ -105,16 +105,16 @@ local function init_appearance()
             table.insert(
                 tabs,
                 string.format(
-                    i == curnr and "%%#TabLineSel#(%s)" or "%%#TabLine#(%s)",
+                    i == curnr and "%%#TabLineSel#%s%%#TabLine#" or "%s",
                     vim.fn.fnamemodify(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i), ":t")
                 )
             )
         end
 
         return string.format(
-            "%%#TabLineFill#%%=%s%s%%#TabLineFill#%s%%=(%d/%d)",
+            "%%#TabLineFill#%%=%%#TabLine#%s|%s|%s%%#TabLineFill#%%=(%d/%d)",
             lower > 1 and "❮❮ " or "   ",
-            table.concat(tabs, ""),
+            table.concat(tabs, "|"),
             upper < lastnr and " ❯❯" or "   ",
             curnr,
             lastnr
