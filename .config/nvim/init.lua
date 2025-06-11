@@ -69,6 +69,7 @@ local function init_appearance()
     vim.opt.number = true
     vim.opt.cursorline = true
     vim.opt.cursorlineopt = "number"
+    vim.opt.signcolumn = "number"
     vim.opt.laststatus = 3
     vim.opt.statusline = "%= [%{mode()}] %t %="
     vim.opt.showtabline = 2
