@@ -39,6 +39,7 @@ zsh
 zsh-completions
 tmux
 neovim
+alacritty
 fzf
 ripgrep
 jq
