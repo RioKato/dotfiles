@@ -1,4 +1,4 @@
-autoload -Uz compinit promptinit edit-command-line
+autoload -Uz compinit promptinit
 compinit && promptinit
 
 setopt noautomenu
@@ -18,8 +18,6 @@ setopt hist_ignore_all_dups
 setopt hist_reduce_blanks
 
 bindkey -e
-zle -N edit-command-line
-bindkey "^O" edit-command-line
 
 if [ "$XDG_SESSION_TYPE" = x11 ] || [ -z "$XDG_SESSION_TYPE" ]
 then
