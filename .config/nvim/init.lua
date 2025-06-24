@@ -64,10 +64,11 @@ local function init_editor()
 
     vim.api.nvim_create_autocmd("TabEnter", {
         callback = function()
-            local tabnr = vim.fn.tabpagenr()
-            local winnr = vim.fn.tabpagewinnr(tabnr)
-            local cwd = vim.fn.getcwd(winnr, tabnr)
-            vim.notify(string.format("CWD: %s", cwd))
+            local curnr = vim.fn.tabpagenr()
+            local lastnr = vim.fn.tabpagenr("$")
+            local winnr = vim.fn.tabpagewinnr(curnr)
+            local cwd = vim.fn.getcwd(winnr, curnr)
+            vim.notify(string.format("CWD: %s (%d/%d)", cwd, curnr, lastnr))
         end,
     })
 end
