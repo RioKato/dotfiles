@@ -72,8 +72,7 @@ local function init_appearance()
     vim.opt.signcolumn = "number"
     vim.opt.laststatus = 3
     vim.opt.statusline = "%= [%{mode()}] %t %="
-    vim.opt.showtabline = 2
-    vim.opt.tabline = "%!v:lua.tabline()"
+    vim.opt.showtabline = 0
     vim.opt.winborder = "single"
     vim.opt.fillchars = {
         stl = "─",
@@ -81,47 +80,6 @@ local function init_appearance()
         eob = " ",
     }
     vim.g.qf_disable_statusline = 1
-
-    function tabline()
-        local curnr = vim.fn.tabpagenr()
-        local lastnr = vim.fn.tabpagenr("$")
-        local lower = 0
-        local upper = 0
-
-        if curnr == 1 then
-            lower = curnr
-            upper = curnr + 2
-        elseif curnr == lastnr then
-            lower = curnr - 2
-            upper = curnr
-        else
-            lower = curnr - 1
-            upper = curnr + 1
-        end
-
-        lower = math.max(lower, 1)
-        upper = math.min(upper, lastnr)
-        local tabs = {}
-
-        for i = lower, upper do
-            local name = vim.fn.fnamemodify(vim.fn.getcwd(vim.fn.tabpagewinnr(i), i), ":t")
-
-            if i == curnr then
-                name = string.format("%%#TabLineSel#%s%%#TabLine#", name)
-            end
-
-            table.insert(tabs, name)
-        end
-
-        return string.format(
-            "%%#TabLineFill#%%=%%#TabLine#%s│%s│%s%%#TabLineFill#%%=(%d/%d)",
-            lower > 1 and "❮❮ " or "   ",
-            table.concat(tabs, "│"),
-            upper < lastnr and " ❯❯" or "   ",
-            curnr,
-            lastnr
-        )
-    end
 
     vim.api.nvim_create_autocmd("ColorScheme", {
         callback = function()
