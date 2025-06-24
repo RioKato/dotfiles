@@ -73,11 +73,6 @@ then
 fi
 
 function precmd() {
-  if [ -n "$TMUX" ]
-  then
-    ATTMUX=@tmux
-  fi
-
   if command -v git >& /dev/null
   then
     local BRANCH="$(git branch --show-current 2> /dev/null)"
