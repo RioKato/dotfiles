@@ -48,6 +48,9 @@ local function init_editor()
     vim.keymap.set("c", "<C-a>", "<home>")
     vim.keymap.set("c", "<C-e>", "<end>")
     vim.keymap.set("n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
+    vim.keymap.set("n", "<C-w>t", "<cmd>tab sbuffer<cr>")
+    vim.keymap.set("n", "<C-w>n", "<cmd>tabnext<cr>")
+    vim.keymap.set("n", "<C-w>p", "<cmd>tabprevious<cr>")
     vim.keymap.set("n", "<C-w>o", "<nop>")
     vim.keymap.set("n", "<C-w>T", "<nop>")
     vim.keymap.set("n", "gt", "<nop>")
@@ -56,6 +59,15 @@ local function init_editor()
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("TabEnter", {
+        callback = function()
+            local tabnr = vim.fn.tabpagenr()
+            local winnr = vim.fn.tabpagewinnr(tabnr)
+            local cwd = vim.fn.getcwd(winnr, tabnr)
+            vim.notify(string.format("CWD: %s", cwd))
         end,
     })
 end
