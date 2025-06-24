@@ -364,43 +364,20 @@ lazy().setup({
     },
 
     {
-        "stevearc/oil.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
+        "nvim-tree/nvim-tree.lua",
 
         config = function()
-            local oil = require("oil")
+            require("nvim-tree").setup({})
 
-            oil.setup({
-                view_options = {
-                    show_hidden = true,
-                },
-                keymaps = {
-                    ["<C-v>"] = {
-                        "actions.select",
-                        opts = {
-                            vertical = true,
-                        },
-                    },
-                    ["<C-s>"] = {
-                        "actions.select",
-                        opts = {
-                            horizontal = true,
-                        },
-                    },
-                    ["<leader><space>"] = {
-                        "actions.cd",
-                        opts = {
-                            scope = "tab",
-                        },
-                        mode = "n",
-                    },
-                    ["gx"] = false,
-                },
+            vim.keymap.set("n", "<leader>o", "<cmd>NvimTreeToggle<cr>")
+
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                callback = function()
+                    for _, hl in ipairs({ "NvimTreeNormal", "NvimTreeEndOfBuffer" }) do
+                        vim.api.nvim_set_hl(0, hl, {})
+                    end
+                end,
             })
-
-            vim.keymap.set("n", "<leader>o", function()
-                oil.toggle_float(vim.fn.getcwd())
-            end)
         end,
     },
 })
