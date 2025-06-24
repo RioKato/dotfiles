@@ -4,6 +4,7 @@ args = ["-l", "-c", "tmux"]
 
 [window]
 opacity = 0.9
+decorations = "None"
 
 [font]
 size = 8
