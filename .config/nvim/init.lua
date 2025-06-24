@@ -367,7 +367,7 @@ lazy().setup({
         "nvim-tree/nvim-tree.lua",
 
         config = function()
-            require("nvim-tree").setup({})
+            require("nvim-tree").setup()
 
             vim.keymap.set("n", "<leader>o", "<cmd>NvimTreeToggle<cr>")
 
