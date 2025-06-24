@@ -68,7 +68,8 @@ local function init_editor()
             local lastnr = vim.fn.tabpagenr("$")
             local winnr = vim.fn.tabpagewinnr(curnr)
             local cwd = vim.fn.getcwd(winnr, curnr)
-            vim.notify(string.format("TAB: %d/%d\nCWD: %s", curnr, lastnr, cwd))
+            local msg = string.format("TAB: %d/%d\nCWD: %s", curnr, lastnr, cwd)
+            vim.notify(msg)
         end,
     })
 end
