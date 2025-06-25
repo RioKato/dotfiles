@@ -239,8 +239,9 @@ lazy().setup({
 
             vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
                 callback = function()
-                    vim.api.nvim_set_hl(0, "TreesitterContext", { link = "Normal" })
-                    vim.api.nvim_set_hl(0, "TreesitterContextSeparator", { link = "Normal" })
+                    for _, hl in ipairs({ "TreesitterContext", "TreesitterContextSeparator" }) do
+                        vim.api.nvim_set_hl(0, hl, { link = "Normal" })
+                    end
                 end,
             })
         end,
@@ -374,7 +375,7 @@ lazy().setup({
             vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
                 callback = function()
                     for _, hl in ipairs({ "NvimTreeNormal", "NvimTreeEndOfBuffer" }) do
-                        vim.api.nvim_set_hl(0, hl, {})
+                        vim.api.nvim_set_hl(0, hl, { link = "Normal" })
                     end
                 end,
             })
