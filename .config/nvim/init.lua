@@ -108,6 +108,7 @@ local function init_appearance()
                 "FloatBorder",
                 "FloatTitle",
                 "FloatFooter",
+                "Pmenu",
             }) do
                 vim.api.nvim_set_hl(0, hl, {})
             end
