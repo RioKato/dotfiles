@@ -92,7 +92,7 @@ local function init_appearance()
     }
     vim.g.qf_disable_statusline = 1
 
-    vim.api.nvim_create_autocmd("ColorScheme", {
+    vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         callback = function()
             for _, hl in ipairs({
                 "Normal",
@@ -371,7 +371,7 @@ lazy().setup({
 
             vim.keymap.set("n", "<leader>o", "<cmd>NvimTreeToggle<cr>")
 
-            vim.api.nvim_create_autocmd("ColorScheme", {
+            vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
                 callback = function()
                     for _, hl in ipairs({ "NvimTreeNormal", "NvimTreeEndOfBuffer" }) do
                         vim.api.nvim_set_hl(0, hl, {})
