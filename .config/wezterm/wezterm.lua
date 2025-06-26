@@ -13,6 +13,7 @@ config.keys = {
     { key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
     { key = ";", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
     { key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
+
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal },
     { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
@@ -21,11 +22,13 @@ config.keys = {
     { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
     { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
     { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") },
-    { key = "[", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
-    { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
+
     { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
     { key = "n", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
     { key = "p", mods = "LEADER", action = wezterm.action.ActivateTabRelative(-1) },
+
+    { key = "[", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
+    { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
 }
 
 return config
