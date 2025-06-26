@@ -43,6 +43,8 @@ return {
         },
     },
 
+    { "mbbill/undotree" },
+
     {
         "Goose97/timber.nvim",
         version = "*",
