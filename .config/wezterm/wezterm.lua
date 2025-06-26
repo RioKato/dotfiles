@@ -2,18 +2,13 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.font_size = 12.0
-config.window_background_opacity = 0.80
-config.window_padding = {
-    left = 0,
-    right = 0,
-    top = 0,
-    bottom = 0,
-}
+config.window_background_opacity = 0.9
+config.color_scheme = "Bamboo"
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+config.audible_bell = "Disabled"
 
 config.disable_default_key_bindings = true
-
 config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
-
 config.keys = {
     { key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
     { key = ";", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
