@@ -23,8 +23,8 @@ config.keys = {
     { key = "[", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
     { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
     { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
-    { key = "n", mods = "LEADER", action = wezterm.action.MoveTabRelative(1) },
-    { key = "p", mods = "LEADER", action = wezterm.action.MoveTabRelative(-1) },
+    { key = "n", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
+    { key = "p", mods = "LEADER", action = wezterm.action.ActivateTabRelative(-1) },
 }
 
 return config
