@@ -2,20 +2,25 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.font_size = 12.0
-config.use_ime = true
-config.window_background_opacity = 0.85
-config.window_decorations = "RESIZE"
+config.window_background_opacity = 0.80
+config.window_padding = {
+    left = 0,
+    right = 0,
+    top = 0,
+    bottom = 0,
+}
 
 config.disable_default_key_bindings = true
 
 config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
 
 config.keys = {
+    { key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
     { key = ";", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
     { key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal },
-    { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
+    { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
     { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
     { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
     { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
