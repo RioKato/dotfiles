@@ -1,12 +1,15 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
+config.font = wezterm.font_with_fallback({ "Inconsolata Nerd Font" })
 config.font_size = 12.0
-config.window_background_opacity = 0.9
-config.color_scheme = "Bamboo"
-config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
-config.audible_bell = "Disabled"
 config.warn_about_missing_glyphs = false
+
+config.window_background_opacity = 0.9
+config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
+config.color_scheme = "Bamboo"
+
+config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {}
 
 config.disable_default_key_bindings = true
