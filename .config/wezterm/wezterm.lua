@@ -34,6 +34,8 @@ config.keys = {
 
     { key = "[", mods = "LEADER", action = wezterm.action.ActivateCopyMode },
     { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
+
+    { key = "q", mods = "LEADER", action = wezterm.action.QuickSelect },
 }
 
 local copy_mode = wezterm.gui.default_key_tables().copy_mode
