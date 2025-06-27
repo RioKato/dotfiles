@@ -31,4 +31,15 @@ config.keys = {
     { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
 }
 
+local copy_mode = wezterm.gui.default_key_tables().copy_mode
+table.insert(copy_mode, {
+    key = "Enter",
+    mods = "NONE",
+    action = wezterm.action.Multiple({
+        { CopyTo = "Clipboard" },
+        { CopyMode = "Close" },
+    }),
+})
+config.key_tables = { copy_mode = copy_mode }
+
 return config
