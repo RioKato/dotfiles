@@ -19,8 +19,8 @@ config.keys = {
     { key = ";", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
     { key = "-", mods = "CTRL", action = wezterm.action.DecreaseFontSize },
 
-    { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical },
-    { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal },
+    { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
+    { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
     { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState },
     { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
