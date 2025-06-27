@@ -6,6 +6,7 @@ config.window_background_opacity = 0.9
 config.color_scheme = "Bamboo"
 config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
 config.audible_bell = "Disabled"
+config.skip_close_confirmation_for_processes_named = {}
 
 config.disable_default_key_bindings = true
 config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
@@ -16,7 +17,7 @@ config.keys = {
 
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal },
-    { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = false }) },
+    { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
     { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState },
     { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
     { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
