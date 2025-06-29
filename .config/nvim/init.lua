@@ -163,6 +163,7 @@ local function init_lsp()
         "rust_analyzer",
         "gopls",
         "jdtls",
+        "zls",
     })
 end
 
