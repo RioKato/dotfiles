@@ -39,30 +39,42 @@ config.keys = {
 }
 
 local keybinds = {
-    {
-        key = "Enter",
-        mods = "NONE",
-        action = wezterm.action.Multiple({
-            { CopyTo = "Clipboard" },
-            { CopyMode = "Close" },
-        }),
+    copy_mode = {
+        {
+            key = "Enter",
+            mods = "NONE",
+            action = wezterm.action.Multiple({
+                { CopyTo = "Clipboard" },
+                { CopyMode = "Close" },
+            }),
+        },
+        {
+            key = "/",
+            mods = "NONE",
+            action = wezterm.action.Multiple({
+                wezterm.action.CopyMode("ClearPattern"),
+                wezterm.action.Search({ CaseInSensitiveString = "" }),
+            }),
+        },
     },
-    {
-        key = "/",
-        mods = "NONE",
-        action = wezterm.action.Multiple({
-            wezterm.action.CopyMode("ClearPattern"),
-            wezterm.action.Search({ CaseInSensitiveString = "" }),
-        }),
-    },
+
+    search_mode = {},
 }
 
 local copy_mode = wezterm.gui.default_key_tables().copy_mode
+local search_mode = wezterm.gui.default_key_tables().search_mode
 
-for _, keybind in ipairs(keybinds) do
+for _, keybind in ipairs(keybinds.copy_mode) do
     table.insert(copy_mode, keybind)
 end
 
-config.key_tables = { copy_mode = copy_mode }
+for _, keybind in ipairs(keybinds.search_mode) do
+    table.insert(search_mode, keybind)
+end
+
+config.key_tables = {
+    copy_mode = copy_mode,
+    search_mode = search_mode,
+}
 
 return config
