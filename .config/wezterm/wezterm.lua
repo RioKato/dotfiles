@@ -58,7 +58,16 @@ local keybinds = {
         },
     },
 
-    search_mode = {},
+    search_mode = {
+        {
+            key = "Escape",
+            mods = "NONE",
+            action = wezterm.action.Multiple({
+                wezterm.action.CopyMode("ClearPattern"),
+                wezterm.action.CopyMode("Close"),
+            }),
+        },
+    },
 }
 
 local copy_mode = wezterm.gui.default_key_tables().copy_mode
