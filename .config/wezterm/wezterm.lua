@@ -38,15 +38,31 @@ config.keys = {
     { key = "q", mods = "LEADER", action = wezterm.action.QuickSelect },
 }
 
+local keybinds = {
+    {
+        key = "Enter",
+        mods = "NONE",
+        action = wezterm.action.Multiple({
+            { CopyTo = "Clipboard" },
+            { CopyMode = "Close" },
+        }),
+    },
+    {
+        key = "/",
+        mods = "NONE",
+        action = wezterm.action.Multiple({
+            wezterm.action.CopyMode("ClearPattern"),
+            wezterm.action.Search({ CaseInSensitiveString = "" }),
+        }),
+    },
+}
+
 local copy_mode = wezterm.gui.default_key_tables().copy_mode
-table.insert(copy_mode, {
-    key = "Enter",
-    mods = "NONE",
-    action = wezterm.action.Multiple({
-        { CopyTo = "Clipboard" },
-        { CopyMode = "Close" },
-    }),
-})
+
+for _, keybind in ipairs(keybinds) do
+    table.insert(copy_mode, keybind)
+end
+
 config.key_tables = { copy_mode = copy_mode }
 
 return config
