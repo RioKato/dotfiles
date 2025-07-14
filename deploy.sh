@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd $(dirname $0)
+git submodule update --init --force --remote
 
 IFS=$'\n'
 for FILE in $(git ls-files)
