@@ -33,19 +33,6 @@ return {
     { "itchyny/vim-qfedit" },
 
     {
-        "windwp/nvim-autopairs",
-
-        opts = {
-            disable_filetype = {
-                "TelescopePrompt",
-                "vim",
-            },
-        },
-    },
-
-    { "mbbill/undotree" },
-
-    {
         "Goose97/timber.nvim",
         version = "*",
         opts = {},
