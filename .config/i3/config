@@ -81,11 +81,11 @@ focus_follows_mouse no
 #############################################################################
 font pango:monospace 10
 title_align center
-client.focused          #272c33 #404552 #ffffff #5294e2 #3e646f
-client.focused_inactive #313742 #29303a #ffffff #484e50 #313742
-client.unfocused        #313742 #29303a #888888 #292d2e #313742
-client.urgent           #2f343a #5294e2 #ffffff #5294e2 #3e646f
-client.placeholder      #000000 #0c0c0c #ffffff #000000 #0c0c0c
+# client.focused          #272c33 #404552 #ffffff #5294e2 #3e646f
+# client.focused_inactive #313742 #29303a #ffffff #484e50 #313742
+# client.unfocused        #313742 #29303a #888888 #292d2e #313742
+# client.urgent           #2f343a #5294e2 #ffffff #5294e2 #3e646f
+# client.placeholder      #000000 #0c0c0c #ffffff #000000 #0c0c0c
 
 bar {
   status_command i3status

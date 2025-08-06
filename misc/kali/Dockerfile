@@ -20,7 +20,7 @@ RUN <<EOF
     cargo \
     python3-pip python-is-python3 \
     ruby \
-    openjdk-17-jdk \
+    default-jdk \
     npm \
     iproute2 \
     iputils-ping \
@@ -51,16 +51,12 @@ RUN <<EOF
     default-mysql-client \
     mingw-w64
   apt clean
-
-  pip install --upgrade autopep8
-  pip install pdbpp
-  npm i -g prettier
 EOF
 
 RUN <<EOF
   set -e
 
-  curl -L https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz | tar zx -C /usr/local/bin
+  curl -L https://github.com/neovim/neovim/releases/download/v0.11.3/nvim-linux-x86_64.tar.gz | tar zx -C /usr/local/bin
   ln -s /usr/local/bin/nvim-linux64/bin/nvim /usr/local/bin/nvim
 EOF
 
@@ -114,8 +110,8 @@ RUN <<EOF
   set -e
 
   go install github.com/ropnop/kerbrute@latest
-  pip install git-dumper
-  pip install certipy-ad
+  # pip install git-dumper
+  # pip install certipy-ad
   npm -g install js-beautify
   cargo install ripgrep
   cargo install urlencode
@@ -137,8 +133,7 @@ RUN <<EOF
 
   chsh -s /bin/zsh
   touch ~/.hushlogin
-  /usr/share/neo4j/bin/neo4j-admin set-initial-password blood
-  updatedb
+  # /usr/share/neo4j/bin/neo4j-admin set-initial-password blood
 EOF
 
 CMD ["/bin/zsh"]
