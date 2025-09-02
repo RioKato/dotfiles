@@ -11,7 +11,7 @@ return {
                         go = 'go run "$(dirname $(go env GOMOD))/main.go"',
                         javascript = "npm start",
                         typescript = "npm start",
-                        zig = '[ $(basename %) = "build.zig" ] && { zig build --summary all } || { zig test % -lc }',
+                        zig = '[ $(basename %) = "build.zig" ] && { zig build --summary all } || { zig build test }',
                     },
                 },
                 behavior = {
