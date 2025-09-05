@@ -11,7 +11,8 @@ return {
                         go = 'go run "$(dirname $(go env GOMOD))/main.go"',
                         javascript = "npm start",
                         typescript = "npm start",
-                        zig = '[ $(basename %) = "build.zig" ] && { zig build --summary all } || { zig build test }',
+                        zig = "zig build test",
+                        antlr4 = "antlr4 -o out %",
                     },
                 },
                 behavior = {
@@ -27,7 +28,7 @@ return {
             })
 
             vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "python", "rust", "go", "javascript", "typescript", "zig" },
+                pattern = { "python", "rust", "go", "javascript", "typescript", "zig", "antlr4" },
                 callback = function(ev)
                     local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "r", "<cmd>Jaq<cr>", opts)
