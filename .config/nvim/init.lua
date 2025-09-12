@@ -51,6 +51,7 @@ local function init_editor()
     vim.keymap.set("n", "<C-w>T", "<nop>")
     vim.keymap.set("n", "gt", "<nop>")
     vim.keymap.set("n", "gT", "<nop>")
+    vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
