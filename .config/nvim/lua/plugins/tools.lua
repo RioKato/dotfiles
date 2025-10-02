@@ -11,7 +11,7 @@ return {
                         go = 'go run "$(dirname $(go env GOMOD))/main.go"',
                         javascript = "npm start",
                         typescript = "npm start",
-                        zig = "zig build test",
+                        zig = "zig test -lc %; zig build test;",
                         antlr4 = "antlr4 -o out %",
                     },
                 },
