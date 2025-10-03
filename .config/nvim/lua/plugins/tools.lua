@@ -1,5 +1,26 @@
 return {
     {
+        "stevearc/overseer.nvim",
+
+        config = function()
+            require("overseer").setup({
+                templates = {
+                    "builtin",
+                    "zig.unit-test",
+                },
+            })
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "zig" },
+                callback = function(ev)
+                    local opts = { buffer = ev.buf }
+                    vim.keymap.set("n", "r", "<cmd>OverseerQuickAction<cr>", opts)
+                end,
+            })
+        end,
+    },
+
+    {
         "is0n/jaq-nvim",
 
         config = function()
