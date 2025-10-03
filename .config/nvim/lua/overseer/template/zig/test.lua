@@ -1,10 +1,12 @@
 return {
-    name = "zig run test",
+    name = "zig test",
 
     builder = function()
+        local file = vim.fn.expand("%:p")
+
         return {
             cmd = { "zig" },
-            args = { "run", "test" },
+            args = { "test", file },
         }
     end,
 

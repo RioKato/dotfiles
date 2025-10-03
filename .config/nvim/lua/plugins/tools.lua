@@ -6,8 +6,8 @@ return {
             require("overseer").setup({
                 templates = {
                     "builtin",
-                    "zig.unit-test",
-                    "zig.run-test",
+                    "zig.test",
+                    "zig.build",
                 },
             })
 
