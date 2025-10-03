@@ -7,62 +7,11 @@ return {
                 templates = {
                     "builtin",
                     "zig.unit-test",
+                    "zig.run-test",
                 },
             })
 
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "zig" },
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "r", "<cmd>OverseerQuickAction<cr>", opts)
-                end,
-            })
-        end,
-    },
-
-    {
-        "is0n/jaq-nvim",
-
-        config = function()
-            require("jaq-nvim").setup({
-                cmds = {
-                    external = {
-                        python = "python3 %",
-                        rust = "cargo run",
-                        go = 'go run "$(dirname $(go env GOMOD))/main.go"',
-                        javascript = "npm start",
-                        typescript = "npm start",
-                        zig = "zig test -lc %; zig build test;",
-                        antlr4 = "antlr4 -o out %",
-                    },
-                },
-                behavior = {
-                    autosave = true,
-                },
-                ui = {
-                    float = {
-                        border = { "╔", "═", "╗", "║", "╝", "═", "╚", "║" },
-                        height = 0.95,
-                        width = 0.95,
-                    },
-                },
-            })
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = { "python", "rust", "go", "javascript", "typescript", "zig", "antlr4" },
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "r", "<cmd>Jaq<cr>", opts)
-                end,
-            })
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "Jaq",
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "q", "<cmd>close<cr>", opts)
-                end,
-            })
+            vim.keymap.set("n", "r", "<cmd>OverseerRun<cr>")
         end,
     },
 
