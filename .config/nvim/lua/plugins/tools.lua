@@ -1,6 +1,7 @@
 return {
     {
         "stevearc/overseer.nvim",
+        dependencies = { "nvim-telescope/telescope.nvim" },
 
         config = function()
             require("overseer").setup({
@@ -12,42 +13,6 @@ return {
             })
 
             vim.keymap.set("n", "r", "<cmd>OverseerRun<cr>")
-        end,
-    },
-
-    {
-        "numToStr/FTerm.nvim",
-
-        config = function()
-            local fterm = require("FTerm")
-
-            local w3m = fterm:new({
-                cmd = "w3m",
-                dimensions = {
-                    height = 1,
-                    width = 1,
-                    x = 0,
-                    y = 0,
-                },
-            })
-
-            vim.keymap.set("n", "<leader>w", function()
-                w3m:toggle()
-            end)
-
-            local gitui = fterm:new({
-                cmd = "gitui",
-                dimensions = {
-                    height = 1,
-                    width = 1,
-                    x = 0,
-                    y = 0,
-                },
-            })
-
-            vim.api.nvim_create_user_command("GitUI", function()
-                gitui:toggle()
-            end, {})
         end,
     },
 
