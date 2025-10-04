@@ -12,6 +12,7 @@ return {
             })
 
             vim.keymap.set("n", "r", "<cmd>OverseerRun<cr>")
+            vim.keymap.set("n", "R", "<cmd>OverseerToggle<cr>")
         end,
     },
 
