@@ -361,6 +361,11 @@ lazy().setup({
     },
 
     {
+        "stevearc/dressing.nvim",
+        opts = {},
+    },
+
+    {
         "nvim-tree/nvim-tree.lua",
 
         config = function()
