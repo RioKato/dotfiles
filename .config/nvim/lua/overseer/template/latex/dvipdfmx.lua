@@ -2,7 +2,7 @@ return {
     name = "dvipdfmx",
 
     builder = function()
-        local file = vim.fn.expand("%:t")
+        local file = vim.fn.expand("%:t:r")
         local cwd = vim.fn.expand("%:p:h")
 
         return {
@@ -14,7 +14,7 @@ return {
                 "-v",
                 string.format("%s:/workdir", cwd),
                 "texlive/texlive",
-                "uplatex",
+                "dvipdfmx",
                 file,
             },
             cwd = cwd,
