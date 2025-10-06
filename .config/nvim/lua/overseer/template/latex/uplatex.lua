@@ -15,6 +15,7 @@ return {
                 string.format("%s:/workdir", cwd),
                 "texlive/texlive",
                 "uplatex",
+                "-interaction=nonstopmode",
                 file,
             },
             cwd = cwd,

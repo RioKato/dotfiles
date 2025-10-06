@@ -6,7 +6,7 @@ return {
 
         return {
             cmd = { "zig" },
-            args = { "test", file },
+            args = { "test", "-lc", file },
         }
     end,
 
