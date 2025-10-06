@@ -4,6 +4,10 @@ return {
 
         config = function()
             require("overseer").setup({
+                task_list = {
+                    direction = "left",
+                },
+
                 templates = {
                     "builtin",
                     "python.run",
