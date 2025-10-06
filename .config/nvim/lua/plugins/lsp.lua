@@ -46,4 +46,11 @@ return {
             automatic_installation = true,
         },
     },
+
+    {
+        "ray-x/lsp_signature.nvim",
+        opts = {
+            hint_enable = false,
+        },
+    },
 }
