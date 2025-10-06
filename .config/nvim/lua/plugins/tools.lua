@@ -6,6 +6,7 @@ return {
             require("overseer").setup({
                 templates = {
                     "builtin",
+                    "python.run",
                     "zig.test",
                     "zig.build",
                     "latex.uplatex",
