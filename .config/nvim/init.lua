@@ -133,17 +133,14 @@ end
 local function init_lsp()
     vim.diagnostic.config({
         signs = false,
-        underline = true,
-    })
-
-    vim.lsp.config("*", {
-        on_attach = function(client, bufnr)
-            vim.lsp.completion.enable(true, client.id, bufnr)
-        end,
+        underline = false,
+        virtual_lines = true,
     })
 
     vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(ev)
+            vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+
             local opts = { buffer = ev.buf }
             vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
             vim.keymap.set("n", "<leader><space>", function()
