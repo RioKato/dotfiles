@@ -132,7 +132,7 @@ end
 
 local function init_lsp()
     vim.diagnostic.config({
-        signs = false,
+        signs = true,
         underline = false,
         virtual_lines = true,
         update_in_insert = true,
@@ -146,6 +146,9 @@ local function init_lsp()
             vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
             vim.keymap.set("n", "<leader><space>", function()
                 vim.lsp.buf.format({ async = true })
+            end, opts)
+            vim.keymap.set("n", "<leader>d", function()
+                vim.diagnostic.enable(not vim.diagnostic.is_enabled())
             end, opts)
         end,
     })
@@ -353,7 +356,6 @@ lazy().setup({
                     local opts = { buffer = ev.buf }
                     vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
                     vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
-                    vim.keymap.set("n", "<leader>d", builtin.diagnostics, opts)
                 end,
             })
         end,
