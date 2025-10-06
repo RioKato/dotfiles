@@ -161,6 +161,7 @@ local function init_lsp()
         "gopls",
         "jdtls",
         "zls",
+        "texlab",
     })
 end
 

@@ -9,7 +9,7 @@ return {
         },
 
         opts = {
-            ensure_installed = { "pyright", "ts_ls", "cmake", "zls" },
+            ensure_installed = { "pyright", "ts_ls", "cmake", "zls", "texlab" },
         },
     },
 
