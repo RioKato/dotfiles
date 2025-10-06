@@ -9,6 +9,7 @@ return {
                     "zig.test",
                     "zig.build",
                     "latex.uplatex",
+                    "latex.dvipdfmx",
                 },
             })
 
