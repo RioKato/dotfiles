@@ -8,6 +8,7 @@ return {
                     "builtin",
                     "zig.test",
                     "zig.build",
+                    "latex.uplatex",
                 },
             })
 
