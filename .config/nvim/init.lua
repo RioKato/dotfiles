@@ -135,6 +135,7 @@ local function init_lsp()
         signs = false,
         underline = false,
         virtual_lines = true,
+        update_in_insert = true,
     })
 
     vim.api.nvim_create_autocmd("LspAttach", {
