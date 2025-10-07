@@ -1,12 +1,12 @@
 return {
-    name = "hurl",
+    name = "hurl -i --path-as-is",
 
     builder = function()
         local file = vim.fn.expand("%:p")
 
         return {
             cmd = { "hurl" },
-            args = { file },
+            args = { "-i", "--path-as-is", file },
         }
     end,
 
