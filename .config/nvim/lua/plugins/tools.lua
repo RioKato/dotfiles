@@ -13,6 +13,8 @@ return {
                     "python.run",
                     "zig.test",
                     "zig.build",
+                    "zig.build_run",
+                    "zig.build_test",
                     "latex.uplatex",
                     "latex.dvipdfmx",
                 },
