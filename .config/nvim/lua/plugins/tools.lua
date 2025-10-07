@@ -18,6 +18,7 @@ return {
                     "latex.uplatex",
                     "latex.dvipdfmx",
                     "http.hurl",
+                    "http.hurl_proxy",
                 },
             })
 
