@@ -17,6 +17,7 @@ return {
                     "zig.build_test",
                     "latex.uplatex",
                     "latex.dvipdfmx",
+                    "http.hurl",
                 },
             })
 
