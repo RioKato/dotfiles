@@ -2,6 +2,7 @@
 # :hurl (@focus|@all) dump.hurl
 
 from collections.abc import Sequence
+from http.cookies import SimpleCookie
 import logging
 import mitmproxy.types
 from mitmproxy import command
@@ -38,6 +39,12 @@ class Hurl:
             if content_type:
                 request.headers.pop("content-type")
 
+            cookies = None
+            if request.headers.get("cookie", None) is not None:
+                cookies = SimpleCookie()
+                cookies.load(request.headers.get("cookie"))
+                request.headers.pop("cookie")
+
             command.append(f"#" * 15)
             command.append(f"# request {i:>3} #")
             command.append(f"#" * 15)
@@ -58,6 +65,14 @@ class Hurl:
                 for k, v in query.items():
                     assert len(v) == 1
                     v = v[0]
+                    command.append(f"{k}: {v}")
+
+            if cookies:
+                command.append("")
+                command.append("[Cookies]")
+
+                for k, v in cookies.items():
+                    v = v.value
                     command.append(f"{k}: {v}")
 
             if request.content:
