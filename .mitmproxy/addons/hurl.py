@@ -24,11 +24,11 @@ class Hurl:
             request.headers.pop("content-length", None)
 
             content_type = ""
-            match request.headers.get("content-type", ""):
-                case "application/json":
-                    content_type = "json"
+            if "content-type" in request.headers:
+                match request.headers.get("content-type", ""):
+                    case "application/json":
+                        content_type = "json"
 
-            if content_type:
                 request.headers.pop("content-type")
 
             cookies = None
