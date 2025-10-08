@@ -1,3 +1,6 @@
+# Usage
+# :hurl (@focus|@all) dump.hurl
+
 from collections.abc import Sequence
 import logging
 import mitmproxy.types
@@ -5,6 +8,7 @@ from mitmproxy import command
 from mitmproxy import exceptions
 from mitmproxy import flow
 from mitmproxy import http
+from urllib.parse import urlparse, urlunparse, parse_qs
 
 
 def cleanup_request(f: flow.Flow) -> http.Request:
@@ -34,11 +38,27 @@ class Hurl:
             if content_type:
                 request.headers.pop("content-type")
 
-            command.append(f"# request {i}")
-            command.append(f"{request.method} {request.url}")
+            command.append(f"#" * 15)
+            command.append(f"# request {i:>3} #")
+            command.append(f"#" * 15)
+            command.append("")
+
+            parsed = urlparse(request.url)
+            url = urlunparse(parsed._replace(query=""))
+            query = parse_qs(parsed.query, True)
+            command.append(f"{request.method} {url}")
 
             for k, v in request.headers.items(multi=True):
                 command.append(f"{k}: {v}")
+
+            if query:
+                command.append("")
+                command.append("[Query]")
+
+                for k, v in query.items():
+                    assert len(v) == 1
+                    v = v[0]
+                    command.append(f"{k}: {v}")
 
             if request.content:
                 content = request.content.decode()
@@ -46,6 +66,7 @@ class Hurl:
                 if content.endswith("\n"):
                     content = content[:-1]
 
+                command.append("")
                 command.append(f"```{content_type}")
                 command.append(content)
                 command.append("```")
