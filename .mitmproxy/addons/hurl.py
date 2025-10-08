@@ -32,7 +32,7 @@ class Hurl:
                 request.headers.pop("content-type")
 
             cookies = None
-            if request.headers.get("cookie", None) is not None:
+            if "cookie" in request.headers:
                 cookies = SimpleCookie()
                 cookies.load(request.headers.get("cookie", ""))
                 request.headers.pop("cookie")
