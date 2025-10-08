@@ -11,6 +11,6 @@ return {
     end,
 
     condition = {
-        filetype = { "http" },
+        filetype = { "hurl" },
     },
 }
