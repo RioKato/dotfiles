@@ -10,15 +10,10 @@ return {
 
                 templates = {
                     "builtin",
-                    "python.python",
-                    "zig.test",
-                    "zig.build",
-                    "zig.build_run",
-                    "zig.build_test",
-                    "latex.uplatex",
-                    "latex.dvipdfmx",
-                    "hurl.hurl",
-                    "hurl.hurl_proxy",
+                    "python",
+                    "zig",
+                    "latex",
+                    "hurl",
                 },
             })
 
