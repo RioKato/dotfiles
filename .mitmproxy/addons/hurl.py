@@ -29,7 +29,8 @@ class Hurl:
                     case "application/json":
                         content_type = "json"
 
-                request.headers.pop("content-type")
+                if content_type:
+                    request.headers.pop("content-type")
 
             cookies = None
             if "cookie" in request.headers:
