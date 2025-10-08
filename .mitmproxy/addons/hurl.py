@@ -16,13 +16,6 @@ def cleanup_request(f: flow.Flow) -> http.Request:
     return request
 
 
-def pop_headers(request: http.Request) -> None:
-    request.headers.pop("content-length", None)
-
-    if request.headers.get("host", "") == request.host:
-        request.headers.pop("host")
-
-
 class Hurl:
     @command.command("hurl")
     def save(self, flows: Sequence[flow.Flow], path: mitmproxy.types.Path) -> None:
@@ -30,7 +23,17 @@ class Hurl:
 
         for i, flow in enumerate(flows):
             request = cleanup_request(flow)
-            pop_headers(request)
+
+            request.headers.pop("content-length", None)
+
+            if request.headers.get("host", "") == request.host:
+                request.headers.pop("host")
+
+            content_type = ""
+            match request.headers.get("content-type", ""):
+                case "application/json":
+                    content_type = "json"
+                    request.headers.pop("content-type")
 
             command.append(f"# request {i}")
             command.append(f"{request.method} {request.url}")
@@ -40,9 +43,13 @@ class Hurl:
 
             if request.content:
                 content = request.content.decode()
-                command.append(f"```")
+
+                if content.endswith("\n"):
+                    content = content[:-1]
+
+                command.append(f"```{content_type}")
                 command.append(content)
-                command.append(f"```")
+                command.append("```")
 
             command.append("")
 
