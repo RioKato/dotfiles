@@ -3,3 +3,7 @@ console_mouse: false
 console_focus_follow: true
 web_open_browser: false
 ssl_insecure: true
+
+scripts: [
+  "~/.mitmproxy/addons/hurl.py"
+]
