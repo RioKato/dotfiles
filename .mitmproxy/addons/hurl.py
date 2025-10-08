@@ -26,14 +26,13 @@ class Hurl:
 
             request.headers.pop("content-length", None)
 
-            if request.headers.get("host", "") == request.host:
-                request.headers.pop("host")
-
             content_type = ""
             match request.headers.get("content-type", ""):
                 case "application/json":
                     content_type = "json"
-                    request.headers.pop("content-type")
+
+            if content_type:
+                request.headers.pop("content-type")
 
             command.append(f"# request {i}")
             command.append(f"{request.method} {request.url}")
