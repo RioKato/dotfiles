@@ -6,19 +6,9 @@ from http.cookies import SimpleCookie
 import logging
 import mitmproxy.types
 from mitmproxy import command
-from mitmproxy import exceptions
 from mitmproxy import flow
 from mitmproxy import http
 from urllib.parse import urlparse, urlunparse, parse_qs
-
-
-def cleanup_request(f: flow.Flow) -> http.Request:
-    if not getattr(f, "request", None):
-        raise exceptions.CommandError("Can't export flow with no request.")
-    assert isinstance(f, http.HTTPFlow)
-    request = f.request.copy()
-    request.decode(strict=False)
-    return request
 
 
 class Hurl:
@@ -27,7 +17,9 @@ class Hurl:
         command = []
 
         for i, flow in enumerate(flows):
-            request = cleanup_request(flow)
+            assert isinstance(flow, http.HTTPFlow)
+            request = flow.request.copy()
+            request.decode(strict=False)
 
             request.headers.pop("content-length", None)
 
@@ -42,7 +34,7 @@ class Hurl:
             cookies = None
             if request.headers.get("cookie", None) is not None:
                 cookies = SimpleCookie()
-                cookies.load(request.headers.get("cookie"))
+                cookies.load(request.headers.get("cookie", ""))
                 request.headers.pop("cookie")
 
             command.append(f"#" * 15)
