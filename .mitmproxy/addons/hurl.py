@@ -12,7 +12,6 @@ from urllib.parse import urlparse, urlunparse, parse_qs
 
 
 def dumpreq(request: http.Request) -> str:
-    command = []
     request = request.copy()
     request.decode(strict=False)
 
@@ -36,57 +35,52 @@ def dumpreq(request: http.Request) -> str:
     parsed = urlparse(request.url)
     url = urlunparse(parsed._replace(query=""))
     query = parse_qs(parsed.query, True)
-    command.append(f"{request.method} {url}")
+
+    command = ""
+    command += f"{request.method} {url}\n"
 
     for k, v in request.headers.items(multi=True):
-        command.append(f"{k}: {v}")
+        command += f"{k}: {v}\n"
 
     if query:
-        command.append("")
-        command.append("[Query]")
+        command += "\n[Query]\n"
 
         for k, v in query.items():
             assert len(v) == 1
             v = v[0]
-            command.append(f"{k}: {v}")
+            command += f"{k}: {v}\n"
 
     if cookies:
-        command.append("")
-        command.append("[Cookies]")
+        command += "\n[Cookies]\n"
 
         for k, v in cookies.items():
             v = v.value
-            command.append(f"{k}: {v}")
+            command += f"{k}: {v}\n"
 
     if request.content:
         content = request.content.decode()
 
-        if content.endswith("\n"):
-            content = content[:-1]
+        if not content.endswith("\n"):
+            content = content + "\n"
 
-        command.append("")
-        command.append(f"```{content_type}")
-        command.append(content)
-        command.append("```")
+        command += f"\n```{content_type}\n{content}```\n"
 
-    return "\n".join(command)
+    return command
 
 
 class Hurl:
     @command.command("hurl")
     def save(self, flows: Sequence[flow.Flow], path: mitmproxy.types.Path) -> None:
-        command = []
+        command = ""
 
         for i, flow in enumerate(flows):
             assert isinstance(flow, http.HTTPFlow)
 
-            command.append(f"#" * 15)
-            command.append(f"# request {i:>3} #")
-            command.append(f"#" * 15)
-            command.append("")
-            command.append(dumpreq(flow.request))
-
-        command = "\n".join(command)
+            command += "#" * 15 + "\n"
+            command += f"# request {i:>3} #\n"
+            command += "#" * 15 + "\n\n"
+            command += dumpreq(flow.request)
+            command += "\n"
 
         try:
             with open(path, "w") as fp:
