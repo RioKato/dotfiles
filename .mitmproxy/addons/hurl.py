@@ -94,9 +94,8 @@ def dumpres(response: http.Response) -> str:
         if not content.endswith("\n"):
             content += "\n"
 
-        content = f"\n```\n{content}```"
         content = content.replace("\n", "\n# ")
-        command += f"{content}\n"
+        command += f"\n# ```\n# {content}```\n"
 
     return command
 
