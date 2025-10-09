@@ -8,6 +8,7 @@ import mitmproxy.types
 from mitmproxy import command
 from mitmproxy import flow
 from mitmproxy import http
+import re
 from urllib.parse import urlparse, urlunparse, parse_qs
 
 
@@ -76,16 +77,16 @@ def dumpres(response: http.Response) -> str:
         cookies = SimpleCookie()
         cookies.load(response.headers.get("set-cookie", ""))
 
-    command = f"# HTTP {response.status_code}\n"
+    command = f"HTTP {response.status_code}\n"
 
     for k, v in response.headers.items(multi=True):
-        command += f"# {k}: {v}\n"
+        command += f"{k}: {v}\n"
 
     if cookies:
-        command += "\n# [Captures]\n"
+        command += "\n[Captures]\n"
 
         for k in cookies:
-            command += f'# {k}: cookie "{k}"\n'
+            command += f'{k}: cookie "{k}"\n'
 
     if response.content:
         content = response.content.decode()
@@ -94,9 +95,11 @@ def dumpres(response: http.Response) -> str:
         if not content.endswith("\n"):
             content += "\n"
 
-        content = content.replace("\n", "\n# ")
-        command += f"\n# ```\n# {content}```\n"
+        command += f"\n```\n{content}```\n"
 
+    command = command.rstrip("\n")
+    command = re.sub(r"^", "# ", command, flags=re.MULTILINE)
+    command += "\n"
     return command
 
 
