@@ -60,7 +60,7 @@ def dumpreq(request: http.Request) -> str:
         content = request.content.decode()
 
         if not content.endswith("\n"):
-            content = content + "\n"
+            content += "\n"
 
         command += f"\n```{content_type}\n{content}```\n"
 
@@ -71,10 +71,21 @@ def dumpres(response: http.Response) -> str:
     response = response.copy()
     response.decode(strict=False)
 
+    cookies = None
+    if "set-cookie" in response.headers:
+        cookies = SimpleCookie()
+        cookies.load(response.headers.get("set-cookie", ""))
+
     command = f"# HTTP {response.status_code}\n"
 
     for k, v in response.headers.items(multi=True):
         command += f"# {k}: {v}\n"
+
+    if cookies:
+        command += "\n# [Captures]\n"
+
+        for k in cookies:
+            command += f'# {k}: cookie "{k}"\n'
 
     if response.content:
         command += "\n# ```\n# ????\n# ```\n"
@@ -90,9 +101,9 @@ class Hurl:
         for i, flow in enumerate(flows):
             assert isinstance(flow, http.HTTPFlow)
 
-            command += "#" * 15 + "\n"
-            command += f"# request {i:>3} #\n"
-            command += "#" * 15 + "\n\n"
+            command += "#" * 12 + "\n"
+            command += f"# flow {i:>3} #\n"
+            command += "#" * 12 + "\n\n"
             command += dumpreq(flow.request)
             command += "\n"
 
