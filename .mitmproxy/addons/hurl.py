@@ -18,6 +18,7 @@ def dumpreq(request: http.Request) -> str:
     request.decode(strict=False)
 
     request.headers.pop("content-length", None)
+    request.headers.pop("proxy-connection", None)
 
     content_type = ""
     if "content-type" in request.headers:
