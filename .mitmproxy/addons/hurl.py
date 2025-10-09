@@ -2,6 +2,7 @@
 # :hurl @___ dump.hurl
 
 from collections.abc import Sequence
+from contextlib import suppress
 from http.cookies import SimpleCookie
 import logging
 import mitmproxy.types
@@ -58,7 +59,10 @@ def dumpreq(request: http.Request) -> str:
             command += f"{k}: {v}\n"
 
     if request.content:
-        content = request.content.decode()
+        content = ""
+
+        with suppress(UnicodeDecodeError):
+            content = request.content.decode()
 
         if not content.endswith("\n"):
             content += "\n"
@@ -68,7 +72,7 @@ def dumpreq(request: http.Request) -> str:
     return command
 
 
-def dumpres(response: http.Response) -> str:
+def dumpres(response: http.Response, limit: int = 0x100) -> str:
     response = response.copy()
     response.decode(strict=False)
 
@@ -89,8 +93,12 @@ def dumpres(response: http.Response) -> str:
             command += f'{k}: cookie "{k}"\n'
 
     if response.content:
-        content = response.content.decode()
-        content = content[:0x100]
+        content = ""
+
+        with suppress(UnicodeDecodeError):
+            content = response.content.decode()
+
+        content = content[:limit]
 
         if not content.endswith("\n"):
             content += "\n"
