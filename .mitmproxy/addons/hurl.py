@@ -1,5 +1,5 @@
 # Usage
-# :hurl (@focus|@all) dump.hurl
+# :hurl @___ dump.hurl
 
 from collections.abc import Sequence
 from http.cookies import SimpleCookie
