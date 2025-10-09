@@ -46,10 +46,9 @@ def dumpreq(request: http.Request) -> str:
     if query:
         command += "\n[Query]\n"
 
-        for k, v in query.items():
-            assert len(v) == 1
-            v = v[0]
-            command += f"{k}: {v}\n"
+        for k, vs in query.items():
+            for v in vs:
+                command += f"{k}: {v}\n"
 
     if cookies:
         command += "\n[Cookies]\n"
