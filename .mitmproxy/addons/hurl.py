@@ -75,21 +75,10 @@ def dumpres(response: http.Response, limit: int = 0x100) -> str:
     response = response.copy()
     response.decode(strict=False)
 
-    cookies = None
-    if "set-cookie" in response.headers:
-        cookies = SimpleCookie()
-        cookies.load(response.headers.get("set-cookie", ""))
-
     command = f"HTTP {response.status_code}\n"
 
     for k, v in response.headers.items(multi=True):
         command += f"{k}: {v}\n"
-
-    if cookies:
-        command += "\n[Captures]\n"
-
-        for k in cookies:
-            command += f'{k}: cookie "{k}"\n'
 
     if response.content:
         content = ""
