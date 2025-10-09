@@ -36,8 +36,7 @@ def dumpreq(request: http.Request) -> str:
     url = urlunparse(parsed._replace(query=""))
     query = parse_qs(parsed.query, True)
 
-    command = ""
-    command += f"{request.method} {url}\n"
+    command = f"{request.method} {url}\n"
 
     for k, v in request.headers.items(multi=True):
         command += f"{k}: {v}\n"
@@ -68,6 +67,21 @@ def dumpreq(request: http.Request) -> str:
     return command
 
 
+def dumpres(response: http.Response) -> str:
+    response = response.copy()
+    response.decode(strict=False)
+
+    command = f"# HTTP {response.status_code}\n"
+
+    for k, v in response.headers.items(multi=True):
+        command += f"# {k}: {v}\n"
+
+    if response.content:
+        command += "\n# ```\n# ????\n# ```\n"
+
+    return command
+
+
 class Hurl:
     @command.command("hurl")
     def save(self, flows: Sequence[flow.Flow], path: mitmproxy.types.Path) -> None:
@@ -81,6 +95,10 @@ class Hurl:
             command += "#" * 15 + "\n\n"
             command += dumpreq(flow.request)
             command += "\n"
+
+            if flow.response:
+                command += dumpres(flow.response)
+                command += "\n"
 
         try:
             with open(path, "w") as fp:
