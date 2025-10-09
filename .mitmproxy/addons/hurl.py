@@ -88,7 +88,15 @@ def dumpres(response: http.Response) -> str:
             command += f'# {k}: cookie "{k}"\n'
 
     if response.content:
-        command += "\n# ```\n# ????\n# ```\n"
+        content = response.content.decode()
+        content = content[:0x100]
+
+        if not content.endswith("\n"):
+            content += "\n"
+
+        content = f"\n```\n{content}```"
+        content = content.replace("\n", "\n# ")
+        command += f"{content}\n"
 
     return command
 
