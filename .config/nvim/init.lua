@@ -43,7 +43,7 @@ local function init_editor()
     vim.keymap.set("c", "<C-b>", "<left>")
     vim.keymap.set("c", "<C-a>", "<home>")
     vim.keymap.set("c", "<C-e>", "<end>")
-    vim.keymap.set("n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
+    -- vim.keymap.set("n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
     vim.keymap.set("n", "<C-w>t", "<cmd>tab sbuffer<cr>")
     vim.keymap.set("n", "<C-w>n", "<cmd>tabnext<cr>")
     vim.keymap.set("n", "<C-w>p", "<cmd>tabprevious<cr>")
@@ -332,6 +332,10 @@ lazy().setup({
                 enabled = true,
                 timeout = 3000,
             },
+
+            zen = {
+                enabled = true,
+            },
         },
 
         keys = {
@@ -378,6 +382,13 @@ lazy().setup({
                     })
                 end,
                 desc = "References",
+            },
+            {
+                "<C-w>z",
+                function()
+                    Snacks.zen()
+                end,
+                desc = "Toggle Zen Mode",
             },
         },
     },
