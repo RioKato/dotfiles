@@ -377,7 +377,6 @@ lazy().setup({
                         layout = { fullscreen = true },
                     })
                 end,
-                nowait = true,
                 desc = "References",
             },
         },
