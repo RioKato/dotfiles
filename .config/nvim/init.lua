@@ -306,76 +306,74 @@ lazy().setup({
     },
 
     {
-        "nvim-telescope/telescope.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
+        "folke/snacks.nvim",
 
-        config = function()
-            local actions = require("telescope.actions")
+        opts = {
+            explorer = { enabled = true },
 
-            require("telescope").setup({
-                defaults = {
-                    initial_mode = "normal",
-                    mappings = {
-                        i = {
-                            ["<C-x>"] = actions.nop,
-                            ["<C-s>"] = actions.select_horizontal,
-                            ["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
-                        },
-                        n = {
-                            ["<C-x>"] = actions.nop,
-                            ["<C-s>"] = actions.select_horizontal,
-                            ["<C-l>"] = actions.send_to_qflist + actions.open_qflist,
-                            ["q"] = actions.close,
+            picker = {
+                enabled = true,
+                win = {
+                    input = {
+                        keys = {
+                            ["<c-l>"] = { "qflist", mode = { "i", "n" } },
                         },
                     },
-                    path_display = { "shorten" },
-                    layout_config = {
-                        width = 0.99,
-                        height = 0.99,
-                    },
                 },
-                pickers = {
-                    lsp_definitions = {
-                        jump_type = "never",
-                    },
-                    lsp_references = {
-                        jump_type = "never",
-                    },
-                },
-            })
+            },
 
-            local builtin = require("telescope.builtin")
-            vim.keymap.set("n", "<leader>f", builtin.find_files)
-            vim.keymap.set("n", "<leader>b", builtin.buffers)
-            vim.keymap.set("n", "<leader>g", builtin.live_grep)
-            vim.keymap.set("n", "<leader>G", builtin.current_buffer_fuzzy_find)
-            vim.keymap.set("n", "<C-s>", builtin.grep_string)
+            notifier = {
+                enabled = true,
+                timeout = 3000,
+            },
+        },
 
-            vim.api.nvim_create_autocmd("LspAttach", {
-                callback = function(ev)
-                    local opts = { buffer = ev.buf }
-                    vim.keymap.set("n", "<C-j>", builtin.lsp_definitions, opts)
-                    vim.keymap.set("n", "<C-k>", builtin.lsp_references, opts)
+        keys = {
+            {
+                "<leader>g",
+                function()
+                    Snacks.picker.grep({
+                        layout = { fullscreen = true },
+                    })
                 end,
-            })
-        end,
-    },
-
-    {
-        "nvim-tree/nvim-tree.lua",
-
-        config = function()
-            require("nvim-tree").setup()
-
-            vim.keymap.set("n", "<leader>o", "<cmd>NvimTreeToggle<cr>")
-
-            vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
-                callback = function()
-                    for _, hl in ipairs({ "NvimTreeNormal", "NvimTreeEndOfBuffer" }) do
-                        vim.api.nvim_set_hl(0, hl, { link = "Normal" })
-                    end
+                desc = "Grep",
+            },
+            {
+                "<C-s>",
+                function()
+                    Snacks.picker.grep_word({
+                        layout = { fullscreen = true },
+                    })
                 end,
-            })
-        end,
+                desc = "Visual selection or word",
+                mode = { "n", "x" },
+            },
+            {
+                "<leader>o",
+                function()
+                    Snacks.explorer()
+                end,
+                desc = "File Explorer",
+            },
+            {
+                "<C-j>",
+                function()
+                    Snacks.picker.lsp_definitions({
+                        layout = { fullscreen = true },
+                    })
+                end,
+                desc = "Goto Definition",
+            },
+            {
+                "<C-k>",
+                function()
+                    Snacks.picker.lsp_references({
+                        layout = { fullscreen = true },
+                    })
+                end,
+                nowait = true,
+                desc = "References",
+            },
+        },
     },
 })
