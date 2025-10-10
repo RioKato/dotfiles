@@ -38,7 +38,10 @@ return {
                     end,
 
                     format = function(item)
-                        return { { string.format("%d. %s ", item.id, item.status) }, { item.name } }
+                        return {
+                            { string.format("%d. %s ", item.id, item.status), string.format("Overseer%s", item.status) },
+                            { item.name },
+                        }
                     end,
 
                     confirm = function(picker, item)
