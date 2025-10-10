@@ -320,6 +320,11 @@ lazy().setup({
                             ["<c-l>"] = { "qflist", mode = { "i", "n" } },
                         },
                     },
+                    list = {
+                        keys = {
+                            ["<c-q>"] = "qflist",
+                        },
+                    },
                 },
             },
 
