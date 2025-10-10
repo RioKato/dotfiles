@@ -43,7 +43,7 @@ return {
 
                     confirm = function(picker, item)
                         picker:close()
-                        overseer.action_util.run_task_action(item)
+                        overseer.action_util.run_task_action(item, "open float")
                     end,
                 })
             end
