@@ -15,6 +15,7 @@ return {
                 },
                 markerHenkan = "*",
                 markerHenkanSelect = "*",
+                showCandidatesCount = 0x100,
             })
 
             vim.fn["skkeleton#register_kanatable"]("rom", {
