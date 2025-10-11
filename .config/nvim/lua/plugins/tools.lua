@@ -30,7 +30,7 @@ return {
                         local reversed = {}
 
                         for i = #tasks, 1, -1 do
-                            tasks[i].text = tasks[i].name
+                            tasks[i].text = string.format("%s %s", tasks[i].status, tasks[i].name)
                             table.insert(reversed, tasks[i])
                         end
 
@@ -38,12 +38,11 @@ return {
                     end,
 
                     format = function(item)
+                        local hl = string.format("Overseer%s", item.status)
+
                         return {
-                            {
-                                string.format("%d. %s ", item.id, item.status),
-                                string.format("Overseer%s", item.status),
-                            },
-                            { item.text },
+                            { string.format("%d. ", item.id), hl },
+                            { item.text, hl },
                         }
                     end,
 
