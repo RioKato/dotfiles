@@ -166,36 +166,10 @@ local function init_lsp()
     })
 end
 
-local function init_ime()
-    if vim.fn.executable("fcitx5-remote") == 1 then
-        vim.api.nvim_create_autocmd({ "InsertLeave", "CmdlineLeave", "TermLeave" }, {
-            callback = function()
-                vim.system({ "fcitx5-remote", "-c" })
-            end,
-        })
-
-        local toggle = false
-
-        vim.api.nvim_create_autocmd("InsertEnter", {
-            callback = function()
-                if toggle then
-                    vim.system({ "fcitx5-remote", "-o" })
-                end
-            end,
-        })
-
-        vim.keymap.set("n", "<leader>j", function()
-            toggle = not toggle
-            vim.notify(toggle and "IME ON" or "IME OFF")
-        end)
-    end
-end
-
 init_editor()
 init_appearance()
 init_quickfix()
 init_lsp()
-init_ime()
 
 local function lazy()
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))

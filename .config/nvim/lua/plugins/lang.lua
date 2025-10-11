@@ -5,6 +5,21 @@ return {
     },
 
     {
+        "vim-skk/skkeleton",
+        dependencies = { "vim-denops/denops.vim" },
+
+        config = function()
+            vim.fn["skkeleton#config"]({
+                globalDictionaries = {
+                    "~/.skk/SKK-JISYO.L",
+                },
+            })
+
+            vim.keymap.set({ "i", "c", "t" }, "<C-g>", "<plug>(skkeleton-toggle)")
+        end,
+    },
+
+    {
         "lambdalisue/kensaku.vim",
         dependencies = { "vim-denops/denops.vim" },
     },
