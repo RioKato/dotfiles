@@ -38,11 +38,9 @@ return {
                     end,
 
                     format = function(item)
-                        local hl = string.format("Overseer%s", item.status)
-
                         return {
                             { string.format("%d. ", item.id) },
-                            { item.text, hl },
+                            { item.text, string.format("Overseer%s", item.status) },
                         }
                     end,
 
