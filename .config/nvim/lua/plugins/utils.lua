@@ -1,5 +1,25 @@
 return {
     {
+        "nvim-treesitter/nvim-treesitter-context",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+
+        config = function()
+            require("treesitter-context").setup({
+                mode = "topline",
+                separator = "·",
+            })
+
+            vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
+                callback = function()
+                    for _, hl in ipairs({ "TreesitterContext", "TreesitterContextSeparator" }) do
+                        vim.api.nvim_set_hl(0, hl, { link = "Normal" })
+                    end
+                end,
+            })
+        end,
+    },
+
+    {
         "t9md/vim-quickhl",
 
         config = function()
