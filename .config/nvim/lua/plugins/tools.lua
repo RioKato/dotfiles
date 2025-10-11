@@ -47,6 +47,10 @@ return {
                     end,
 
                     confirm = function(picker, item)
+                        if item == nil then
+                            return
+                        end
+
                         picker:close()
                         overseer.run_action(item, "open float")
                     end,
