@@ -13,9 +13,11 @@ return {
                 globalDictionaries = {
                     "~/.skk/SKK-JISYO.L",
                 },
+                markerHenkan = "*",
+                markerHenkanSelect = "*",
             })
 
-            vim.keymap.set({ "i", "c", "t" }, "<C-b>", "<plug>(skkeleton-toggle)")
+            vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<plug>(skkeleton-toggle)")
         end,
     },
 
