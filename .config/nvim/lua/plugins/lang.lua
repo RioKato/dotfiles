@@ -17,6 +17,13 @@ return {
                 markerHenkanSelect = "*",
             })
 
+            vim.fn["skkeleton#register_kanatable"]("rom", {
+                ["/"] = { "・", "" },
+                [";"] = { "；", "" },
+                ["<s-l>"] = { "", "" },
+                ["l"] = { "", "" },
+            })
+
             vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<plug>(skkeleton-toggle)")
         end,
     },
