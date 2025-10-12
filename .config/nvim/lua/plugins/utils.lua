@@ -60,7 +60,28 @@ return {
         opts = {},
     },
 
-    { "nicwest/vim-camelsnek" },
+    {
+        "johmsalas/text-case.nvim",
+        opts = {},
+
+        keys = {
+            {
+                "ccs",
+                function()
+                    require("textcase").current_word("to_snake_case")
+                end,
+                desc = "textcase to_snake_case",
+            },
+
+            {
+                "ccc",
+                function()
+                    require("textcase").current_word("to_camel_case")
+                end,
+                desc = "textcase to_camel_case",
+            },
+        },
+    },
 
     {
         "skosulor/nibbler",
