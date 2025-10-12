@@ -98,6 +98,7 @@ return {
         keys = {
             { "ccd", "<cmd>NibblerToDec<cr>", desc = "NibblerToDec" },
             { "cch", "<cmd>NibblerToHex<cr>", desc = "NibblerToHex" },
+            { "ccb", "<cmd>NibblerToBin<cr>", desc = "NibblerToBin" },
         },
     },
 
