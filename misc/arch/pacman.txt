@@ -3,7 +3,7 @@ xorg-xhost
 xsel
 xclip
 fcitx5-im
-fcitx5-mozc
+fcitx5-skk
 dex
 xss-lock
 network-manager-applet
