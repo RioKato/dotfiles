@@ -58,7 +58,20 @@ return {
         opts = {},
     },
 
-    { "linrongbin16/gitlinker.nvim", opts = {} },
-
     { "nicwest/vim-camelsnek" },
+
+    {
+        "skosulor/nibbler",
+
+        opts = {
+            display_enabled = false,
+        },
+
+        keys = {
+            { "ccd", "<cmd>NibblerToDec<cr>", desc = "NibblerToDec" },
+            { "cch", "<cmd>NibblerToHex<cr>", desc = "NibblerToHex" },
+        },
+    },
+
+    { "linrongbin16/gitlinker.nvim", opts = {} },
 }
