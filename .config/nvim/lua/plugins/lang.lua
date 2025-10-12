@@ -7,6 +7,7 @@ return {
     {
         "vim-skk/skkeleton",
         dependencies = { "vim-denops/denops.vim" },
+        lazy = false,
 
         config = function()
             vim.fn["skkeleton#config"]({
@@ -24,9 +25,11 @@ return {
                 ["<s-l>"] = { "", "" },
                 ["l"] = { "", "" },
             })
-
-            vim.keymap.set({ "i", "c", "t" }, "<C-j>", "<plug>(skkeleton-toggle)")
         end,
+
+        keys = {
+            { "<C-j>", "<plug>(skkeleton-toggle)", mode = { "i", "c", "t" }, desc = "skkeleton-toggle" },
+        },
     },
 
     {
@@ -38,9 +41,9 @@ return {
         "lambdalisue/kensaku-search.vim",
         dependencies = { "lambdalisue/kensaku.vim" },
 
-        config = function()
-            vim.keymap.set("c", "<cr>", "<plug>(kensaku-search-replace)<cr>")
-        end,
+        keys = {
+            { "<cr>", "<plug>(kensaku-search-replace)<cr>", mode = { "c" }, desc = "kensaku-search-replace" },
+        },
     },
 
     {

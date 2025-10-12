@@ -22,10 +22,10 @@ return {
     {
         "t9md/vim-quickhl",
 
-        config = function()
-            vim.keymap.set({ "n", "x" }, "<C-t>", "<plug>(quickhl-manual-this)")
-            vim.keymap.set("n", "<leader>m", "<plug>(quickhl-manual-reset)")
-        end,
+        keys = {
+            { "<C-t>", "<plug>(quickhl-manual-this)", mode = { "n", "x" }, desc = "quickhl-manual-this" },
+            { "<leader>m", "<plug>(quickhl-manual-reset)" },
+        },
     },
 
     {
@@ -39,13 +39,15 @@ return {
     {
         "rapan931/lasterisk.nvim",
 
-        config = function()
-            local lasterisk = require("lasterisk")
-
-            vim.keymap.set("n", "*", function()
-                lasterisk.search()
-            end)
-        end,
+        keys = {
+            {
+                "*",
+                function()
+                    require("lasterisk").search()
+                end,
+                desc = "lasterisk",
+            },
+        },
     },
 
     { "machakann/vim-sandwich" },
