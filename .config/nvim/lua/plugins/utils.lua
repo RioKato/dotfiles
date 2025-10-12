@@ -11,7 +11,12 @@ return {
 
             vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
                 callback = function()
-                    for _, hl in ipairs({ "TreesitterContext", "TreesitterContextSeparator" }) do
+                    local hls = {
+                        "TreesitterContext",
+                        "TreesitterContextSeparator",
+                    }
+
+                    for _, hl in ipairs(hls) do
                         vim.api.nvim_set_hl(0, hl, { link = "Normal" })
                     end
                 end,

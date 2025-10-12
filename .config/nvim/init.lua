@@ -97,7 +97,7 @@ local function init_appearance()
 
     vim.api.nvim_create_autocmd({ "VimEnter", "ColorScheme" }, {
         callback = function()
-            for _, hl in ipairs({
+            local hls = {
                 "Normal",
                 "NormalNC",
                 "StatusLine",
@@ -112,7 +112,9 @@ local function init_appearance()
                 "FloatTitle",
                 "FloatFooter",
                 "Pmenu",
-            }) do
+            }
+
+            for _, hl in ipairs(hls) do
                 vim.api.nvim_set_hl(0, hl, {})
             end
         end,
