@@ -140,10 +140,8 @@ local function init_quickfix()
                 { "n", "<enter>", "<cmd>.cc<cr>" },
             }
 
-            local opts = { buffer = ev.buf }
-
             for _, key in ipairs(keys) do
-                vim.keymap.set(key[1], key[2], key[3], opts)
+                vim.keymap.set(key[1], key[2], key[3], { buffer = ev.buf })
             end
         end,
     })
@@ -179,10 +177,8 @@ local function init_lsp()
                 },
             }
 
-            local opts = { buffer = ev.buf }
-
             for _, key in ipairs(keys) do
-                vim.keymap.set(key[1], key[2], key[3], opts)
+                vim.keymap.set(key[1], key[2], key[3], { buffer = ev.buf })
             end
         end,
     })
