@@ -185,7 +185,7 @@ local function init_lsp()
         end,
     })
 
-    vim.lsp.enable({
+    local lss = {
         "pyright",
         "ts_ls",
         "cmake",
@@ -195,7 +195,9 @@ local function init_lsp()
         "jdtls",
         "zls",
         "texlab",
-    })
+    }
+
+    vim.lsp.enable(lss)
 end
 
 init_editor()
@@ -230,7 +232,14 @@ lazy().setup({
         "nvim-treesitter/nvim-treesitter",
 
         opts = {
-            ensure_installed = { "c", "cpp", "python", "rust", "java", "vim" },
+            ensure_installed = {
+                "c",
+                "cpp",
+                "python",
+                "rust",
+                "java",
+                "vim",
+            },
         },
     },
 
