@@ -205,7 +205,7 @@ init_appearance()
 init_quickfix()
 init_lsp()
 
-local function lazy()
+if vim.pack == nil then
     local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
 
     if not vim.loop.fs_stat(path) then
@@ -220,10 +220,13 @@ local function lazy()
     end
 
     vim.opt.rtp:prepend(path)
-    return require("lazy")
+else
+    vim.pack.add({
+        "https://github.com/folke/lazy.nvim",
+    })
 end
 
-lazy().setup({
+require("lazy").setup({
     { "folke/lazy.nvim" },
     { import = "plugins" },
     { "neovim/nvim-lspconfig" },
