@@ -34,24 +34,30 @@ local function init_editor()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
-    vim.keymap.set({ "n", "x" }, "j", "gj")
-    vim.keymap.set({ "n", "x" }, "k", "gk")
-    vim.keymap.set({ "n", "x" }, "gj", "j")
-    vim.keymap.set({ "n", "x" }, "gk", "k")
-    vim.keymap.set("n", "x", '"_x')
-    vim.keymap.set("c", "<C-f>", "<right>")
-    vim.keymap.set("c", "<C-b>", "<left>")
-    vim.keymap.set("c", "<C-a>", "<home>")
-    vim.keymap.set("c", "<C-e>", "<end>")
-    vim.keymap.set("n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>")
-    vim.keymap.set("n", "<C-w>t", "<cmd>tab sbuffer<cr>")
-    vim.keymap.set("n", "<C-w>n", "<cmd>tabnext<cr>")
-    vim.keymap.set("n", "<C-w>p", "<cmd>tabprevious<cr>")
-    vim.keymap.set("n", "<C-w>o", "<nop>")
-    vim.keymap.set("n", "<C-w>T", "<nop>")
-    vim.keymap.set("n", "gt", "<nop>")
-    vim.keymap.set("n", "gT", "<nop>")
-    vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
+    local keys = {
+        { { "n", "x" }, "j", "gj" },
+        { { "n", "x" }, "k", "gk" },
+        { { "n", "x" }, "gj", "j" },
+        { { "n", "x" }, "gk", "k" },
+        { "n", "x", '"_x' },
+        { "c", "<C-f>", "<right>" },
+        { "c", "<C-b>", "<left>" },
+        { "c", "<C-a>", "<home>" },
+        { "c", "<C-e>", "<end>" },
+        { "n", "<C-w>z", "<cmd>horizontal resize | vertical resize<cr>" },
+        { "n", "<C-w>t", "<cmd>tab sbuffer<cr>" },
+        { "n", "<C-w>n", "<cmd>tabnext<cr>" },
+        { "n", "<C-w>p", "<cmd>tabprevious<cr>" },
+        { "n", "<C-w>o", "<nop>" },
+        { "n", "<C-w>T", "<nop>" },
+        { "n", "gt", "<nop>" },
+        { "n", "gT", "<nop>" },
+        { "t", "<esc>", "<c-\\><c-n>" },
+    }
+
+    for _, key in ipairs(keys) do
+        vim.keymap.set(key[1], key[2], key[3])
+    end
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
@@ -114,18 +120,31 @@ local function init_appearance()
 end
 
 local function init_quickfix()
-    vim.keymap.set("n", "<C-l>", "<cmd>copen<cr>")
-    vim.keymap.set("n", "<C-n>", "<cmd>silent! cnext<cr>")
-    vim.keymap.set("n", "<C-p>", "<cmd>silent! cprevious<cr>")
+    local keys = {
+        { "n", "<C-l>", "<cmd>copen<cr>" },
+        { "n", "<C-n>", "<cmd>silent! cnext<cr>" },
+        { "n", "<C-p>", "<cmd>silent! cprevious<cr>" },
+    }
+
+    for _, key in ipairs(keys) do
+        vim.keymap.set(key[1], key[2], key[3])
+    end
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
         callback = function(ev)
+            local keys = {
+                { "n", "q", "<cmd>cclose<cr>" },
+                { "n", "<C-o>", "<cmd>silent! colder<cr>" },
+                { "n", "<C-i>", "<cmd>silent! cnewer<cr>" },
+                { "n", "<enter>", "<cmd>.cc<cr>" },
+            }
+
             local opts = { buffer = ev.buf }
-            vim.keymap.set("n", "q", "<cmd>cclose<cr>", opts)
-            vim.keymap.set("n", "<C-o>", "<cmd>silent! colder<cr>", opts)
-            vim.keymap.set("n", "<C-i>", "<cmd>silent! cnewer<cr>", opts)
-            vim.keymap.set("n", "<enter>", "<cmd>.cc<cr>", opts)
+
+            for _, key in ipairs(keys) do
+                vim.keymap.set(key[1], key[2], key[3], opts)
+            end
         end,
     })
 end
@@ -142,14 +161,29 @@ local function init_lsp()
         callback = function(ev)
             vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
 
+            local keys = {
+                { "n", "<C-h>", vim.lsp.buf.hover },
+                {
+                    "n",
+                    "<leader><space>",
+                    function()
+                        vim.lsp.buf.format({ async = true })
+                    end,
+                },
+                {
+                    "n",
+                    "<leader>d",
+                    function()
+                        vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+                    end,
+                },
+            }
+
             local opts = { buffer = ev.buf }
-            vim.keymap.set("n", "<C-h>", vim.lsp.buf.hover, opts)
-            vim.keymap.set("n", "<leader><space>", function()
-                vim.lsp.buf.format({ async = true })
-            end, opts)
-            vim.keymap.set("n", "<leader>d", function()
-                vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-            end, opts)
+
+            for _, key in ipairs(keys) do
+                vim.keymap.set(key[1], key[2], key[3], opts)
+            end
         end,
     })
 

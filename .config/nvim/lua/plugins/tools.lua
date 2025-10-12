@@ -55,8 +55,14 @@ return {
                 })
             end
 
-            vim.keymap.set("n", "r", "<cmd>OverseerRun<cr>")
-            vim.keymap.set("n", "R", pick)
+            local keys = {
+                { "n", "r", "<cmd>OverseerRun<cr>" },
+                { "n", "R", pick },
+            }
+
+            for _, key in ipairs(keys) do
+                vim.keymap.set(key[1], key[2], key[3])
+            end
         end,
     },
 
