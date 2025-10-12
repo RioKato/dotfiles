@@ -14,8 +14,8 @@ return {
                 globalDictionaries = {
                     "~/.skk/SKK-JISYO.L",
                 },
-                markerHenkan = "*",
-                markerHenkanSelect = "*",
+                markerHenkan = "□ ",
+                markerHenkanSelect = "■ ",
                 showCandidatesCount = 0x100,
             })
 
