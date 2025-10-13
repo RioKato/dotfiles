@@ -64,17 +64,6 @@ local function init_editor()
             vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
         end,
     })
-
-    vim.api.nvim_create_autocmd("TabEnter", {
-        callback = function()
-            local curnr = vim.fn.tabpagenr()
-            local lastnr = vim.fn.tabpagenr("$")
-            local winnr = vim.fn.tabpagewinnr(curnr)
-            local cwd = vim.fn.getcwd(winnr, curnr)
-            local msg = string.format("TAB: %d/%d\nCWD: %s", curnr, lastnr, cwd)
-            vim.notify(msg)
-        end,
-    })
 end
 
 local function init_appearance()
@@ -221,9 +210,7 @@ if vim.pack == nil then
 
     vim.opt.rtp:prepend(path)
 else
-    vim.pack.add({
-        "https://github.com/folke/lazy.nvim",
-    })
+    vim.pack.add({ "https://github.com/folke/lazy.nvim" })
 end
 
 require("lazy").setup({
