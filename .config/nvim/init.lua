@@ -1,3 +1,9 @@
+local function assign_keys(keys, opt)
+    for _, key in ipairs(keys) do
+        vim.keymap.set(key[1], key[2], key[3], opt)
+    end
+end
+
 local function init_editor()
     vim.opt.encoding = "utf-8"
     vim.opt.autoindent = true
@@ -55,9 +61,7 @@ local function init_editor()
         { "t", "<esc>", "<c-\\><c-n>" },
     }
 
-    for _, key in ipairs(keys) do
-        vim.keymap.set(key[1], key[2], key[3])
-    end
+    assign_keys(keys)
 
     vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
@@ -117,9 +121,7 @@ local function init_quickfix()
         { "n", "<C-p>", "<cmd>silent! cprevious<cr>" },
     }
 
-    for _, key in ipairs(keys) do
-        vim.keymap.set(key[1], key[2], key[3])
-    end
+    assign_keys(keys)
 
     vim.api.nvim_create_autocmd("FileType", {
         pattern = "qf",
@@ -131,9 +133,7 @@ local function init_quickfix()
                 { "n", "<enter>", "<cmd>.cc<cr>" },
             }
 
-            for _, key in ipairs(keys) do
-                vim.keymap.set(key[1], key[2], key[3], { buffer = ev.buf })
-            end
+            assign_keys(keys, { buffer = ev.buf })
         end,
     })
 end
@@ -164,9 +164,7 @@ local function init_lsp()
                 { "n", "<leader>d", toggle },
             }
 
-            for _, key in ipairs(keys) do
-                vim.keymap.set(key[1], key[2], key[3], { buffer = ev.buf })
-            end
+            assign_keys(keys, { buffer = ev.buf })
         end,
     })
 
