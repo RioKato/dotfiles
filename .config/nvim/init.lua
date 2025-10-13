@@ -150,22 +150,18 @@ local function init_lsp()
         callback = function(ev)
             vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
 
+            local function format()
+                vim.lsp.buf.format({ async = true })
+            end
+
+            local function toggle()
+                vim.diagnostic.enable(not vim.diagnostic.is_enabled())
+            end
+
             local keys = {
                 { "n", "<C-h>", vim.lsp.buf.hover },
-                {
-                    "n",
-                    "<leader><space>",
-                    function()
-                        vim.lsp.buf.format({ async = true })
-                    end,
-                },
-                {
-                    "n",
-                    "<leader>d",
-                    function()
-                        vim.diagnostic.enable(not vim.diagnostic.is_enabled())
-                    end,
-                },
+                { "n", "<leader><space>", format },
+                { "n", "<leader>d", toggle },
             }
 
             for _, key in ipairs(keys) do
