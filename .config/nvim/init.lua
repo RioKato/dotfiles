@@ -296,7 +296,6 @@ require("lazy").setup({
 
         opts = {
             explorer = { enabled = true },
-
             picker = {
                 enabled = true,
                 win = {
@@ -312,12 +311,10 @@ require("lazy").setup({
                     },
                 },
             },
-
             notifier = {
                 enabled = true,
                 timeout = 3000,
             },
-
             zen = {
                 enabled = true,
             },
