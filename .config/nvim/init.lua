@@ -295,7 +295,9 @@ require("lazy").setup({
         lazy = false,
 
         opts = {
-            explorer = { enabled = true },
+            explorer = {
+                enabled = true,
+            },
             picker = {
                 enabled = true,
                 win = {
