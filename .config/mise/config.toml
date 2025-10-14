@@ -1,7 +1,11 @@
 [tools]
+neovim = 'latest'
+fzf = 'latest'
+fd = 'latest'
+
 zls = 'latest'
 black = 'latest'
 prettier = 'latest'
 stylua = 'latest'
-
+'npm:pyright' = 'latest'
 'npm:typescript-language-server' = 'latest'
