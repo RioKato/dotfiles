@@ -151,7 +151,7 @@ local function init_lsp()
             vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
 
             local function format()
-                vim.lsp.buf.format({ async = true })
+                vim.lsp.buf.format({ id = ev.data.client_id, bufnr = ev.buf })
             end
 
             local function toggle()
@@ -160,7 +160,7 @@ local function init_lsp()
 
             local keys = {
                 { "n", "<C-h>", vim.lsp.buf.hover },
-                { "n", "<leader><space>", format },
+                { "n", "<leader> ", format },
                 { "n", "<leader>d", toggle },
             }
 
