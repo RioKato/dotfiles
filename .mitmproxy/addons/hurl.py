@@ -26,6 +26,9 @@ def dumpreq(request: http.Request) -> str:
             case "application/json":
                 content_type = "json"
 
+            case "application/x-www-form-urlencoded":
+                content_type = "form"
+
         if content_type:
             request.headers.pop("content-type")
 
@@ -64,10 +67,21 @@ def dumpreq(request: http.Request) -> str:
         with suppress(UnicodeDecodeError):
             content = request.content.decode()
 
-        if not content.endswith("\n"):
-            content += "\n"
+        match content_type:
+            case "" | "json":
+                if not content.endswith("\n"):
+                    content += "\n"
 
-        command += f"\n```{content_type}\n{content}```\n"
+                command += f"\n```{content_type}\n{content}```\n"
+
+            case "form":
+                command += "\n[Form]\n"
+
+                form = parse_qs(content, True)
+
+                for k, vs in form.items():
+                    for v in vs:
+                        command += f"{k}: {v}\n"
 
     return command
 
