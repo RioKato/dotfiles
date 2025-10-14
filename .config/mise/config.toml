@@ -1,0 +1,5 @@
+[tools]
+zls = 'latest'
+black = 'latest'
+prettier = 'latest'
+stylua = 'latest'
