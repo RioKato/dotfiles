@@ -1,4 +1,21 @@
 return {
+    {
+        "neovim/nvim-lspconfig",
+
+        config = function()
+            local lss = {
+                "clangd",
+                "pyright",
+                "ts_ls",
+                "zls",
+                "texlab",
+                "stylua",
+            }
+
+            vim.lsp.enable(lss)
+        end,
+    },
+
     { "mason-org/mason.nvim", opts = {} },
 
     {

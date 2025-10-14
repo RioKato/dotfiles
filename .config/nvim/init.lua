@@ -163,17 +163,6 @@ local function init_lsp()
             assign_keys(keys, { buffer = ev.buf })
         end,
     })
-
-    local lss = {
-        "clangd",
-        "pyright",
-        "ts_ls",
-        "zls",
-        "texlab",
-        "stylua",
-    }
-
-    vim.lsp.enable(lss)
 end
 
 init_editor()
@@ -207,7 +196,6 @@ require("lazy").setup({
     },
 
     { import = "plugins" },
-    { "neovim/nvim-lspconfig" },
 
     {
         "nvim-treesitter/nvim-treesitter",
