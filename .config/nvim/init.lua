@@ -1,6 +1,6 @@
-local function assign_keys(keys, opt)
+local function assign_keys(keys, opts)
     for _, key in ipairs(keys) do
-        vim.keymap.set(key[1], key[2], key[3], opt)
+        vim.keymap.set(key[1], key[2], key[3], opts)
     end
 end
 
