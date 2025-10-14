@@ -12,7 +12,6 @@ return {
             ensure_installed = {
                 "pyright",
                 "ts_ls",
-                "cmake",
                 "zls",
                 "texlab",
                 "stylua",
