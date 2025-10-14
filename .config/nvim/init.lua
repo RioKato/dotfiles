@@ -199,17 +199,9 @@ require("lazy").setup({
 
     {
         "nvim-treesitter/nvim-treesitter",
-
-        opts = {
-            ensure_installed = {
-                "c",
-                "cpp",
-                "python",
-                "rust",
-                "java",
-                "vim",
-            },
-        },
+        branch = "master",
+        lazy = false,
+        build = ":TSUpdate",
     },
 
     {
