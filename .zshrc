@@ -104,6 +104,10 @@ alias ll="ls -al --time-style long-iso --color"
 export LESS="-R"
 
 ###############################################################################################
+if command -v mise &> /dev/null
+then
+  eval "$(mise activate zsh)"
+fi
 
 export EDITOR=vim
 alias view='vim -R'
