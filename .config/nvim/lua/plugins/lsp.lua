@@ -5,11 +5,6 @@ return {
         config = function()
             local lss = {
                 "clangd",
-                "pyright",
-                "ts_ls",
-                "zls",
-                "texlab",
-                "stylua",
             }
 
             vim.lsp.enable(lss)
@@ -26,7 +21,6 @@ return {
         },
 
         opts = {
-            automatic_enable = false,
             ensure_installed = {
                 "pyright",
                 "ts_ls",
