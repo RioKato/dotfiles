@@ -169,15 +169,12 @@ local function init_lsp()
     })
 
     local lss = {
+        "clangd",
         "pyright",
         "ts_ls",
-        "cmake",
-        "clangd",
-        "rust_analyzer",
-        "gopls",
-        "jdtls",
         "zls",
         "texlab",
+        "stylua",
     }
 
     vim.lsp.enable(lss)
