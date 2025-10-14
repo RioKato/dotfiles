@@ -208,7 +208,11 @@ else
 end
 
 require("lazy").setup({
-    { "folke/lazy.nvim" },
+    {
+        "folke/lazy.nvim",
+        enabled = vim.pack == nil,
+    },
+
     { import = "plugins" },
     { "neovim/nvim-lspconfig" },
 
