@@ -9,6 +9,7 @@ return {
         },
 
         opts = {
+            automatic_enable = false,
             ensure_installed = {
                 "pyright",
                 "ts_ls",
