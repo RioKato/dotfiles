@@ -339,13 +339,6 @@ require("lazy").setup({
                 end,
                 desc = "Toggle Zen Mode",
             },
-            {
-                "<leader>p",
-                function()
-                    Snacks.picker.projects()
-                end,
-                desc = "Projects",
-            },
         },
     },
 })

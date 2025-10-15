@@ -109,5 +109,13 @@ return {
         },
     },
 
+    {
+        "wsdjeg/rooter.nvim",
+
+        opts = {
+            root_patterns = { ".git/" },
+        },
+    },
+
     { "linrongbin16/gitlinker.nvim", opts = {} },
 }
