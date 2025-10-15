@@ -113,7 +113,13 @@ return {
         "wsdjeg/rooter.nvim",
 
         opts = {
-            root_patterns = { ".git/" },
+            root_patterns = {
+                ".git/",
+                "Makefile",
+                "build.zig",
+                "go.mod",
+                "package.json",
+            },
         },
     },
 
