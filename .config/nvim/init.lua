@@ -168,32 +168,9 @@ init_editor()
 init_appearance()
 init_quickfix()
 init_lsp()
-
-if vim.pack == nil then
-    local path = string.format("%s/lazy/lazy.nvim", vim.fn.stdpath("data"))
-
-    if not vim.loop.fs_stat(path) then
-        vim.fn.system({
-            "git",
-            "clone",
-            "--filter=blob:none",
-            "https://github.com/folke/lazy.nvim.git",
-            "--branch=stable",
-            path,
-        })
-    end
-
-    vim.opt.rtp:prepend(path)
-else
-    vim.pack.add({ "https://github.com/folke/lazy.nvim" })
-end
+vim.pack.add({ "https://github.com/folke/lazy.nvim" })
 
 require("lazy").setup({
-    {
-        "folke/lazy.nvim",
-        enabled = vim.pack == nil,
-    },
-
     { import = "plugins" },
 
     {
