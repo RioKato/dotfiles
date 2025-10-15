@@ -115,6 +115,7 @@ return {
             rooter_patterns = {
                 ".git",
                 "Makefile",
+                "pyproject.toml",
                 "build.zig",
                 "go.mod",
                 "package.json",
