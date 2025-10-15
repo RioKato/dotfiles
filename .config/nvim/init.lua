@@ -168,17 +168,13 @@ init_editor()
 init_appearance()
 init_quickfix()
 init_lsp()
-vim.pack.add({ "https://github.com/folke/lazy.nvim" })
+
+vim.pack.add({
+    "https://github.com/folke/lazy.nvim",
+})
 
 require("lazy").setup({
     { import = "plugins" },
-
-    {
-        "nvim-treesitter/nvim-treesitter",
-        branch = "master",
-        lazy = false,
-        build = ":TSUpdate",
-    },
 
     {
         "saghen/blink.cmp",
