@@ -110,16 +110,18 @@ return {
     },
 
     {
-        "wsdjeg/rooter.nvim",
+        "notjedi/nvim-rooter.lua",
 
         opts = {
-            root_patterns = {
-                ".git/",
+            rooter_patterns = {
+                ".git",
                 "Makefile",
                 "build.zig",
                 "go.mod",
                 "package.json",
             },
+            manual = true,
+            cd_scope = "tabpage",
         },
     },
 
