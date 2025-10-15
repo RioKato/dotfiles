@@ -14,13 +14,4 @@ return {
             vim.lsp.enable(lss)
         end,
     },
-
-    {
-        "ray-x/lsp_signature.nvim",
-
-        opts = {
-            doc_lines = 0,
-            hint_enable = false,
-        },
-    },
 }
