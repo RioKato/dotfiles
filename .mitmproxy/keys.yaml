@@ -7,3 +7,8 @@
   cmd: hurl @shown dump.hurl
   ctx: [flowlist]
   help: save @shown to dump.hurl
+
+- key: b
+  cmd: bopen @focus
+  ctx: [flowlist]
+  help: browse @focus
