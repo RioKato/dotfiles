@@ -123,6 +123,17 @@ return {
             manual = true,
             cd_scope = "tabpage",
         },
+
+        keys = {
+            {
+                "<leader>p",
+                function()
+                    require("nvim-rooter").rooter_default()
+                    local cwd = vim.fn.getcwd()
+                    vim.notify(string.format("Change Directory:\n  %s", cwd))
+                end,
+            },
+        },
     },
 
     { "linrongbin16/gitlinker.nvim", opts = {} },
