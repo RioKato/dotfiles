@@ -12,7 +12,7 @@ return {
         config = function()
             vim.fn["skkeleton#config"]({
                 globalDictionaries = {
-                    "~/.skk/SKK-JISYO.L",
+                    "~/.skk/dict/SKK-JISYO.L",
                 },
                 markerHenkan = "□ ",
                 markerHenkanSelect = "■ ",
