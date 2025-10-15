@@ -177,6 +177,22 @@ require("lazy").setup({
     { import = "plugins" },
 
     {
+        "neovim/nvim-lspconfig",
+
+        config = function()
+            local lss = {
+                "clangd",
+                "pyright",
+                "ts_ls",
+                "zls",
+                "stylua",
+            }
+
+            vim.lsp.enable(lss)
+        end,
+    },
+
+    {
         "saghen/blink.cmp",
         version = "1.*",
 
