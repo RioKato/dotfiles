@@ -18,6 +18,7 @@ return {
                 function()
                     require("conform").format()
                 end,
+                desc = "conform",
             },
         },
     },
@@ -40,7 +41,7 @@ return {
         },
 
         keys = {
-            { "r", "<cmd>OverseerRun<cr>" },
+            { "r", "<cmd>OverseerRun<cr>", desc = "OverseerRun" },
             {
                 "R",
                 function()
@@ -79,6 +80,7 @@ return {
                         end,
                     })
                 end,
+                desc = "Overseer Task List",
             },
         },
     },

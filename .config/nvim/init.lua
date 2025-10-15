@@ -304,8 +304,8 @@ require("lazy").setup({
                         layout = { fullscreen = true },
                     })
                 end,
-                desc = "Visual selection or word",
                 mode = { "n", "x" },
+                desc = "Visual selection or word",
             },
             {
                 "<leader>o",

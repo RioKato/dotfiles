@@ -36,7 +36,7 @@ return {
 
         keys = {
             { "<C-t>", "<plug>(quickhl-manual-this)", mode = { "n", "x" }, desc = "quickhl-manual-this" },
-            { "<leader>m", "<plug>(quickhl-manual-reset)" },
+            { "<leader>m", "<plug>(quickhl-manual-reset)", desc = "quickhl-manual-reset" },
         },
     },
 
@@ -132,6 +132,7 @@ return {
                     local cwd = vim.fn.getcwd()
                     vim.notify(string.format("Change Directory:\n  %s", cwd))
                 end,
+                desc = "Rooter",
             },
         },
     },
