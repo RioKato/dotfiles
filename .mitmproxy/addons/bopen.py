@@ -7,13 +7,14 @@ import webbrowser
 class BOpen:
     @command.command("bopen")
     def open(self, flow: flow.Flow):
-        response = flow.response.copy()
-        response.decode(strict=False)
-        temp = mkstemp()
+        if flow.response:
+            response = flow.response.copy()
+            response.decode(strict=False)
+            temp = mkstemp()
 
-        with open(temp[1], "w+b") as fd:
-            fd.write(response.content)
-            webbrowser.open(temp[1])
+            with open(temp[1], "w+b") as fd:
+                fd.write(response.content)
+                webbrowser.open(temp[1])
 
 
 addons = [BOpen()]
