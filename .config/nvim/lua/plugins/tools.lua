@@ -1,5 +1,28 @@
 return {
     {
+        "stevearc/conform.nvim",
+
+        opts = {
+            formatters_by_ft = {
+                python = { "black" },
+                markdown = { "prettier" },
+            },
+            default_format_opts = {
+                lsp_format = "fallback",
+            },
+        },
+
+        keys = {
+            {
+                "<leader> ",
+                function()
+                    require("conform").format()
+                end,
+            },
+        },
+    },
+
+    {
         "stevearc/overseer.nvim",
         dependencies = { "folke/snacks.nvim" },
 
