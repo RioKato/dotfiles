@@ -15,5 +15,8 @@ return {
         build = ":call mkdp#util#install()",
     },
 
-    { "HakonHarnes/img-clip.nvim", opts = {} },
+    {
+        "HakonHarnes/img-clip.nvim",
+        opts = {},
+    },
 }
