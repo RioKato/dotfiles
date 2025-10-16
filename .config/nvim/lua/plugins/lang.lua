@@ -10,20 +10,25 @@ return {
         lazy = false,
 
         config = function()
-            vim.fn["skkeleton#config"]({
-                globalDictionaries = {
-                    "~/.skk/dict/SKK-JISYO.L",
-                },
-                markerHenkan = "□ ",
-                markerHenkanSelect = "■ ",
-                showCandidatesCount = 0x100,
-            })
+            vim.api.nvim_create_autocmd("User", {
+                pattern = "skkeleton-initialize-pre",
+                callback = function()
+                    vim.fn["skkeleton#config"]({
+                        globalDictionaries = {
+                            "~/.skk/dict/SKK-JISYO.L",
+                        },
+                        markerHenkan = "",
+                        markerHenkanSelect = "",
+                        showCandidatesCount = 0x100,
+                    })
 
-            vim.fn["skkeleton#register_kanatable"]("rom", {
-                ["/"] = { "・", "" },
-                [";"] = { "；", "" },
-                ["<s-l>"] = { "", "" },
-                ["l"] = { "", "" },
+                    vim.fn["skkeleton#register_kanatable"]("rom", {
+                        ["/"] = { "・", "" },
+                        [";"] = { "；", "" },
+                        ["<s-l>"] = { "", "" },
+                        ["l"] = { "", "" },
+                    })
+                end,
             })
         end,
 
