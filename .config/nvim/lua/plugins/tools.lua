@@ -94,13 +94,28 @@ return {
     {
         "obsidian-nvim/obsidian.nvim",
         version = "*",
+        lazy = false,
 
         opts = {
             workspaces = {
                 {
                     name = "Obsidian",
                     path = "~/Documents/Obsidian",
+                    strict = true,
                 },
+                {
+                    name = "Curent",
+                    path = function()
+                        return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
+                    end,
+                    strict = true,
+                },
+            },
+            footer = {
+                enabled = false,
+            },
+            statusline = {
+                enabled = false,
             },
             legacy_commands = false,
         },
