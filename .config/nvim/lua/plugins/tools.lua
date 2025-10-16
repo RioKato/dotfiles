@@ -98,11 +98,15 @@ return {
         opts = {
             workspaces = {
                 {
-                    name = "memo",
-                    path = "~/.memo",
+                    name = "Obsidian",
+                    path = "~/Documents/Obsidian",
                 },
             },
             legacy_commands = false,
+        },
+
+        keys = {
+            { "<leader>1", "<cmd>Obsidian<cr>", desc = "Obsidian" },
         },
     },
 }
