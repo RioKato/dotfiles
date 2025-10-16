@@ -90,4 +90,19 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {},
     },
+
+    {
+        "obsidian-nvim/obsidian.nvim",
+        version = "*",
+        -- ft = "markdown",
+        opts = {
+            workspaces = {
+                {
+                    name = "memo",
+                    path = "~/.memo",
+                },
+            },
+            legacy_commands = false,
+        },
+    },
 }
