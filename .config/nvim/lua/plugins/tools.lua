@@ -104,7 +104,7 @@ return {
                     strict = true,
                 },
                 {
-                    name = "Curent",
+                    name = "Current Directory",
                     path = function()
                         return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
                     end,
