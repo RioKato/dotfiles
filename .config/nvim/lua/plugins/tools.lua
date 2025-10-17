@@ -104,6 +104,19 @@ return {
                     strict = true,
                 },
                 {
+                    name = "git/Notes",
+                    path = function()
+                        local path = vim.fs.root(0, ".git")
+
+                        if path then
+                            path = vim.fs.joinpath(path, "Notes")
+                        end
+
+                        return path
+                    end,
+                    strict = true,
+                },
+                {
                     name = "Current Directory",
                     path = function()
                         return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
