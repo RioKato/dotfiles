@@ -289,7 +289,7 @@ require("lazy").setup({
 
         keys = {
             {
-                "<leader>g",
+                "<leader>s",
                 function()
                     Snacks.picker.grep({
                         layout = { fullscreen = true },
