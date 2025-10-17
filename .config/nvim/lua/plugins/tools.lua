@@ -99,12 +99,7 @@ return {
         opts = {
             workspaces = {
                 {
-                    name = "Obsidian",
-                    path = "~/Documents/Obsidian",
-                    strict = true,
-                },
-                {
-                    name = "git/Notes",
+                    name = "Git/Note",
                     path = function()
                         local path = vim.fs.root(0, ".git")
 
