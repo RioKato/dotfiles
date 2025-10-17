@@ -104,7 +104,7 @@ return {
                         local path = vim.fs.root(0, ".git")
 
                         if path then
-                            path = vim.fs.joinpath(path, "Notes")
+                            path = vim.fs.joinpath(path, "Note")
                         end
 
                         return path
