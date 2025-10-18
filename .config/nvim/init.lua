@@ -335,6 +335,24 @@ require("lazy").setup({
                 desc = "References",
             },
             {
+                "<leader>ls",
+                function()
+                    Snacks.picker.lsp_symbols({
+                        layout = { fullscreen = true },
+                    })
+                end,
+                desc = "LSP Symbols",
+            },
+            {
+                "<leader>lw",
+                function()
+                    Snacks.picker.lsp_workspace_symbols({
+                        layout = { fullscreen = true },
+                    })
+                end,
+                desc = "LSP Workspace Symbols",
+            },
+            {
                 "<C-w>z",
                 function()
                     Snacks.zen()
