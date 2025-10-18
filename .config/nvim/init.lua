@@ -150,13 +150,13 @@ local function init_lsp()
         callback = function(ev)
             vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
 
-            local function toggle()
+            local function diagnostic()
                 vim.diagnostic.enable(not vim.diagnostic.is_enabled())
             end
 
             local keys = {
                 { "n", "<C-h>", vim.lsp.buf.hover },
-                { "n", "<leader>ld", toggle },
+                { "n", "<leader>ld", diagnostic },
                 { "n", "<leader>lr", vim.lsp.buf.rename },
                 { "n", "<leader>lc", vim.lsp.buf.code_action },
             }
