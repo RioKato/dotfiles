@@ -156,7 +156,9 @@ local function init_lsp()
 
             local keys = {
                 { "n", "<C-h>", vim.lsp.buf.hover },
-                { "n", "<leader>d", toggle },
+                { "n", "<leader>ld", toggle },
+                { "n", "<leader>lr", vim.lsp.buf.rename },
+                { "n", "<leader>lc", vim.lsp.buf.code_action },
             }
 
             assign_keys(keys, { buffer = ev.buf })
