@@ -152,4 +152,13 @@ return {
             },
         },
     },
+
+    {
+        "folke/which-key.nvim",
+        opts = {
+            triggers = {
+                { "c", mode = { "n" } },
+            },
+        },
+    },
 }
