@@ -73,7 +73,7 @@ return {
         opts = {},
         keys = {
             {
-                "ct",
+                "cct",
                 function()
                     require("treesj").toggle()
                 end,
