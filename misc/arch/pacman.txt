@@ -47,7 +47,6 @@ jq
 bc
 wget
 p7zip
-w3m
 gitui
 nerd-fonts
 
