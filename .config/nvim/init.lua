@@ -197,7 +197,7 @@ function init:all()
     self.appearance()
     self.quickfix()
     self.lsp()
+    self.plugins()
 end
 
 init:all()
-init.plugins()
