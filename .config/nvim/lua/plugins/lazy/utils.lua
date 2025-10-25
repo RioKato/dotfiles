@@ -84,12 +84,6 @@ return {
     },
 
     {
-        "Goose97/timber.nvim",
-        version = "*",
-        opts = {},
-    },
-
-    {
         "johmsalas/text-case.nvim",
         opts = {},
 
@@ -140,6 +134,11 @@ return {
     },
 
     {
+        "andrewferrier/debugprint.nvim",
+        opts = {},
+    },
+
+    {
         "notjedi/nvim-rooter.lua",
 
         opts = {
@@ -172,7 +171,9 @@ return {
         "folke/which-key.nvim",
         opts = {
             triggers = {
+                { "s", mode = { "n" } },
                 { "cc", mode = { "n" } },
+                { "g?", mode = { "n" } },
                 { "<leader>", mode = { "n" } },
             },
             show_help = false,
