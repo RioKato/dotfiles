@@ -171,7 +171,7 @@ return {
         "folke/which-key.nvim",
         opts = {
             triggers = {
-                { "s", mode = { "n" } },
+                { "s", mode = { "n", "v" } },
                 { "cc", mode = { "n" } },
                 { "g?", mode = { "n" } },
                 { "<leader>", mode = { "n" } },
