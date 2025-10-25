@@ -1,0 +1,176 @@
+#!python3
+
+import pathlib
+import shlex
+import subprocess
+import uuid
+
+
+ARCH_OPTS: dict[str, tuple[list[str], list[str], list[str]]] = {
+    'arm64': (
+        [
+            '--platform', 'linux/arm64'
+        ],
+        [
+            '-target', 'arm64-pc-linux',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/aarch64-linux-gnu',
+            '/usr/lib/gcc/aarch64-linux-gnu/*/include',
+            '/usr/lib/gcc/aarch64-linux-gnu/*/include-fixed'
+        ]
+    ),
+
+    'arm32': (
+        [
+            '--platform', 'linux/arm/v7'
+        ],
+        [
+            '-target', 'arm-pc-linux',
+            '-mfloat-abi=hard',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/arm-linux-gnueabihf',
+            '/usr/lib/gcc/arm-linux-gnueabihf/*/include',
+            '/usr/lib/gcc/arm-linux-gnueabihf/*/include-fixed'
+        ]
+    ),
+
+    'x64': (
+        [
+            '--platform', 'linux/amd64'
+        ],
+        [
+            '-target', 'x86_64-pc-linux',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/x86_64-linux-gnu',
+            '/usr/lib/gcc/x86_64-linux-gnu/*/include',
+            '/usr/lib/gcc/x86_64-linux-gnu/*/include-fixed'
+        ]
+    ),
+
+    'x86': (
+        [
+            '--platform', 'linux/386'
+        ],
+        [
+            '-target', 'i386-pc-linux',
+            '-nostdinc',
+        ],
+        [
+            '/usr/include',
+            '/usr/include/i386-linux-gnu',
+            '/usr/lib/gcc/i686-linux-gnu/*/include',
+            '/usr/lib/gcc/i686-linux-gnu/*/include-fixed'
+        ]
+    )
+}
+
+UBUNTU_IMG_PREFIX: dict[str, str] = {
+    'arm64': 'arm64v8',
+    'arm32': 'arm32v7',
+    'x64': 'amd64',
+    'x86': 'i386'
+}
+
+
+def docker(sysroot: str, arch: str, image: str, opts: list[str]):
+    name = str(uuid.uuid1())
+
+    if image.startswith('ubuntu'):
+        image = f'{UBUNTU_IMG_PREFIX[arch]}/{image}'
+
+    try:
+        command = ['docker', 'run', '--name', name, '-it', *ARCH_OPTS[arch][0], *opts, image]
+        print(f'[*] {shlex.join(command)}')
+        subprocess.run(command)
+        command = ['docker', 'cp', f'{name}:/', sysroot]
+        subprocess.run(command, check=True)
+    finally:
+        command = ['docker', 'rm', name]
+        subprocess.run(command, stdout=subprocess.DEVNULL)
+
+
+def idaclang(sysroot: str, tilname: str, arch: str, opts: list[str]):
+    command = ['idaclang', '--idaclang-tilname', tilname, *ARCH_OPTS[arch][1]]
+    sysroot = pathlib.Path(sysroot)
+
+    for pattern in ARCH_OPTS[arch][2]:
+        assert (pattern.startswith('/'))
+        for path in sysroot.glob(pattern[1:]):
+            command += ['-isystem', str(path)]
+
+    command += opts
+    print(f'[*] {shlex.join(command)}')
+    subprocess.run(command, check=True)
+
+
+def binja(sysroot: str, arch: str):
+    flags = []
+    flags += ARCH_OPTS[arch][1]
+    sysroot = pathlib.Path(sysroot)
+
+    for pattern in ARCH_OPTS[arch][2]:
+        assert (pattern.startswith('/'))
+        for path in sysroot.glob(pattern[1:]):
+            path = path.resolve()
+            flags += ['-isystem', str(path)]
+
+    print('==================flags==================')
+
+    for f in flags:
+        print(f)
+
+
+def main():
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument('--sysroot', default='fs')
+    parser.add_argument('arch', choices=ARCH_OPTS.keys())
+    subparsers = parser.add_subparsers(dest='tool')
+    docker_parser = subparsers.add_parser('docker')
+    docker_parser.add_argument('--image', '-i', default='ubuntu')
+    docker_parser.add_argument('opts', nargs='*')
+    idaclang_parser = subparsers.add_parser('idaclang')
+    idaclang_parser.add_argument('tilname')
+    idaclang_parser.add_argument('opts', nargs='+')
+    binja_parser = subparsers.add_parser('binja')
+    args = parser.parse_args()
+    sysroot = pathlib.Path(args.sysroot)
+
+    match args.tool:
+        case 'docker':
+            if sysroot.is_dir():
+                print(f'[*] {args.sysroot} already exists')
+                exit(1)
+
+            docker(args.sysroot, args.arch, args.image, args.opts)
+
+        case 'idaclang':
+            if not sysroot.is_dir():
+                print(f'[*] {args.sysroot} not found')
+                exit(1)
+
+            idaclang(args.sysroot, args.tilname, args.arch, args.opts)
+
+        case 'binja':
+            if not sysroot.is_dir():
+                print(f'[*] {args.sysroot} not found')
+                exit(1)
+
+            binja(args.sysroot, args.arch)
+
+        case _:
+            parser.print_help()
+            exit(1)
+
+
+if __name__ == '__main__':
+    main()

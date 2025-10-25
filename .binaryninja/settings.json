@@ -1,0 +1,11 @@
+{
+    "ui.font.view.size": 11,
+    "ui.view.linear.il": "PseudoC",
+    "ui.theme.transientScrollbars": true,
+    "ui.theme.name": "Slushee Light",
+    "ui.featureMap.enable": false,
+    "ui.files.detection.database": "disable",
+    "ui.view.linear.gutterWidth": 10,
+    "corePlugins.languages.pseudoRust": false,
+    "python.interpreter": "/usr/lib/libpython3.so"
+}

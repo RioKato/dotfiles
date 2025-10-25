@@ -1,0 +1,11 @@
+#!/bin/sh
+
+xhost +local:$(id -nu)
+
+docker run --rm -ti \
+  --network host \
+  -e DISPLAY \
+  --device=/dev/dri:/dev/dri \
+  -v $PWD:/work \
+  kalilinux/kali-rolling:custom
+

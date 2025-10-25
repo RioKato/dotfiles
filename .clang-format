@@ -1,0 +1,13 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 0
+#BreakBeforeBraces: Stroustrup
+RemoveBracesLLVM: true
+IndentPPDirectives: AfterHash
+
+ForEachMacros:
+  - "hash_for_each"
+  - "hash_for_each_possible"
+  - "hash_for_each_safe"
+
+NamespaceIndentation: All

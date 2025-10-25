@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if [ $# -ne 1 ]; then
+  echo "Usage: $0 PEM"
+  exit 1
+fi
+
+set -e
+PEM=$1
+
+# create certificate
+CERT="/tmp/$(openssl x509 -inform PEM -subject_hash_old -in $PEM | head -1).0"
+cp $PEM $CERT
+openssl x509 -inform PEM -text -in $CERT -out /dev/null >> $CERT
+
+# install certificate
+adb root
+adb shell avbctl disable-verification
+adb disable-verity
+adb reboot
+echo "wait for reboot"
+sleep 30
+adb root
+adb remount
+adb shell mount -o rw,remount /system
+adb push $CERT /system/etc/security/cacerts/
+adb shell mount -o ro,remount /system
+adb reboot
+echo "wait for reboot"
+sleep 30
+
+# set proxy
+adb reverse tcp:8080 tcp:8080
+adb shell settings put global http_proxy 127.0.0.1:8080
+adb shell settings put global global_http_proxy_host 127.0.0.1:8080
+adb shell settings put global global_http_proxy_port 127.0.0.1:8080

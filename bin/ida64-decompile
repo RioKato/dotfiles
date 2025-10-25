@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ $# -eq 0 ]
+then
+  echo "[usage] $0 target output"
+  exit 1
+fi
+
+TARGET="$1"
+OUTPUT="$2"
+[ -z "$OUTPUT" ] && OUTPUT="$TARGET.c"
+
+ida64 -Ohexrays:"$OUTPUT":ALL -A "$TARGET"

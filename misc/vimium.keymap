@@ -1,0 +1,6 @@
+map <C-f> scrollFullPageDown
+map <C-b> scrollFullPageUp
+map <C-o> goBack
+map <C-i> goForward
+map <C-+> zoomIn
+map <C--> zoomIn

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+usage() {
+  echo "Usage: $0 [-e|-d]"
+  exit 1
+}
+
+while getopts ed OPT
+do
+  case $OPT in
+    e) VALUE=2 ;;
+    d) VALUE=0 ;;
+    *) usage ;;
+  esac
+done
+
+if [ -z "$VALUE" ]
+then
+  usage
+fi
+
+echo $VALUE > /proc/sys/kernel/randomize_va_space

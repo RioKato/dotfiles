@@ -1,0 +1,14 @@
+[terminal.shell]
+program = "/usr/bin/zsh"
+args = ["-l", "-c", "tmux"]
+
+[window]
+opacity = 0.9
+
+[font]
+size = 8
+
+[keyboard]
+bindings = [
+  { key = ";", mods = "Control", action = "IncreaseFontSize" },
+]

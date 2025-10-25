@@ -1,0 +1,16 @@
+#!/bin/sh
+
+[ -z "$TMUX" ] && exit 1
+
+PYTHON='$(command -v python python3 python2 2> /dev/null | head -n 1)'
+PYCMD='import pty;pty.spawn("/bin/sh")'
+tmux send "$PYTHON -c '$PYCMD'" Enter
+sleep 0.5
+tmux send C-z
+tmux send 'stty raw -echo' Enter
+tmux send 'fg' Enter
+tmux send 'reset xterm' Enter
+tmux send 'export TERM=xterm' Enter
+ROWS=$(tmux display -p '#{pane_height}')
+COLS=$(tmux display -p '#{pane_width}')
+tmux send "stty rows $ROWS columns $COLS" Enter

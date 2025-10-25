@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# https://github.com/junegunn/fzf/blob/master/shell/key-bindings.zsh
+__fzfcmd() {
+  [ -n "${TMUX_PANE-}" ] && { [ "${FZF_TMUX:-0}" != 0 ] || [ -n "${FZF_TMUX_OPTS-}" ]; } &&
+    echo "fzf-tmux ${FZF_TMUX_OPTS:--d${FZF_TMUX_HEIGHT:-40%}} -- " || echo "fzf"
+}
+
+__fix_fzfcmd() {
+  TMUX_PANE=$TMUX __fzfcmd
+}
+
+cd $(dirname $(realpath $0))
+
+__list_snippet() {
+  {
+    cat pensnippet/shell.txt | awk '{print "sh", $0}'
+    cat pensnippet/command.txt | awk '{print "cmd", $0}'
+    cat pensnippet/powershell.txt | awk '{print "ps", $0}'
+    cat pensnippet/mimikatz.txt | awk '{print "mimikatz", $0}'
+  } | sed '/^$/d'
+}
+
+FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-}"
+__list_snippet | $(__fix_fzfcmd) | cut -d' ' -f2-

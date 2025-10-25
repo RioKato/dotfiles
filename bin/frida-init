@@ -1,0 +1,26 @@
+#!/bin/sh
+
+npm init -y
+npm pkg delete 'scripts'
+npm pkg set 'main'='build/main.js'
+npm pkg set 'scripts.prestart'='npx tsc'
+npm pkg set 'scripts.start'='frida -l build/main.js EXECUTABLE'
+npm install --save-dev typescript @types/frida-gum
+
+cat > tsconfig.json <<END
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "es6",
+    "rootDir": "src",
+    "outDir": "build",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true
+  }
+}
+END
+
+mkdir src
+touch src/main.ts
