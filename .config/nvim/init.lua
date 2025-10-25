@@ -158,26 +158,20 @@ function init.lsp()
 
     vim.diagnostic.enable(false)
 
-    vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(ev)
-            vim.lsp.completion.enable(true, ev.data.client_id, ev.buf)
+    local function diagnostic()
+        local enabled = not vim.diagnostic.is_enabled()
+        vim.diagnostic.enable(enabled)
+        vim.notify(string.format("Diagnostic: %s", enabled and "enable" or "disable"))
+    end
 
-            local function diagnostic()
-                local enabled = not vim.diagnostic.is_enabled()
-                vim.diagnostic.enable(enabled)
-                vim.notify(string.format("Diagnostic: %s", enabled and "enable" or "disable"))
-            end
+    local keys = {
+        { "n", "<C-h>", vim.lsp.buf.hover },
+        { "n", "<leader>ld", diagnostic },
+        { "n", "<leader>lr", vim.lsp.buf.rename },
+        { "n", "<leader>lc", vim.lsp.buf.code_action },
+    }
 
-            local keys = {
-                { "n", "<C-h>", vim.lsp.buf.hover },
-                { "n", "<leader>ld", diagnostic },
-                { "n", "<leader>lr", vim.lsp.buf.rename },
-                { "n", "<leader>lc", vim.lsp.buf.code_action },
-            }
-
-            util.assign_keys(keys, { buffer = ev.buf })
-        end,
-    })
+    util.assign_keys(keys)
 end
 
 function init.plugins()
