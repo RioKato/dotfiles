@@ -175,6 +175,8 @@ return {
                 { "cc", mode = { "n" } },
                 { "<leader>", mode = { "n" } },
             },
+            show_help = false,
+            show_keys = false,
         },
     },
 }
