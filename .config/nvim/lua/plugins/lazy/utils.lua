@@ -116,7 +116,7 @@ return {
                 desc = "PascalCase",
             },
             {
-                "ccu",
+                "ccC",
                 function()
                     require("textcase").current_word("to_constant_case")
                 end,
