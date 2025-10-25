@@ -192,8 +192,12 @@ function init.plugins()
     require("plugins.local").setup()
 end
 
-init.editor()
-init.appearance()
-init.quickfix()
-init.lsp()
+function init:all()
+    self.editor()
+    self.appearance()
+    self.quickfix()
+    self.lsp()
+end
+
+init:all()
 init.plugins()
