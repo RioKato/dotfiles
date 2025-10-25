@@ -62,9 +62,25 @@ return {
         },
     },
 
+    { "itchyny/vim-qfedit" },
+
+    { "tpope/vim-repeat" },
+
     { "machakann/vim-sandwich" },
 
-    { "itchyny/vim-qfedit" },
+    {
+        "Wansmer/treesj",
+        opts = {},
+        keys = {
+            {
+                "ct",
+                function()
+                    require("treesj").toggle()
+                end,
+                desc = "treesj toggle",
+            },
+        },
+    },
 
     {
         "Goose97/timber.nvim",
