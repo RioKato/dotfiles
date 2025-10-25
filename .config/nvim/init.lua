@@ -189,7 +189,7 @@ function init.plugins()
         { import = "plugins.lazy" },
     })
 
-    require("plugins.local").setup()
+    require("plugins.local")
 end
 
 function init:all()
