@@ -71,6 +71,7 @@ return {
     {
         "Wansmer/treesj",
         opts = {},
+
         keys = {
             {
                 "cct",
@@ -98,14 +99,28 @@ return {
                 function()
                     require("textcase").current_word("to_snake_case")
                 end,
-                desc = "textcase to_snake_case",
+                desc = "snake_case",
             },
             {
                 "ccc",
                 function()
                     require("textcase").current_word("to_camel_case")
                 end,
-                desc = "textcase to_camel_case",
+                desc = "camelCase",
+            },
+            {
+                "ccp",
+                function()
+                    require("textcase").current_word("to_pascal_case")
+                end,
+                desc = "PascalCase",
+            },
+            {
+                "ccu",
+                function()
+                    require("textcase").current_word("to_constant_case")
+                end,
+                desc = "CONSTANT_CASE",
             },
         },
     },
@@ -118,9 +133,9 @@ return {
         },
 
         keys = {
-            { "ccd", "<cmd>NibblerToDec<cr>", desc = "NibblerToDec" },
-            { "cch", "<cmd>NibblerToHex<cr>", desc = "NibblerToHex" },
-            { "ccb", "<cmd>NibblerToBin<cr>", desc = "NibblerToBin" },
+            { "ccd", "<cmd>NibblerToDec<cr>", desc = "Dec" },
+            { "cch", "<cmd>NibblerToHex<cr>", desc = "Hex" },
+            { "ccb", "<cmd>NibblerToBin<cr>", desc = "Bin" },
         },
     },
 
