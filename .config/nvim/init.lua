@@ -186,10 +186,10 @@ function init.plugins()
     })
 
     require("lazy").setup({
-        { import = "plugin" },
+        { import = "plugins.lazy" },
     })
 
-    require("hover").setup()
+    require("plugins.local").setup()
 end
 
 init.editor()
