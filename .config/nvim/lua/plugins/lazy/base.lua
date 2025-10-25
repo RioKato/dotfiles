@@ -11,7 +11,7 @@ return {
         "neovim/nvim-lspconfig",
 
         config = function()
-            local lss = {
+            local servers = {
                 "clangd",
                 "pyright",
                 "ts_ls",
@@ -20,7 +20,7 @@ return {
                 "stylua",
             }
 
-            vim.lsp.enable(lss)
+            vim.lsp.enable(servers)
         end,
     },
 
