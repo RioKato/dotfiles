@@ -1,7 +1,8 @@
 local M = {}
 
-function M.setup(opts)
-    require("plugins.local.hover").setup()
+function M.setup()
+    local root = "plugins.local"
+    require(root .. ".hover").setup()
 end
 
 return M
