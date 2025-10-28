@@ -6,6 +6,22 @@ local function active()
     return vim.env.TMUX ~= nil
 end
 
+local function setup()
+    if active() then
+        vim.api.nvim_create_autocmd("VimEnter", {
+            callback = function()
+                exec({ "set", "-p", "@vim", "1" })
+            end,
+        })
+
+        vim.api.nvim_create_autocmd("VimLeave", {
+            callback = function()
+                exec({ "set", "-p", "@vim", "0" })
+            end,
+        })
+    end
+end
+
 local zoom = {}
 
 function zoom.toggle()
@@ -21,6 +37,7 @@ function zoom.off()
 end
 
 local M = {
+    setup = setup,
     active = active,
     zoom = zoom,
 }
