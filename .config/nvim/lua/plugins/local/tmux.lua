@@ -1,39 +1,28 @@
-local Tmux = {}
-
-function Tmux.exec(cmd)
+local function exec(cmd)
     return vim.fn.system({ "tmux", unpack(cmd) })
 end
 
-function Tmux.enabled()
+local function active()
     return vim.env.TMUX ~= nil
 end
 
-local Zoom = {}
+local zoom = {}
 
-function Zoom:toggle()
-    Tmux.exec({ "resizep", "-Z" })
+function zoom.toggle()
+    exec({ "resizep", "-Z" })
 end
 
-function Zoom:enabled()
-    local flag = Tmux.exec({ "display", "-p", "#{window_zoomed_flag}" })
-    return flag:byte(1) == ("1"):byte(1)
+function zoom.on()
+    exec({ "if", "-F", "#{==:#{window_zoomed_flag},0}", "resizep -Z" })
 end
 
-function Zoom:on()
-    if not self:enabled() then
-        self:toggle()
-    end
-end
-
-function Zoom:off()
-    if self:enabled() then
-        self:toggle()
-    end
+function zoom.off()
+    exec({ "if", "-F", "#{==:#{window_zoomed_flag},1}", "resizep -Z" })
 end
 
 local M = {
-    Tmux = Tmux,
-    Zoom = Zoom,
+    active = active,
+    zoom = zoom,
 }
 
 return M
