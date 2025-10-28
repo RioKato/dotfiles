@@ -1,4 +1,3 @@
 #!/bin/sh
 
-FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} --reverse --bind=ctrl-z:ignore ${FZF_DEFAULT_OPTS-}"
-ip -j address | jq -r '.[].addr_info|.[]|select(.label)|[.label,.local]|@tsv' | fzf-tmux --bind 'enter:become(echo -n {2})'
+ip -j address | jq -r '.[].addr_info|.[]|select(.label)|[.label,.local]|@tsv' | fzf-tmux $FZF_TMUX_OPTS --reverse --bind 'enter:become(echo -n {2})'
