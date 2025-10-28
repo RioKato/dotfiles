@@ -10,16 +10,16 @@ function init.tmux()
     local tmux = require(root .. ".tmux")
 
     vim.keymap.set("n", "<C-w>z", function()
-        local active = tmux.active()
-
         local opts = {
             toggles = {
                 dim = false,
             },
-
-            on_open = active and tmux.zoom.on or nil,
-            on_close = active and tmux.zoom.off or nil,
         }
+
+        if tmux.active() then
+            opts.on_open = tmux.zoom.on
+            opts.on_close = tmux.zoom.off
+        end
 
         Snacks.zen(opts)
     end)
