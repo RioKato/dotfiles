@@ -1,6 +1,10 @@
 local root = "plugins.local"
 
 require(root .. ".hover").setup()
-require(root .. ".tmux").setup({
-    zen = Snacks.zen,
-})
+
+local Tmux = require(root .. ".tmux")
+
+vim.keymap.set("n", "<C-w>z", function()
+    Snacks.zen()
+    Tmux:zoom()
+end)
