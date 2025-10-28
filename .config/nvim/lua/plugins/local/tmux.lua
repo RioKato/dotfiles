@@ -21,7 +21,16 @@ end
 
 local Navi = {}
 
-function Navi.wincmd(hjkl)
+function Navi:new(zen)
+    local obj = {
+        zen = zen,
+    }
+
+    setmetatable(obj, { __index = self })
+    return obj
+end
+
+function Navi:wincmd(hjkl)
     local prev = vim.api.nvim_get_current_win()
     vim.cmd.wincmd(hjkl)
 
@@ -30,9 +39,9 @@ function Navi.wincmd(hjkl)
     end
 end
 
-function Navi.zoom()
-    if Snacks.zen then
-        Snacks.zen()
+function Navi:zoom()
+    if self.zen then
+        self.zen()
     end
 
     Tmux:zoom()
@@ -40,41 +49,44 @@ end
 
 local M = {}
 
-function M.setup()
+function M.setup(opts)
+    opts = opts or {}
+    local navi = Navi:new(opts.zen)
+
     local keys = {
         {
             "n",
             "<C-w>h",
             function()
-                Navi.wincmd("h")
+                navi:wincmd("h")
             end,
         },
         {
             "n",
             "<C-w>j",
             function()
-                Navi.wincmd("j")
+                navi:wincmd("j")
             end,
         },
         {
             "n",
             "<C-w>k",
             function()
-                Navi.wincmd("k")
+                navi:wincmd("k")
             end,
         },
         {
             "n",
             "<C-w>l",
             function()
-                Navi.wincmd("l")
+                navi:wincmd("l")
             end,
         },
         {
             "n",
             "<C-w>z",
             function()
-                Navi.zoom()
+                navi:zoom()
             end,
         },
     }
