@@ -15,6 +15,10 @@ function Tmux:wincmd(hjkl)
     self.exec({ "selectp", map[hjkl] })
 end
 
+function Tmux:zoom()
+    self.exec({ "resizep", "-Z" })
+end
+
 local Navi = {}
 
 function Navi.wincmd(hjkl)
@@ -24,6 +28,14 @@ function Navi.wincmd(hjkl)
     if vim.env.TMUX and prev == vim.api.nvim_get_current_win() then
         Tmux:wincmd(hjkl)
     end
+end
+
+function Navi.zoom()
+    if Snacks.zen then
+        Snacks.zen()
+    end
+
+    Tmux:zoom()
 end
 
 local M = {}
@@ -56,6 +68,13 @@ function M.setup()
             "<C-w>l",
             function()
                 Navi.wincmd("l")
+            end,
+        },
+        {
+            "n",
+            "<C-w>z",
+            function()
+                Navi.zoom()
             end,
         },
     }
