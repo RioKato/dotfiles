@@ -5,9 +5,20 @@ require(root .. ".hover").setup()
 local Tmux = require(root .. ".tmux")
 
 vim.keymap.set("n", "<C-w>z", function()
-    Snacks.zen()
+    local opts = {
+        on_open = function()
+            if not Tmux:zoomed() then
+                Tmux:zoom()
+            end
+        end,
 
-    if Tmux:enabled() then
-        Tmux:zoom()
-    end
+        on_close = function()
+            if Tmux:zoomed() then
+                Tmux:zoom()
+            end
+        end,
+    }
+
+    opts = Tmux:enabled() and opts or {}
+    Snacks.zen.zen(opts)
 end)
