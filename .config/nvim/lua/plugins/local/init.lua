@@ -6,6 +6,10 @@ local Tmux = require(root .. ".tmux")
 
 vim.keymap.set("n", "<C-w>z", function()
     local opts = {
+        toggles = {
+            dim = false,
+        },
+
         on_open = function()
             if not Tmux:zoomed() then
                 Tmux:zoom()
@@ -19,6 +23,10 @@ vim.keymap.set("n", "<C-w>z", function()
         end,
     }
 
-    opts = Tmux:enabled() and opts or {}
-    Snacks.zen.zen(opts)
+    if not Tmux:enabled() then
+        opts.on_open = nil
+        opts.on_close = nil
+    end
+
+    Snacks.zen(opts)
 end)
