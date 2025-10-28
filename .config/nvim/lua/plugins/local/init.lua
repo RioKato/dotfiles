@@ -6,5 +6,8 @@ local Tmux = require(root .. ".tmux")
 
 vim.keymap.set("n", "<C-w>z", function()
     Snacks.zen()
-    Tmux:zoom()
+
+    if Tmux:enabled() then
+        Tmux:zoom()
+    end
 end)
