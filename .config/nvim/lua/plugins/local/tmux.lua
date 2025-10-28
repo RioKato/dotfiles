@@ -21,7 +21,7 @@ function Navi.wincmd(hjkl)
     local prev = vim.api.nvim_get_current_win()
     vim.cmd.wincmd(hjkl)
 
-    if prev == vim.api.nvim_get_current_win() then
+    if vim.env.TMUX and prev == vim.api.nvim_get_current_win() then
         Tmux:wincmd(hjkl)
     end
 end
