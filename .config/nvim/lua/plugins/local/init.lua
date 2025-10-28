@@ -9,8 +9,6 @@ end
 function init.tmux()
     local tmux = require(root .. ".tmux")
 
-    tmux.setup()
-
     vim.keymap.set("n", "<C-w>z", function()
         local opts = {
             toggles = {
