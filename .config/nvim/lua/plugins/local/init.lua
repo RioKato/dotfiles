@@ -2,31 +2,27 @@ local root = "plugins.local"
 
 require(root .. ".hover").setup()
 
-local Tmux = require(root .. ".tmux")
+local tmux = require(root .. ".tmux")
 
 vim.keymap.set("n", "<C-w>z", function()
+    local enabled = tmux.Tmux:enabled()
+
+    local function on_open()
+        tmux.Zoom:on()
+    end
+
+    local function on_close()
+        tmux.Zoom:off()
+    end
+
     local opts = {
         toggles = {
             dim = false,
         },
 
-        on_open = function()
-            if not Tmux:zoomed() then
-                Tmux:zoom()
-            end
-        end,
-
-        on_close = function()
-            if Tmux:zoomed() then
-                Tmux:zoom()
-            end
-        end,
+        on_open = enabled and on_open or nil,
+        on_close = enabled and on_close or nil,
     }
-
-    if not Tmux:enabled() then
-        opts.on_open = nil
-        opts.on_close = nil
-    end
 
     Snacks.zen(opts)
 end)
