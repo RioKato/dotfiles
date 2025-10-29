@@ -3,6 +3,7 @@
 fzf = 'latest'
 rg = 'latest'
 fd = 'latest'
+navi = 'latest'
 
 zls = 'latest'
 black = 'latest'
