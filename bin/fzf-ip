@@ -1,3 +1,0 @@
-#!/bin/sh
-
-ip -j address | jq -r '.[].addr_info.[]|select(.label)|[.label,.local]|@tsv' | fzf-tmux $FZF_TMUX_OPTS --reverse --bind 'enter:become(echo -n {2})'
