@@ -1,0 +1,30 @@
+#!/usr/bin/python3
+
+from pathlib import Path
+
+
+def install(blacklist: list[str]):
+    dotfiles = Path(__file__).parent
+    blacklist = [dotfiles / b for b in blacklist]
+
+    for src in dotfiles.glob("**"):
+        if src.is_file() and not any(src.full_match(b) for b in blacklist):
+            dst = Path.home() / src.relative_to(dotfiles)
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.unlink(True)
+            dst.symlink_to(src)
+
+
+def main():
+    BLACKLIST = [
+        "deploy",
+        ".git/**",
+        ".gitmodules",
+        "misc/**",
+    ]
+
+    install(BLACKLIST)
+
+
+if __name__ == "__main__":
+    main()
