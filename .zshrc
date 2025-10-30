@@ -50,15 +50,15 @@ bindkey '^u' __backward-kill-line
 bindkey '^y' __yank
 
 function precmd() {
-  if command -v git >& /dev/null
+  local BRANCH="$(git branch --show-current 2> /dev/null)"
+
+  if [ -n "$BRANCH" ]
   then
-    local BRANCH="$(git branch --show-current 2> /dev/null)"
-    [ -z "$BRANCH" ] && BRANCH="$(git show --format='%h' --no-patch 2> /dev/null)"
-    [ -n "$BRANCH" ] && BRANCH="[$BRANCH]"
+    BRANCH="[$BRANCH]"
   fi
 
   export PROMPT="
-%B%F{green}╭╴(%n$ATTMUX)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b
+%B%F{green}╭╴(%n)%f%b %B%F{cyan}%~%f%b %B%F{red}$BRANCH%f%b
 %B%F{green}╰╴\$%f%b "
 }
 
@@ -66,45 +66,20 @@ function chpwd() {
   ls --color
 }
 
-if command -v dircolors >& /dev/null
-then
-  eval "$(dircolors 2> /dev/null)"
-fi
-
-if [ -n "$LS_COLORS" ]
-then
-  zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-fi
+eval "$(dircolors 2> /dev/null)"
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 alias ls="ls --color"
 alias ll="ls -al --time-style long-iso --color"
 export LESS="-R"
 
 ###############################################################################################
-if command -v mise &> /dev/null
-then
-  eval "$(mise activate zsh)"
-fi
+eval "$(mise activate zsh)"
 
-export EDITOR=vim
-alias view='vim -R'
-
-if command -v nvim &> /dev/null
-then
-  EDITOR=nvim
-  alias vim=nvim
-  alias view='nvim -R'
-fi
-
-if command -v xdg-open &> /dev/null
-then
-  alias open=xdg-open
-fi
-
-case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
-  EndeavourOS) export DEBUGINFOD_URLS="https://debuginfod.archlinux.org";;
-  Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
-esac
+export EDITOR=nvim
+alias vim=nvim
+alias view='nvim -R'
+alias open=xdg-open
 
 export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
 export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
@@ -112,3 +87,8 @@ export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
 export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
+
+case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
+  EndeavourOS) export DEBUGINFOD_URLS="https://debuginfod.archlinux.org";;
+  Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
+esac
