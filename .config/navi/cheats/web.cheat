@@ -4,7 +4,8 @@
 % pentest,web
 
 $ host: getent hosts | awk '{printf "%s\t%s\n",$2,$1}' --- --delimiter '\t' --column 1 --prevent-extra
-$ dict: find ~/Documents/SecLists -type f --- --prevent-extra
+$ dict: fd . ~/Documents/SecLists -t f --- --prevent-extra
+$ req: fd -t f -e req --- --prevent-extra
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16,4 +17,16 @@ gobuster dir --wordlist '<dict>' --url 'https://<host>'
 ffuf -w '<dict>' -u 'https://<host>'
 
 # ffuf from request file
-ffuf -w '<dict>' -request '<file>' -request-proto https
+ffuf -w '<dict>' -request '<req>' -request-proto https
+
+# sqlmap from request file use ssl
+sqlmap -r '<req>' --force-ssl                                                         ║
+
+# sqlmap from request file check privilege
+sqlmap -r '<req>' --privileges                                                        ║
+
+# sqlmap from request file maximize scan
+sqlmap -r '<req>' --technique=BEUS --level=5 --risk=3 -v 3 --batch
+
+# wpscan
+wpscan --plugins-detection aggressive -e ap --url 'https://<host>'
