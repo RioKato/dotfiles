@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
+from argparse import ArgumentParser
 from pathlib import Path
+import subprocess
 
 
 def install(blacklist: list[str]):
@@ -15,16 +17,35 @@ def install(blacklist: list[str]):
             dst.symlink_to(src)
 
 
-def main():
-    BLACKLIST = [
-        Path(__file__).name,
-        ".git/**",
-        ".gitmodules",
-        "**/.gitignore",
-        "misc/**",
-    ]
+def submodule():
+    command = ["git", "submodule", "update", "--init", "--force", "--remote"]
+    cwd = Path(__file__).parent
+    subprocess.run(command, cwd=cwd)
 
-    install(BLACKLIST)
+
+BLACKLIST = [
+    Path(__file__).name,
+    ".git/**",
+    ".gitmodules",
+    "**/.gitignore",
+    "misc/**",
+]
+
+
+def main():
+    parser = ArgumentParser()
+    parser.add_argument("-i", "--install", action="store_true")
+    parser.add_argument("-s", "--submodule", action="store_true")
+    args = parser.parse_args()
+
+    if not args.install and not args.submodule:
+        args.install = args.submodule = True
+
+    if args.install:
+        install(BLACKLIST)
+
+    if args.submodule:
+        submodule()
 
 
 if __name__ == "__main__":
