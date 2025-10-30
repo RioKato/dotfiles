@@ -17,7 +17,7 @@ def install(blacklist: list[str]):
 
 def main():
     BLACKLIST = [
-        "deploy",
+        Path(__file__).name,
         ".git/**",
         ".gitmodules",
         "**/.gitignore",
