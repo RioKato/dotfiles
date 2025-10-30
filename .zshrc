@@ -111,4 +111,4 @@ export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
 export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
 export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 source /usr/share/fzf/completion.zsh
-source usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/key-bindings.zsh
