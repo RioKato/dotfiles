@@ -1,7 +1,7 @@
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
-export PATH=$PATH:/opt/idapro-8.2
 export PATH=$PATH:~/binaryninja
+export PATH=$PATH:/opt/idapro-8.2
 
 ###############################################################################################
 export PATH=$PATH:"/mnt/c/Windows/System32"
