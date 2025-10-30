@@ -87,8 +87,3 @@ export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
 export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
-
-case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
-  EndeavourOS) export DEBUGINFOD_URLS="https://debuginfod.archlinux.org";;
-  Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
-esac
