@@ -106,64 +106,9 @@ case $(grep -o -e Ubuntu -e EndeavourOS /etc/issue) in
   Ubuntu) export DEBUGINFOD_URLS="https://debuginfod.ubuntu.com";;
 esac
 
-alias clang='clang -MJ compile_commands.json'
-alias gcc-cov='gcc -coverage'
-alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
-alias git-pclone='git clone --filter=blob:none -n'
-alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
-alias rrrecord='rr record --bind-to-cpu=0'
-export PATH=$PATH:~/bin
-export PATH=$PATH:~/.local/bin
-export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
-export PATH=$PATH:~/go/bin
-export PATH=$PATH:~/.local/share/gem/ruby/3.0.0/bin
-export PATH=$PATH:~/perl5/bin
-export PERL5LIB=~/perl5/lib/perl5
-export PERL_LOCAL_LIB_ROOT=~/perl5
-export PERL_MB_OPT="--install_base \"~/perl5\""
-export PERL_MM_OPT="INSTALL_BASE=~/perl5"
-export PATH=$PATH:/opt/idapro-8.2
-export PYTHONPATH=$PYTHONPATH:/opt/idapro-8.2/python/3
-export PATH=$PATH:~/binaryninja
-
-###############################################################################################
-if command -v fzf >& /dev/null
-then
-  export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
-  export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
-
-  if command -v rg &> /dev/null
-  then
-    FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
-  fi
-fi
-
-[ -d /usr/share/fzf ] && FZF_PLUGIN=/usr/share/fzf
-[ -d /usr/share/doc/fzf/examples ] && FZF_PLUGIN=/usr/share/doc/fzf/examples
-
-if [ -n "$FZF_PLUGIN" ]
-then
-  if [ -e "$FZF_PLUGIN/completion.zsh" ]
-  then
-    source "$FZF_PLUGIN/completion.zsh"
-  fi
-
-  if [ -e "$FZF_PLUGIN/key-bindings.zsh" ]
-  then
-    source "$FZF_PLUGIN/key-bindings.zsh"
-    export FZF_CTRL_T_COMMAND="find ~ 2> /dev/null"
-    export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
-
-    if command -v locate &> /dev/null
-    then
-      FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
-    fi
-  fi
-fi
-
-###############################################################################################
-export PATH=$PATH:"/mnt/c/Windows/System32"
-export PATH=$PATH:"/mnt/c/Windows/System32/WindowsPowerShell/v1.0"
-export PATH=$PATH:"/mnt/c/Program Files (x86)/Windows Kits/10/Debugger/x64"
-export PATH=$PATH:"/mnt/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.39.33519/bin/Hostx64/x64"
-export PATH=$PATH:"/mnt/c/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/MSBuild/Current/Bin"
+export FZF_DEFAULT_OPTS="--height 50% --layout=reverse --border --inline-info"
+export FZF_DEFAULT_COMMAND="rg --files --follow --hidden 2> /dev/null"
+export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
+export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
+source /usr/share/fzf/completion.zsh
+source usr/share/fzf/key-bindings.zsh
