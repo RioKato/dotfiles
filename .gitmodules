@@ -1,6 +1,3 @@
-[submodule ".config/tmux/tpm"]
-	path = .config/tmux/tpm
-	url = https://github.com/tmux-plugins/tpm
 [submodule ".skk/dict"]
 	path = .skk/dict
 	url = https://github.com/skk-dev/dict
