@@ -19,58 +19,35 @@ setopt hist_reduce_blanks
 
 bindkey -e
 
-if [ "$XDG_SESSION_TYPE" = x11 ] || [ -z "$XDG_SESSION_TYPE" ]
-then
-  if command -v xsel >& /dev/null
-  then
-    function __copy() {
-      xsel -pi && xsel -po | xsel -bi
-    }
+function __copy() {
+  xsel -pi && xsel -po | xsel -bi
+}
 
-    function __paste() {
-      xsel -bo
-    }
-  fi
-fi
+function __paste() {
+  xsel -bo
+}
 
-if [ "$XDG_SESSION_TYPE" = wayland ] || [ -z "$XDG_SESSION_TYPE" ]
-then
-  if command -v wl-copy wl-paste >& /dev/null
-  then
-    function __copy() {
-      wl-copy
-    }
+function __kill-line() {
+  zle kill-line
+  echo -n "$CUTBUFFER" | __copy
+}
 
-    function __paste() {
-      wl-paste
-    }
-  fi
-fi
+function __backward-kill-line() {
+  zle backward-kill-line
+  echo -n "$CUTBUFFER" | __copy
+}
 
-if command -v __copy __paste >& /dev/null
-then
-  function __kill-line() {
-    zle kill-line
-    echo -n "$CUTBUFFER" | __copy
-  }
+function __yank() {
+  CUTBUFFER="$(__paste)"
+  zle yank
+}
 
-  function __backward-kill-line() {
-    zle backward-kill-line
-    echo -n "$CUTBUFFER" | __copy
-  }
-
-  function __yank() {
-    CUTBUFFER="$(__paste)"
-    zle yank
-  }
-
-  zle -N __kill-line
-  zle -N __backward-kill-line
-  zle -N __yank
-  bindkey '^k' __kill-line
-  bindkey '^u' __backward-kill-line
-  bindkey '^y' __yank
-fi
+zle -N __kill-line
+zle -N __backward-kill-line
+zle -N __yank
+bindkey '^k' __kill-line
+bindkey '^u' __backward-kill-line
+bindkey '^y' __yank
 
 function precmd() {
   if command -v git >& /dev/null
@@ -135,8 +112,6 @@ alias clang-cov='clang -fprofile-instr-generate -fcoverage-mapping'
 alias git-pclone='git clone --filter=blob:none -n'
 alias gcc-nodep='musl-gcc -std=c++20 -fmodules-ts -nodefaultlibs -lc -nostdinc++ -fno-exceptions -fno-rtti'
 alias rrrecord='rr record --bind-to-cpu=0'
-export WWW_HOME='https://www.google.com?gl=ja&hl=ja'
-export PATH=$PATH:/var/lib/snapd/snap/bin
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cargo/bin:~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin
@@ -149,12 +124,9 @@ export PERL_MB_OPT="--install_base \"~/perl5\""
 export PERL_MM_OPT="INSTALL_BASE=~/perl5"
 export PATH=$PATH:/opt/idapro-8.2
 export PYTHONPATH=$PYTHONPATH:/opt/idapro-8.2/python/3
-export PATH=$PATH:/opt/jdtls/bin
-export PATH=$PATH:~/bin/codeql
 export PATH=$PATH:~/binaryninja
 
 ###############################################################################################
-
 if command -v fzf >& /dev/null
 then
   export FZF_DEFAULT_COMMAND="find . -type f -follow 2> /dev/null"
@@ -190,12 +162,6 @@ then
 fi
 
 ###############################################################################################
-
-alias rnc="rlwrap nc"
-alias mitmproxy="trap '' 2; mitmproxy; trap - 2"
-
-###############################################################################################
-
 export PATH=$PATH:"/mnt/c/Windows/System32"
 export PATH=$PATH:"/mnt/c/Windows/System32/WindowsPowerShell/v1.0"
 export PATH=$PATH:"/mnt/c/Program Files (x86)/Windows Kits/10/Debugger/x64"
