@@ -4,26 +4,36 @@ from argparse import ArgumentParser
 from pathlib import Path
 import subprocess
 
+DOTFILES: Path = Path(__file__).parent
+
 
 def install(blacklist: list[str]):
-    dotfiles = Path(__file__).parent
-    blacklist = [dotfiles / b for b in blacklist]
+    blacklist = [DOTFILES / b for b in blacklist]
 
-    for src in dotfiles.glob("**"):
+    for src in DOTFILES.glob("**"):
         if src.is_file() and not any(src.full_match(b) for b in blacklist):
-            dst = Path.home() / src.relative_to(dotfiles)
+            dst = Path.home() / src.relative_to(DOTFILES)
             dst.parent.mkdir(parents=True, exist_ok=True)
             dst.unlink(True)
             dst.symlink_to(src)
 
 
 def submodule():
-    command = ["git", "submodule", "update", "--init", "--force", "--remote"]
-    cwd = Path(__file__).parent
-    subprocess.run(command, cwd=cwd)
+    command = [
+        "git",
+        "-C",
+        str(DOTFILES),
+        "submodule",
+        "update",
+        "--init",
+        "--force",
+        "--remote",
+    ]
+
+    subprocess.run(command)
 
 
-BLACKLIST = [
+BLACKLIST: list[str] = [
     Path(__file__).name,
     ".git/**",
     ".gitmodules",
