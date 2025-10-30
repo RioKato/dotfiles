@@ -41,11 +41,11 @@ def main():
     if not args.install and not args.submodule:
         args.install = args.submodule = True
 
-    if args.install:
-        install(BLACKLIST)
-
     if args.submodule:
         submodule()
+
+    if args.install:
+        install(BLACKLIST)
 
 
 if __name__ == "__main__":

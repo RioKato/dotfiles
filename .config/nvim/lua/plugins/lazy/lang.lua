@@ -15,7 +15,7 @@ return {
                 callback = function()
                     vim.fn["skkeleton#config"]({
                         globalDictionaries = {
-                            "~/.skk/dict/SKK-JISYO.L",
+                            "~/.config/nvim/resources/skkeleton/dict/SKK-JISYO.L",
                         },
                         markerHenkan = "",
                         markerHenkanSelect = "",

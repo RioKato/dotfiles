@@ -1,3 +1,3 @@
 [submodule ".skk/dict"]
-	path = .skk/dict
+	path = .config/nvim/resources/skkeleton/dict
 	url = https://github.com/skk-dev/dict
