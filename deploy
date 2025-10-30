@@ -20,6 +20,7 @@ def main():
         "deploy",
         ".git/**",
         ".gitmodules",
+        "**/.gitignore",
         "misc/**",
     ]
 
