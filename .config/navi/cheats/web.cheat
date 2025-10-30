@@ -1,0 +1,19 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+% pentest,web
+
+$ host: getent hosts | awk '{printf "%s\t%s\n",$2,$1}' --- --delimiter '\t' --column 1 --prevent-extra
+$ dict: find ~/Documents/SecLists -type f --- --prevent-extra
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+# gobuster dir
+gobuster dir --wordlist '<dict>' --url 'https://<host>'
+
+# ffuf
+ffuf -w '<dict>' -u 'https://<host>'
+
+# ffuf from request file
+ffuf -w '<dict>' -request '<file>' -request-proto https
