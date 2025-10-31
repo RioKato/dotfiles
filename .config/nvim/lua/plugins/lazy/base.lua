@@ -107,6 +107,11 @@ return {
             zen = {
                 enabled = true,
             },
+            styles = {
+                zen = {
+                    width = 0.9,
+                },
+            },
         },
 
         keys = {
