@@ -69,6 +69,11 @@ return {
     { "machakann/vim-sandwich" },
 
     {
+        "windwp/nvim-autopairs",
+        config = {},
+    },
+
+    {
         "Wansmer/treesj",
         opts = {},
 
