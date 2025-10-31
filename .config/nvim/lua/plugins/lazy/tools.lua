@@ -88,46 +88,4 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {},
     },
-
-    {
-        "obsidian-nvim/obsidian.nvim",
-        version = "*",
-        lazy = false,
-
-        opts = {
-            workspaces = {
-                {
-                    name = "Git/Note",
-                    path = function()
-                        local path = vim.fs.root(0, ".git")
-
-                        if path then
-                            path = vim.fs.joinpath(path, "Note")
-                        end
-
-                        return path
-                    end,
-                    strict = true,
-                },
-                {
-                    name = "Current Directory",
-                    path = function()
-                        return assert(vim.fs.dirname(vim.api.nvim_buf_get_name(0)))
-                    end,
-                    strict = true,
-                },
-            },
-            footer = {
-                enabled = false,
-            },
-            statusline = {
-                enabled = false,
-            },
-            legacy_commands = false,
-        },
-
-        keys = {
-            { "<leader>1", "<cmd>Obsidian<cr>", desc = "Obsidian" },
-        },
-    },
 }
