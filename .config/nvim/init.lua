@@ -36,10 +36,10 @@ function init.editor()
     vim.opt.virtualedit = "block"
     vim.opt.showmatch = true
     vim.opt.matchtime = 1
-    vim.opt.clipboard = "unnamedplus"
     vim.opt.mouse = ""
-    vim.opt.shortmess = "I"
     vim.opt.timeoutlen = 10000
+    vim.opt.clipboard:append("unnamedplus")
+    vim.opt.shortmess:append("I")
     vim.g.mapleader = " "
     vim.g.loaded_matchparen = 1
     vim.g.loaded_netrw = 1
