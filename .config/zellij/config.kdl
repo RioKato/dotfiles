@@ -42,10 +42,15 @@ load_plugins {
 default_shell "zsh"
 
 theme "default"
+ui {
+    pane_frames {
+        hide_session_name true
+        rounded_corners true
+    }
+}
 pane_frames false
 show_release_notes false
 show_startup_tips false
-simplified_ui true
 
 scroll_buffer_size 10000
 scrollback_editor "nvim"
