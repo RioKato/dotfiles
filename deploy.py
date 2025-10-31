@@ -4,15 +4,15 @@ from argparse import ArgumentParser
 from pathlib import Path
 import subprocess
 
-DOTFILES: Path = Path(__file__).parent
+ROOT: Path = Path(__file__).parent
 
 
 def install(blacklist: list[str]):
-    blacklist = [DOTFILES / b for b in blacklist]
+    blacklist = [ROOT / b for b in blacklist]
 
-    for src in DOTFILES.glob("**"):
+    for src in ROOT.glob("**"):
         if src.is_file() and not any(src.full_match(b) for b in blacklist):
-            dst = Path.home() / src.relative_to(DOTFILES)
+            dst = Path.home() / src.relative_to(ROOT)
             dst.parent.mkdir(parents=True, exist_ok=True)
             dst.unlink(True)
             dst.symlink_to(src)
@@ -22,7 +22,7 @@ def submodule():
     command = [
         "git",
         "-C",
-        str(DOTFILES),
+        str(ROOT),
         "submodule",
         "update",
         "--init",
