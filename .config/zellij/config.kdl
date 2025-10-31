@@ -4,7 +4,7 @@ keybinds clear-defaults=true {
     }
     tmux {
         bind "Ctrl g" { SwitchToMode "Normal"; }
-        bind "[" { SwitchToMode "Scroll"; }
+        bind "[" { EditScrollback; SwitchToMode "Normal"; }
         bind "s" { NewPane "Down"; SwitchToMode "Normal"; }
         bind "v" { NewPane "Right"; SwitchToMode "Normal"; }
         bind "z" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
@@ -16,10 +16,6 @@ keybinds clear-defaults=true {
         bind "j" { MoveFocus "Down"; SwitchToMode "Normal"; }
         bind "k" { MoveFocus "Up"; SwitchToMode "Normal"; }
         bind "c" { CloseFocus; SwitchToMode "Normal"; }
-    }
-    scroll {
-        bind "Ctrl g" { SwitchToMode "Normal"; }
-        bind "e" { EditScrollback; SwitchToMode "Normal"; }
     }
 }
 
@@ -53,10 +49,6 @@ show_startup_tips false
 simplified_ui true
 
 scroll_buffer_size 10000
-copy_command "xclip -selection clipboard"
-
-// copy_clipboard "primary"
-// copy_on_select false
 scrollback_editor "nvim"
 
 mouse_mode false
