@@ -87,3 +87,9 @@ export FZF_CTRL_T_COMMAND="locate -A ~ 2> /dev/null"
 export FZF_CTRL_T_OPTS="--preview 'head -100 {} 2> /dev/null'"
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
+
+###############################################################################################
+export XDG_CONFIG_HOME=~/.config
+export DOCKER_CONFIG=$XDG_CONFIG_HOME/docker
+alias mitmproxy="mitmproxy --set confdir=$XDG_CONFIG_HOME/mitmproxy"
+alias mitmweb="mitmweb --set confdir=$XDG_CONFIG_HOME/mitmproxy"

@@ -5,6 +5,6 @@ web_open_browser: false
 ssl_insecure: true
 
 scripts: [
-  "~/.mitmproxy/addons/hurl.py",
-  "~/.mitmproxy/addons/bopen.py",
+  "~/.config/mitmproxy/addons/hurl.py",
+  "~/.config/mitmproxy/addons/bopen.py",
 ]
