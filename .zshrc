@@ -90,6 +90,9 @@ source /usr/share/fzf/key-bindings.zsh
 
 ###############################################################################################
 export XDG_CONFIG_HOME=~/.config
+export XDG_DATA_HOME=~/.local/share
+
 export DOCKER_CONFIG=$XDG_CONFIG_HOME/docker
 alias mitmproxy="mitmproxy --set confdir=$XDG_CONFIG_HOME/mitmproxy"
 alias mitmweb="mitmweb --set confdir=$XDG_CONFIG_HOME/mitmproxy"
+export GOPATH=$XDG_DATA_HOME/go
