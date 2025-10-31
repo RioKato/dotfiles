@@ -41,7 +41,7 @@ load_plugins {
 
 default_shell "zsh"
 
-theme "default"
+theme "ansi"
 ui {
     pane_frames {
         hide_session_name true
