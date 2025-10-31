@@ -70,7 +70,8 @@ return {
 
     {
         "windwp/nvim-autopairs",
-        config = {
+
+        opts = {
             map_c_h = true,
         },
     },
