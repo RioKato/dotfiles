@@ -12,6 +12,32 @@ config.color_scheme = "Bamboo"
 config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {}
 
+function register_ActivatePaneDirection(event, key, dir)
+    wezterm.on(event, function(win, pane)
+        local actions = nil
+
+        if pane:get_foreground_process_name():find("n?vim") then
+            actions = {
+                wezterm.action.SendKey({ key = "q", mods = "CTRL" }),
+                wezterm.action.SendKey({ key = key }),
+            }
+        else
+            actions = {
+                wezterm.action.ActivatePaneDirection(dir),
+            }
+        end
+
+        for _, action in ipairs(actions) do
+            win:perform_action(action, pane)
+        end
+    end)
+end
+
+register_ActivatePaneDirection("GoToLeft", "h", "Left")
+register_ActivatePaneDirection("GoToDown", "j", "Down")
+register_ActivatePaneDirection("GoToUp", "k", "Up")
+register_ActivatePaneDirection("GoToRight", "l", "Right")
+
 config.disable_default_key_bindings = true
 config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
 config.keys = {
@@ -23,10 +49,10 @@ config.keys = {
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
     { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState },
-    { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") },
-    { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") },
-    { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") },
-    { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") },
+    { key = "h", mods = "LEADER", action = wezterm.action.EmitEvent("GoToLeft") },
+    { key = "j", mods = "LEADER", action = wezterm.action.EmitEvent("GoToDown") },
+    { key = "k", mods = "LEADER", action = wezterm.action.EmitEvent("GoToUp") },
+    { key = "l", mods = "LEADER", action = wezterm.action.EmitEvent("GoToRight") },
 
     { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
     { key = "n", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
@@ -36,54 +62,6 @@ config.keys = {
     { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
 
     { key = "q", mods = "LEADER", action = wezterm.action.QuickSelect },
-}
-
-local keybinds = {
-    copy_mode = {
-        {
-            key = "Enter",
-            mods = "NONE",
-            action = wezterm.action.Multiple({
-                { CopyTo = "Clipboard" },
-                { CopyMode = "Close" },
-            }),
-        },
-        {
-            key = "/",
-            mods = "NONE",
-            action = wezterm.action.Multiple({
-                wezterm.action.CopyMode("ClearPattern"),
-                wezterm.action.Search({ CaseInSensitiveString = "" }),
-            }),
-        },
-    },
-
-    search_mode = {
-        {
-            key = "Escape",
-            mods = "NONE",
-            action = wezterm.action.Multiple({
-                wezterm.action.CopyMode("ClearPattern"),
-                wezterm.action.CopyMode("Close"),
-            }),
-        },
-    },
-}
-
-local copy_mode = wezterm.gui.default_key_tables().copy_mode
-local search_mode = wezterm.gui.default_key_tables().search_mode
-
-for _, keybind in ipairs(keybinds.copy_mode) do
-    table.insert(copy_mode, keybind)
-end
-
-for _, keybind in ipairs(keybinds.search_mode) do
-    table.insert(search_mode, keybind)
-end
-
-config.key_tables = {
-    copy_mode = copy_mode,
-    search_mode = search_mode,
 }
 
 return config

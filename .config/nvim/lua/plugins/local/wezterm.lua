@@ -5,7 +5,7 @@ function wezterm.exec(cmd)
 end
 
 function wezterm:cli(cmd)
-    self:exec({ "cli", unpack(cmd) })
+    self.exec({ "cli", unpack(cmd) })
 end
 
 function wezterm:activatePaneDirection(direction)
@@ -60,40 +60,13 @@ end
 local M = {}
 
 function M.setup(prefix)
-    local keys = {
-        {
-            "h",
-            function()
-                wrapper.go("h")
-            end,
-        },
-        {
-            "j",
-            function()
-                wrapper.go("j")
-            end,
-        },
-        {
-            "k",
-            function()
-                wrapper.go("k")
-            end,
-        },
-        {
-            "l",
-            function()
-                wrapper.go("l")
-            end,
-        },
-        {
-            "z",
-            wrapper.zoom,
-        },
-    }
-
-    for _, key in ipairs(keys) do
-        vim.keymap.set("n", prefix .. key[1], key[2])
+    for _, key in ipairs({ "h", "j", "k", "l" }) do
+        vim.keymap.set("n", prefix .. key, function()
+            wrapper.go(key)
+        end)
     end
+
+    vim.keymap.set("n", prefix .. "z", wrapper.zoom)
 end
 
 return M
