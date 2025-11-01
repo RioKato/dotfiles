@@ -14,7 +14,7 @@ config.skip_close_confirmation_for_processes_named = {}
 
 local function fallthrough(name, opts)
     assert(opts.mods == "LEADER")
-    local event = string.format("KEY_%s_%s", opts.mods, opts.key)
+    local event = string.format("FALLTHROUGH%s%s", opts.mods, opts.key)
 
     wezterm.on(event, function(win, pane)
         local actions = { opts.action }
