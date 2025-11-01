@@ -12,8 +12,6 @@ config.color_scheme = "Bamboo"
 config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {}
 
-local leader = { key = "q", mods = "CTRL" }
-
 local function pass(name, opts)
     assert(opts.mods == "LEADER")
     local event = string.format("KEY_%s_%s", opts.mods, opts.key)
@@ -23,7 +21,7 @@ local function pass(name, opts)
 
         if pane:get_foreground_process_name():find(name) then
             actions = {
-                wezterm.action.SendKey(leader),
+                wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
                 wezterm.action.SendKey({ key = opts.key }),
             }
         end
@@ -37,7 +35,7 @@ local function pass(name, opts)
 end
 
 config.disable_default_key_bindings = true
-config.leader = { key = leader.key, mods = leader.mods, timeout_milliseconds = 1000 }
+config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
 config.keys = {
     { key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
     { key = ";", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
