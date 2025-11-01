@@ -14,9 +14,8 @@ config.skip_close_confirmation_for_processes_named = {}
 
 local function fallthrough(name, opts)
     assert(opts.mods == "LEADER")
-    local event = string.format("FALLTHROUGH%s%s", opts.mods, opts.key)
 
-    wezterm.on(event, function(win, pane)
+    local action = wezterm.action_callback(function(win, pane)
         local action = opts.action
 
         if pane:get_foreground_process_name():find(name) then
@@ -29,7 +28,7 @@ local function fallthrough(name, opts)
         win:perform_action(action, pane)
     end)
 
-    return { key = opts.key, mods = opts.mods, action = wezterm.action.EmitEvent(event) }
+    return { key = opts.key, mods = opts.mods, action = action }
 end
 
 config.disable_default_key_bindings = true
