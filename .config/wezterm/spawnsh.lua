@@ -1,6 +1,6 @@
 local wezterm = require("wezterm")
 
-local function performSpawnShell(win, pane)
+return wezterm.action_callback(function(win, pane)
     local dimensions = pane:get_dimensions()
 
     local actions = {
@@ -21,8 +21,4 @@ local function performSpawnShell(win, pane)
         win:perform_action(action, pane)
         wezterm.sleep_ms(100)
     end
-end
-
-local event = "SpawnShell"
-wezterm.on(event, performSpawnShell)
-return wezterm.action.EmitEvent(event)
+end)
