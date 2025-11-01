@@ -12,7 +12,7 @@ config.color_scheme = "Bamboo"
 config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {}
 
-local function pass(name, opts)
+local function fallthrough(name, opts)
     assert(opts.mods == "LEADER")
     local event = string.format("KEY_%s_%s", opts.mods, opts.key)
 
@@ -44,11 +44,11 @@ config.keys = {
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
-    pass("nvim", { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState }),
-    pass("nvim", { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") }),
-    pass("nvim", { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") }),
-    pass("nvim", { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") }),
-    pass("nvim", { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") }),
+    fallthrough("nvim", { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState }),
+    fallthrough("nvim", { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") }),
+    fallthrough("nvim", { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") }),
+    fallthrough("nvim", { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") }),
+    fallthrough("nvim", { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") }),
 
     { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
     { key = "n", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
