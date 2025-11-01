@@ -27,7 +27,7 @@ end
 
 function init.wezterm()
     local wezterm = require(root .. ".wezterm")
-    wezterm.setup("<C-w>")
+    wezterm.setup("<C-q>")
 end
 
 function init:all()
