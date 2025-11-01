@@ -25,9 +25,15 @@ function init.tmux()
     end)
 end
 
+function init.wezterm()
+    local wezterm = require(root .. ".wezterm")
+    wezterm.setup("<C-w>")
+end
+
 function init:all()
     self.hover()
-    self.tmux()
+    -- self.tmux()
+    self.wezterm()
 end
 
 init:all()
