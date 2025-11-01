@@ -17,18 +17,16 @@ local function fallthrough(name, opts)
     local event = string.format("FALLTHROUGH%s%s", opts.mods, opts.key)
 
     wezterm.on(event, function(win, pane)
-        local actions = { opts.action }
+        local action = opts.action
 
         if pane:get_foreground_process_name():find(name) then
-            actions = {
+            action = wezterm.action.Multiple({
                 wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
                 wezterm.action.SendKey({ key = opts.key }),
-            }
+            })
         end
 
-        for _, action in ipairs(actions) do
-            win:perform_action(action, pane)
-        end
+        win:perform_action(action, pane)
     end)
 
     return { key = opts.key, mods = opts.mods, action = wezterm.action.EmitEvent(event) }
