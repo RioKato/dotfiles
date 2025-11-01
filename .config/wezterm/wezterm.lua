@@ -12,13 +12,15 @@ config.color_scheme = "Bamboo"
 config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {}
 
+local leader = { key = "q", mods = "CTRL" }
+
 function register_ActivatePaneDirection(event, key, dir)
     wezterm.on(event, function(win, pane)
         local actions = nil
 
         if pane:get_foreground_process_name():find("n?vim") then
             actions = {
-                wezterm.action.SendKey({ key = "q", mods = "CTRL" }),
+                wezterm.action.SendKey(leader),
                 wezterm.action.SendKey({ key = key }),
             }
         else
@@ -39,7 +41,7 @@ register_ActivatePaneDirection("GoToUp", "k", "Up")
 register_ActivatePaneDirection("GoToRight", "l", "Right")
 
 config.disable_default_key_bindings = true
-config.leader = { key = "q", mods = "CTRL", timeout_milliseconds = 1000 }
+config.leader = { key = leader.key, mods = leader.mods, timeout_milliseconds = 1000 }
 config.keys = {
     { key = "0", mods = "CTRL", action = wezterm.action.ResetFontSize },
     { key = ";", mods = "CTRL", action = wezterm.action.IncreaseFontSize },
