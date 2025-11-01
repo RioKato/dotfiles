@@ -17,15 +17,12 @@ local function fallthrough(name, opts)
 
     local action = wezterm.action_callback(function(win, pane)
         local config = win:effective_config()
-        local action = opts.action
+        local SendOrignKeys = wezterm.action.Multiple({
+            wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
+            wezterm.action.SendKey({ key = opts.key }),
+        })
 
-        if pane:get_foreground_process_name():find(name) then
-            action = wezterm.action.Multiple({
-                wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
-                wezterm.action.SendKey({ key = opts.key }),
-            })
-        end
-
+        local action = pane:get_foreground_process_name():find(name) and SendOrignKeys or opts.action
         win:perform_action(action, pane)
     end)
 
