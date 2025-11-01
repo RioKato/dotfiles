@@ -5,7 +5,7 @@ function wezterm.exec(cmd)
 end
 
 function wezterm:cli(cmd)
-    wezterm.exec({ "cli", unpack(cmd) })
+    self:exec({ "cli", unpack(cmd) })
 end
 
 function wezterm:activatePaneDirection(direction)
