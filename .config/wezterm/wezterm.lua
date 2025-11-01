@@ -15,18 +15,19 @@ config.skip_close_confirmation_for_processes_named = {}
 local function fallthrough(name, opts)
     assert(opts.mods == "LEADER")
 
-    local action = wezterm.action_callback(function(win, pane)
+    local action = opts.action
+
+    opts.action = wezterm.action_callback(function(win, pane)
         local config = win:effective_config()
         local SendOrignKeys = wezterm.action.Multiple({
             wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
             wezterm.action.SendKey({ key = opts.key }),
         })
-
-        local action = pane:get_foreground_process_name():find(name) and SendOrignKeys or opts.action
+        local action = pane:get_foreground_process_name():find(name) and SendOrignKeys or action
         win:perform_action(action, pane)
     end)
 
-    return { key = opts.key, mods = opts.mods, action = action }
+    return opts
 end
 
 config.disable_default_key_bindings = true
