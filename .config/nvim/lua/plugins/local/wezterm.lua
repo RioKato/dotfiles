@@ -62,37 +62,37 @@ local M = {}
 function M.setup(prefix)
     local keys = {
         {
-            prefix .. "h",
+            "h",
             function()
                 wrapper.go("h")
             end,
         },
         {
-            prefix .. "j",
+            "j",
             function()
                 wrapper.go("j")
             end,
         },
         {
-            prefix .. "k",
+            "k",
             function()
                 wrapper.go("k")
             end,
         },
         {
-            prefix .. "l",
+            "l",
             function()
                 wrapper.go("l")
             end,
         },
         {
-            prefix .. "z",
+            "z",
             wrapper.zoom,
         },
     }
 
     for _, key in ipairs(keys) do
-        vim.keymap.set("n", key[1], key[2])
+        vim.keymap.set("n", prefix .. key[1], key[2])
     end
 end
 
