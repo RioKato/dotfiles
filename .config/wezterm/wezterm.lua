@@ -54,6 +54,7 @@ config.keys = {
     { key = "]", mods = "LEADER", action = wezterm.action.PasteFrom("Clipboard") },
 
     { key = "q", mods = "LEADER", action = wezterm.action.QuickSelect },
+    { key = "d", mods = "LEADER", action = wezterm.action.ShowDebugOverlay },
 
     { key = "1", mods = "LEADER", action = require("spawnsh") },
 }
