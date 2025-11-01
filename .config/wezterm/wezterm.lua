@@ -14,18 +14,12 @@ config.skip_close_confirmation_for_processes_named = {}
 
 local leader = { key = "q", mods = "CTRL" }
 
-function register_ActivatePaneDirection(event, key, dir)
+local function register_event(event, key, actions)
     wezterm.on(event, function(win, pane)
-        local actions = nil
-
         if pane:get_foreground_process_name():find("n?vim") then
             actions = {
                 wezterm.action.SendKey(leader),
                 wezterm.action.SendKey({ key = key }),
-            }
-        else
-            actions = {
-                wezterm.action.ActivatePaneDirection(dir),
             }
         end
 
@@ -35,10 +29,11 @@ function register_ActivatePaneDirection(event, key, dir)
     end)
 end
 
-register_ActivatePaneDirection("GoToLeft", "h", "Left")
-register_ActivatePaneDirection("GoToDown", "j", "Down")
-register_ActivatePaneDirection("GoToUp", "k", "Up")
-register_ActivatePaneDirection("GoToRight", "l", "Right")
+register_event("GoToLeft", "h", { wezterm.action.ActivatePaneDirection("Left") })
+register_event("GoToDown", "j", { wezterm.action.ActivatePaneDirection("Down") })
+register_event("GoToUp", "k", { wezterm.action.ActivatePaneDirection("Up") })
+register_event("GoToRight", "l", { wezterm.action.ActivatePaneDirection("Right") })
+register_event("ToggleZoom", "z", { wezterm.action.TogglePaneZoomState })
 
 config.disable_default_key_bindings = true
 config.leader = { key = leader.key, mods = leader.mods, timeout_milliseconds = 1000 }
@@ -50,7 +45,7 @@ config.keys = {
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
-    { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState },
+    { key = "z", mods = "LEADER", action = wezterm.action.EmitEvent("ToggleZoom") },
     { key = "h", mods = "LEADER", action = wezterm.action.EmitEvent("GoToLeft") },
     { key = "j", mods = "LEADER", action = wezterm.action.EmitEvent("GoToDown") },
     { key = "k", mods = "LEADER", action = wezterm.action.EmitEvent("GoToUp") },
