@@ -14,28 +14,27 @@ config.skip_close_confirmation_for_processes_named = {}
 
 local leader = { key = "q", mods = "CTRL" }
 
-local function register_event(event, key, actions)
-    wezterm.on(event, function(win, pane)
-        local actions_ = actions
+local function pass(name, opts)
+    assert(opts.mods == "LEADER")
+    local event = string.format("KEY_%s_%s", opts.mods, opts.key)
 
-        if pane:get_foreground_process_name():find("n?vim") then
-            actions_ = {
+    wezterm.on(event, function(win, pane)
+        local actions = { opts.action }
+
+        if pane:get_foreground_process_name():find(name) then
+            actions = {
                 wezterm.action.SendKey(leader),
-                wezterm.action.SendKey({ key = key }),
+                wezterm.action.SendKey({ key = opts.key }),
             }
         end
 
-        for _, action in ipairs(actions_) do
+        for _, action in ipairs(actions) do
             win:perform_action(action, pane)
         end
     end)
-end
 
-register_event("GoToLeft", "h", { wezterm.action.ActivatePaneDirection("Left") })
-register_event("GoToDown", "j", { wezterm.action.ActivatePaneDirection("Down") })
-register_event("GoToUp", "k", { wezterm.action.ActivatePaneDirection("Up") })
-register_event("GoToRight", "l", { wezterm.action.ActivatePaneDirection("Right") })
-register_event("ToggleZoom", "z", { wezterm.action.TogglePaneZoomState })
+    return { key = opts.key, mods = opts.mods, action = wezterm.action.EmitEvent(event) }
+end
 
 config.disable_default_key_bindings = true
 config.leader = { key = leader.key, mods = leader.mods, timeout_milliseconds = 1000 }
@@ -47,11 +46,11 @@ config.keys = {
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) },
-    { key = "z", mods = "LEADER", action = wezterm.action.EmitEvent("ToggleZoom") },
-    { key = "h", mods = "LEADER", action = wezterm.action.EmitEvent("GoToLeft") },
-    { key = "j", mods = "LEADER", action = wezterm.action.EmitEvent("GoToDown") },
-    { key = "k", mods = "LEADER", action = wezterm.action.EmitEvent("GoToUp") },
-    { key = "l", mods = "LEADER", action = wezterm.action.EmitEvent("GoToRight") },
+    pass("nvim", { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState }),
+    pass("nvim", { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") }),
+    pass("nvim", { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") }),
+    pass("nvim", { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") }),
+    pass("nvim", { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") }),
 
     { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
     { key = "n", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
