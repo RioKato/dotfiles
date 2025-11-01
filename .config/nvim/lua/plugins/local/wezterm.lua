@@ -9,9 +9,6 @@ function wezterm:cli(cmd)
 end
 
 function wezterm:activatePaneDirection(direction)
-    local directions = { "Up", "Down", "Left", "Right", "Next", "Prev" }
-    assert(vim.tbl_contains(directions, direction))
-
     self:cli({ "activate-pane-direction", direction })
 end
 
@@ -30,7 +27,7 @@ function wrapper.go(hjkl)
         l = "Right",
     }
 
-    assert(vim.tbl_contains(vim.tbl_keys(map), hjkl))
+    assert(map[hjkl])
 
     local win = vim.api.nvim_get_current_win()
 
@@ -59,14 +56,14 @@ end
 
 local M = {}
 
-function M.setup(prefix)
+function M.setup(leader)
     for _, key in ipairs({ "h", "j", "k", "l" }) do
-        vim.keymap.set("n", prefix .. key, function()
+        vim.keymap.set("n", leader .. key, function()
             wrapper.go(key)
         end)
     end
 
-    vim.keymap.set("n", prefix .. "z", wrapper.zoom)
+    vim.keymap.set("n", leader .. "z", wrapper.zoom)
 end
 
 return M
