@@ -16,6 +16,7 @@ local function fallthrough(name, opts)
     assert(opts.mods == "LEADER")
 
     local action = wezterm.action_callback(function(win, pane)
+        local config = win:effective_config()
         local action = opts.action
 
         if pane:get_foreground_process_name():find(name) then
