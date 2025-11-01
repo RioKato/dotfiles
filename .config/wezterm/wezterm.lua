@@ -16,14 +16,16 @@ local leader = { key = "q", mods = "CTRL" }
 
 local function register_event(event, key, actions)
     wezterm.on(event, function(win, pane)
+        local actions_ = actions
+
         if pane:get_foreground_process_name():find("n?vim") then
-            actions = {
+            actions_ = {
                 wezterm.action.SendKey(leader),
                 wezterm.action.SendKey({ key = key }),
             }
         end
 
-        for _, action in ipairs(actions) do
+        for _, action in ipairs(actions_) do
             win:perform_action(action, pane)
         end
     end)
