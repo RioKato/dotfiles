@@ -23,8 +23,8 @@ local function fallthrough(name, opts)
             wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
             wezterm.action.SendKey({ key = opts.key }),
         })
-        local action = pane:get_foreground_process_name():find(name) and SendOrignKeys or action
-        win:perform_action(action, pane)
+        local found = pane:get_foreground_process_name():find(name)
+        win:perform_action(found and SendOrignKeys or action, pane)
     end)
 
     return opts
