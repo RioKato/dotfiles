@@ -15,16 +15,16 @@ config.skip_close_confirmation_for_processes_named = {}
 local function fallthrough(name, opts)
     assert(opts.mods == "LEADER")
 
+    local keys = wezterm.action.Multiple({
+        wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
+        wezterm.action.SendKey({ key = opts.key }),
+    })
+
     local action = opts.action
 
     opts.action = wezterm.action_callback(function(win, pane)
-        local config = win:effective_config()
-        local SendOrignKeys = wezterm.action.Multiple({
-            wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
-            wezterm.action.SendKey({ key = opts.key }),
-        })
         local found = pane:get_foreground_process_name():find(name)
-        win:perform_action(found and SendOrignKeys or action, pane)
+        win:perform_action(found and keys or action, pane)
     end)
 
     return opts
