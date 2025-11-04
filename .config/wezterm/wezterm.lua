@@ -12,10 +12,10 @@ config.color_scheme = "Bamboo"
 config.audible_bell = "Disabled"
 config.skip_close_confirmation_for_processes_named = {}
 
-local function fallthrough(name, opts)
+local function uncapture(name, opts)
     assert(opts.mods == "LEADER")
 
-    local keys = wezterm.action.Multiple({
+    local sendKeys = wezterm.action.Multiple({
         wezterm.action.SendKey({ key = config.leader.key, mods = config.leader.mods }),
         wezterm.action.SendKey({ key = opts.key }),
     })
@@ -24,7 +24,7 @@ local function fallthrough(name, opts)
 
     opts.action = wezterm.action_callback(function(win, pane)
         local found = pane:get_foreground_process_name():find(name)
-        win:perform_action(found and keys or action, pane)
+        win:perform_action(found and sendKeys or action, pane)
     end)
 
     return opts
@@ -39,12 +39,12 @@ config.keys = {
 
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-    fallthrough("nvim", { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) }),
-    fallthrough("nvim", { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState }),
-    fallthrough("nvim", { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") }),
-    fallthrough("nvim", { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") }),
-    fallthrough("nvim", { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") }),
-    fallthrough("nvim", { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") }),
+    uncapture("nvim", { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) }),
+    uncapture("nvim", { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState }),
+    uncapture("nvim", { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") }),
+    uncapture("nvim", { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") }),
+    uncapture("nvim", { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") }),
+    uncapture("nvim", { key = "l", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Right") }),
 
     { key = "t", mods = "LEADER", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
     { key = "n", mods = "LEADER", action = wezterm.action.ActivateTabRelative(1) },
