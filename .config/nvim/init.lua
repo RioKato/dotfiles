@@ -45,6 +45,10 @@ function init.editor()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
+    local function toggle_readonly()
+        vim.bo.readonly = not vim.bo.readonly
+    end
+
     local keys = {
         { { "n", "x" }, "j", "gj" },
         { { "n", "x" }, "k", "gk" },
@@ -64,6 +68,7 @@ function init.editor()
         { "n", "gt", "<nop>" },
         { "n", "gT", "<nop>" },
         { "t", "<esc>", "<c-\\><c-n>" },
+        { "n", "<leader>r", toggle_readonly },
     }
 
     util.assign_keys(keys)
@@ -90,7 +95,7 @@ function init.appearance()
     vim.opt.cursorlineopt = "number"
     vim.opt.signcolumn = "number"
     vim.opt.laststatus = 3
-    vim.opt.statusline = "%= [%{mode()}] %t %="
+    vim.opt.statusline = "%= [%{mode()}]%r %t %="
     vim.opt.showtabline = 0
     vim.opt.winborder = "single"
     vim.opt.fillchars = {
