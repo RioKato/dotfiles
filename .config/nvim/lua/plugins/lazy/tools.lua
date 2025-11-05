@@ -52,15 +52,13 @@ return {
                         layout = "select",
 
                         finder = function()
-                            local tasks = overseer.list_tasks()
-                            local reversed = {}
-
-                            for i = #tasks, 1, -1 do
-                                tasks[i].text = string.format("%s %s", tasks[i].status, tasks[i].name)
-                                table.insert(reversed, tasks[i])
-                            end
-
-                            return reversed
+                            return vim.iter(overseer.list_tasks())
+                                :rev()
+                                :map(function(task)
+                                    task.text = string.format("%s %s", task.status, task.name)
+                                    return task
+                                end)
+                                :totable()
                         end,
 
                         format = function(item)
