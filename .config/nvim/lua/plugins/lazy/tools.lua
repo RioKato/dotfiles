@@ -54,7 +54,9 @@ return {
                             return string.format("%s %s", item.status, item.name)
                         end,
                     }, function(item)
-                        overseer.run_action(item, "open float")
+                        if item then
+                            overseer.run_action(item, "open float")
+                        end
                     end)
                 end,
                 desc = "Overseer Task List",
