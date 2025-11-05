@@ -50,7 +50,13 @@ return {
                     type = "gdb",
                     request = "launch",
                     program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                        local dir = vim.fs.find("zig-out/bin", { upward = true, type = "directory" })[1]
+
+                        if not dir then
+                            dir = vim.fn.getcwd()
+                        end
+
+                        return vim.fn.input("Path to executable: ", dir .. "/", "file")
                     end,
                     args = {},
                     cwd = "${workspaceFolder}",
