@@ -11,3 +11,6 @@ prettier = 'latest'
 stylua = 'latest'
 'npm:pyright' = 'latest'
 'npm:typescript-language-server' = 'latest'
+
+pipx = 'latest'
+'pipx:debugpy' = 'latest'
