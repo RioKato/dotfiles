@@ -17,7 +17,9 @@ return {
                     type = "gdb",
                     request = "launch",
                     program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+                        local root = vim.fs.root(0, "Makefile") or vim.fn.getcwd()
+                        root = vim.fs.joinpath(root, "/")
+                        return vim.fn.input("Path to executable: ", root, "file")
                     end,
                     args = {},
                     cwd = "${workspaceFolder}",
@@ -50,13 +52,16 @@ return {
                     type = "gdb",
                     request = "launch",
                     program = function()
-                        local dir = vim.fs.find("zig-out/bin", { upward = true, type = "directory" })[1]
+                        local root = vim.fs.root(0, "zig-out/bin")
 
-                        if not dir then
-                            dir = vim.fn.getcwd()
+                        if root then
+                            root = vim.fs.joinpath(root, "zig-out/bin")
+                        else
+                            root = vim.fn.getcwd()
                         end
 
-                        return vim.fn.input("Path to executable: ", dir .. "/", "file")
+                        root = vim.fs.joinpath(root, "/")
+                        return vim.fn.input("Path to executable: ", root, "file")
                     end,
                     args = {},
                     cwd = "${workspaceFolder}",
