@@ -70,7 +70,8 @@ return {
             { "<leader>db", "<cmd>DapToggleBreakpoint<cr>" },
             { "<leader>dc", "<cmd>DapContinue<cr>" },
             { "<leader>ds", "<cmd>DapStepInto<cr>" },
-            { "<leader>dn", "<cmd>DapStepOut<cr>" },
+            { "<leader>dn", "<cmd>DapStepOver<cr>" },
+            { "<leader>df", "<cmd>DapStepOut<cr>" },
         },
     },
 
