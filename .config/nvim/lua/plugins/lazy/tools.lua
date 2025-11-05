@@ -46,35 +46,16 @@ return {
                 "R",
                 function()
                     local overseer = require("overseer")
+                    local tasks = vim.iter(overseer.list_tasks()):rev():totable()
 
-                    Snacks.picker.pick({
-                        title = "Tasks",
-                        layout = "select",
-
-                        finder = function()
-                            return vim.iter(overseer.list_tasks())
-                                :rev()
-                                :map(function(task)
-                                    task.text = string.format("%s %s", task.status, task.name)
-                                    return task
-                                end)
-                                :totable()
+                    vim.ui.select(tasks, {
+                        prompt = "Tasks",
+                        format_item = function(item)
+                            return string.format("%s %s", item.status, item.name)
                         end,
-
-                        format = function(item)
-                            return {
-                                { string.format("%d. ", item.id) },
-                                { item.text, string.format("Overseer%s", item.status) },
-                            }
-                        end,
-
-                        confirm = function(picker, item)
-                            if item then
-                                picker:close()
-                                overseer.run_action(item, "open float")
-                            end
-                        end,
-                    })
+                    }, function(item)
+                        overseer.run_action(item, "open float")
+                    end)
                 end,
                 desc = "Overseer Task List",
             },
