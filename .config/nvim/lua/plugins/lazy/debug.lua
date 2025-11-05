@@ -50,6 +50,15 @@ return {
     },
 
     {
+        "theHamsta/nvim-dap-virtual-text",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        opts = {},
+    },
+
+    {
         "andythigpen/nvim-coverage",
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {},
