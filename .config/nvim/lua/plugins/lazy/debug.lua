@@ -42,7 +42,6 @@ return {
         keys = {
             { "<leader>dd", "<cmd>DapToggleRepl<cr>" },
             { "<leader>db", "<cmd>DapToggleBreakpoint<cr>" },
-            { "<leader>dr", "<cmd>DapNew<cr>" },
             { "<leader>dc", "<cmd>DapContinue<cr>" },
             { "<leader>ds", "<cmd>DapStepInto<cr>" },
             { "<leader>dn", "<cmd>DapStepOut<cr>" },
