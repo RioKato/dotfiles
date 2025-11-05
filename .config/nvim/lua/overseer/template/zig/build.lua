@@ -1,7 +1,3 @@
-local function find(marker, dir)
-    return vim.fs.root(dir, marker)
-end
-
 return {
     name = "zig build",
 
@@ -17,7 +13,7 @@ return {
             if vim.fn.executable("zig") == 0 then
                 return false, 'Command "zig" not found'
             end
-            if not find("build.zig", opts.dir) then
+            if not vim.fs.root(opts.dir, "build.zig") then
                 return false, "No build.zig found"
             end
             return true
