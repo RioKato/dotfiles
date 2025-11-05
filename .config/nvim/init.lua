@@ -45,10 +45,6 @@ function init.editor()
     vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1
 
-    local function toggle_readonly()
-        vim.bo.readonly = not vim.bo.readonly
-    end
-
     local keys = {
         { { "n", "x" }, "j", "gj" },
         { { "n", "x" }, "k", "gk" },
@@ -68,7 +64,6 @@ function init.editor()
         { "n", "gt", "<nop>" },
         { "n", "gT", "<nop>" },
         { "t", "<esc>", "<c-\\><c-n>" },
-        { "n", "<leader>r", toggle_readonly },
     }
 
     util.assign_keys(keys)
