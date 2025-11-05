@@ -36,27 +36,17 @@ return {
                     end,
                     cwd = "${workspaceFolder}",
                 },
-                {
-                    name = "Attach to gdbserver :1234",
-                    type = "gdb",
-                    request = "attach",
-                    target = "localhost:1234",
-                    program = function()
-                        return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-                    end,
-                    cwd = "${workspaceFolder}",
-                },
             }
         end,
-    },
 
-    {
-        "rcarriga/nvim-dap-ui",
-        dependencies = {
-            "mfussenegger/nvim-dap",
-            "nvim-neotest/nvim-nio",
+        keys = {
+            { "<leader>dd", "<cmd>DapToggleRepl<cr>" },
+            { "<leader>db", "<cmd>DapToggleBreakpoint<cr>" },
+            { "<leader>dr", "<cmd>DapNew<cr>" },
+            { "<leader>dc", "<cmd>DapContinue<cr>" },
+            { "<leader>ds", "<cmd>DapStepInto<cr>" },
+            { "<leader>dn", "<cmd>DapStepOut<cr>" },
         },
-        opts = {},
     },
 
     {
