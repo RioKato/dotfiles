@@ -52,10 +52,10 @@ return {
                     type = "gdb",
                     request = "launch",
                     program = function()
-                        local root = vim.fs.root(0, "zig-out/bin")
+                        local root = vim.fs.root(0, "zig-out")
 
                         if root then
-                            root = vim.fs.joinpath(root, "zig-out/bin")
+                            root = vim.fs.joinpath(root, "zig-out")
                         else
                             root = vim.fn.getcwd()
                         end
