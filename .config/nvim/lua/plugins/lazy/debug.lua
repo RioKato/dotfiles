@@ -5,65 +5,66 @@ return {
         config = function()
             local dap = require("dap")
 
-            dap.adapters.gdb = {
-                type = "executable",
-                command = "gdb",
-                args = { "--interpreter=dap" },
-            }
-
-            dap.configurations.c = {
-                {
-                    name = "Launch",
-                    type = "gdb",
-                    request = "launch",
-                    program = function()
-                        local root = vim.fs.root(0, "Makefile") or vim.fn.getcwd()
-                        root = vim.fs.joinpath(root, "/")
-                        return vim.fn.input("Path to executable: ", root, "file")
-                    end,
-                    args = {},
-                    cwd = "${workspaceFolder}",
-                    stopAtBeginningOfMainSubprogram = false,
+            dap.adapters = {
+                gdb = {
+                    type = "executable",
+                    command = "gdb",
+                    args = { "--interpreter=dap" },
+                },
+                python = {
+                    type = "executable",
+                    command = "debugpy-adapter",
+                    options = {
+                        source_filetype = "python",
+                    },
                 },
             }
 
-            dap.adapters.python = {
-                type = "executable",
-                command = "debugpy-adapter",
-                options = {
-                    source_filetype = "python",
+            dap.configurations = {
+                c = {
+                    {
+                        name = "Launch",
+                        type = "gdb",
+                        request = "launch",
+                        program = function()
+                            local root = vim.fs.root(0, "Makefile") or vim.fn.getcwd()
+                            root = vim.fs.joinpath(root, "/")
+                            return vim.fn.input("Path to executable: ", root, "file")
+                        end,
+                        args = {},
+                        cwd = "${workspaceFolder}",
+                        stopAtBeginningOfMainSubprogram = false,
+                    },
                 },
-            }
-
-            dap.configurations.python = {
-                {
-                    type = "python",
-                    request = "launch",
-                    name = "Launch file",
-                    program = "${file}",
+                python = {
+                    {
+                        type = "python",
+                        request = "launch",
+                        name = "Launch file",
+                        program = "${file}",
+                    },
                 },
-            }
+                zig = {
+                    {
+                        name = "Launch",
+                        type = "gdb",
+                        request = "launch",
+                        program = function()
+                            local root = vim.fs.root(0, "zig-out")
 
-            dap.configurations.zig = {
-                {
-                    name = "Launch",
-                    type = "gdb",
-                    request = "launch",
-                    program = function()
-                        local root = vim.fs.root(0, "zig-out")
+                            if root then
+                                root = vim.fs.joinpath(root, "zig-out")
+                            else
+                                root = vim.fn.getcwd()
+                            end
 
-                        if root then
-                            root = vim.fs.joinpath(root, "zig-out")
-                        else
-                            root = vim.fn.getcwd()
-                        end
-
-                        root = vim.fs.joinpath(root, "/")
-                        return vim.fn.input("Path to executable: ", root, "file")
-                    end,
-                    args = {},
-                    cwd = "${workspaceFolder}",
-                    stopAtBeginningOfMainSubprogram = false,
+                            root = vim.fs.joinpath(root, "/")
+                            return vim.fn.input("Path to executable: ", root, "file")
+                        end,
+                        args = {},
+                        cwd = "${workspaceFolder}",
+                        stopAtBeginningOfMainSubprogram = false,
+                    },
                 },
             }
         end,
