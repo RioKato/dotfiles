@@ -166,28 +166,12 @@ function init.lsp()
     end
 
     local keys = {
-        {
-            "n",
-            "<C-h>",
-            function()
-                vim.lsp.buf.hover()
-            end,
-        },
+        -- stylua: ignore start
+        { "n", "<C-h>", function() vim.lsp.buf.hover() end },
         { "n", "<leader>ld", diagnostic },
-        {
-            "n",
-            "<leader>lr",
-            function()
-                vim.lsp.buf.rename()
-            end,
-        },
-        {
-            "n",
-            "<leader>lc",
-            function()
-                vim.lsp.buf.code_action()
-            end,
-        },
+        { "n", "<leader>lr", function() vim.lsp.buf.rename() end },
+        { "n", "<leader>lc", function() vim.lsp.buf.code_action() end },
+        -- stylua: ignore end
     }
 
     util.assign_keys(keys)
