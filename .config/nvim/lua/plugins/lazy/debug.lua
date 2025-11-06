@@ -27,9 +27,15 @@ return {
                         type = "gdb",
                         request = "launch",
                         program = function()
-                            local root = vim.fs.root(0, "Makefile") or vim.fn.getcwd()
-                            root = vim.fs.joinpath(root, "/")
-                            return vim.fn.input("Path to executable: ", root, "file")
+                            return coroutine.create(function(co)
+                                Snacks.picker.files({
+                                    cwd = vim.fs.root(0, "Makefile"),
+                                    confirm = function(picker, item)
+                                        picker:close()
+                                        coroutine.resume(co, item._path)
+                                    end,
+                                })
+                            end)
                         end,
                         args = {},
                         cwd = "${workspaceFolder}",
