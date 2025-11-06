@@ -45,9 +45,9 @@ return {
                 },
                 python = {
                     {
+                        name = "Launch",
                         type = "python",
                         request = "launch",
-                        name = "Launch file",
                         program = "${file}",
                     },
                 },
