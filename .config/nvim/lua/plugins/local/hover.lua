@@ -53,7 +53,13 @@ end
 function Layout:render() end
 
 function Layout:hover(opts)
-    local position = vim.lsp.util.make_position_params(0, vim.bo.fileencoding)
+    local encoding = vim.bo.fileencoding
+
+    if encoding == "" then
+        encoding = "utf-8"
+    end
+
+    local position = vim.lsp.util.make_position_params(0, encoding)
 
     vim.lsp.buf_request_all(0, "textDocument/hover", position, function(arg)
         vim.iter(arg):each(function(response)
