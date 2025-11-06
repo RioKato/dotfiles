@@ -80,14 +80,18 @@ return {
                     filetypes = { "zig" },
                     markers = { "build.zig" },
                     callback = function(cwd)
-                        local out = cwd
+                        local program = nil
 
                         if cwd then
-                            local temp = vim.fs.joinpath(cwd, "zig-out")
+                            local out = vim.fs.joinpath(cwd, "zig-out")
 
-                            if vim.uv.fs_stat(temp) then
-                                out = temp
+                            if vim.uv.fs_stat(out) then
+                                program = find(out)
                             end
+                        end
+
+                        if not program then
+                            program = find(cwd)
                         end
 
                         return {
@@ -95,7 +99,7 @@ return {
                                 name = "Launch",
                                 type = "gdb",
                                 request = "launch",
-                                program = find(out),
+                                program = program,
                                 args = {},
                                 cwd = cwd,
                                 stopAtBeginningOfMainSubprogram = false,
