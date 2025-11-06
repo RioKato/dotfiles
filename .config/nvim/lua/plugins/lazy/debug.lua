@@ -1,6 +1,7 @@
 return {
     {
         "mfussenegger/nvim-dap",
+        dependencies = { "folke/snacks.nvim" },
 
         config = function()
             local dap = require("dap")
