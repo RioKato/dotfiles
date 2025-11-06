@@ -23,9 +23,9 @@ return {
                         "TreesitterContextSeparator",
                     }
 
-                    for _, hl in ipairs(hls) do
+                    vim.iter(hls):each(function(hl)
                         vim.api.nvim_set_hl(0, hl, { link = "Normal" })
-                    end
+                    end)
                 end,
             })
         end,

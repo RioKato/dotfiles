@@ -1,9 +1,9 @@
 local util = {}
 
 function util.assign_keys(keys, opts)
-    for _, key in ipairs(keys) do
+    vim.iter(keys):each(function(key)
         vim.keymap.set(key[1], key[2], key[3], opts)
-    end
+    end)
 end
 
 local init = {}
@@ -119,9 +119,9 @@ function init.appearance()
                 "Pmenu",
             }
 
-            for _, hl in ipairs(hls) do
+            vim.iter(hls):each(function(hl)
                 vim.api.nvim_set_hl(0, hl, {})
-            end
+            end)
         end,
     })
 end

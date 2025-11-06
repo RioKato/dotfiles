@@ -57,11 +57,11 @@ end
 local M = {}
 
 function M.setup(leader)
-    for _, key in ipairs({ "h", "j", "k", "l" }) do
+    vim.iter({ "h", "j", "k", "l" }):each(function(key)
         vim.keymap.set("n", leader .. key, function()
             wrapper.go(key)
         end)
-    end
+    end)
 
     vim.keymap.set("n", leader .. "z", wrapper.zoom)
     vim.keymap.set("n", leader .. "c", "<cmd>close<cr>")
