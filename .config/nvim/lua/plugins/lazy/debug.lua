@@ -21,17 +21,6 @@ return {
                 },
             }
 
-            dap.configurations = {
-                python = {
-                    {
-                        name = "Launch",
-                        type = "debugpy",
-                        request = "launch",
-                        program = "${file}",
-                    },
-                },
-            }
-
             local function cofiles(cwd)
                 return coroutine.create(function(co)
                     Snacks.picker.files({
@@ -67,6 +56,26 @@ return {
                             args = {},
                             cwd = cwd,
                             stopAtBeginningOfMainSubprogram = false,
+                        },
+                    }
+                end,
+                python = function(bufnr)
+                    if not vim.tbl_contains({ "python" }, vim.bo[bufnr].filetype) then
+                        return {}
+                    end
+
+                    local cwd = vim.fs.root(bufnr, { "pyproject.toml", "setup.py", "setup.cfg" })
+
+                    return {
+                        {
+                            name = "Launch",
+                            type = "debugpy",
+                            request = "launch",
+                            program = function()
+                                return cofiles(cwd)
+                            end,
+                            args = {},
+                            cwd = cwd,
                         },
                     }
                 end,
