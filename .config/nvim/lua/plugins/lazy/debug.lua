@@ -34,8 +34,7 @@ return {
             end
 
             local providers = {
-                {
-                    name = "c",
+                c = {
                     filetypes = { "c" },
                     markers = { "Makefile" },
                     callback = function(cwd)
@@ -52,27 +51,25 @@ return {
                         }
                     end,
                 },
-                {
-                    name = "python",
+                python = {
                     filetypes = { "python" },
                     markers = { "pyproject.toml", "setup.py", "setup.cfg" },
                     callback = function(cwd, bufnr)
-                        local temp = vim.api.nvim_buf_get_name(bufnr)
+                        local path = vim.api.nvim_buf_get_name(bufnr)
 
                         return {
                             {
                                 name = "Launch",
                                 type = "debugpy",
                                 request = "launch",
-                                program = cwd and find(cwd) or temp,
+                                program = cwd and find(cwd) or path,
                                 args = {},
-                                cwd = cwd or vim.fs.dirname(temp),
+                                cwd = cwd or vim.fs.dirname(path),
                             },
                         }
                     end,
                 },
-                {
-                    name = "zig",
+                zig = {
                     filetypes = { "zig" },
                     markers = { "build.zig" },
                     callback = function(cwd)
@@ -101,8 +98,8 @@ return {
                 },
             }
 
-            vim.iter(providers):each(function(provider)
-                dap.providers.configs[provider.name] = function(bufnr)
+            vim.iter(providers):each(function(name, provider)
+                dap.providers.configs[name] = function(bufnr)
                     if not vim.tbl_contains(provider.filetypes, vim.bo[bufnr].filetype) then
                         return {}
                     end
