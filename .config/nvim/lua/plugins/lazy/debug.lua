@@ -4,18 +4,6 @@ return {
         dependencies = { "folke/snacks.nvim" },
 
         config = function()
-            local function cofiles(cwd)
-                return coroutine.create(function(co)
-                    Snacks.picker.files({
-                        cwd = cwd,
-                        confirm = function(picker, item)
-                            picker:close()
-                            coroutine.resume(co, item._path)
-                        end,
-                    })
-                end)
-            end
-
             local dap = require("dap")
 
             dap.adapters = {
@@ -44,13 +32,25 @@ return {
                 },
             }
 
+            local function cofiles(cwd)
+                return coroutine.create(function(co)
+                    Snacks.picker.files({
+                        cwd = cwd,
+                        confirm = function(picker, item)
+                            picker:close()
+                            coroutine.resume(co, item._path)
+                        end,
+                    })
+                end)
+            end
+
             dap.providers.configs = {
                 c = function(bufnr)
                     if not vim.tbl_contains({ "c" }, vim.bo[bufnr].filetype) then
                         return {}
                     end
 
-                    local cwd = vim.fs.root(0, "Makefile")
+                    local cwd = vim.fs.root(bufnr, "Makefile")
 
                     if not cwd then
                         return {}
@@ -75,7 +75,7 @@ return {
                         return {}
                     end
 
-                    local cwd = vim.fs.root(0, "build.zig")
+                    local cwd = vim.fs.root(bufnr, "build.zig")
 
                     if not cwd then
                         return {}
