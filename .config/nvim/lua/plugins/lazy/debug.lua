@@ -56,15 +56,17 @@ return {
                     name = "python",
                     filetypes = { "python" },
                     markers = { "pyproject.toml", "setup.py", "setup.cfg" },
-                    callback = function(cwd)
+                    callback = function(cwd, bufnr)
+                        local temp = vim.api.nvim_buf_get_name(bufnr)
+
                         return {
                             {
                                 name = "Launch",
                                 type = "debugpy",
                                 request = "launch",
-                                program = find(cwd),
+                                program = cwd and find(cwd) or temp,
                                 args = {},
-                                cwd = cwd,
+                                cwd = cwd or vim.fs.dirname(temp),
                             },
                         }
                     end,
@@ -105,7 +107,7 @@ return {
                         return {}
                     end
 
-                    return provider.callback(vim.fs.root(bufnr, provider.markers))
+                    return provider.callback(vim.fs.root(bufnr, provider.markers), bufnr)
                 end
             end)
         end,
