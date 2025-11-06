@@ -50,9 +50,7 @@ return {
                             name = "Launch",
                             type = "gdb",
                             request = "launch",
-                            program = function()
-                                return cofiles(cwd)
-                            end,
+                            program = cofiles(cwd),
                             args = {},
                             cwd = cwd,
                             stopAtBeginningOfMainSubprogram = false,
@@ -71,9 +69,7 @@ return {
                             name = "Launch",
                             type = "debugpy",
                             request = "launch",
-                            program = function()
-                                return cofiles(cwd)
-                            end,
+                            program = cofiles(cwd),
                             args = {},
                             cwd = cwd,
                         },
@@ -101,9 +97,7 @@ return {
                             name = "Launch",
                             type = "gdb",
                             request = "launch",
-                            program = function()
-                                return cofiles(out)
-                            end,
+                            program = cofiles(out),
                             args = {},
                             cwd = cwd,
                             stopAtBeginningOfMainSubprogram = false,
