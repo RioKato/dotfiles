@@ -57,16 +57,21 @@ return {
                         type = "gdb",
                         request = "launch",
                         program = function()
-                            local root = vim.fs.root(0, "zig-out")
+                            local cwd = vim.fs.root(0, "zig-out")
 
-                            if root then
-                                root = vim.fs.joinpath(root, "zig-out")
-                            else
-                                root = vim.fn.getcwd()
+                            if cwd then
+                                cwd = vim.fs.joinpath(cwd, "zig-out")
                             end
 
-                            root = vim.fs.joinpath(root, "/")
-                            return vim.fn.input("Path to executable: ", root, "file")
+                            return coroutine.create(function(co)
+                                Snacks.picker.files({
+                                    cwd = cwd,
+                                    confirm = function(picker, item)
+                                        picker:close()
+                                        coroutine.resume(co, item._path)
+                                    end,
+                                })
+                            end)
                         end,
                         args = {},
                         cwd = "${workspaceFolder}",
