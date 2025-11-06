@@ -21,6 +21,16 @@ return {
                 },
             }
 
+            local function register(name, filetypes, markers, provider)
+                dap.providers.configs[name] = function(bufnr)
+                    if not vim.tbl_contains(filetypes, vim.bo[bufnr].filetype) then
+                        return {}
+                    end
+
+                    return provider(vim.fs.root(bufnr, markers))
+                end
+            end
+
             local function cofiles(cwd)
                 return coroutine.create(function(co)
                     Snacks.picker.files({
@@ -33,78 +43,56 @@ return {
                 end)
             end
 
-            dap.providers.configs = {
-                c = function(bufnr)
-                    if not vim.tbl_contains({ "c" }, vim.bo[bufnr].filetype) then
-                        return {}
-                    end
+            register("c", { "c" }, { "Makefile" }, function(cwd)
+                return {
+                    {
+                        name = "Launch",
+                        type = "gdb",
+                        request = "launch",
+                        program = cofiles(cwd),
+                        args = {},
+                        cwd = cwd,
+                        stopAtBeginningOfMainSubprogram = false,
+                    },
+                }
+            end)
 
-                    local cwd = vim.fs.root(bufnr, "Makefile")
+            register("python", { "python" }, { "pyproject.toml", "setup.py", "setup.cfg" }, function(cwd)
+                return {
+                    {
+                        name = "Launch",
+                        type = "debugpy",
+                        request = "launch",
+                        program = cofiles(cwd),
+                        args = {},
+                        cwd = cwd,
+                    },
+                }
+            end)
 
-                    if not cwd then
-                        return {}
-                    end
+            register("zig", { "zig" }, { "build.zig" }, function(cwd)
+                if not cwd then
+                    return {}
+                end
 
-                    return {
-                        {
-                            name = "Launch",
-                            type = "gdb",
-                            request = "launch",
-                            program = cofiles(cwd),
-                            args = {},
-                            cwd = cwd,
-                            stopAtBeginningOfMainSubprogram = false,
-                        },
-                    }
-                end,
-                python = function(bufnr)
-                    if not vim.tbl_contains({ "python" }, vim.bo[bufnr].filetype) then
-                        return {}
-                    end
+                local out = vim.fs.joinpath(cwd, "zig-out")
 
-                    local cwd = vim.fs.root(bufnr, { "pyproject.toml", "setup.py", "setup.cfg" })
+                if vim.fn.isdirectory(out) == 0 then
+                    out = cwd
+                end
 
-                    return {
-                        {
-                            name = "Launch",
-                            type = "debugpy",
-                            request = "launch",
-                            program = cofiles(cwd),
-                            args = {},
-                            cwd = cwd,
-                        },
-                    }
-                end,
-                zig = function(bufnr)
-                    if not vim.tbl_contains({ "zig" }, vim.bo[bufnr].filetype) then
-                        return {}
-                    end
-
-                    local cwd = vim.fs.root(bufnr, "build.zig")
-
-                    if not cwd then
-                        return {}
-                    end
-
-                    local out = vim.fs.joinpath(cwd, "zig-out")
-
-                    if vim.fn.isdirectory(out) == 0 then
-                        return {}
-                    end
-
-                    return {
-                        {
-                            name = "Launch",
-                            type = "gdb",
-                            request = "launch",
-                            program = cofiles(out),
-                            args = {},
-                            cwd = cwd,
-                            stopAtBeginningOfMainSubprogram = false,
-                        },
-                    }
-                end,
-            }
+                return {
+                    {
+                        name = "Launch",
+                        type = "gdb",
+                        request = "launch",
+                        program = cofiles(out),
+                        args = {},
+                        cwd = cwd,
+                        stopAtBeginningOfMainSubprogram = false,
+                    },
+                }
+            end)
         end,
 
         keys = {
