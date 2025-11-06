@@ -4,6 +4,18 @@ return {
         dependencies = { "folke/snacks.nvim" },
 
         config = function()
+            local function cofiles(cwd)
+                return coroutine.create(function(co)
+                    Snacks.picker.files({
+                        cwd = cwd,
+                        confirm = function(picker, item)
+                            picker:close()
+                            coroutine.resume(co, item._path)
+                        end,
+                    })
+                end)
+            end
+
             local dap = require("dap")
 
             dap.adapters = {
@@ -28,15 +40,8 @@ return {
                         type = "gdb",
                         request = "launch",
                         program = function()
-                            return coroutine.create(function(co)
-                                Snacks.picker.files({
-                                    cwd = vim.fs.root(0, "Makefile"),
-                                    confirm = function(picker, item)
-                                        picker:close()
-                                        coroutine.resume(co, item._path)
-                                    end,
-                                })
-                            end)
+                            local cwd = vim.fs.root(0, "Makefile")
+                            return cofiles(cwd)
                         end,
                         args = {},
                         cwd = "${workspaceFolder}",
@@ -63,15 +68,7 @@ return {
                                 cwd = vim.fs.joinpath(cwd, "zig-out")
                             end
 
-                            return coroutine.create(function(co)
-                                Snacks.picker.files({
-                                    cwd = cwd,
-                                    confirm = function(picker, item)
-                                        picker:close()
-                                        coroutine.resume(co, item._path)
-                                    end,
-                                })
-                            end)
+                            return cofiles(cwd)
                         end,
                         args = {},
                         cwd = "${workspaceFolder}",
