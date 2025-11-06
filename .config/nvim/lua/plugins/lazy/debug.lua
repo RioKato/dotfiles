@@ -21,16 +21,6 @@ return {
                 },
             }
 
-            local function register(name, filetypes, markers, provider)
-                dap.providers.configs[name] = function(bufnr)
-                    if not vim.tbl_contains(filetypes, vim.bo[bufnr].filetype) then
-                        return {}
-                    end
-
-                    return provider(vim.fs.root(bufnr, markers))
-                end
-            end
-
             local function find(cwd)
                 return coroutine.create(function(co)
                     Snacks.picker.files({
@@ -43,55 +33,76 @@ return {
                 end)
             end
 
-            register("c", { "c" }, { "Makefile" }, function(cwd)
-                return {
-                    {
-                        name = "Launch",
-                        type = "gdb",
-                        request = "launch",
-                        program = find(cwd),
-                        args = {},
-                        cwd = cwd,
-                        stopAtBeginningOfMainSubprogram = false,
-                    },
-                }
-            end)
+            local providers = {
+                {
+                    name = "c",
+                    filetypes = { "c" },
+                    markers = { "Makefile" },
+                    callback = function(cwd)
+                        return {
+                            {
+                                name = "Launch",
+                                type = "gdb",
+                                request = "launch",
+                                program = find(cwd),
+                                args = {},
+                                cwd = cwd,
+                                stopAtBeginningOfMainSubprogram = false,
+                            },
+                        }
+                    end,
+                },
+                {
+                    name = "python",
+                    filetypes = { "python" },
+                    markers = { "pyproject.toml", "setup.py", "setup.cfg" },
+                    callback = function(cwd)
+                        return {
+                            {
+                                name = "Launch",
+                                type = "debugpy",
+                                request = "launch",
+                                program = find(cwd),
+                                args = {},
+                                cwd = cwd,
+                            },
+                        }
+                    end,
+                },
+                {
+                    name = "zig",
+                    filetypes = { "zig" },
+                    markers = { "build.zig" },
+                    callback = function(cwd)
+                        local out = cwd
 
-            register("python", { "python" }, { "pyproject.toml", "setup.py", "setup.cfg" }, function(cwd)
-                return {
-                    {
-                        name = "Launch",
-                        type = "debugpy",
-                        request = "launch",
-                        program = find(cwd),
-                        args = {},
-                        cwd = cwd,
-                    },
-                }
-            end)
+                        if cwd then
+                            out = vim.fs.joinpath(cwd, "zig-out")
+                        end
 
-            register("zig", { "zig" }, { "build.zig" }, function(cwd)
-                if not cwd then
-                    return {}
+                        return {
+                            {
+                                name = "Launch",
+                                type = "gdb",
+                                request = "launch",
+                                program = find(out),
+                                args = {},
+                                cwd = cwd,
+                                stopAtBeginningOfMainSubprogram = false,
+                            },
+                        }
+                    end,
+                },
+            }
+
+            vim.iter(providers):each(function(provider)
+                dap.providers.configs[provider.name] = function(bufnr)
+                    if not vim.tbl_contains(provider.filetypes, vim.bo[bufnr].filetype) then
+                        return {}
+                    end
+
+                    return provider.callback(vim.fs.root(bufnr, provider.markers))
                 end
-
-                local out = vim.fs.joinpath(cwd, "zig-out")
-
-                if vim.fn.isdirectory(out) == 0 then
-                    out = cwd
-                end
-
-                return {
-                    {
-                        name = "Launch",
-                        type = "gdb",
-                        request = "launch",
-                        program = find(out),
-                        args = {},
-                        cwd = cwd,
-                        stopAtBeginningOfMainSubprogram = false,
-                    },
-                }
             end)
         end,
 
