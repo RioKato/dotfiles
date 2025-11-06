@@ -34,20 +34,6 @@ return {
             }
 
             dap.configurations = {
-                c = {
-                    {
-                        name = "Launch",
-                        type = "gdb",
-                        request = "launch",
-                        program = function()
-                            local cwd = vim.fs.root(0, "Makefile")
-                            return cofiles(cwd)
-                        end,
-                        args = {},
-                        cwd = "${workspaceFolder}",
-                        stopAtBeginningOfMainSubprogram = false,
-                    },
-                },
                 python = {
                     {
                         name = "Launch",
@@ -56,25 +42,65 @@ return {
                         program = "${file}",
                     },
                 },
-                zig = {
-                    {
-                        name = "Launch",
-                        type = "gdb",
-                        request = "launch",
-                        program = function()
-                            local cwd = vim.fs.root(0, "zig-out")
+            }
 
-                            if cwd then
-                                cwd = vim.fs.joinpath(cwd, "zig-out")
-                            end
+            dap.providers.configs = {
+                c = function(bufnr)
+                    if not vim.tbl_contains({ "c" }, vim.bo[bufnr].filetype) then
+                        return {}
+                    end
 
-                            return cofiles(cwd)
-                        end,
-                        args = {},
-                        cwd = "${workspaceFolder}",
-                        stopAtBeginningOfMainSubprogram = false,
-                    },
-                },
+                    local cwd = vim.fs.root(0, "Makefile")
+
+                    if not cwd then
+                        return {}
+                    end
+
+                    return {
+                        {
+                            name = "Launch",
+                            type = "gdb",
+                            request = "launch",
+                            program = function()
+                                return cofiles(cwd)
+                            end,
+                            args = {},
+                            cwd = cwd,
+                            stopAtBeginningOfMainSubprogram = false,
+                        },
+                    }
+                end,
+                zig = function(bufnr)
+                    if not vim.tbl_contains({ "zig" }, vim.bo[bufnr].filetype) then
+                        return {}
+                    end
+
+                    local cwd = vim.fs.root(0, "build.zig")
+
+                    if not cwd then
+                        return {}
+                    end
+
+                    local out = vim.fs.joinpath(cwd, "zig-out")
+
+                    if vim.fn.isdirectory(out) == 0 then
+                        return {}
+                    end
+
+                    return {
+                        {
+                            name = "Launch",
+                            type = "gdb",
+                            request = "launch",
+                            program = function()
+                                return cofiles(out)
+                            end,
+                            args = {},
+                            cwd = cwd,
+                            stopAtBeginningOfMainSubprogram = false,
+                        },
+                    }
+                end,
             }
         end,
 
