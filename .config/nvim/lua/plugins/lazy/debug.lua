@@ -31,7 +31,7 @@ return {
                 end
             end
 
-            local function cofiles(cwd)
+            local function find(cwd)
                 return coroutine.create(function(co)
                     Snacks.picker.files({
                         cwd = cwd,
@@ -49,7 +49,7 @@ return {
                         name = "Launch",
                         type = "gdb",
                         request = "launch",
-                        program = cofiles(cwd),
+                        program = find(cwd),
                         args = {},
                         cwd = cwd,
                         stopAtBeginningOfMainSubprogram = false,
@@ -63,7 +63,7 @@ return {
                         name = "Launch",
                         type = "debugpy",
                         request = "launch",
-                        program = cofiles(cwd),
+                        program = find(cwd),
                         args = {},
                         cwd = cwd,
                     },
@@ -86,7 +86,7 @@ return {
                         name = "Launch",
                         type = "gdb",
                         request = "launch",
-                        program = cofiles(out),
+                        program = find(out),
                         args = {},
                         cwd = cwd,
                         stopAtBeginningOfMainSubprogram = false,
