@@ -25,7 +25,6 @@ return {
 
     {
         "stevearc/overseer.nvim",
-        dependencies = { "folke/snacks.nvim" },
 
         opts = {
             task_list = {
