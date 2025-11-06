@@ -24,7 +24,7 @@ return {
                     command = "gdb",
                     args = { "--interpreter=dap" },
                 },
-                python = {
+                debugpy = {
                     type = "executable",
                     command = "debugpy-adapter",
                     options = {
@@ -51,7 +51,7 @@ return {
                 python = {
                     {
                         name = "Launch",
-                        type = "python",
+                        type = "debugpy",
                         request = "launch",
                         program = "${file}",
                     },
@@ -81,6 +81,9 @@ return {
         keys = {
             { "<leader>dd", "<cmd>DapToggleRepl<cr>" },
             { "<leader>db", "<cmd>DapToggleBreakpoint<cr>" },
+            { "<leader>dB", "<cmd>DapClearBreakpoints<cr>" },
+            { "<leader>dr", "<cmd>DapNew<cr>" },
+            { "<leader>dR", "<cmd>DapTerminate<cr>" },
             { "<leader>dc", "<cmd>DapContinue<cr>" },
             { "<leader>ds", "<cmd>DapStepInto<cr>" },
             { "<leader>dn", "<cmd>DapStepOver<cr>" },
