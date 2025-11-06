@@ -44,8 +44,6 @@ return {
                 },
             }
 
-            dap.adapters.zig = dap.adapters.gdb
-
             dap.configurations.zig = {
                 {
                     name = "Launch",
