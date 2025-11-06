@@ -77,7 +77,11 @@ return {
                         local out = cwd
 
                         if cwd then
-                            out = vim.fs.joinpath(cwd, "zig-out")
+                            local temp = vim.fs.joinpath(cwd, "zig-out")
+
+                            if vim.uv.fs_stat(temp) then
+                                out = temp
+                            end
                         end
 
                         return {
