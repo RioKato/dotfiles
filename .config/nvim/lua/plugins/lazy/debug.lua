@@ -55,16 +55,23 @@ return {
                     filetypes = { "python" },
                     markers = { "pyproject.toml", "setup.py", "setup.cfg" },
                     callback = function(cwd, bufnr)
-                        local path = vim.api.nvim_buf_get_name(bufnr)
+                        local program = nil
+
+                        if cwd then
+                            program = find(cwd)
+                        else
+                            program = vim.api.nvim_buf_get_name(bufnr)
+                            cwd = vim.fs.dirname(program)
+                        end
 
                         return {
                             {
                                 name = "Launch",
                                 type = "debugpy",
                                 request = "launch",
-                                program = cwd and find(cwd) or path,
+                                program = program,
                                 args = {},
-                                cwd = cwd or vim.fs.dirname(path),
+                                cwd = cwd,
                             },
                         }
                     end,
