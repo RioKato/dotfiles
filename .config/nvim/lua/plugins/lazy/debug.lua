@@ -6,6 +6,8 @@ return {
         config = function()
             local dap = require("dap")
 
+            dap.defaults.fallback.stepping_granularity = "instruction"
+
             dap.adapters = {
                 gdb = {
                     type = "executable",
