@@ -63,7 +63,6 @@ function M.setup(leader)
         end)
     end)
 
-    -- vim.keymap.set("n", leader .. "z", wrapper.zoom)
     vim.keymap.set("n", leader .. "c", "<cmd>close<cr>")
 end
 

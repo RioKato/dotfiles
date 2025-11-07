@@ -39,8 +39,8 @@ config.keys = {
 
     { key = "s", mods = "LEADER", action = wezterm.action.SplitVertical({ domain = "CurrentPaneDomain" }) },
     { key = "v", mods = "LEADER", action = wezterm.action.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
+    { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState },
     uncapture("nvim", { key = "c", mods = "LEADER", action = wezterm.action.CloseCurrentPane({ confirm = true }) }),
-    uncapture("nvim", { key = "z", mods = "LEADER", action = wezterm.action.TogglePaneZoomState }),
     uncapture("nvim", { key = "h", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Left") }),
     uncapture("nvim", { key = "j", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Down") }),
     uncapture("nvim", { key = "k", mods = "LEADER", action = wezterm.action.ActivatePaneDirection("Up") }),
