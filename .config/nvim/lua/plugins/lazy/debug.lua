@@ -49,10 +49,10 @@ return {
                                 stopAtBeginningOfMainSubprogram = false,
                             },
                             {
-                                name = "Connect to localhost:1234",
+                                name = "Connect to 127.0.0.1:1234",
                                 type = "gdb",
                                 request = "attach",
-                                target = "localhost:1234",
+                                target = "127.0.0.1:1234",
                             },
                         }
                     end,
