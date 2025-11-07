@@ -15,9 +15,6 @@ return {
                 debugpy = {
                     type = "executable",
                     command = "debugpy-adapter",
-                    options = {
-                        source_filetype = "python",
-                    },
                 },
             }
 
