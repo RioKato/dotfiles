@@ -62,7 +62,7 @@ function Layout:hover(opts)
     local position = vim.lsp.util.make_position_params(0, encoding)
 
     vim.lsp.buf_request_all(0, "textDocument/hover", position, function(arg)
-        vim.iter(arg):each(function(response)
+        vim.iter(pairs(arg)):each(function(id, response)
             if response.result then
                 local lines = vim.lsp.util.convert_input_to_markdown_lines(response.result.contents)
                 self:open(opts)
