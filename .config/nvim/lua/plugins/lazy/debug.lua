@@ -118,6 +118,17 @@ return {
                     return provider.callback(vim.fs.root(bufnr, provider.markers), bufnr)
                 end
             end)
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "dap-repl",
+                callback = function(ev)
+                    local keys = { { "n", "q", "<cmd>DapToggleRepl<cr>" } }
+
+                    vim.iter(keys):each(function(key)
+                        vim.keymap.set(key[1], key[2], key[3], { buffer = ev.buf })
+                    end)
+                end,
+            })
         end,
 
         keys = {
