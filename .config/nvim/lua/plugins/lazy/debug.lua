@@ -48,6 +48,15 @@ return {
                                 cwd = cwd,
                                 stopAtBeginningOfMainSubprogram = false,
                             },
+                            {
+                                name = "Connect to localhost:1234",
+                                type = "gdb",
+                                request = "attach",
+                                program = find(cwd),
+                                args = {},
+                                cwd = cwd,
+                                target = "localhost:1234",
+                            },
                         }
                     end,
                 },
