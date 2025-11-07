@@ -21,6 +21,17 @@ return {
                 },
             }
 
+            dap.configurations = {
+                c = {
+                    {
+                        name = "Connect to 127.0.0.1:1234",
+                        type = "gdb",
+                        request = "attach",
+                        target = "127.0.0.1:1234",
+                    },
+                },
+            }
+
             local function find(cwd)
                 return coroutine.create(function(co)
                     Snacks.picker.files({
@@ -47,12 +58,6 @@ return {
                                 args = {},
                                 cwd = cwd,
                                 stopAtBeginningOfMainSubprogram = false,
-                            },
-                            {
-                                name = "Connect to 127.0.0.1:1234",
-                                type = "gdb",
-                                request = "attach",
-                                target = "127.0.0.1:1234",
                             },
                         }
                     end,
