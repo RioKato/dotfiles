@@ -56,14 +56,15 @@ end
 
 local M = {}
 
-function M.setup(leader)
+function M.setup()
     vim.iter({ "h", "j", "k", "l" }):each(function(key)
-        vim.keymap.set("n", leader .. key, function()
+        vim.keymap.set("n", "<C-q>" .. key, function()
             wrapper.go(key)
         end)
     end)
 
-    vim.keymap.set("n", leader .. "c", "<cmd>close<cr>")
+    vim.keymap.set("n", "<C-w>z", wrapper.zoom)
+    vim.keymap.set("n", "<C-q>c", "<cmd>close<cr>")
 end
 
 return M

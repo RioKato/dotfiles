@@ -7,8 +7,7 @@ function init.hover()
 end
 
 function init.wezterm()
-    local wezterm = require(root .. ".wezterm")
-    wezterm.setup("<C-q>")
+    require(root .. ".wezterm").setup()
 end
 
 function init:all()
