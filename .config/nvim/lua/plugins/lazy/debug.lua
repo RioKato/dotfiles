@@ -126,21 +126,10 @@ return {
                     return provider.callback(vim.fs.root(bufnr, provider.markers), bufnr)
                 end
             end)
-
-            vim.api.nvim_create_autocmd("FileType", {
-                pattern = "dap-repl",
-                callback = function(ev)
-                    local keys = { { "n", "q", "<cmd>DapToggleRepl<cr>" } }
-
-                    vim.iter(keys):each(function(key)
-                        vim.keymap.set(key[1], key[2], key[3], { buffer = ev.buf })
-                    end)
-                end,
-            })
         end,
 
         keys = {
-            { "<leader>dd", "<cmd>DapToggleRepl<cr>" },
+            -- { "<leader>dd", "<cmd>DapToggleRepl<cr>" },
             { "<leader>db", "<cmd>DapToggleBreakpoint<cr>" },
             { "<leader>dB", "<cmd>DapClearBreakpoints<cr>" },
             { "<leader>dr", "<cmd>DapNew<cr>" },
@@ -159,6 +148,39 @@ return {
             "nvim-treesitter/nvim-treesitter",
         },
         opts = {},
+    },
+
+    {
+        "igorlfs/nvim-dap-view",
+        dependencies = {
+            "mfussenegger/nvim-dap",
+            "Jorenar/nvim-dap-disasm",
+        },
+
+        opts = {
+            winbar = {
+                sections = {
+                    "repl",
+                    "disassembly",
+                    "scopes",
+                    "breakpoints",
+                    "watches",
+                    "threads",
+                    "exceptions",
+                },
+                default_section = "repl",
+            },
+        },
+
+        keys = {
+            { "<leader>dd", "<cmd>DapViewToggle<cr>" },
+        },
+    },
+
+    {
+        "Jorenar/nvim-dap-disasm",
+        dependencies = { "igorlfs/nvim-dap-view" },
+        config = true,
     },
 
     {
