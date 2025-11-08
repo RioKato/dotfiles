@@ -1,22 +1,16 @@
 local Proc = {}
 
 function Proc:new(builder)
-    local obj = {
-        newline = "\n",
-    }
-
+    local obj = {}
     setmetatable(obj, { __index = self })
 
     local buffer = ""
 
-    obj.system = vim.system(builder.command, {
-        text = true,
-        stdin = true,
-        stdout = function(err, data)
-            if data then
-                data = buffer .. data
-                local lines = vim.split(data, obj.newline, { plain = true })
-                buffer = table.remove(lines) or ""
+    obj.jobid = vim.fn.jobstart(builder.command, {
+        on_stdout = function(_, lines, _)
+            if #lines ~= 0 then
+                lines[1] = buffer .. lines[1]
+                buffer = table.remove(lines)
 
                 vim.iter(lines):each(function(line)
                     vim.iter(builder.handlers):find(function(event, callback)
@@ -33,7 +27,7 @@ function Proc:new(builder)
 end
 
 function Proc:send(command)
-    self.system:write(command .. self.newline)
+    vim.fn.chansend(self.jobid, command)
 end
 
 local Builder = {}
@@ -142,4 +136,3 @@ local recipes = {
 
 local builder = Builder:default(recipes.gdb.command, Window:new())
 local proc = builder:build()
-proc.system:wait()
