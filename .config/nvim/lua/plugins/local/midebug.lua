@@ -13,7 +13,7 @@ function Proc:new(builder)
                 buffer = table.remove(lines)
 
                 vim.iter(lines):each(function(line)
-                    builder:handle(line)
+                    builder:handle(obj, line)
                 end)
             end
         end,
@@ -43,13 +43,16 @@ function Builder:new(command)
 end
 
 function Builder:on(event, callback)
-    self.handlers[event] = callback
+    table.insert(self.handlers, {
+        event = event,
+        callback = callback,
+    })
 end
 
-function Builder:handle(message)
-    vim.iter(self.handlers):find(function(event, callback)
-        if message:sub(1, #event) == event then
-            return callback(obj, message)
+function Builder:handle(proc, message)
+    vim.iter(self.handlers):find(function(handler)
+        if message:sub(1, #handler.event) == handler.event then
+            return handler.callback(proc, message)
         end
     end)
 end
@@ -62,12 +65,16 @@ function Builder:default(command, window)
     local builder = self:new(command)
 
     local events = {
+        ['*stopped,reason="exited-normally"'] = function(proc, message)
+            return window:onExit(proc, message)
+        end,
+
         ["*stopped"] = function(proc, message)
-            return window:handleCursor(proc, message)
+            return window:onStop(proc, message)
         end,
 
         ["*running"] = function(proc, message)
-            return window:handleCursor(proc, message)
+            return window:onRun(proc, message)
         end,
 
         ["=thread-selected"] = function(proc, message)
@@ -107,13 +114,7 @@ function Builder:default(command, window)
         end,
 
         ["~"] = function(proc, message)
-            message = message:match('^~"(.*)"$')
-
-            if message then
-                message = message:gsub("\\n", "\n")
-                message = message:gsub('\\"', '"')
-                return window:handleOutput(proc, message)
-            end
+            return window:handleOutput(proc, message)
         end,
     }
 
@@ -124,6 +125,34 @@ function Builder:default(command, window)
     return builder
 end
 
+local Parser = {}
+
+function Parser.parseStr(text, start)
+    local pos = start
+
+    while true do
+        pos = string.find(text, '"', pos + 1, true)
+
+        if pos then
+            local ok, inner = pcall(vim.json.decode, text:sub(start, pos))
+
+            if ok then
+                return inner
+            end
+        else
+            break
+        end
+    end
+end
+
+function Parser.parsePair(text, key, start)
+    local ok, tail = string.find(text, string.format('%s="', key), start, true)
+
+    if ok then
+        return Parser.parseStr(text, tail)
+    end
+end
+
 local Window = {}
 
 function Window:new()
@@ -132,7 +161,11 @@ function Window:new()
     return obj
 end
 
-function Window:handleCursor(proc, message) end
+function Window:onExit(proc, message) end
+
+function Window:onStop(proc, message) end
+
+function Window:onRun(proc, message) end
 
 function Window:handleBreakpoint(proc, message) end
 
@@ -144,9 +177,7 @@ function Window:handleDisassemble(proc, message) end
 
 function Window:handleVariables(proc, message) end
 
-function Window:handleOutput(proc, message)
-    print(message)
-end
+function Window:handleOutput(proc, message) end
 
 local recipes = {
     gdb = {
