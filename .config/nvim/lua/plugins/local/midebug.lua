@@ -63,47 +63,47 @@ function Builder:default(command, window)
 
     local events = {
         ["*stopped"] = function(proc, message)
-            window:handleCursor(proc, message)
+            return window:handleCursor(proc, message)
         end,
 
         ["*running"] = function(proc, message)
-            window:handleCursor(proc, message)
+            return window:handleCursor(proc, message)
         end,
 
         ["=thread-selected"] = function(proc, message)
-            window:handleCursor(proc, message)
+            return window:handleCursor(proc, message)
         end,
 
         ["^done,bkpt="] = function(proc, message)
-            window:handleBreakpoint(proc, message)
+            return window:handleBreakpoint(proc, message)
         end,
 
         ["=breakpoint-created,"] = function(proc, message)
-            window:handleBreakpoint(proc, message)
+            return window:handleBreakpoint(proc, message)
         end,
 
         ["=breakpoint-modified,"] = function(proc, message)
-            window:handleBreakpoint(proc, message)
+            return window:handleBreakpoint(proc, message)
         end,
 
         ["=breakpoint-deleted,"] = function(proc, message)
-            window:handleBreakpoint(proc, message)
+            return window:handleBreakpoint(proc, message)
         end,
 
         ["=thread-group-started"] = function(proc, message)
-            window:handleProgramRun(proc, message)
+            return window:handleProgramRun(proc, message)
         end,
 
         ["^error,msg="] = function(proc, message)
-            window:handleError()
+            return window:handleError()
         end,
 
         ['&"disassemble'] = function(proc, message)
-            window:handleDisassemble()
+            return window:handleDisassemble()
         end,
 
         ["^done,variables="] = function(proc, message)
-            window:handleVariables(proc, message)
+            return window:handleVariables(proc, message)
         end,
 
         ["~"] = function(proc, message)
