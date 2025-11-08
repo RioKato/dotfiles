@@ -257,9 +257,17 @@ function init.debug()
         end)
     end
 
+    local function start()
+        local args = vim.fn.input("TermdebugCommand ", "", "file")
+        vim.cmd(string.format("TermdebugCommand %s", args))
+    end
+
     local keys = {
         { "n", "<leader>Dd", select_window },
         { "n", "<leader>DD", select_debugger },
+        { "n", "<leader>Da", start },
+        { "n", "<leader>Dr", "<cmd>Run<cr>" },
+        { "n", "<leader>DR", "<cmd>Stop<cr>" },
         { "n", "<leader>Db", "<cmd>Break<cr>" },
         { "n", "<leader>DB", "<cmd>Clear<cr>" },
         { "n", "<leader>Ds", "<cmd>Step<cr>" },
