@@ -180,35 +180,43 @@ end
 function init.debug()
     vim.cmd.packadd("termdebug")
 
-    -- stylua: ignore start
-    local command_add_args = {
-        gdb = function(cmd, pty)
-            return {
-                "gdb",
-                "-tty", pty,
-                "-quiet",
-                "-iex", "set pagination off",
-                "-iex", "set mi-async on",
-                "-ex", "echo startupdone\n",
-            }
-        end,
-        rr = function(cmd, pty)
-            return {
-                "rr", "replay",
-                "--tty", pty,
-                "--",
-                "-quiet",
-                "-iex", "set pagination off",
-                "-iex", "set mi-async on",
-                "-ex", "echo startupdone\n",
-            }
-        end,
+    local termdebug_config = {
+        gdb = {
+            command = { "gdb" },
+            command_add_args = function(cmd, pty)
+                -- stylua: ignore start
+                return {
+                    "gdb",
+                    "-tty", pty,
+                    "-quiet",
+                    "-iex", "set pagination off",
+                    "-iex", "set mi-async on",
+                    "-ex", "echo startupdone\n",
+                }
+                -- stylua: ignore end
+            end,
+        },
+        rr = {
+            command = { "rr" },
+            command_add_args = function(cmd, pty)
+                -- stylua: ignore start
+                return {
+                    "rr", "replay",
+                    "--tty", pty,
+                    "--",
+                    "-quiet",
+                    "-iex", "set pagination off",
+                    "-iex", "set mi-async on",
+                    "-ex", "echo startupdone\n",
+                }
+                -- stylua: ignore end
+            end,
+        },
     }
-    -- stylua: ignore end
 
     vim.g.termdebug_config = {
-        command = { "gdb" },
-        command_add_args = command_add_args.gdb,
+        command = termdebug_config.gdb.command,
+        command_add_args = termdebug_config.gdb.command_add_args,
         map_K = 0,
         map_minus = 0,
         map_plus = 0,
@@ -217,28 +225,29 @@ function init.debug()
     }
 
     local function choice()
-        local commands = {
-            { { "gdb" }, command_add_args.gdb },
-            { { "rr" }, command_add_args.rr },
-        }
+        local items = vim.iter(termdebug_config)
+            :map(function(_, value)
+                return value
+            end)
+            :totable()
 
-        vim.ui.select(commands, {
+        vim.ui.select(items, {
             prompt = "Commands",
             format_item = function(item)
-                return item[1][1]
+                return vim.iter(item.command):join(" ")
             end,
         }, function(item)
             if item then
                 local termdebug_config = vim.g.termdebug_config
-                termdebug_config.command = item[1]
-                termdebug_config.command_add_args = item[2]
+                termdebug_config.command = item.command
+                termdebug_config.command_add_args = item.command_add_args
                 vim.g.termdebug_config = termdebug_config
             end
         end)
     end
 
     local keys = {
-        { "n", "<leader>dr", choice },
+        { "n", "<leader>Dr", choice },
     }
 
     util.assign_keys(keys)
