@@ -222,9 +222,10 @@ function init.debug()
         map_plus = 0,
         disasm_window = 1,
         variables_window = 1,
+        popup = 0,
     }
 
-    local function choice()
+    local function select_debugger()
         local items = vim.iter(termdebug_config)
             :map(function(_, value)
                 return value
@@ -232,7 +233,7 @@ function init.debug()
             :totable()
 
         vim.ui.select(items, {
-            prompt = "Commands",
+            prompt = "Debugger",
             format_item = function(item)
                 return vim.iter(item.command):join(" ")
             end,
@@ -246,8 +247,25 @@ function init.debug()
         end)
     end
 
+    local function select_window()
+        local items = { "Gdb", "Source", "Program", "Asm", "Var" }
+
+        vim.ui.select(items, {
+            prompt = "Window",
+        }, function(item)
+            vim.cmd(item)
+        end)
+    end
+
     local keys = {
-        { "n", "<leader>Dr", choice },
+        { "n", "<leader>Dd", select_window },
+        { "n", "<leader>DD", select_debugger },
+        { "n", "<leader>Db", "<cmd>Break<cr>" },
+        { "n", "<leader>DB", "<cmd>Clear<cr>" },
+        { "n", "<leader>Ds", "<cmd>Step<cr>" },
+        { "n", "<leader>Dn", "<cmd>Over<cr>" },
+        { "n", "<leader>Dc", "<cmd>Continue<cr>" },
+        { "n", "<leader>Df", "<cmd>Finish<cr>" },
     }
 
     util.assign_keys(keys)
