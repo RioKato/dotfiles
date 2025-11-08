@@ -75,19 +75,19 @@ function Builder:default(command, window)
         end,
 
         ["^done,bkpt="] = function(proc, message)
-            window:handleNewBreakpoint(proc, message)
+            window:handleBreakpoint(proc, message)
         end,
 
         ["=breakpoint-created,"] = function(proc, message)
-            window:handleNewBreakpoint(proc, message)
+            window:handleBreakpoint(proc, message)
         end,
 
         ["=breakpoint-modified,"] = function(proc, message)
-            window:handleNewBreakpoint(proc, message)
+            window:handleBreakpoint(proc, message)
         end,
 
         ["=breakpoint-deleted,"] = function(proc, message)
-            window:handleBreakpointDelete(proc, message)
+            window:handleBreakpoint(proc, message)
         end,
 
         ["=thread-group-started"] = function(proc, message)
@@ -131,6 +131,18 @@ function Window:new()
     setmetatable(obj, { __index = self })
     return obj
 end
+
+function Window:handleCursor(proc, message) end
+
+function Window:handleBreakpoint(proc, message) end
+
+function Window:handleProgramRun(proc, message) end
+
+function Window:handleError(proc, message) end
+
+function Window:handleDisassemble(proc, message) end
+
+function Window:handleVariables(proc, message) end
 
 function Window:handleOutput(proc, message)
     print(message)
