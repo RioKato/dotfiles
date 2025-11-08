@@ -6,7 +6,7 @@ function Proc:new(builder)
 
     local buffer = ""
 
-    obj.jobid = vim.fn.jobstart(builder.command, {
+    obj.job = vim.fn.jobstart(builder.command, {
         on_stdout = function(_, lines, _)
             if #lines ~= 0 then
                 lines[1] = buffer .. lines[1]
@@ -27,7 +27,11 @@ function Proc:new(builder)
 end
 
 function Proc:send(command)
-    vim.fn.chansend(self.jobid, command)
+    vim.fn.chansend(self.job, command)
+end
+
+function Proc:stop()
+    vim.fn.jobstop(self.job)
 end
 
 local Builder = {}
