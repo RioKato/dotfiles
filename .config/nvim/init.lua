@@ -259,7 +259,11 @@ function init.debug()
 
     local function start()
         local args = vim.fn.input("TermdebugCommand ", "", "file")
-        vim.cmd(string.format("TermdebugCommand %s", args))
+        if args == "" then
+            vim.cmd("Termdebug")
+        else
+            vim.cmd(string.format("TermdebugCommand %s", args))
+        end
     end
 
     local keys = {
