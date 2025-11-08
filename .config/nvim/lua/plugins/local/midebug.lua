@@ -145,7 +145,7 @@ function Parser.parseStr(text, start)
     end
 end
 
-function Parser.parsePair(text, key, start)
+function Parser.getValue(text, key, start)
     local ok, tail = string.find(text, string.format('%s="', key), start, true)
 
     if ok then
@@ -161,11 +161,21 @@ function Window:new()
     return obj
 end
 
-function Window:onExit(proc, message) end
+function Window:onExit(proc, message)
+    local fullname = Parser.getValue(message, "fullname")
+
+    local line = Parser.getValue(message, "line")
+    line = line and tonumber(line)
+
+    local addr = Parser.getValue(message, "addr")
+    addr = addr and tonumber(line)
+end
 
 function Window:onStop(proc, message) end
 
 function Window:onRun(proc, message) end
+
+function Window:handleCursor(proc, message) end
 
 function Window:handleBreakpoint(proc, message) end
 
