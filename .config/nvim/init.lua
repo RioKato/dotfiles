@@ -177,6 +177,73 @@ function init.lsp()
     util.assign_keys(keys)
 end
 
+function init.debug()
+    vim.cmd.packadd("termdebug")
+
+    -- stylua: ignore start
+    local command_add_args = {
+        gdb = function(cmd, pty)
+            return {
+                "gdb",
+                "-tty", pty,
+                "-quiet",
+                "-iex", "set pagination off",
+                "-iex", "set mi-async on",
+                "-ex", "echo startupdone\n",
+            }
+        end,
+        rr = function(cmd, pty)
+            return {
+                "rr", "replay",
+                "--tty", pty,
+                "--",
+                "-quiet",
+                "-iex", "set pagination off",
+                "-iex", "set mi-async on",
+                "-ex", "echo startupdone\n",
+            }
+        end,
+    }
+    -- stylua: ignore end
+
+    vim.g.termdebug_config = {
+        command = { "gdb" },
+        command_add_args = command_add_args.gdb,
+        map_K = 0,
+        map_minus = 0,
+        map_plus = 0,
+        disasm_window = 1,
+        variables_window = 1,
+    }
+
+    local function choice()
+        local commands = {
+            { { "gdb" }, command_add_args.gdb },
+            { { "rr" }, command_add_args.rr },
+        }
+
+        vim.ui.select(commands, {
+            prompt = "Commands",
+            format_item = function(item)
+                return item[1][1]
+            end,
+        }, function(item)
+            if item then
+                local termdebug_config = vim.g.termdebug_config
+                termdebug_config.command = item[1]
+                termdebug_config.command_add_args = item[2]
+                vim.g.termdebug_config = termdebug_config
+            end
+        end)
+    end
+
+    local keys = {
+        { "n", "<leader>dr", choice },
+    }
+
+    util.assign_keys(keys)
+end
+
 function init.plugins()
     vim.pack.add({
         "https://github.com/folke/lazy.nvim",
@@ -194,6 +261,7 @@ function init:all()
     self.appearance()
     self.quickfix()
     self.lsp()
+    self.debug()
     self.plugins()
 end
 
