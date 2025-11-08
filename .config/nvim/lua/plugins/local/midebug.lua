@@ -13,11 +13,7 @@ function Proc:new(builder)
                 buffer = table.remove(lines)
 
                 vim.iter(lines):each(function(line)
-                    vim.iter(builder.handlers):find(function(event, callback)
-                        if line:sub(1, #event) == event then
-                            return callback(obj, line)
-                        end
-                    end)
+                    builder:handle(line)
                 end)
             end
         end,
@@ -48,6 +44,14 @@ end
 
 function Builder:on(event, callback)
     self.handlers[event] = callback
+end
+
+function Builder:handle(message)
+    vim.iter(self.handlers):find(function(event, callback)
+        if message:sub(1, #event) == event then
+            return callback(obj, message)
+        end
+    end)
 end
 
 function Builder:build()
