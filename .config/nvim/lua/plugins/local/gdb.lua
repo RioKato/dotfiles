@@ -167,7 +167,7 @@ function MI.argsp(text, start)
 end
 
 function MI.cmdp(text, start)
-    local parser = Parser.andp(Parser.regexp("^[^,]+"), Parser.tryp(Parser.andp(Parser.strp(","), MI.argsp)))
+    local parser = Parser.andp(Parser.regexp("^[=*^&][^,]+"), Parser.tryp(Parser.andp(Parser.strp(","), MI.argsp)))
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -238,7 +238,7 @@ function Gdb:run(command, handler)
                     end
 
                     result.raw = line
-                    print(vim.inspect(result))
+                    handler:call(result)
                 end)
             end
         end,
@@ -259,11 +259,23 @@ function Gdb:stop()
 end
 
 ---------------------------------------------------------------------------------------------------
+local Handler = {}
 
-local gdb = Gdb.new()
-gdb:run({ "gdb", "-i=mi" }, nil)
--- local text = '=cmd-param-changed,param="style enabled",value="off"'
--- local text = 'abc'
--- local text = '~"abc"'
--- local ok, event, args = MI.parse(text)
--- print(event, vim.inspect(args))
+function Handler.new()
+    local self = {}
+    setmetatable(self, { __index = Handler })
+    return self
+end
+
+function Handler:call(mi)
+    print(vim.inspect(mi))
+end
+
+---------------------------------------------------------------------------------------------------
+
+local function test()
+    local gdb = Gdb.new()
+    gdb:run({ "gdb", "-i=mi" }, Handler.new())
+end
+
+test()

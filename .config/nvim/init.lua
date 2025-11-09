@@ -177,109 +177,6 @@ function init.lsp()
     util.assign_keys(keys)
 end
 
-function init.debug()
-    vim.cmd.packadd("termdebug")
-
-    local termdebug_config = {
-        gdb = {
-            command = { "gdb" },
-            command_add_args = function(cmd, pty)
-                -- stylua: ignore start
-                return {
-                    "gdb",
-                    "-tty", pty,
-                    "-quiet",
-                    "-iex", "set pagination off",
-                    "-iex", "set mi-async on",
-                    "-ex", "echo startupdone\n",
-                }
-                -- stylua: ignore end
-            end,
-        },
-        rr = {
-            command = { "rr" },
-            command_add_args = function(cmd, pty)
-                -- stylua: ignore start
-                return {
-                    "rr", "replay",
-                    "--tty", pty,
-                    "--",
-                    "-quiet",
-                    "-iex", "set pagination off",
-                    "-iex", "set mi-async on",
-                    "-ex", "echo startupdone\n",
-                }
-                -- stylua: ignore end
-            end,
-        },
-    }
-
-    vim.g.termdebug_config = {
-        command = termdebug_config.gdb.command,
-        command_add_args = termdebug_config.gdb.command_add_args,
-        map_K = 0,
-        map_minus = 0,
-        map_plus = 0,
-        disasm_window = 1,
-        variables_window = 1,
-        popup = 0,
-    }
-
-    local function select_debugger()
-        local items = vim.iter(termdebug_config)
-            :map(function(_, value)
-                return value
-            end)
-            :totable()
-
-        vim.ui.select(items, {
-            prompt = "Debugger",
-            format_item = function(item)
-                return vim.iter(item.command):join(" ")
-            end,
-        }, function(item)
-            if item then
-                local termdebug_config = vim.g.termdebug_config
-                termdebug_config.command = item.command
-                termdebug_config.command_add_args = item.command_add_args
-                vim.g.termdebug_config = termdebug_config
-            end
-        end)
-    end
-
-    local function select_window()
-        local items = { "Gdb", "Source", "Program", "Asm", "Var" }
-
-        vim.ui.select(items, {
-            prompt = "Window",
-        }, function(item)
-            vim.cmd(item)
-        end)
-    end
-
-    local function start()
-        local args = vim.fn.input("TermdebugCommand ", "", "file")
-        local command = args == "" and "Termdebug" or string.format("TermdebugCommand %s", args)
-        vim.cmd(command)
-    end
-
-    local keys = {
-        { "n", "<leader>Dd", select_window },
-        { "n", "<leader>DD", select_debugger },
-        { "n", "<leader>Da", start },
-        { "n", "<leader>Dr", "<cmd>Run<cr>" },
-        { "n", "<leader>DR", "<cmd>Stop<cr>" },
-        { "n", "<leader>Db", "<cmd>Break<cr>" },
-        { "n", "<leader>DB", "<cmd>Clear<cr>" },
-        { "n", "<leader>Ds", "<cmd>Step<cr>" },
-        { "n", "<leader>Dn", "<cmd>Over<cr>" },
-        { "n", "<leader>Dc", "<cmd>Continue<cr>" },
-        { "n", "<leader>Df", "<cmd>Finish<cr>" },
-    }
-
-    util.assign_keys(keys)
-end
-
 function init.plugins()
     vim.pack.add({
         "https://github.com/folke/lazy.nvim",
@@ -297,7 +194,6 @@ function init:all()
     self.appearance()
     self.quickfix()
     self.lsp()
-    self.debug()
     self.plugins()
 end
 
