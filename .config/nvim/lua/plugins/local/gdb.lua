@@ -238,7 +238,7 @@ function Gdb:run(command, handler)
                     end
 
                     result.raw = line
-                    handler:call(result)
+                    handler:call(self, result)
                 end)
             end
         end,
@@ -262,20 +262,55 @@ end
 local Handler = {}
 
 function Handler.new()
-    local self = {}
+    local self = { inner = {} }
     setmetatable(self, { __index = Handler })
     return self
 end
 
-function Handler:call(mi)
-    print(vim.inspect(mi))
+function Handler:on(event, callback)
+    self.inner[event] = callback
+end
+
+function Handler:handle(gdb, event, args)
+    local callback = self.inner[event]
+
+    if callback then
+        callback(gdb, event, args)
+        return true
+    else
+        return false
+    end
+end
+
+function Handler:call(gdb, mi)
+    local event = ""
+    local args = nil
+
+    if mi.command then
+        event = mi.command[1]
+        args = mi.command[2]
+    end
+
+    if mi.message then
+        event = "MESSAGE"
+        args = mi.message
+    end
+
+    if not self:handle(gdb, event, args) then
+        self:handle(gdb, "UNHANDLED", mi)
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
 
 local function test()
+    local handler = Handler.new()
+    handler:on("UNHANDLED", function(gdb, event, args)
+        print(event, vim.inspect(args))
+    end)
+
     local gdb = Gdb.new()
-    gdb:run({ "gdb", "-i=mi" }, Handler.new())
+    gdb:run({ "gdb", "-i=mi" }, handler)
 end
 
 test()
