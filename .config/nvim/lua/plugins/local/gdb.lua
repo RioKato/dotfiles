@@ -44,16 +44,14 @@ function Parser.repp(parser)
         local i = start
         local seq = {}
 
-        while true do
+        repeat
             local ok, next, result = parser(text, i)
 
             if ok then
                 i = next
                 table.insert(seq, result)
-            else
-                break
             end
-        end
+        until not ok
 
         return true, i, seq
     end
