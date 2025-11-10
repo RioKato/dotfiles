@@ -36,7 +36,6 @@ return {
                 "zig",
                 "latex",
                 "hurl",
-                "debug",
             },
         },
 
