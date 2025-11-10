@@ -305,7 +305,13 @@ function Prompt.setup(listener)
     vim.bo[buf].buftype = "prompt"
 
     listener:on("MESSAGE", function(gdb, text)
-        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, vim.split(text, "\n"))
+        local lines = vim.split(text, "\n")
+        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
+    end)
+
+    listener:on("^error", function(gdb, info)
+        local lines = vim.split(info.msg, "\n")
+        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
     end)
 
     return buf
@@ -314,6 +320,10 @@ end
 ---------------------------------------------------------------------------------------------------
 local function test()
     local listener = Listener.new()
+    -- listener:on("", function(gdb, text)
+    --   print(vim.inspect(text))
+    -- end)
+
     local buf = Prompt.setup(listener)
     local gdb = Gdb.new()
 
