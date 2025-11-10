@@ -233,7 +233,7 @@ function Gdb:run(command, listener)
                     end
 
                     result.raw = line
-                    listener:call(self, result)
+                    listener:listen(self, result)
                 end)
             end
         end,
@@ -266,23 +266,12 @@ function Listener:on(event, callback)
     self.callback[event] = callback
 end
 
-function Listener:listen(gdb, event, info)
-    local callback = self.callback[event]
-
-    if callback then
-        callback(gdb, event, info)
-        return true
-    else
-        return false
-    end
-end
-
-function Listener:call(gdb, mi)
+function Listener:listen(gdb, mi)
     local event = ""
-    local info = nil
+    local info = mi
 
     if mi.command then
-        event = mi.command.evemt
+        event = mi.command.event
         info = mi.command.info
     end
 
@@ -296,8 +285,15 @@ function Listener:call(gdb, mi)
         info = mi.ignore
     end
 
-    if not self:listen(gdb, event, info) then
-        self:listen(gdb, "", mi)
+    if not self.callback[event] then
+        event = ""
+        info = mi
+    end
+
+    local callback = self.callback[event]
+
+    if callback then
+        callback(gdb, event, info)
     end
 end
 
