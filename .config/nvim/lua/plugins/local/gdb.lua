@@ -1,7 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 local Parser = {}
 
-function Parser.andp(...)
+function Parser.seq(...)
     local args = { ... }
 
     return function(text, start)
@@ -23,7 +23,7 @@ function Parser.andp(...)
     end
 end
 
-function Parser.orp(...)
+function Parser.br(...)
     local args = { ... }
 
     return function(text, start)
@@ -39,7 +39,7 @@ function Parser.orp(...)
     end
 end
 
-function Parser.repp(parser)
+function Parser.rep(parser)
     return function(text, start)
         local i = start
         local seq = {}
@@ -57,7 +57,7 @@ function Parser.repp(parser)
     end
 end
 
-function Parser.tryp(parser)
+function Parser.try(parser)
     return function(text, start)
         local ok, next, result = parser(text, start)
 
@@ -69,7 +69,7 @@ function Parser.tryp(parser)
     end
 end
 
-function Parser.strp(str)
+function Parser.str(str)
     return function(text, start)
         local next = start + #str
 
@@ -81,7 +81,7 @@ function Parser.strp(str)
     end
 end
 
-function Parser.regexp(regex)
+function Parser.regex(regex)
     return function(text, start)
         local i, j = text:find(regex, start)
 
@@ -96,12 +96,9 @@ end
 ---------------------------------------------------------------------------------------------------
 local MI = {}
 
-function MI.strp(text, start)
-    local parser = Parser.andp(
-        Parser.strp('"'),
-        Parser.repp(Parser.orp(Parser.regexp("^\\."), Parser.regexp('^[^"]'))),
-        Parser.strp('"')
-    )
+function MI.str(text, start)
+    local parser =
+        Parser.seq(Parser.str('"'), Parser.rep(Parser.br(Parser.regex("^\\."), Parser.regex('^[^"]'))), Parser.str('"'))
 
     local ok, next, result = parser(text, start)
 
@@ -122,8 +119,8 @@ function MI.strp(text, start)
     return ok, next, result
 end
 
-function MI.pairp(text, start)
-    local parser = Parser.andp(Parser.regexp("^[^=]+"), Parser.strp("="), Parser.orp(MI.strp, MI.objp))
+function MI.pair(text, start)
+    local parser = Parser.seq(Parser.regex("^[^=]+"), Parser.str("="), Parser.br(MI.str, MI.obj))
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -133,8 +130,8 @@ function MI.pairp(text, start)
     return ok, next, result
 end
 
-function MI.objp(text, start)
-    local parser = Parser.andp(Parser.strp("{"), MI.argsp, Parser.strp("}"))
+function MI.obj(text, start)
+    local parser = Parser.seq(Parser.str("{"), MI.args, Parser.str("}"))
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -144,15 +141,15 @@ function MI.objp(text, start)
     return ok, next, result
 end
 
-function MI.argsp(text, start)
-    local parser = Parser.repp(Parser.andp(MI.pairp, Parser.tryp(Parser.strp(","))))
+function MI.args(text, start)
+    local parser = Parser.rep(Parser.seq(MI.pair, Parser.try(Parser.str(","))))
     local ok, next, result = parser(text, start)
 
     if ok then
         result = vim.iter(result):fold({}, function(left, right)
             local key = right[1][1]
             local value = right[1][2]
-            left[right] = value
+            left[key] = value
             return left
         end)
     end
@@ -160,8 +157,8 @@ function MI.argsp(text, start)
     return ok, next, result
 end
 
-function MI.cmdp(text, start)
-    local parser = Parser.andp(Parser.regexp("^[=*^&][^,]+"), Parser.tryp(Parser.andp(Parser.strp(","), MI.argsp)))
+function MI.cmd(text, start)
+    local parser = Parser.seq(Parser.regex("^[=*^&][^,]+"), Parser.try(Parser.seq(Parser.str(","), MI.args)))
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -176,8 +173,8 @@ function MI.cmdp(text, start)
     return ok, next, result
 end
 
-function MI.msgp(text, start)
-    local parser = Parser.andp(Parser.strp("~"), MI.strp)
+function MI.msg(text, start)
+    local parser = Parser.seq(Parser.str("~"), MI.str)
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -187,8 +184,8 @@ function MI.msgp(text, start)
     return ok, next, result
 end
 
-function MI.ignorep(text, start)
-    local parser = Parser.strp("(gdb) ")
+function MI.ignore(text, start)
+    local parser = Parser.str("(gdb) ")
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -198,10 +195,10 @@ function MI.ignorep(text, start)
     return ok, next, result
 end
 
-MI.beginp = Parser.orp(MI.msgp, MI.ignorep, MI.cmdp)
+MI.begin = Parser.br(MI.msg, MI.ignore, MI.cmd)
 
 function MI.parse(text)
-    local ok, next, result = MI.beginp(text, 1)
+    local ok, next, result = MI.begin(text, 1)
 
     if ok then
         result.rest = text:sub(next)
