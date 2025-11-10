@@ -242,7 +242,7 @@ end
 
 function Gdb:send(command)
     if self.job then
-        vim.fn.chansend(self.job, command)
+        vim.fn.chansend(self.job, command .. "\n")
     end
 end
 
@@ -298,29 +298,30 @@ function Listener:listen(gdb, mi)
 end
 
 ---------------------------------------------------------------------------------------------------
-function setup(listener)
+local Prompt = {}
+
+function Prompt.setup(listener)
     local buf = vim.api.nvim_create_buf(true, true)
     vim.bo[buf].buftype = "prompt"
-
-    vim.fn.prompt_setcallback(buf, function(line)
-        vim.notify(line)
-    end)
 
     listener:on("MESSAGE", function(gdb, text)
         vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, vim.split(text, "\n"))
     end)
+
+    return buf
 end
 
 ---------------------------------------------------------------------------------------------------
 local function test()
     local listener = Listener.new()
-    setup(listener)
-
-    -- listener:on("", function(gdb, event, args)
-    --     print(event, vim.inspect(args))
-    -- end)
-
+    local buf = Prompt.setup(listener)
     local gdb = Gdb.new()
+
+    vim.fn.prompt_setcallback(buf, function(line)
+        vim.notify(line)
+        gdb:send(line)
+    end)
+
     gdb:run({ "gdb", "-i=mi" }, listener)
 end
 
