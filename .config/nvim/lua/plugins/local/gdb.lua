@@ -293,17 +293,32 @@ function Listener:listen(gdb, mi)
     local callback = self.callback[event]
 
     if callback then
-        callback(gdb, event, info)
+        callback(gdb, info, event)
     end
 end
 
 ---------------------------------------------------------------------------------------------------
+function setup(listener)
+    local buf = vim.api.nvim_create_buf(true, true)
+    local term = vim.api.nvim_open_term(buf, {
+        on_input = function(_, _, _, data)
+            vim.notify(data)
+        end,
+    })
 
+    listener:on("MESSAGE", function(gdb, info)
+        vim.fn.chansend(term, info)
+    end)
+end
+
+---------------------------------------------------------------------------------------------------
 local function test()
     local listener = Listener.new()
-    listener:on("", function(gdb, event, args)
-        print(event, vim.inspect(args))
-    end)
+    setup(listener)
+
+    -- listener:on("", function(gdb, event, args)
+    --     print(event, vim.inspect(args))
+    -- end)
 
     local gdb = Gdb.new()
     gdb:run({ "gdb", "-i=mi" }, listener)
