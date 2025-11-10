@@ -183,18 +183,18 @@ function MI.msg(text, start)
     return ok, next, result
 end
 
-function MI.ignore(text, start)
-    local parser = Parser.str("(gdb) ")
+function MI.inputRequest(text, start)
+    local parser = Parser.str("(gdb)")
     local ok, next, result = parser(text, start)
 
     if ok then
-        result = { ignore = result }
+        result = { inputRequest = result }
     end
 
     return ok, next, result
 end
 
-MI.begin = Parser.br(MI.ignore, MI.cmd, MI.msg)
+MI.begin = Parser.br(MI.inputRequest, MI.cmd, MI.msg)
 
 function MI.parse(text)
     local ok, next, result = MI.begin(text, 1)
@@ -280,9 +280,9 @@ function Listener:listen(gdb, mi)
         info = mi.message
     end
 
-    if mi.ignore then
-        event = "IGNORE"
-        info = mi.ignore
+    if mi.inputRequest then
+        event = "INPUT_REQUEST"
+        info = mi.inputRequest
     end
 
     if not self.callback[event] then
@@ -300,7 +300,7 @@ end
 ---------------------------------------------------------------------------------------------------
 local Prompt = {}
 
-function Prompt.setup(listener)
+function Prompt.setup(gdb, listener)
     local buf = vim.api.nvim_create_buf(true, true)
     vim.bo[buf].buftype = "prompt"
 
@@ -314,7 +314,13 @@ function Prompt.setup(listener)
         vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
     end)
 
-    return buf
+    listener:on("INPUT_REQUEST", function(gdb, info)
+        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, { "", "" })
+    end)
+
+    vim.fn.prompt_setcallback(buf, function(line)
+        gdb:send(line)
+    end)
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -324,13 +330,8 @@ local function test()
     --   print(vim.inspect(text))
     -- end)
 
-    local buf = Prompt.setup(listener)
     local gdb = Gdb.new()
-
-    vim.fn.prompt_setcallback(buf, function(line)
-        vim.notify(line)
-        gdb:send(line)
-    end)
+    local buf = Prompt.setup(gdb, listener)
 
     gdb:run({ "gdb", "-i=mi" }, listener)
 end
