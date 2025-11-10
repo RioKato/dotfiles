@@ -149,16 +149,12 @@ function MI.argsp(text, start)
     local ok, next, result = parser(text, start)
 
     if ok then
-        result = vim.iter(result)
-            :map(function(pair)
-                local key = pair[1][1]
-                local value = pair[1][2]
-                return { key, value }
-            end)
-            :fold({}, function(left, right)
-                left[right[1]] = right[2]
-                return left
-            end)
+        result = vim.iter(result):fold({}, function(left, right)
+            local key = right[1][1]
+            local value = right[1][2]
+            left[right] = value
+            return left
+        end)
     end
 
     return ok, next, result
@@ -169,7 +165,12 @@ function MI.cmdp(text, start)
     local ok, next, result = parser(text, start)
 
     if ok then
-        result = { command = { result[1], result[2] and result[2][2] or {} } }
+        result = {
+            command = {
+                event = result[1],
+                info = result[2] and result[2][2] or {},
+            },
+        }
     end
 
     return ok, next, result
@@ -269,11 +270,11 @@ function Handler:on(event, callback)
     self.inner[event] = callback
 end
 
-function Handler:handle(gdb, event, args)
+function Handler:handle(gdb, event, info)
     local callback = self.inner[event]
 
     if callback then
-        callback(gdb, event, args)
+        callback(gdb, event, info)
         return true
     else
         return false
@@ -282,19 +283,19 @@ end
 
 function Handler:call(gdb, mi)
     local event = ""
-    local args = nil
+    local info = nil
 
     if mi.command then
-        event = mi.command[1]
-        args = mi.command[2]
+        event = mi.command.evemt
+        info = mi.command.info
     end
 
     if mi.message then
         event = "MESSAGE"
-        args = mi.message
+        info = mi.message
     end
 
-    if not self:handle(gdb, event, args) then
+    if not self:handle(gdb, event, info) then
         self:handle(gdb, "UNHANDLED", mi)
     end
 end
