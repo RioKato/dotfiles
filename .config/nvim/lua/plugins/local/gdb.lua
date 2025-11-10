@@ -315,8 +315,12 @@ function Prompt.setup(gdb, listener)
     end)
 
     listener:on("INPUT_REQUEST", function(gdb, info)
-        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, { "", "" })
+        if vim.api.nvim_buf_get_lines(buf, -2, -1, true)[1] ~= "" then
+            vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, { "", "" })
+        end
     end)
+
+    vim.fn.prompt_setprompt(buf, "")
 
     vim.fn.prompt_setcallback(buf, function(line)
         gdb:send(line)
