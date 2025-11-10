@@ -300,14 +300,14 @@ end
 ---------------------------------------------------------------------------------------------------
 function setup(listener)
     local buf = vim.api.nvim_create_buf(true, true)
-    local term = vim.api.nvim_open_term(buf, {
-        on_input = function(_, _, _, data)
-            vim.notify(data)
-        end,
-    })
+    vim.bo[buf].buftype = "prompt"
 
-    listener:on("MESSAGE", function(gdb, info)
-        vim.fn.chansend(term, info)
+    vim.fn.prompt_setcallback(buf, function(line)
+        vim.notify(line)
+    end)
+
+    listener:on("MESSAGE", function(gdb, text)
+        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, vim.split(text, "\n"))
     end)
 end
 
