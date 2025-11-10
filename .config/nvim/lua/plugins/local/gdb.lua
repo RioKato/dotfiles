@@ -162,10 +162,8 @@ function MI.cmd(text, start)
 
     if ok then
         result = {
-            command = {
-                event = result[1],
-                info = result[2] and result[2][2] or {},
-            },
+            event = result[1],
+            info = result[2] and result[2][2] or {},
         }
     end
 
@@ -183,18 +181,18 @@ function MI.msg(text, start)
     return ok, next, result
 end
 
-function MI.inputRequest(text, start)
+function MI.ireq(text, start)
     local parser = Parser.str("(gdb)")
     local ok, next, result = parser(text, start)
 
     if ok then
-        result = { inputRequest = result }
+        result = { ireq = result }
     end
 
     return ok, next, result
 end
 
-MI.begin = Parser.br(MI.inputRequest, MI.cmd, MI.msg)
+MI.begin = Parser.br(MI.ireq, MI.cmd, MI.msg)
 
 function MI.parse(text)
     local ok, next, result = MI.begin(text, 1)
@@ -211,12 +209,12 @@ end
 local Gdb = {}
 
 function Gdb.new()
-    local self = {}
+    local self = { listener = {} }
     setmetatable(self, { __index = Gdb })
     return self
 end
 
-function Gdb:run(command, listener)
+function Gdb:run(command)
     local buffer = ""
 
     self.job = vim.fn.jobstart(command, {
@@ -233,7 +231,22 @@ function Gdb:run(command, listener)
                     end
 
                     result.raw = line
-                    listener:listen(self, result)
+
+                    local event = result.event or ""
+
+                    if result.message then
+                        event = "message"
+                    end
+
+                    if result.ireq then
+                        event = "input_request"
+                    end
+
+                    local callback = self.listener[event]
+
+                    if callback then
+                        callback(result, event)
+                    end
                 end)
             end
         end,
@@ -253,91 +266,45 @@ function Gdb:stop()
     end
 end
 
----------------------------------------------------------------------------------------------------
-local Listener = {}
-
-function Listener.new()
-    local self = { callback = {} }
-    setmetatable(self, { __index = Listener })
-    return self
+function Gdb:on(event, callback)
+    self.listener[event] = callback
 end
 
-function Listener:on(event, callback)
-    self.callback[event] = callback
-end
-
-function Listener:listen(gdb, mi)
-    local event = ""
-    local info = mi
-
-    if mi.command then
-        event = mi.command.event
-        info = mi.command.info
-    end
-
-    if mi.message then
-        event = "MESSAGE"
-        info = mi.message
-    end
-
-    if mi.inputRequest then
-        event = "INPUT_REQUEST"
-        info = mi.inputRequest
-    end
-
-    if not self.callback[event] then
-        event = ""
-        info = mi
-    end
-
-    local callback = self.callback[event]
-
-    if callback then
-        callback(gdb, info, event)
-    end
-end
-
----------------------------------------------------------------------------------------------------
-local Prompt = {}
-
-function Prompt.setup(gdb, listener)
+function Gdb:setup()
     local buf = vim.api.nvim_create_buf(true, true)
     vim.bo[buf].buftype = "prompt"
 
-    listener:on("MESSAGE", function(gdb, text)
-        local lines = vim.split(text, "\n")
+    vim.fn.prompt_setprompt(buf, "")
+
+    vim.fn.prompt_setcallback(buf, function(line)
+        self:send(line)
+    end)
+
+    self:on("^error", function(info)
+        local lines = vim.split(info.info.msg, "\n")
         vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
     end)
 
-    listener:on("^error", function(gdb, info)
-        local lines = vim.split(info.msg, "\n")
+    self:on("message", function(info)
+        local lines = vim.split(info.message, "\n")
         vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
     end)
 
-    listener:on("INPUT_REQUEST", function(gdb, info)
+    self:on("input_request", function()
         if vim.api.nvim_buf_get_lines(buf, -2, -1, true)[1] ~= "" then
             vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, { "", "" })
         end
     end)
 
-    vim.fn.prompt_setprompt(buf, "")
-
-    vim.fn.prompt_setcallback(buf, function(line)
-        gdb:send(line)
-    end)
+    return buf
 end
 
 ---------------------------------------------------------------------------------------------------
 local function test()
-    local listener = Listener.new()
-    -- listener:on("", function(gdb, text)
-    --   print(vim.inspect(text))
-    -- end)
-
     local gdb = Gdb.new()
-    local buf = Prompt.setup(gdb, listener)
+    local buf = gdb:setup()
 
-    gdb:run({ "gdb", "-i=mi" }, listener)
+    gdb:run({ "gdb", "-i=mi" })
 end
 
 test()
