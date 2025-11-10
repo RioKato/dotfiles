@@ -194,7 +194,7 @@ function MI.ignore(text, start)
     return ok, next, result
 end
 
-MI.begin = Parser.br(MI.msg, MI.ignore, MI.cmd)
+MI.begin = Parser.br(MI.ignore, MI.cmd, MI.msg)
 
 function MI.parse(text)
     local ok, next, result = MI.begin(text, 1)
@@ -216,7 +216,7 @@ function Gdb.new()
     return self
 end
 
-function Gdb:run(command, handler)
+function Gdb:run(command, listener)
     local buffer = ""
 
     self.job = vim.fn.jobstart(command, {
@@ -233,7 +233,7 @@ function Gdb:run(command, handler)
                     end
 
                     result.raw = line
-                    handler:call(self, result)
+                    listener:call(self, result)
                 end)
             end
         end,
@@ -254,20 +254,20 @@ function Gdb:stop()
 end
 
 ---------------------------------------------------------------------------------------------------
-local Handler = {}
+local Listener = {}
 
-function Handler.new()
-    local self = { inner = {} }
-    setmetatable(self, { __index = Handler })
+function Listener.new()
+    local self = { callback = {} }
+    setmetatable(self, { __index = Listener })
     return self
 end
 
-function Handler:on(event, callback)
-    self.inner[event] = callback
+function Listener:on(event, callback)
+    self.callback[event] = callback
 end
 
-function Handler:handle(gdb, event, info)
-    local callback = self.inner[event]
+function Listener:listen(gdb, event, info)
+    local callback = self.callback[event]
 
     if callback then
         callback(gdb, event, info)
@@ -277,7 +277,7 @@ function Handler:handle(gdb, event, info)
     end
 end
 
-function Handler:call(gdb, mi)
+function Listener:call(gdb, mi)
     local event = ""
     local info = nil
 
@@ -291,21 +291,26 @@ function Handler:call(gdb, mi)
         info = mi.message
     end
 
-    if not self:handle(gdb, event, info) then
-        self:handle(gdb, "UNHANDLED", mi)
+    if mi.ignore then
+        event = "IGNORE"
+        info = mi.ignore
+    end
+
+    if not self:listen(gdb, event, info) then
+        self:listen(gdb, "", mi)
     end
 end
 
 ---------------------------------------------------------------------------------------------------
 
 local function test()
-    local handler = Handler.new()
-    handler:on("UNHANDLED", function(gdb, event, args)
+    local listener = Listener.new()
+    listener:on("", function(gdb, event, args)
         print(event, vim.inspect(args))
     end)
 
     local gdb = Gdb.new()
-    gdb:run({ "gdb", "-i=mi" }, handler)
+    gdb:run({ "gdb", "-i=mi" }, listener)
 end
 
 test()
