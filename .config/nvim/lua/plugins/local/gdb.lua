@@ -99,7 +99,6 @@ local MI = {}
 function MI.str(text, start)
     local parser =
         Parser.seq(Parser.str('"'), Parser.rep(Parser.br(Parser.regex("^\\."), Parser.regex('^[^"]'))), Parser.str('"'))
-
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -120,7 +119,7 @@ function MI.str(text, start)
 end
 
 function MI.pair(text, start)
-    local parser = Parser.seq(Parser.regex("^[^=]+"), Parser.str("="), Parser.br(MI.str, MI.obj))
+    local parser = Parser.seq(Parser.regex("^[^=]+"), Parser.str("="), Parser.br(MI.str, MI.dict))
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -130,8 +129,8 @@ function MI.pair(text, start)
     return ok, next, result
 end
 
-function MI.obj(text, start)
-    local parser = Parser.seq(Parser.str("{"), MI.args, Parser.str("}"))
+function MI.dict(text, start)
+    local parser = Parser.seq(Parser.str("{"), MI.inner, Parser.str("}"))
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -141,7 +140,7 @@ function MI.obj(text, start)
     return ok, next, result
 end
 
-function MI.args(text, start)
+function MI.inner(text, start)
     local parser = Parser.rep(Parser.seq(MI.pair, Parser.try(Parser.str(","))))
     local ok, next, result = parser(text, start)
 
@@ -158,7 +157,7 @@ function MI.args(text, start)
 end
 
 function MI.cmd(text, start)
-    local parser = Parser.seq(Parser.regex("^[=*^&][^,]+"), Parser.try(Parser.seq(Parser.str(","), MI.args)))
+    local parser = Parser.seq(Parser.regex("^[=*^&][^,]+"), Parser.try(Parser.seq(Parser.str(","), MI.inner)))
     local ok, next, result = parser(text, start)
 
     if ok then
