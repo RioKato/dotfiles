@@ -156,7 +156,7 @@ function MI.inner(text, start)
     return ok, next, result
 end
 
-function MI.cmd(text, start)
+function MI.event(text, start)
     local parser = Parser.seq(Parser.regex("^[=*^&][^,]+"), Parser.try(Parser.seq(Parser.str(","), MI.inner)))
     local ok, next, result = parser(text, start)
 
@@ -175,7 +175,7 @@ function MI.msg(text, start)
     local ok, next, result = parser(text, start)
 
     if ok then
-        result = { message = result[2] }
+        result = { msg = result[2] }
     end
 
     return ok, next, result
@@ -192,7 +192,7 @@ function MI.ireq(text, start)
     return ok, next, result
 end
 
-MI.begin = Parser.br(MI.ireq, MI.cmd, MI.msg)
+MI.begin = Parser.br(MI.ireq, MI.event, MI.msg)
 
 function MI.parse(text)
     local ok, next, result = MI.begin(text, 1)
@@ -215,13 +215,13 @@ function Gdb.new()
 end
 
 function Gdb:run(command)
-    local buffer = ""
+    local buf = ""
 
-    self.job = vim.fn.jobstart(command, {
+    self.jobid = vim.fn.jobstart(command, {
         on_stdout = function(_, lines, _)
             if #lines ~= 0 then
-                lines[1] = buffer .. lines[1]
-                buffer = table.remove(lines)
+                lines[1] = buf .. lines[1]
+                buf = table.remove(lines)
 
                 vim.iter(lines):each(function(line)
                     local ok, result = MI.parse(line)
@@ -234,12 +234,12 @@ function Gdb:run(command)
 
                     local event = result.event or ""
 
-                    if result.message then
-                        event = "message"
+                    if result.msg then
+                        event = "msg"
                     end
 
                     if result.ireq then
-                        event = "input_request"
+                        event = "ireq"
                     end
 
                     local callback = self.listener[event]
@@ -254,15 +254,15 @@ function Gdb:run(command)
 end
 
 function Gdb:send(command)
-    if self.job then
-        vim.fn.chansend(self.job, command .. "\n")
+    if self.jobid then
+        vim.fn.chansend(self.jobid, command .. "\n")
     end
 end
 
 function Gdb:stop()
-    if self.job then
-        vim.fn.jobstop(self.job)
-        self.job = nil
+    if self.jobid then
+        vim.fn.jobstop(self.jobid)
+        self.jobid = nil
     end
 end
 
@@ -271,32 +271,32 @@ function Gdb:on(event, callback)
 end
 
 function Gdb:setup()
-    local buf = vim.api.nvim_create_buf(true, true)
-    vim.bo[buf].buftype = "prompt"
+    local bufid = vim.api.nvim_create_buf(true, true)
+    vim.bo[bufid].buftype = "prompt"
 
-    vim.fn.prompt_setprompt(buf, "")
+    vim.fn.prompt_setprompt(bufid, "")
 
-    vim.fn.prompt_setcallback(buf, function(line)
+    vim.fn.prompt_setcallback(bufid, function(line)
         self:send(line)
     end)
 
     self:on("^error", function(info)
         local lines = vim.split(info.info.msg, "\n")
-        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
+        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("message", function(info)
-        local lines = vim.split(info.message, "\n")
-        vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, lines)
+    self:on("msg", function(info)
+        local lines = vim.split(info.msg, "\n")
+        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("input_request", function()
-        if vim.api.nvim_buf_get_lines(buf, -2, -1, true)[1] ~= "" then
-            vim.api.nvim_buf_set_text(buf, -1, -1, -1, -1, { "", "" })
+    self:on("ireq", function()
+        if vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
+            vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, { "", "" })
         end
     end)
 
-    return buf
+    return bufid
 end
 
 ---------------------------------------------------------------------------------------------------
