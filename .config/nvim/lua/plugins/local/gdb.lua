@@ -232,15 +232,7 @@ function Gdb:run(command)
 
                     result.raw = line
 
-                    local event = result.event or ""
-
-                    if result.msg then
-                        event = "msg"
-                    end
-
-                    if result.ireq then
-                        event = "ireq"
-                    end
+                    local event = result.event or (result.msg and "msg") or (result.ireq and "ireq") or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
@@ -272,7 +264,7 @@ function Gdb:on(event, callback)
     table.insert(self.listener[event], callback)
 end
 
-function Gdb:setup()
+function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
 
@@ -304,7 +296,7 @@ end
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
-    local buf = gdb:setup()
+    local bufid = gdb:prompt()
 
     gdb:run({ "gdb", "-i=mi" })
 end
