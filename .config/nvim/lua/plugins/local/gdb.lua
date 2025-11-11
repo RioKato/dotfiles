@@ -181,18 +181,18 @@ function MI.msg(text, start)
     return ok, next, result
 end
 
-function MI.ireq(text, start)
+function MI.done(text, start)
     local parser = Parser.str("(gdb)")
     local ok, next, result = parser(text, start)
 
     if ok then
-        result = { ireq = result }
+        result = { done = result }
     end
 
     return ok, next, result
 end
 
-MI.begin = Parser.br(MI.ireq, MI.event, MI.msg)
+MI.begin = Parser.br(MI.done, MI.event, MI.msg)
 
 function MI.parse(text)
     local ok, next, result = MI.begin(text, 1)
@@ -232,7 +232,7 @@ function Gdb:open(cmd)
 
                     result.raw = line
 
-                    local event = result.event or (result.msg and "msg") or (result.ireq and "ireq") or ""
+                    local event = result.event or (result.msg and "msg") or (result.done and "done") or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
@@ -312,7 +312,7 @@ function Gdb:prompt()
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("ireq", function()
+    self:on("done", function()
         local sep = string.rep("─", 20)
         local lines = {}
 
@@ -333,7 +333,7 @@ local function test()
     local gdb = Gdb.new()
     local bufid = gdb:prompt()
 
-    gdb:run({ "gdb", "-i=mi" })
+    gdb:open({ "gdb", "-i=mi" })
 end
 
 test()
