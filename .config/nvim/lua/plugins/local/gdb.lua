@@ -88,7 +88,7 @@ function Gdb:open(cmd)
                     local result = MI.parse(line) or {}
                     result.raw = line
 
-                    local event = result.event or (result.msg and "msg") or (result.done and "done") or ""
+                    local event = result.event or (result.msg and "#msg") or (result.done and "#done") or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
@@ -171,16 +171,16 @@ function Gdb:prompt()
     end)
 
     self:on("^error", function(data)
-        local lines = vim.split(data.info.msg, "\n")
-        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
-    end)
-
-    self:on("msg", function(data)
         local lines = vim.split(data.msg, "\n")
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("done", function()
+    self:on("#msg", function(data)
+        local lines = vim.split(data.msg, "\n")
+        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
+    end)
+
+    self:on("#done", function()
         local sep = string.rep("─", 20)
         local lines = {}
 
@@ -198,13 +198,13 @@ end
 
 function Gdb:disassemble()
     self:on("^done", function(data)
-        print(vim.inspect(data.info))
+        print(vim.inspect(data))
     end)
 end
 
 function Gdb:breakpoints()
     self:on("^done", function(data)
-        if data.info.bkpt then
+        if data.bkpt then
             print(vim.inspect(data))
         end
     end)
