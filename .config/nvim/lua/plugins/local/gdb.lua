@@ -154,9 +154,23 @@ function Gdb:disassemble()
 end
 
 function Gdb:init()
-    self.on("*running", function(data) end)
+    local state = "#init"
 
-    self.on("*stopped", function(data) end)
+    self.on("*running", function(data)
+        state = "#running"
+    end)
+
+    self.on("*stopped", function(data)
+        if data.reason == "exited-normally" then
+            state = "#exited"
+        else
+            state = "*stopped"
+        end
+    end)
+
+    self.on("=thread-group-exited", function(data)
+        state = "#quited"
+    end)
 end
 
 function Gdb:prompt()
