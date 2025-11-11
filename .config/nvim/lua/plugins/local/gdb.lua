@@ -298,7 +298,15 @@ function Gdb:prompt()
 
     vim.fn.prompt_setprompt(bufid, "")
 
+    local last = ""
+
     vim.fn.prompt_setcallback(bufid, function(line)
+        if line == "" then
+            line = last
+        else
+            last = line
+        end
+
         self:send(line)
     end)
 
