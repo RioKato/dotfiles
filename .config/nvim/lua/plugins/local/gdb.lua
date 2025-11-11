@@ -310,13 +310,13 @@ function Gdb:prompt()
         self:send(line)
     end)
 
-    self:on("^error", function(info)
-        local lines = vim.split(info.info.msg, "\n")
+    self:on("^error", function(data)
+        local lines = vim.split(data.info.msg, "\n")
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("msg", function(info)
-        local lines = vim.split(info.msg, "\n")
+    self:on("msg", function(data)
+        local lines = vim.split(data.msg, "\n")
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
@@ -336,10 +336,31 @@ function Gdb:prompt()
     return bufid
 end
 
+function Gdb:breakpoints()
+    self:on("^done", function(data)
+        if data.bkpt then
+            print(vim.inspect(data))
+        end
+    end)
+
+    self:on("=breakpoint-created", function(data)
+        print(vim.inspect(data))
+    end)
+
+    self:on("=breakpoint-deleted", function(data)
+        print(vim.inspect(data))
+    end)
+
+    self:on("=breakpoint-modified", function(data)
+        print(vim.inspect(data))
+    end)
+end
+
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
     local bufid = gdb:prompt()
+    gdb:breakpoints()
 
     gdb:open({ "gdb", "-i=mi" })
 end
