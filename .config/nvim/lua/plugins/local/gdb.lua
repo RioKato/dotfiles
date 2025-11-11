@@ -214,7 +214,7 @@ function Gdb.new()
     return self
 end
 
-function Gdb:run(cmd)
+function Gdb:open(cmd)
     local buf = ""
 
     self.jobid = vim.fn.jobstart(cmd, {
@@ -249,7 +249,7 @@ function Gdb:send(cmd)
     end
 end
 
-function Gdb:stop()
+function Gdb:close()
     if self.jobid then
         vim.fn.jobstop(self.jobid)
         self.jobid = nil
@@ -262,6 +262,34 @@ function Gdb:on(event, callback)
     end
 
     table.insert(self.listener[event], callback)
+end
+
+function Gdb:run()
+    self:send("-exec-run")
+end
+
+function Gdb:step()
+    self:send("-exec-step")
+end
+
+function Gdb:next()
+    self:send("-exec-next")
+end
+
+function Gdb:finish()
+    self:send("-exec-finish")
+end
+
+function Gdb:go(at)
+    self:send(string.format("-exec-until %s", at))
+end
+
+function Gdb:continue()
+    self:send("-exec-continue")
+end
+
+function Gdb:interrupt()
+    self:send("-exec-interrupt")
 end
 
 function Gdb:prompt()
