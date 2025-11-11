@@ -214,10 +214,10 @@ function Gdb.new()
     return self
 end
 
-function Gdb:run(command)
+function Gdb:run(cmd)
     local buf = ""
 
-    self.jobid = vim.fn.jobstart(command, {
+    self.jobid = vim.fn.jobstart(cmd, {
         on_stdout = function(_, lines, _)
             if #lines ~= 0 then
                 lines[1] = buf .. lines[1]
@@ -243,9 +243,9 @@ function Gdb:run(command)
     })
 end
 
-function Gdb:send(command)
+function Gdb:send(cmd)
     if self.jobid then
-        vim.fn.chansend(self.jobid, command .. "\n")
+        vim.fn.chansend(self.jobid, cmd .. "\n")
     end
 end
 
