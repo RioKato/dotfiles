@@ -1,219 +1,70 @@
 ---------------------------------------------------------------------------------------------------
-local Parser = {}
+local function initParser()
+    local lpeg = vim.lpeg
 
-function Parser.seq(...)
-    local args = { ... }
-
-    return function(text, start)
-        local i = start
-        local seq = {}
-
-        for _, parser in ipairs(args) do
-            local ok, next, result = parser(text, i)
-
-            if ok then
-                i = next
-                table.insert(seq, result)
-            else
-                return false
-            end
-        end
-
-        return true, i, seq
-    end
-end
-
-function Parser.br(...)
-    local args = { ... }
-
-    return function(text, start)
-        for _, parser in ipairs(args) do
-            local ok, next, result = parser(text, start)
-
-            if ok then
-                return true, next, result
-            end
-        end
-
-        return false
-    end
-end
-
-function Parser.rep(parser)
-    return function(text, start)
-        local i = start
-        local seq = {}
-
-        repeat
-            local ok, next, result = parser(text, i)
-
-            if ok then
-                i = next
-                table.insert(seq, result)
-            end
-        until not ok
-
-        return true, i, seq
-    end
-end
-
-function Parser.try(parser)
-    return function(text, start)
-        local ok, next, result = parser(text, start)
-
-        if ok then
-            return true, next, result
-        else
-            return true, start, nil
-        end
-    end
-end
-
-function Parser.str(str)
-    return function(text, start)
-        local next = start + #str
-
-        if text:sub(start, next - 1) == str then
-            return true, next, str
-        else
-            return false
-        end
-    end
-end
-
-function Parser.regex(regex)
-    return function(text, start)
-        local i, j = text:find(regex, start)
-
-        if i then
-            return true, j + 1, text:sub(i, j)
-        else
-            return false
-        end
-    end
-end
-
----------------------------------------------------------------------------------------------------
-local MI = {}
-
-function MI.str(text, start)
-    local parser =
-        Parser.seq(Parser.str('"'), Parser.rep(Parser.br(Parser.regex("^\\."), Parser.regex('^[^"]'))), Parser.str('"'))
-    local ok, next, result = parser(text, start)
-
-    if ok then
+    local function toStr(chars)
         local map = {
             ["\\n"] = "\n",
             ["\\t"] = "\t",
             ['\\"'] = '"',
         }
 
-        result = vim.iter(result[2])
+        return vim.iter(chars)
             :map(function(char)
                 return map[char] or char
             end)
             :join("")
     end
 
-    return ok, next, result
-end
-
-function MI.list(text, start)
-    local parser =
-        Parser.seq(Parser.str("["), Parser.rep(Parser.seq(MI.obj, Parser.try(Parser.str(",")))), Parser.str("]"))
-    print(vim.inspect(text), start)
-    local ok, next, result = parser(text, start)
-    print(ok, vim.inspect(result))
-end
-
-function MI.pair(text, start)
-    local parser = Parser.seq(Parser.regex("^[^=]+"), Parser.str("="), MI.obj)
-    local ok, next, result = parser(text, start)
-
-    if ok then
-        result = { result[1], result[3] }
-    end
-
-    return ok, next, result
-end
-
-function MI.dict(text, start)
-    local parser = Parser.seq(Parser.str("{"), MI.inner, Parser.str("}"))
-    local ok, next, result = parser(text, start)
-
-    if ok then
-        result = result[2]
-    end
-
-    return ok, next, result
-end
-
-function MI.inner(text, start)
-    local parser = Parser.rep(Parser.seq(MI.pair, Parser.try(Parser.str(","))))
-    local ok, next, result = parser(text, start)
-
-    if ok then
-        result = vim.iter(result):fold({}, function(left, right)
-            local key = right[1][1]
-            local value = right[1][2]
-            left[key] = value
+    local function toDict(pairs)
+        return vim.iter(pairs):fold({}, function(left, right)
+            left[right[1]] = right[2]
             return left
         end)
     end
 
-    return ok, next, result
-end
-
-MI.obj = Parser.br(MI.str, MI.dict, MI.list)
-
-function MI.event(text, start)
-    local parser = Parser.seq(Parser.regex("^[=*^&][^,]+"), Parser.try(Parser.seq(Parser.str(","), MI.inner)))
-    local ok, next, result = parser(text, start)
-
-    if ok then
-        result = {
-            event = result[1],
-            info = result[2] and result[2][2] or {},
-        }
+    local function toEvent(data)
+        local event = data[1]
+        local dict = toDict(data[2])
+        dict.event = event
+        return dict
     end
 
-    return ok, next, result
-end
+    local any = lpeg.P(1)
+    local str = lpeg.V("str")
+    local pair = lpeg.V("pair")
+    local dict = lpeg.V("dict")
+    local list = lpeg.V("list")
+    local obj = lpeg.V("obj")
+    local event = lpeg.V("event")
+    local msg = lpeg.V("msg")
+    local done = lpeg.V("done")
+    local begin = lpeg.V("begin")
 
-function MI.msg(text, start)
-    local parser = Parser.seq(Parser.str("~"), MI.str)
-    local ok, next, result = parser(text, start)
+    local mi = lpeg.P({
+        begin,
+        str = lpeg.Ct(lpeg.P('"') * lpeg.C(lpeg.P("\\") * any + (any - lpeg.P('"'))) ^ 0 * lpeg.P('"')) / toStr,
+        pair = lpeg.Ct(lpeg.C((any - lpeg.P("=")) ^ 1) * lpeg.P("=") * obj),
+        dict = lpeg.Ct(lpeg.P("{") * (lpeg.P("}") + pair * (lpeg.P(",") * pair) ^ 0 * lpeg.P("}"))) / toDict,
+        list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + obj * (lpeg.P(",") * obj) ^ 0 * lpeg.P("]"))),
+        obj = str + dict + list,
+        event = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 0) * lpeg.Ct((lpeg.P(",") * pair) ^ 0)) / toEvent,
+        msg = (lpeg.P("~") * str) / function(msg)
+            return { msg = msg }
+        end,
+        done = lpeg.P("(gdb)") / function()
+            return { done = true }
+        end,
+        begin = event + msg + done,
+    })
 
-    if ok then
-        result = { msg = result[2] }
-    end
-
-    return ok, next, result
-end
-
-function MI.done(text, start)
-    local parser = Parser.str("(gdb)")
-    local ok, next, result = parser(text, start)
-
-    if ok then
-        result = { done = result }
-    end
-
-    return ok, next, result
-end
-
-MI.begin = Parser.br(MI.done, MI.event, MI.msg)
-
-function MI.parse(text)
-    local ok, next, result = MI.begin(text, 1)
-
-    if ok then
-        result.rest = text:sub(next)
-        return true, result
-    else
-        return false
+    return function(text)
+        return lpeg.match(mi, text)
     end
 end
+
+local MI = {}
+MI.parse = initParser()
 
 ---------------------------------------------------------------------------------------------------
 local Gdb = {}
@@ -234,15 +85,9 @@ function Gdb:open(cmd)
                 buf = table.remove(lines)
 
                 vim.iter(lines):each(function(line)
-                    local ok, result = MI.parse(line)
-
-                    if not ok then
-                        result = {}
-                    end
-
+                    local result = MI.parse(line) or {}
                     result.raw = line
 
-                    print(vim.inspect(result))
                     local event = result.event or (result.msg and "msg") or (result.done and "done") or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
@@ -387,8 +232,4 @@ local function test()
     gdb:open({ "gdb", "-i=mi" })
 end
 
--- test()
-
-local text = '&abc,a=["a",{b="1"}],c="2"'
-local ok, result = MI.parse(text)
-print(vim.inspect(result))
+test()
