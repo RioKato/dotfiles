@@ -90,6 +90,7 @@ function Gdb:open(cmd)
 
                     local event = result.event or (result.msg and "#msg") or (result.done and "#done") or ""
 
+                    print(vim.inspect(result))
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
                     end)
@@ -152,6 +153,12 @@ function Gdb:disassemble()
     self:send("-data-disassemble -a $pc")
 end
 
+function Gdb:init()
+    self.on("*running", function(data) end)
+
+    self.on("*stopped", function(data) end)
+end
+
 function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
@@ -197,8 +204,8 @@ function Gdb:prompt()
 end
 
 function Gdb:disassemble()
-    self:on("^done", function(data)
-        print(vim.inspect(data))
+    self:on("*stopped", function()
+        self:disassemble()
     end)
 end
 
@@ -227,7 +234,7 @@ local function test()
     local gdb = Gdb.new()
     local bufid = gdb:prompt()
     gdb:disassemble()
-    gdb:breakpoints()
+    -- gdb:breakpoints()
 
     gdb:open({ "gdb", "-i=mi" })
 end
