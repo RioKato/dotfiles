@@ -242,11 +242,9 @@ function Gdb:run(command)
                         event = "ireq"
                     end
 
-                    local callback = self.listener[event]
-
-                    if callback then
+                    vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
-                    end
+                    end)
                 end)
             end
         end,
@@ -267,7 +265,11 @@ function Gdb:stop()
 end
 
 function Gdb:on(event, callback)
-    self.listener[event] = callback
+    if not self.listener[event] then
+        self.listener[event] = {}
+    end
+
+    table.insert(self.listener[event], callback)
 end
 
 function Gdb:setup()
