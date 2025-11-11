@@ -118,8 +118,16 @@ function MI.str(text, start)
     return ok, next, result
 end
 
+function MI.list(text, start)
+    local parser =
+        Parser.seq(Parser.str("["), Parser.rep(Parser.seq(MI.obj, Parser.try(Parser.str(",")))), Parser.str("]"))
+    print(vim.inspect(text), start)
+    local ok, next, result = parser(text, start)
+    print(ok, vim.inspect(result))
+end
+
 function MI.pair(text, start)
-    local parser = Parser.seq(Parser.regex("^[^=]+"), Parser.str("="), Parser.br(MI.str, MI.dict))
+    local parser = Parser.seq(Parser.regex("^[^=]+"), Parser.str("="), MI.obj)
     local ok, next, result = parser(text, start)
 
     if ok then
@@ -155,6 +163,8 @@ function MI.inner(text, start)
 
     return ok, next, result
 end
+
+MI.obj = Parser.br(MI.str, MI.dict, MI.list)
 
 function MI.event(text, start)
     local parser = Parser.seq(Parser.regex("^[=*^&][^,]+"), Parser.try(Parser.seq(Parser.str(","), MI.inner)))
@@ -377,4 +387,8 @@ local function test()
     gdb:open({ "gdb", "-i=mi" })
 end
 
-test()
+-- test()
+
+local text = '&abc,a=["a",{b="1"}],c="2"'
+local ok, result = MI.parse(text)
+print(vim.inspect(result))
