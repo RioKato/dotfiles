@@ -285,9 +285,16 @@ function Gdb:prompt()
     end)
 
     self:on("ireq", function()
+        local sep = string.rep("─", 20)
+        local lines = {}
+
         if vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
-            vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, { "", "" })
+            lines = { "", sep, "" }
+        else
+            lines = { sep, "" }
         end
+
+        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
     return bufid
