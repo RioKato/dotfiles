@@ -90,7 +90,7 @@ function Gdb:open(cmd)
 
                     local event = result.event or (result.msg and "#msg") or (result.done and "#done") or ""
 
-                    print(vim.inspect(result))
+                    -- print(vim.inspect(result))
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
                     end)
@@ -217,6 +217,7 @@ local Setup = {}
 
 function Setup.prompt(gdb)
     local bufid = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_buf_set_name(bufid, "Gdb Prompt")
     vim.bo[bufid].buftype = "prompt"
     vim.fn.prompt_setprompt(bufid, "")
 
@@ -264,7 +265,6 @@ function Setup.previwer(gdb, winid)
         if found and line then
             local bufid = vim.fn.bufadd(found)
             vim.bo[bufid].modifiable = false
-            vim.bo[bufid].readonly = true
             vim.api.nvim_win_set_buf(winid, bufid)
             vim.api.nvim_win_set_cursor(winid, { line, 0 })
         else
@@ -272,9 +272,25 @@ function Setup.previwer(gdb, winid)
         end
     end)
 
+    local bufid = vim.api.nvim_create_buf(true, true)
+    vim.api.nvim_buf_set_name(bufid, "Disassm")
+    vim.bo[bufid].modifiable = false
+
     gdb:on("^done", function(data)
-        if data.asm_insns then
-            print(asm_insns)
+        local asm_insns = data.asm_insns
+
+        if asm_insns then
+            local lines = vim.iter(asm_insns)
+                :map(function(insn)
+                    return string.format("%s %s", insn.address, insn.inst)
+                end)
+                :totable()
+
+            vim.bo[bufid].modifiable = true
+            vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+            vim.bo[bufid].modifiable = false
+            vim.api.nvim_win_set_buf(winid, bufid)
+            vim.api.nvim_win_set_cursor(winid, { 1, 0 })
         end
     end)
 end
@@ -282,8 +298,8 @@ end
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
-    local bufid = Setup.prompt(gdb)
-    Setup.src(gdb, 0)
+    Setup.prompt(gdb)
+    Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
 
