@@ -100,13 +100,15 @@ end
 
 function Gdb:send(cmd)
     if self.jobid then
-        vim.fn.chansend(self.jobid, cmd .. "\n")
+        if not pcall(vim.fn.chansend, self.jobid, cmd .. "\n") then
+            self.jobid = nil
+        end
     end
 end
 
 function Gdb:close()
     if self.jobid then
-        vim.fn.jobstop(self.jobid)
+        pcall(vim.fn.jobstop, self.jobid)
         self.jobid = nil
     end
 end
@@ -279,7 +281,7 @@ function Setup.previwer(gdb, winid)
         if asm_insns then
             local lines = vim.iter(asm_insns)
                 :map(function(insn)
-                    return string.format("%s %s", insn.address, insn.inst)
+                    return string.format("%s│ %s", insn.address, insn.inst)
                 end)
                 :totable()
 
