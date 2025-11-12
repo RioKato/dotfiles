@@ -153,25 +153,22 @@ function Gdb:disassemble()
     self:send("-data-disassemble -a $pc")
 end
 
----------------------------------------------------------------------------------------------------
-local Setup = {}
-
-function Setup.prompt(gdb, callback)
-    gdb:on("^error", function(data)
+function Gdb:prompt(callback)
+    self:on("^error", function(data)
         callback(data.msg)
     end)
 
-    gdb:on("#msg", function(data)
+    self:on("#msg", function(data)
         callback(data.msg)
     end)
 
-    gdb:on("#done", function()
+    self:on("#done", function()
         callback(nil)
     end)
 end
 
-function Setup.src(gdb, callback)
-    gdb:on("*stopped", function(data)
+function Gdb:src(callback)
+    self:on("*stopped", function(data)
         local frame = data.frame
 
         if frame then
@@ -192,8 +189,8 @@ function Setup.src(gdb, callback)
     end)
 end
 
-function Setup.disass(gdb, callback)
-    gdb:on("*stopped", function(data)
+function Gdb:disass(callback)
+    self:on("*stopped", function(data)
         local frame = data.frame
 
         if frame and frame.addr then
@@ -202,10 +199,10 @@ function Setup.disass(gdb, callback)
     end)
 end
 
-function Setup.bkpt(gdb, callback)
+function Gdb:bkpt(callback)
     local bkpts = {}
 
-    gdb:on("=breakpoint-created", function(data)
+    self:on("=breakpoint-created", function(data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
@@ -214,14 +211,14 @@ function Setup.bkpt(gdb, callback)
         end
     end)
 
-    gdb:on("=breakpoint-deleted", function(data)
+    self:on("=breakpoint-deleted", function(data)
         if data.id then
             bkpts[data.id] = nil
             callback(bkpts)
         end
     end)
 
-    gdb:on("=breakpoint-modified", function(data)
+    self:on("=breakpoint-modified", function(data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
@@ -230,6 +227,9 @@ function Setup.bkpt(gdb, callback)
         end
     end)
 end
+
+---------------------------------------------------------------------------------------------------
+local Setup = {}
 
 function Setup.simple(gdb)
     local bufid = vim.api.nvim_create_buf(true, true)
@@ -249,7 +249,7 @@ function Setup.simple(gdb)
         gdb:send(line)
     end)
 
-    Setup.prompt(gdb, function(msg)
+    gdb:prompt(function(msg)
         local lines = {}
 
         if msg == nil then
