@@ -272,7 +272,7 @@ function Setup.previwer(gdb, winid)
         end
     end)
 
-    self:on("^done", function(data)
+    gdb:on("^done", function(data)
         if data.asm_insns then
             print(asm_insns)
         end
