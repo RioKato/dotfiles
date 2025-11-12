@@ -38,7 +38,6 @@ local function parser()
     local obj = lpeg.V("obj")
     local event = lpeg.V("event")
     local msg = lpeg.V("msg")
-    local done = lpeg.V("done")
     local begin = lpeg.V("begin")
 
     local mi = lpeg.P({
@@ -52,10 +51,7 @@ local function parser()
         msg = (lpeg.P("~") * str) / function(msg)
             return { msg = msg }
         end,
-        done = lpeg.P("(gdb)") / function()
-            return { done = true }
-        end,
-        begin = event + msg + done,
+        begin = event + msg,
     })
 
     return function(text)
@@ -162,10 +158,6 @@ function Gdb:onReceiveMessage(callback)
         assert(data.msg)
         callback(data.msg)
     end)
-
-    self:on("#done", function()
-        callback(nil)
-    end)
 end
 
 function Gdb:onStop(callback)
@@ -216,34 +208,16 @@ function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_buf_set_name(bufid, "Gdb Prompt")
     vim.bo[bufid].buftype = "prompt"
-    vim.fn.prompt_setprompt(bufid, "")
-
-    local last = ""
 
     vim.fn.prompt_setcallback(bufid, function(line)
-        if line == "" then
-            line = last
-        else
-            last = line
-        end
-
         self:send(line)
     end)
 
-    local sep = string.rep("─", 20)
-
     self:onReceiveMessage(function(msg)
-        local lines = {}
-
-        if msg then
-            lines = vim.split(msg, "\n")
-        elseif vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
-            lines = { "", sep, "" }
-        else
-            lines = { sep, "" }
-        end
-
-        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
+        vim.bo[bufid].buftype = "nofile"
+        local lines = vim.split(msg, "\n")
+        vim.api.nvim_buf_set_lines(bufid, -2, -1, false, lines)
+        vim.bo[bufid].buftype = "prompt"
     end)
 end
 
@@ -298,7 +272,7 @@ end
 local function test()
     local gdb = Gdb.new()
     gdb:prompt()
-    Setup.previwer(gdb, 0)
+    -- Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
 
