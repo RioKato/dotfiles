@@ -153,23 +153,33 @@ function Gdb:disassemble()
     self:send("-data-disassemble -a $pc")
 end
 
-function Gdb:init()
-    local state = "#init"
+function Gdb:trace()
+    self:on("*stopped", function(data)
+        local frame = data.frame
 
-    self.on("*running", function(data)
-        state = "#running"
-    end)
+        if frame then
+            local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
+                local stat = vim.uv.fs_stat(file)
 
-    self.on("*stopped", function(data)
-        if data.reason == "exited-normally" then
-            state = "#exited"
-        else
-            state = "*stopped"
+                if stat then
+                    return stat.type == "file"
+                end
+            end)
+
+            if found and frame.line then
+                print(found, frame.line)
+            end
+
+            if frame.addr then
+                print(frame.addr)
+            end
+
+            vim.iter(frame.args or {}):each(function(arg)
+                if arg.name and arg.value then
+                    print(arg.name, arg.value)
+                end
+            end)
         end
-    end)
-
-    self.on("=thread-group-exited", function(data)
-        state = "#quited"
     end)
 end
 
@@ -217,29 +227,29 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:disassemble()
-    self:on("*stopped", function()
-        self:disassemble()
-    end)
-end
-
 function Gdb:breakpoints()
-    self:on("^done", function(data)
-        if data.bkpt then
-            print(vim.inspect(data))
+    local breakpoints = {}
+
+    self:on("=breakpoint-created", function(data)
+        local bkpt = data.bkpt
+
+        if bkpt and bkpt.number then
+            breakpoints[bkpt.number] = bkpt
         end
     end)
 
-    self:on("=breakpoint-created", function(data)
-        print(vim.inspect(data))
-    end)
-
     self:on("=breakpoint-deleted", function(data)
-        print(vim.inspect(data))
+        if data.id then
+            breakpoints[data.id] = nil
+        end
     end)
 
     self:on("=breakpoint-modified", function(data)
-        print(vim.inspect(data))
+        local bkpt = data.bkpt
+
+        if data.bkpt and bkpt.number then
+            breakpoints[bkpt.number] = bkpt
+        end
     end)
 end
 
@@ -247,7 +257,7 @@ end
 local function test()
     local gdb = Gdb.new()
     local bufid = gdb:prompt()
-    gdb:disassemble()
+    gdb:trace()
     -- gdb:breakpoints()
 
     gdb:open({ "gdb", "-i=mi" })
