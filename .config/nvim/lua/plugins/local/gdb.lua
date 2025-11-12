@@ -178,7 +178,11 @@ function Gdb:onSrc(callback)
             table.insert(files, frame.fullname)
 
             if #files >= 1 and frame.line then
-                callback(files, frame.line)
+                local line = tonumber(frame.line)
+
+                if line then
+                    callback(files, line)
+                end
             end
         end
     end)
@@ -269,7 +273,7 @@ function Setup.prompt(gdb)
     end)
 end
 
-function Setup.src(gdb)
+function Setup.src(gdb, winid)
     gdb:onSrc(function(files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -282,6 +286,8 @@ function Setup.src(gdb)
         if found then
             local bufid = vim.fn.bufadd(found)
             vim.bo[bufid].modifiable = false
+            vim.api.nvim_win_set_buf(winid, bufid)
+            vim.api.nvim_win_set_cursor(winid, { line, 0 })
         end
     end)
 end
@@ -290,10 +296,7 @@ end
 local function test()
     local gdb = Gdb.new()
     local bufid = Setup.prompt(gdb)
-    -- Setup.src(gdb)
-    -- Setup.disass(gdb)
-    -- Setup.bkpt(gdb)
-
+    Setup.src(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
 
