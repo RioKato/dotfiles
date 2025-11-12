@@ -213,8 +213,8 @@ function Gdb:prompt()
     end)
 
     self:onReceiveMessage(function(msg)
-        vim.bo[bufid].buftype = "nofile"
         local lines = vim.split(msg, "\n")
+        vim.bo[bufid].buftype = "nofile"
         vim.api.nvim_buf_set_lines(bufid, -2, -1, false, lines)
         vim.bo[bufid].buftype = "prompt"
     end)
@@ -222,11 +222,8 @@ function Gdb:prompt()
     return bufid
 end
 
----------------------------------------------------------------------------------------------------
-local Setup = {}
-
-function Setup.previwer(gdb, winid)
-    gdb:onStop(function(addr, files, line)
+function Gdb:code(winid)
+    self:onStop(function(addr, files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
 
@@ -244,7 +241,12 @@ function Setup.previwer(gdb, winid)
             gdb:disassemble()
         end
     end)
+end
 
+---------------------------------------------------------------------------------------------------
+local Setup = {}
+
+function Setup.previwer(gdb, winid)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_buf_set_name(bufid, "Disassm")
     vim.bo[bufid].modifiable = false
@@ -273,6 +275,7 @@ end
 local function test()
     local gdb = Gdb.new()
     gdb:prompt()
+    gdb:code(0)
     -- Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
