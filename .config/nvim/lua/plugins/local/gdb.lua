@@ -150,7 +150,7 @@ function Gdb:interrupt()
 end
 
 function Gdb:disassemble()
-    self:send("-data-disassemble -a $pc")
+    self:send("-data-disassemble -a $pc -- 0")
 end
 
 function Gdb:onReceiveMessage(callback)
@@ -275,6 +275,7 @@ function Setup.previwer(gdb, winid)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_buf_set_name(bufid, "Disassm")
     vim.bo[bufid].modifiable = false
+    vim.bo[bufid].filetype = "asm"
 
     gdb:on("^done", function(data)
         local asm_insns = data.asm_insns
