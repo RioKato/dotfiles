@@ -153,7 +153,7 @@ function Gdb:disassemble()
     self:send("-data-disassemble -a $pc")
 end
 
-function Gdb:onPrompt(callback)
+function Gdb:onReceiveMessage(callback)
     self:on("^error", function(data)
         callback(data.msg or "")
     end)
@@ -168,43 +168,22 @@ function Gdb:onPrompt(callback)
     end)
 end
 
-function Gdb:onSrc(callback)
-    self:on("*stopped", function(data)
-        local frame = data.frame
-
-        if frame then
-            local files = {}
-            table.insert(files, frame.file)
-            table.insert(files, frame.fullname)
-
-            if #files >= 1 and frame.line then
-                local line = tonumber(frame.line)
-
-                if line then
-                    callback(files, line)
-                end
-            end
-        end
-    end)
-end
-
-function Gdb:onDisassemble(callback)
+function Gdb:onStop(callback)
     self:on("*stopped", function(data)
         local frame = data.frame
 
         if frame and frame.addr then
-            callback(frame.addr)
-        end
-    end)
-
-    self:on("^done", function(data)
-        if data.asm_insns then
-            callback(data.asm_insns)
+            local addr = frame.addr
+            local files = {}
+            table.insert(files, frame.file)
+            table.insert(files, frame.fullname)
+            local line = tonumber(frame.line)
+            callback(addr, files, line)
         end
     end)
 end
 
-function Gdb:onBreakpoint(callback)
+function Gdb:onChangeBreakpoint(callback)
     local bkpts = {}
 
     self:on("=breakpoint-created", function(data)
@@ -239,7 +218,6 @@ local Setup = {}
 function Setup.prompt(gdb)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
-
     vim.fn.prompt_setprompt(bufid, "")
 
     local last = ""
@@ -254,7 +232,7 @@ function Setup.prompt(gdb)
         gdb:send(line)
     end)
 
-    gdb:onPrompt(function(msg)
+    gdb:onReceiveMessage(function(msg)
         local lines = {}
 
         if msg == nil then
@@ -273,8 +251,8 @@ function Setup.prompt(gdb)
     end)
 end
 
-function Setup.src(gdb, winid)
-    gdb:onSrc(function(files, line)
+function Setup.previwer(gdb, winid)
+    gdb:onStop(function(addr, files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
 
@@ -283,11 +261,20 @@ function Setup.src(gdb, winid)
             end
         end)
 
-        if found then
+        if found and line then
             local bufid = vim.fn.bufadd(found)
             vim.bo[bufid].modifiable = false
+            vim.bo[bufid].readonly = true
             vim.api.nvim_win_set_buf(winid, bufid)
             vim.api.nvim_win_set_cursor(winid, { line, 0 })
+        else
+            gdb:disassemble()
+        end
+    end)
+
+    self:on("^done", function(data)
+        if data.asm_insns then
+            print(asm_insns)
         end
     end)
 end
