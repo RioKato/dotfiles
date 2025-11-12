@@ -272,7 +272,7 @@ function Setup.src(gdb)
             end
         end)
 
-        if found and frame.line then
+        if found then
             local bufid = vim.fn.bufadd(found)
             vim.bo[bufid].modifiable = false
         end
