@@ -155,10 +155,11 @@ end
 
 function Gdb:onPrompt(callback)
     self:on("^error", function(data)
-        callback(data.msg)
+        callback(data.msg or "")
     end)
 
     self:on("#msg", function(data)
+        assert(data.msg)
         callback(data.msg)
     end)
 
