@@ -1,5 +1,5 @@
 ---------------------------------------------------------------------------------------------------
-local function initParser()
+local function parser()
     local lpeg = vim.lpeg
 
     local function toStr(chars)
@@ -64,7 +64,7 @@ local function initParser()
 end
 
 local MI = {}
-MI.parse = initParser()
+MI.parse = parser()
 
 ---------------------------------------------------------------------------------------------------
 local Gdb = {}
@@ -153,37 +153,10 @@ function Gdb:disassemble()
     self:send("-data-disassemble -a $pc")
 end
 
-function Gdb:trace()
-    self:on("*stopped", function(data)
-        local frame = data.frame
+---------------------------------------------------------------------------------------------------
+local Setup = {}
 
-        if frame then
-            local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
-                local stat = vim.uv.fs_stat(file)
-
-                if stat then
-                    return stat.type == "file"
-                end
-            end)
-
-            if found and frame.line then
-                print(found, frame.line)
-            end
-
-            if frame.addr then
-                print(frame.addr)
-            end
-
-            vim.iter(frame.args or {}):each(function(arg)
-                if arg.name and arg.value then
-                    print(arg.name, arg.value)
-                end
-            end)
-        end
-    end)
-end
-
-function Gdb:prompt()
+function Setup.prompt(gdb)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
 
@@ -198,20 +171,20 @@ function Gdb:prompt()
             last = line
         end
 
-        self:send(line)
+        gdb:send(line)
     end)
 
-    self:on("^error", function(data)
+    gdb:on("^error", function(data)
         local lines = vim.split(data.msg, "\n")
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("#msg", function(data)
+    gdb:on("#msg", function(data)
         local lines = vim.split(data.msg, "\n")
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 
-    self:on("#done", function()
+    gdb:on("#done", function()
         local sep = string.rep("─", 20)
         local lines = {}
 
@@ -227,28 +200,66 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:breakpoints()
-    local breakpoints = {}
+function Setup.src(gdb)
+    gdb:on("*stopped", function(data)
+        local frame = data.frame
 
-    self:on("=breakpoint-created", function(data)
+        if frame then
+            local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
+                local stat = vim.uv.fs_stat(file)
+
+                if stat then
+                    return stat.type == "file"
+                end
+            end)
+
+            if found and frame.line then
+                print(found, frame.line)
+            end
+
+            vim.iter(frame.args or {}):each(function(arg)
+                if arg.name and arg.value then
+                    print(arg.name, arg.value)
+                end
+            end)
+        end
+    end)
+end
+
+function Setup.disass(gdb)
+    gdb:on("*stopped", function(data)
+        local frame = data.frame
+
+        if frame then
+            if frame.addr then
+                print(frame.addr)
+            end
+        end
+    end)
+end
+
+function Setup.bkpt(gdb)
+    local bkpts = {}
+
+    gdb:on("=breakpoint-created", function(data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
-            breakpoints[bkpt.number] = bkpt
+            bkpts[bkpt.number] = bkpt
         end
     end)
 
-    self:on("=breakpoint-deleted", function(data)
+    gdb:on("=breakpoint-deleted", function(data)
         if data.id then
-            breakpoints[data.id] = nil
+            bkpts[data.id] = nil
         end
     end)
 
-    self:on("=breakpoint-modified", function(data)
+    gdb:on("=breakpoint-modified", function(data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
-            breakpoints[bkpt.number] = bkpt
+            bkpts[bkpt.number] = bkpt
         end
     end)
 end
@@ -256,9 +267,10 @@ end
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
-    local bufid = gdb:prompt()
-    gdb:trace()
-    -- gdb:breakpoints()
+    local bufid = Setup.prompt(gdb)
+    Setup.src(gdb)
+    Setup.disass(gdb)
+    Setup.bkpt(gdb)
 
     gdb:open({ "gdb", "-i=mi" })
 end
