@@ -212,10 +212,7 @@ function Gdb:onChangeBreakpoint(callback)
     end)
 end
 
----------------------------------------------------------------------------------------------------
-local Setup = {}
-
-function Setup.prompt(gdb)
+function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.api.nvim_buf_set_name(bufid, "Gdb Prompt")
     vim.bo[bufid].buftype = "prompt"
@@ -230,12 +227,12 @@ function Setup.prompt(gdb)
             last = line
         end
 
-        gdb:send(line)
+        self:send(line)
     end)
 
     local sep = string.rep("─", 20)
 
-    gdb:onReceiveMessage(function(msg)
+    self:onReceiveMessage(function(msg)
         local lines = {}
 
         if msg then
@@ -249,6 +246,9 @@ function Setup.prompt(gdb)
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
     end)
 end
+
+---------------------------------------------------------------------------------------------------
+local Setup = {}
 
 function Setup.previwer(gdb, winid)
     gdb:onStop(function(addr, files, line)
@@ -297,7 +297,7 @@ end
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
-    Setup.prompt(gdb)
+    gdb:prompt()
     Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
