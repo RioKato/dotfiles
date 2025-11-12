@@ -172,18 +172,12 @@ function Gdb:src(callback)
         local frame = data.frame
 
         if frame then
-            local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
-                local stat = vim.uv.fs_stat(file)
+            local files = {}
+            table.insert(files, frame.file)
+            table.insert(files, frame.fullname)
 
-                if stat then
-                    return stat.type == "file"
-                end
-            end)
-
-            if found and frame.line then
-                -- local bufid = vim.fn.bufadd(found)
-                -- vim.bo[bufid].modifiable = false
-                callback(found, frame.line, frame.args or {})
+            if #files >= 1 and frame.line then
+                callback(files, frame.line, frame.args or {})
             end
         end
     end)
@@ -231,7 +225,7 @@ end
 ---------------------------------------------------------------------------------------------------
 local Setup = {}
 
-function Setup.simple(gdb)
+function Setup.prompt(gdb)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
 
@@ -268,10 +262,27 @@ function Setup.simple(gdb)
     end)
 end
 
+function Setup.src(gdb)
+    gdb:src(function(files, line, args)
+        local found = vim.iter(files):find(function(file)
+            local stat = vim.uv.fs_stat(file)
+
+            if stat then
+                return stat.type == "file"
+            end
+        end)
+
+        if found and frame.line then
+            local bufid = vim.fn.bufadd(found)
+            vim.bo[bufid].modifiable = false
+        end
+    end)
+end
+
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
-    local bufid = Setup.simple(gdb)
+    local bufid = Setup.prompt(gdb)
     -- Setup.src(gdb)
     -- Setup.disass(gdb)
     -- Setup.bkpt(gdb)
