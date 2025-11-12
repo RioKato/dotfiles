@@ -206,7 +206,6 @@ end
 
 function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
-    vim.api.nvim_buf_set_name(bufid, "Gdb Prompt")
     vim.bo[bufid].buftype = "prompt"
 
     vim.fn.prompt_setcallback(bufid, function(line)
@@ -219,6 +218,8 @@ function Gdb:prompt()
         vim.api.nvim_buf_set_lines(bufid, -2, -1, false, lines)
         vim.bo[bufid].buftype = "prompt"
     end)
+
+    return bufid
 end
 
 ---------------------------------------------------------------------------------------------------
