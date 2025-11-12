@@ -200,7 +200,7 @@ function Setup.prompt(gdb)
     return bufid
 end
 
-function Setup.src(gdb)
+function Setup.src(gdb, callback)
     gdb:on("*stopped", function(data)
         local frame = data.frame
 
@@ -214,31 +214,27 @@ function Setup.src(gdb)
             end)
 
             if found and frame.line then
-                print(found, frame.line)
+                local bufid = vim.fn.bufadd(found)
+                vim.bo[bufid].modifiable = false
+                callback(bufid, frame.line, frame.args or {})
             end
-
-            vim.iter(frame.args or {}):each(function(arg)
-                if arg.name and arg.value then
-                    print(arg.name, arg.value)
-                end
-            end)
         end
     end)
 end
 
-function Setup.disass(gdb)
+function Setup.disass(gdb, callback)
     gdb:on("*stopped", function(data)
         local frame = data.frame
 
         if frame then
             if frame.addr then
-                print(frame.addr)
+                callback(frame.addr)
             end
         end
     end)
 end
 
-function Setup.bkpt(gdb)
+function Setup.bkpt(gdb, callback)
     local bkpts = {}
 
     gdb:on("=breakpoint-created", function(data)
@@ -246,12 +242,14 @@ function Setup.bkpt(gdb)
 
         if bkpt and bkpt.number then
             bkpts[bkpt.number] = bkpt
+            callback(bkpts)
         end
     end)
 
     gdb:on("=breakpoint-deleted", function(data)
         if data.id then
             bkpts[data.id] = nil
+            callback(bkpts)
         end
     end)
 
@@ -260,6 +258,7 @@ function Setup.bkpt(gdb)
 
         if bkpt and bkpt.number then
             bkpts[bkpt.number] = bkpt
+            callback(bkpts)
         end
     end)
 end
