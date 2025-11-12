@@ -87,10 +87,8 @@ function Gdb:open(cmd)
                 vim.iter(lines):each(function(line)
                     local result = MI.parse(line) or {}
                     result.raw = line
-
                     local event = result.event or (result.msg and "#msg") or (result.done and "#done") or ""
 
-                    -- print(vim.inspect(result))
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(result, event)
                     end)
