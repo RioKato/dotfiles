@@ -247,7 +247,7 @@ function Gdb:breakpoints()
     self:on("=breakpoint-modified", function(data)
         local bkpt = data.bkpt
 
-        if data.bkpt and bkpt.number then
+        if bkpt and bkpt.number then
             breakpoints[bkpt.number] = bkpt
         end
     end)
