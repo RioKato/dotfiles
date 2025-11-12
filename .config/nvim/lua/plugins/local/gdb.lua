@@ -178,7 +178,7 @@ function Gdb:onSrc(callback)
             table.insert(files, frame.fullname)
 
             if #files >= 1 and frame.line then
-                callback(files, frame.line, frame.args or {})
+                callback(files, frame.line)
             end
         end
     end)
@@ -190,6 +190,12 @@ function Gdb:onDisassemble(callback)
 
         if frame and frame.addr then
             callback(frame.addr)
+        end
+    end)
+
+    self:on("^done", function(data)
+        if data.asm_insns then
+            callback(data.asm_insns)
         end
     end)
 end
@@ -264,7 +270,7 @@ function Setup.prompt(gdb)
 end
 
 function Setup.src(gdb)
-    gdb:onSrc(function(files, line, args)
+    gdb:onSrc(function(files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
 
