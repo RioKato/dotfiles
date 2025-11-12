@@ -156,48 +156,18 @@ end
 ---------------------------------------------------------------------------------------------------
 local Setup = {}
 
-function Setup.prompt(gdb)
-    local bufid = vim.api.nvim_create_buf(true, true)
-    vim.bo[bufid].buftype = "prompt"
-
-    vim.fn.prompt_setprompt(bufid, "")
-
-    local last = ""
-
-    vim.fn.prompt_setcallback(bufid, function(line)
-        if line == "" then
-            line = last
-        else
-            last = line
-        end
-
-        gdb:send(line)
-    end)
-
+function Setup.prompt(gdb, callback)
     gdb:on("^error", function(data)
-        local lines = vim.split(data.msg, "\n")
-        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
+        callback(data.msg)
     end)
 
     gdb:on("#msg", function(data)
-        local lines = vim.split(data.msg, "\n")
-        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
+        callback(data.msg)
     end)
 
     gdb:on("#done", function()
-        local sep = string.rep("─", 20)
-        local lines = {}
-
-        if vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
-            lines = { "", sep, "" }
-        else
-            lines = { sep, "" }
-        end
-
-        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
+        callback(nil)
     end)
-
-    return bufid
 end
 
 function Setup.src(gdb, callback)
@@ -214,9 +184,9 @@ function Setup.src(gdb, callback)
             end)
 
             if found and frame.line then
-                local bufid = vim.fn.bufadd(found)
-                vim.bo[bufid].modifiable = false
-                callback(bufid, frame.line, frame.args or {})
+                -- local bufid = vim.fn.bufadd(found)
+                -- vim.bo[bufid].modifiable = false
+                callback(found, frame.line, frame.args or {})
             end
         end
     end)
@@ -263,13 +233,50 @@ function Setup.bkpt(gdb, callback)
     end)
 end
 
+function Setup.simple(gdb)
+    local bufid = vim.api.nvim_create_buf(true, true)
+    vim.bo[bufid].buftype = "prompt"
+
+    vim.fn.prompt_setprompt(bufid, "")
+
+    local last = ""
+
+    vim.fn.prompt_setcallback(bufid, function(line)
+        if line == "" then
+            line = last
+        else
+            last = line
+        end
+
+        gdb:send(line)
+    end)
+
+    Setup.prompt(gdb, function(msg)
+        local lines = {}
+
+        if msg == nil then
+            local sep = string.rep("─", 20)
+
+            if vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
+                lines = { "", sep, "" }
+            else
+                lines = { sep, "" }
+            end
+        else
+            lines = vim.split(msg, "\n")
+        end
+
+        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
+    end)
+end
+
 ---------------------------------------------------------------------------------------------------
 local function test()
     local gdb = Gdb.new()
-    local bufid = Setup.prompt(gdb)
-    Setup.src(gdb)
-    Setup.disass(gdb)
-    Setup.bkpt(gdb)
+    local bufid = Setup.simple(gdb)
+    -- Setup.src(gdb)
+    -- Setup.disass(gdb)
+    -- Setup.bkpt(gdb)
 
     gdb:open({ "gdb", "-i=mi" })
 end
