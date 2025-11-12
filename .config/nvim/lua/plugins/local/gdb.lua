@@ -153,7 +153,7 @@ function Gdb:disassemble()
     self:send("-data-disassemble -a $pc")
 end
 
-function Gdb:prompt(callback)
+function Gdb:onPrompt(callback)
     self:on("^error", function(data)
         callback(data.msg)
     end)
@@ -167,7 +167,7 @@ function Gdb:prompt(callback)
     end)
 end
 
-function Gdb:src(callback)
+function Gdb:onSrc(callback)
     self:on("*stopped", function(data)
         local frame = data.frame
 
@@ -183,7 +183,7 @@ function Gdb:src(callback)
     end)
 end
 
-function Gdb:disass(callback)
+function Gdb:onDisassemble(callback)
     self:on("*stopped", function(data)
         local frame = data.frame
 
@@ -193,7 +193,7 @@ function Gdb:disass(callback)
     end)
 end
 
-function Gdb:bkpt(callback)
+function Gdb:onBreakpoint(callback)
     local bkpts = {}
 
     self:on("=breakpoint-created", function(data)
@@ -243,7 +243,7 @@ function Setup.prompt(gdb)
         gdb:send(line)
     end)
 
-    gdb:prompt(function(msg)
+    gdb:onPrompt(function(msg)
         local lines = {}
 
         if msg == nil then
@@ -263,7 +263,7 @@ function Setup.prompt(gdb)
 end
 
 function Setup.src(gdb)
-    gdb:src(function(files, line, args)
+    gdb:onSrc(function(files, line, args)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
 
