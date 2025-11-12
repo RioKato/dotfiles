@@ -231,19 +231,17 @@ function Setup.prompt(gdb)
         gdb:send(line)
     end)
 
+    local sep = string.rep("─", 20)
+
     gdb:onReceiveMessage(function(msg)
         local lines = {}
 
-        if msg == nil then
-            local sep = string.rep("─", 20)
-
-            if vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
-                lines = { "", sep, "" }
-            else
-                lines = { sep, "" }
-            end
-        else
+        if msg then
             lines = vim.split(msg, "\n")
+        elseif vim.api.nvim_buf_get_lines(bufid, -2, -1, true)[1] ~= "" then
+            lines = { "", sep, "" }
+        else
+            lines = { sep, "" }
         end
 
         vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
