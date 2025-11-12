@@ -196,10 +196,8 @@ function Setup.disass(gdb, callback)
     gdb:on("*stopped", function(data)
         local frame = data.frame
 
-        if frame then
-            if frame.addr then
-                callback(frame.addr)
-            end
+        if frame and frame.addr then
+            callback(frame.addr)
         end
     end)
 end
