@@ -156,12 +156,12 @@ end
 
 function Gdb:onReceiveMessage(callback)
     self:on("^error", function(ctx, data)
-        callback(ctx, data.msg or "")
+        callback(data.msg or "")
     end)
 
     self:on("#msg", function(ctx, data)
         assert(data.msg)
-        callback(ctx, data.msg)
+        callback(data.msg)
     end)
 end
 
@@ -176,27 +176,34 @@ function Gdb:onStop(callback)
             table.insert(files, frame.fullname)
             local row = tonumber(frame.line)
             row = row and row > 0 and row - 1 or nil
-            callback(ctx, addr, files, row)
+
+            ctx.stop = {
+                addr = addr,
+                files = files,
+                row = row,
+            }
+
+            callback(ctx)
         end
     end)
 end
 
 function Gdb:onChangeBreakpoint(callback)
-    local bkpts = {}
-
     self:on("=breakpoint-created", function(ctx, data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
-            bkpts[bkpt.number] = bkpt
-            callback(ctx, bkpts)
+            ctx.bkpts = ctx.bkpts or {}
+            ctx.bkpts[bkpt.number] = bkpt
+            callback(ctx)
         end
     end)
 
     self:on("=breakpoint-deleted", function(ctx, data)
         if data.id then
-            bkpts[data.id] = nil
-            callback(ctx, bkpts)
+            ctx.bkpts = ctx.bkpts or {}
+            ctx.bkpts[data.id] = nil
+            callback(ctx)
         end
     end)
 
@@ -204,8 +211,9 @@ function Gdb:onChangeBreakpoint(callback)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
-            bkpts[bkpt.number] = bkpt
-            callback(ctx, bkpts)
+            ctx.bkpts = ctx.bkpts or {}
+            ctx.bkpts[bkpt.number] = bkpt
+            callback(ctx)
         end
     end)
 end
@@ -218,7 +226,7 @@ function Gdb:prompt()
         self:send(line)
     end)
 
-    self:onReceiveMessage(function(_, msg)
+    self:onReceiveMessage(function(msg)
         local lines = vim.split(msg, "\n")
         vim.bo[bufid].buftype = "nofile"
         vim.api.nvim_buf_set_lines(bufid, -2, -1, false, lines)
@@ -229,17 +237,18 @@ function Gdb:prompt()
 end
 
 function Gdb:code(display)
-    self:onStop(function(_, addr, files, row)
-        local found = vim.iter(files):find(function(file)
+    self:onStop(function(ctx)
+        local stop = ctx.stop
+        local found = vim.iter(stop.files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
 
-        if found and row then
+        if found and stop.row then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
-            display(bufid, row)
+            display(bufid, stop.row)
         end
     end)
 end
@@ -290,7 +299,8 @@ local function test()
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
     local draw = window(0, nsid, "MyCustomLineHighlight")
     gdb:code(draw)
-    gdb:open({ "gdb", "-i=mi" })
+    local ctx = {}
+    gdb:open({ "gdb", "-i=mi" }, ctx)
 end
 
 test()
