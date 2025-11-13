@@ -72,7 +72,7 @@ function Gdb.new()
     return self
 end
 
-function Gdb:open(cmd)
+function Gdb:open(cmd, ctx)
     if not self.jobid then
         local buf = ""
 
@@ -88,7 +88,7 @@ function Gdb:open(cmd)
                     local event = result.event or (result.msg and "#msg") or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
-                        callback(result, event)
+                        callback(ctx, result, event)
                     end)
                 end)
             end,
@@ -155,18 +155,18 @@ function Gdb:disassemble()
 end
 
 function Gdb:onReceiveMessage(callback)
-    self:on("^error", function(data)
-        callback(data.msg or "")
+    self:on("^error", function(ctx, data)
+        callback(ctx, data.msg or "")
     end)
 
-    self:on("#msg", function(data)
+    self:on("#msg", function(ctx, data)
         assert(data.msg)
-        callback(data.msg)
+        callback(ctx, data.msg)
     end)
 end
 
 function Gdb:onStop(callback)
-    self:on("*stopped", function(data)
+    self:on("*stopped", function(ctx, data)
         local frame = data.frame
 
         if frame and frame.addr then
@@ -176,7 +176,7 @@ function Gdb:onStop(callback)
             table.insert(files, frame.fullname)
             local row = tonumber(frame.line)
             row = row and row > 0 and row - 1 or nil
-            callback(addr, files, row)
+            callback(ctx, addr, files, row)
         end
     end)
 end
@@ -184,28 +184,28 @@ end
 function Gdb:onChangeBreakpoint(callback)
     local bkpts = {}
 
-    self:on("=breakpoint-created", function(data)
+    self:on("=breakpoint-created", function(ctx, data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
             bkpts[bkpt.number] = bkpt
-            callback(bkpts)
+            callback(ctx, bkpts)
         end
     end)
 
-    self:on("=breakpoint-deleted", function(data)
+    self:on("=breakpoint-deleted", function(ctx, data)
         if data.id then
             bkpts[data.id] = nil
-            callback(bkpts)
+            callback(ctx, bkpts)
         end
     end)
 
-    self:on("=breakpoint-modified", function(data)
+    self:on("=breakpoint-modified", function(ctx, data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
             bkpts[bkpt.number] = bkpt
-            callback(bkpts)
+            callback(ctx, bkpts)
         end
     end)
 end
@@ -218,7 +218,7 @@ function Gdb:prompt()
         self:send(line)
     end)
 
-    self:onReceiveMessage(function(msg)
+    self:onReceiveMessage(function(_, msg)
         local lines = vim.split(msg, "\n")
         vim.bo[bufid].buftype = "nofile"
         vim.api.nvim_buf_set_lines(bufid, -2, -1, false, lines)
@@ -229,7 +229,7 @@ function Gdb:prompt()
 end
 
 function Gdb:code(display)
-    self:onStop(function(addr, files, row)
+    self:onStop(function(_, addr, files, row)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
@@ -263,7 +263,7 @@ function Gdb:asm()
     vim.bo[bufid].modifiable = false
     vim.bo[bufid].filetype = "asm"
 
-    self:on("^done", function(data)
+    self:on("^done", function(ctx, data)
         local asm_insns = data.asm_insns
 
         if asm_insns then
