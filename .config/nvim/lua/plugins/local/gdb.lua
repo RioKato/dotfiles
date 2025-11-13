@@ -74,6 +74,7 @@ end
 
 function Gdb:open(cmd, ctx)
     if not self.jobid then
+        ctx = ctx or {}
         local buf = ""
 
         self.jobid = vim.fn.jobstart(cmd, {
@@ -155,11 +156,11 @@ function Gdb:disassemble()
 end
 
 function Gdb:onReceiveMessage(callback)
-    self:on("^error", function(ctx, data)
+    self:on("^error", function(_, data)
         callback(data.msg or "")
     end)
 
-    self:on("#msg", function(ctx, data)
+    self:on("#msg", function(_, data)
         assert(data.msg)
         callback(data.msg)
     end)
