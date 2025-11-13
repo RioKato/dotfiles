@@ -268,24 +268,33 @@ local function window(winid, nsid, hl)
 end
 
 ---------------------------------------------------------------------------------------------------
-function Gdb:asm()
+function Gdb:asm(display)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].modifiable = false
     vim.bo[bufid].filetype = "asm"
 
     self:on("^done", function(ctx, data)
+        local stop = ctx.stop
         local asm_insns = data.asm_insns
 
-        if asm_insns then
-            local lines = vim.iter(asm_insns)
-                :map(function(insn)
-                    return string.format("%s│ %s", insn.address, insn.inst)
-                end)
-                :totable()
+        if asm_insns and stop then
+            local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
+                return tonumber(insn.address) == tonumber(stop.address)
+            end)
+            row = row and row - 1
 
-            vim.bo[bufid].modifiable = true
-            vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
-            vim.bo[bufid].modifiable = false
+            if row then
+                local lines = vim.iter(asm_insns)
+                    :map(function(insn)
+                        return string.format("%s│ %s", insn.address, insn.inst)
+                    end)
+                    :totable()
+
+                vim.bo[bufid].modifiable = true
+                vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+                vim.bo[bufid].modifiable = false
+                display(bufid, row)
+            end
         end
     end)
 
@@ -298,10 +307,9 @@ local function test()
     gdb:prompt()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
-    local draw = window(0, nsid, "MyCustomLineHighlight")
-    gdb:code(draw)
-    local ctx = {}
-    gdb:open({ "gdb", "-i=mi" }, ctx)
+    gdb:code(window(0, nsid, "MyCustomLineHighlight"))
+    gdb:asm(window(2, nsid, "MyCustomLineHighlight"))
+    gdb:open({ "gdb", "-i=mi" })
 end
 
 test()
