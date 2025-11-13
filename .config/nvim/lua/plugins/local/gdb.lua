@@ -174,8 +174,8 @@ function Gdb:onStop(callback)
             local files = {}
             table.insert(files, frame.file)
             table.insert(files, frame.fullname)
-            local line = tonumber(frame.line)
-            callback(addr, files, line)
+            local row = tonumber(frame.line)
+            callback(addr, files, row)
         end
     end)
 end
@@ -228,31 +228,31 @@ function Gdb:prompt()
 end
 
 function Gdb:code(display)
-    self:onStop(function(addr, files, line)
+    self:onStop(function(addr, files, row)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
 
-        if found and line and line > 0 then
+        if found and row and row > 0 then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
-            display(bufid, line - 1)
+            display(bufid, row - 1)
         end
     end)
 end
 
 local function window(winid, nsid, hl)
-    return function(bufid, line)
+    return function(bufid, row)
         vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
-        vim.api.nvim_buf_set_extmark(bufid, nsid, line, 0, {
-            end_line = line + 1,
+        vim.api.nvim_buf_set_extmark(bufid, nsid, row, 0, {
+            end_line = row + 1,
             hl_eol = true,
             hl_group = hl,
         })
         vim.api.nvim_win_set_buf(winid, bufid)
-        vim.api.nvim_win_set_cursor(winid, { line + 1, 0 })
+        vim.api.nvim_win_set_cursor(winid, { row + 1, 0 })
     end
 end
 
