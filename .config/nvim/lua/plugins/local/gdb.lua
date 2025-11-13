@@ -249,18 +249,19 @@ function Gdb:previwer(winid)
 
     local function draw()
         local lines = vim.api.nvim_buf_get_lines(bufid, 0, -1, true)
-        local found = vim.iter(lines):find(function(line)
+        local found = vim.iter(lines):enumerate():find(function(_, line)
             return vim.startswith(line, lastaddr)
         end)
 
         if found then
             vim.api.nvim_win_set_buf(winid, bufid)
-            vim.api.nvim_win_set_cursor(winid, { 1, 0 })
+            vim.api.nvim_win_set_cursor(winid, { found, 0 })
         end
     end
 
     self:onStop(function(addr)
         lastaddr = addr
+        draw()
     end)
 
     self:on("^done", function(data)
@@ -276,6 +277,7 @@ function Gdb:previwer(winid)
             vim.bo[bufid].modifiable = true
             vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
             vim.bo[bufid].modifiable = false
+            draw()
         end
     end)
 
