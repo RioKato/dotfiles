@@ -227,7 +227,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(draw)
+function Gdb:code(display)
     self:onStop(function(addr, files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -238,7 +238,7 @@ function Gdb:code(draw)
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
-            draw(bufid, line - 1)
+            display(bufid, line - 1)
         end
     end)
 end
