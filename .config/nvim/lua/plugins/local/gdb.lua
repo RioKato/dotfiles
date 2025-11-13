@@ -227,7 +227,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(winid, nsid, hl)
+function Gdb:code(draw)
     self:onStop(function(addr, files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -238,16 +238,22 @@ function Gdb:code(winid, nsid, hl)
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
-            vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
-            vim.api.nvim_buf_set_extmark(bufid, nsid, line - 1, 0, {
-                end_line = line,
-                hl_eol = true,
-                hl_group = hl,
-            })
-            vim.api.nvim_win_set_buf(winid, bufid)
-            vim.api.nvim_win_set_cursor(winid, { line, 0 })
+            draw(bufid, line - 1)
         end
     end)
+end
+
+function window(winid, nsid, hl)
+    return function(bufid, line)
+        vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
+        vim.api.nvim_buf_set_extmark(bufid, nsid, line, 0, {
+            end_line = line + 1,
+            hl_eol = true,
+            hl_group = hl,
+        })
+        vim.api.nvim_win_set_buf(winid, bufid)
+        vim.api.nvim_win_set_cursor(winid, { line + 1, 0 })
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -302,7 +308,8 @@ local function test()
     gdb:prompt()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
-    gdb:code(0, nsid, "MyCustomLineHighlight")
+    local draw = window(0, nsid, "MyCustomLineHighlight")
+    gdb:code(draw)
     -- Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
