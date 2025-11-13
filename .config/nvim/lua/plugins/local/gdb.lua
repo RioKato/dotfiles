@@ -71,36 +71,38 @@ function Gdb.new()
 end
 
 function Gdb:open(cmd)
-    local buf = ""
+    if not self.jobid then
+        local buf = ""
 
-    self.jobid = vim.fn.jobstart(cmd, {
-        on_stdout = function(_, lines, _)
-            if #lines ~= 0 then
-                lines[1] = buf .. lines[1]
-                buf = table.remove(lines)
+        self.jobid = vim.fn.jobstart(cmd, {
+            on_stdout = function(_, lines, _)
+                if #lines ~= 0 then
+                    lines[1] = buf .. lines[1]
+                    buf = table.remove(lines)
 
-                vim.iter(lines):each(function(line)
-                    local result = MI.parse(line) or {}
-                    result.raw = line
-                    local event = result.event or (result.msg and "#msg") or ""
+                    vim.iter(lines):each(function(line)
+                        local result = MI.parse(line) or {}
+                        result.raw = line
+                        local event = result.event or (result.msg and "#msg") or ""
 
-                    vim.iter(self.listener[event] or {}):each(function(callback)
-                        callback(result, event)
+                        vim.iter(self.listener[event] or {}):each(function(callback)
+                            callback(result, event)
+                        end)
                     end)
-                end)
-            end
-        end,
-        on_stderr = function(_, lines, _)
-            local text = vim.iter(lines):join("")
+                end
+            end,
+            on_stderr = function(_, lines, _)
+                local text = vim.iter(lines):join("")
 
-            if text ~= "" then
-                vim.notify(text)
-            end
-        end,
-        on_exit = function()
-            self.jobid = nil
-        end,
-    })
+                if text ~= "" then
+                    vim.notify(text)
+                end
+            end,
+            on_exit = function()
+                self.jobid = nil
+            end,
+        })
+    end
 end
 
 function Gdb:send(cmd)
