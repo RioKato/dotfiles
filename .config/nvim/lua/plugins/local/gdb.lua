@@ -175,6 +175,7 @@ function Gdb:onStop(callback)
             table.insert(files, frame.file)
             table.insert(files, frame.fullname)
             local row = tonumber(frame.line)
+            row = row and row > 0 and row - 1 or nil
             callback(addr, files, row)
         end
     end)
@@ -234,11 +235,11 @@ function Gdb:code(display)
             return stat and stat.type == "file"
         end)
 
-        if found and row and row > 0 then
+        if found and row then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
-            display(bufid, row - 1)
+            display(bufid, row)
         end
     end)
 end
