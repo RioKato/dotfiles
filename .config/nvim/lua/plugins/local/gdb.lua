@@ -90,21 +90,28 @@ function Gdb:open(cmd)
                 end)
             end
         end,
+        on_stderr = function(_, lines, _)
+            local text = vim.iter(lines):join("")
+
+            if text ~= "" then
+                vim.notify(text)
+            end
+        end,
+        on_exit = function()
+            self.jobid = nil
+        end,
     })
 end
 
 function Gdb:send(cmd)
     if self.jobid then
-        if not pcall(vim.fn.chansend, self.jobid, cmd .. "\n") then
-            self.jobid = nil
-        end
+        vim.fn.chansend(self.jobid, cmd .. "\n")
     end
 end
 
 function Gdb:close()
     if self.jobid then
-        pcall(vim.fn.jobstop, self.jobid)
-        self.jobid = nil
+        vim.fn.jobstop(self.jobid)
     end
 end
 
@@ -287,7 +294,7 @@ end
 local function test()
     local gdb = Gdb.new()
     gdb:prompt()
-    gdb:code(0)
+    -- gdb:code(0)
     -- Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
