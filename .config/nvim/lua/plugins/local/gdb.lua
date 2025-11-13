@@ -30,6 +30,10 @@ local function parser()
         return dict
     end
 
+    local function toMsg(str)
+        return { msg = str }
+    end
+
     local any = lpeg.P(1)
     local str = lpeg.V("str")
     local pair = lpeg.V("pair")
@@ -48,9 +52,7 @@ local function parser()
         list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + obj * (lpeg.P(",") * obj) ^ 0 * lpeg.P("]"))),
         obj = str + dict + list,
         event = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 0) * lpeg.Ct((lpeg.P(",") * pair) ^ 0)) / toEvent,
-        msg = (lpeg.P("~") * str) / function(msg)
-            return { msg = msg }
-        end,
+        msg = (lpeg.P("~") * str) / toMsg,
         begin = event + msg,
     })
 
@@ -76,20 +78,19 @@ function Gdb:open(cmd)
 
         self.jobid = vim.fn.jobstart(cmd, {
             on_stdout = function(_, lines, _)
-                if #lines ~= 0 then
-                    lines[1] = buf .. lines[1]
-                    buf = table.remove(lines)
+                assert(#lines > 0)
+                lines[1] = buf .. lines[1]
+                buf = table.remove(lines)
 
-                    vim.iter(lines):each(function(line)
-                        local result = MI.parse(line) or {}
-                        result.raw = line
-                        local event = result.event or (result.msg and "#msg") or ""
+                vim.iter(lines):each(function(line)
+                    local result = MI.parse(line) or {}
+                    result.raw = line
+                    local event = result.event or (result.msg and "#msg") or ""
 
-                        vim.iter(self.listener[event] or {}):each(function(callback)
-                            callback(result, event)
-                        end)
+                    vim.iter(self.listener[event] or {}):each(function(callback)
+                        callback(result, event)
                     end)
-                end
+                end)
             end,
             on_stderr = function(_, lines, _)
                 local text = vim.iter(lines):join("")
@@ -233,7 +234,7 @@ function Gdb:code(winid, nsid, hl)
             return stat and stat.type == "file"
         end)
 
-        if found and line then
+        if found and line and line > 0 then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
