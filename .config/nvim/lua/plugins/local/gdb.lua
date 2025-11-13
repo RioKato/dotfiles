@@ -257,30 +257,10 @@ local function window(winid, nsid, hl)
 end
 
 ---------------------------------------------------------------------------------------------------
-function Gdb:previwer(winid)
+function Gdb:asm()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].modifiable = false
     vim.bo[bufid].filetype = "asm"
-    local lastaddr = nil
-
-    local function draw()
-        if lastaddr then
-            local lines = vim.api.nvim_buf_get_lines(bufid, 0, -1, true)
-            local found = vim.iter(lines):enumerate():find(function(_, line)
-                return vim.startswith(line, lastaddr)
-            end)
-
-            if found then
-                vim.api.nvim_win_set_buf(winid, bufid)
-                vim.api.nvim_win_set_cursor(winid, { found, 0 })
-            end
-        end
-    end
-
-    self:onStop(function(addr)
-        lastaddr = addr
-        draw()
-    end)
 
     self:on("^done", function(data)
         local asm_insns = data.asm_insns
@@ -295,7 +275,6 @@ function Gdb:previwer(winid)
             vim.bo[bufid].modifiable = true
             vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
             vim.bo[bufid].modifiable = false
-            draw()
         end
     end)
 
@@ -310,7 +289,6 @@ local function test()
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
     local draw = window(0, nsid, "MyCustomLineHighlight")
     gdb:code(draw)
-    -- Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
 
