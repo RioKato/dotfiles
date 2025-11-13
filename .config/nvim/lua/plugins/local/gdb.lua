@@ -243,7 +243,7 @@ function Gdb:code(draw)
     end)
 end
 
-function window(winid, nsid, hl)
+local function window(winid, nsid, hl)
     return function(bufid, line)
         vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
         vim.api.nvim_buf_set_extmark(bufid, nsid, line, 0, {
