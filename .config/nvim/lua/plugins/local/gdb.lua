@@ -245,11 +245,22 @@ function Gdb:previwer(winid)
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].modifiable = false
     vim.bo[bufid].filetype = "asm"
+    local lastaddr = nil
 
-    local lastAddr = nil
+    local function draw()
+        local lines = vim.api.nvim_buf_get_lines(bufid, 0, -1, true)
+        local found = vim.iter(lines):find(function(line)
+            return vim.startswith(line, lastaddr)
+        end)
+
+        if found then
+            vim.api.nvim_win_set_buf(winid, bufid)
+            vim.api.nvim_win_set_cursor(winid, { 1, 0 })
+        end
+    end
 
     self:onStop(function(addr)
-        lastAddr = addr
+        lastaddr = addr
     end)
 
     self:on("^done", function(data)
@@ -265,8 +276,6 @@ function Gdb:previwer(winid)
             vim.bo[bufid].modifiable = true
             vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
             vim.bo[bufid].modifiable = false
-            vim.api.nvim_win_set_buf(winid, bufid)
-            vim.api.nvim_win_set_cursor(winid, { 1, 0 })
         end
     end)
 
