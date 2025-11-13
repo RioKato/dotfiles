@@ -225,10 +225,7 @@ function Gdb:code(winid)
     self:onStop(function(addr, files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
-
-            if stat then
-                return stat.type == "file"
-            end
+            return stat and stat.type == "file"
         end)
 
         if found and line then
