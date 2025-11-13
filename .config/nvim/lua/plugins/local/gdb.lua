@@ -59,8 +59,7 @@ local function parser()
     end
 end
 
-local MI = {}
-MI.parse = parser()
+local MI = { parse = parser() }
 
 ---------------------------------------------------------------------------------------------------
 local Gdb = {}
@@ -237,22 +236,23 @@ function Gdb:code(winid)
             vim.bo[bufid].modifiable = false
             vim.api.nvim_win_set_buf(winid, bufid)
             vim.api.nvim_win_set_cursor(winid, { line, 0 })
-        else
-            gdb:disassemble()
         end
     end)
 end
 
 ---------------------------------------------------------------------------------------------------
-local Setup = {}
-
-function Setup.previwer(gdb, winid)
+function Gdb:previwer(winid)
     local bufid = vim.api.nvim_create_buf(true, true)
-    vim.api.nvim_buf_set_name(bufid, "Disassm")
     vim.bo[bufid].modifiable = false
     vim.bo[bufid].filetype = "asm"
 
-    gdb:on("^done", function(data)
+    local lastAddr = nil
+
+    self:onStop(function(addr)
+        lastAddr = addr
+    end)
+
+    self:on("^done", function(data)
         local asm_insns = data.asm_insns
 
         if asm_insns then
@@ -269,6 +269,8 @@ function Setup.previwer(gdb, winid)
             vim.api.nvim_win_set_cursor(winid, { 1, 0 })
         end
     end)
+
+    return bufid
 end
 
 ---------------------------------------------------------------------------------------------------
