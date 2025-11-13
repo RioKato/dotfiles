@@ -1,12 +1,12 @@
 local Layout = {}
 
-function Layout:new()
+function Layout.new()
     local obj = {
         buf = nil,
         win = nil,
     }
 
-    setmetatable(obj, { __index = self })
+    setmetatable(obj, { __index = Layout })
     return obj
 end
 
@@ -75,13 +75,13 @@ end
 
 local Hover = {}
 
-function Hover:new(opts)
+function Hover.new(opts)
     local obj = {
-        layout = Layout:new(),
+        layout = Layout.new(),
         opts = opts,
     }
 
-    setmetatable(obj, { __index = self })
+    setmetatable(obj, { __index = Hover })
     return obj
 end
 
@@ -149,7 +149,7 @@ local default = {
 
 function M.setup(opts)
     opts = vim.tbl_deep_extend("force", default, opts or {})
-    local hover = Hover:new(opts.win)
+    local hover = Hover.new(opts.win)
     local render = opts.render or Render:get()
 
     if render then
