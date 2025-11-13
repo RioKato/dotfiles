@@ -248,14 +248,16 @@ function Gdb:previwer(winid)
     local lastaddr = nil
 
     local function draw()
-        local lines = vim.api.nvim_buf_get_lines(bufid, 0, -1, true)
-        local found = vim.iter(lines):enumerate():find(function(_, line)
-            return vim.startswith(line, lastaddr)
-        end)
+        if lastaddr then
+            local lines = vim.api.nvim_buf_get_lines(bufid, 0, -1, true)
+            local found = vim.iter(lines):enumerate():find(function(_, line)
+                return vim.startswith(line, lastaddr)
+            end)
 
-        if found then
-            vim.api.nvim_win_set_buf(winid, bufid)
-            vim.api.nvim_win_set_cursor(winid, { found, 0 })
+            if found then
+                vim.api.nvim_win_set_buf(winid, bufid)
+                vim.api.nvim_win_set_cursor(winid, { found, 0 })
+            end
         end
     end
 
