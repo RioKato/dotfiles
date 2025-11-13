@@ -141,10 +141,6 @@ function Gdb:finish()
     self:send("-exec-finish")
 end
 
-function Gdb:go(at)
-    self:send(string.format("-exec-until %s", at))
-end
-
 function Gdb:continue()
     self:send("-exec-continue")
 end
@@ -230,7 +226,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(winid)
+function Gdb:code(winid, nsid, hl)
     self:onStop(function(addr, files, line)
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -239,7 +235,14 @@ function Gdb:code(winid)
 
         if found and line then
             local bufid = vim.fn.bufadd(found)
+            vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
+            vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
+            vim.api.nvim_buf_set_extmark(bufid, nsid, line - 1, 0, {
+                end_line = line,
+                hl_eol = true,
+                hl_group = hl,
+            })
             vim.api.nvim_win_set_buf(winid, bufid)
             vim.api.nvim_win_set_cursor(winid, { line, 0 })
         end
@@ -296,7 +299,9 @@ end
 local function test()
     local gdb = Gdb.new()
     gdb:prompt()
-    -- gdb:code(0)
+    local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
+    vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
+    gdb:code(0, nsid, "MyCustomLineHighlight")
     -- Setup.previwer(gdb, 0)
     gdb:open({ "gdb", "-i=mi" })
 end
