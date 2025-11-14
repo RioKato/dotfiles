@@ -279,7 +279,7 @@ function Gdb:asm(display)
 
         if asm_insns and stop then
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
-                return tonumber(insn.address) == tonumber(stop.address)
+                return tonumber(insn.address) == tonumber(stop.addr)
             end)
             row = row and row - 1
 
@@ -308,7 +308,7 @@ local function test()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
     gdb:code(window(0, nsid, "MyCustomLineHighlight"))
-    gdb:asm(window(2, nsid, "MyCustomLineHighlight"))
+    gdb:asm(window(0, nsid, "MyCustomLineHighlight"))
     gdb:open({ "gdb", "-i=mi" })
 end
 
