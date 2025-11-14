@@ -278,7 +278,11 @@ function Gdb:code(display)
             if row then
                 local lines = vim.iter(asm_insns)
                     :map(function(insn)
-                        return string.format("%s│ %s", insn.address, insn.inst)
+                        local address = insn.address or ""
+                        local name = insn["func-name"] or ""
+                        local offset = tonumber(insn.offset) or 0
+                        local inst = insn.inst or ""
+                        return string.format("%s<%s+%03d> │ %s", address, name, offset, inst)
                     end)
                     :totable()
 
