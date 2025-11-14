@@ -274,7 +274,6 @@ function Gdb:code(display)
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
                 return tonumber(insn.address) == stopped.addr
             end)
-            row = row and row - 1
 
             if row then
                 local lines = vim.iter(asm_insns)
@@ -287,7 +286,7 @@ function Gdb:code(display)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
-                display(bufid, row)
+                display(bufid, row - 1)
             end
         end
     end)
