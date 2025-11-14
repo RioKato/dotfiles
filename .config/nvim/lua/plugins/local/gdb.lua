@@ -248,7 +248,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(display)
+function Gdb:code(display, fallback)
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -261,6 +261,8 @@ function Gdb:code(display)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
             display(bufid, stopped.row)
+        elseif fallback then
+            self:disassemble()
         end
     end)
 end
@@ -318,7 +320,7 @@ local function test()
     gdb:prompt()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
-    gdb:code(window(0, nsid, "MyCustomLineHighlight"))
+    gdb:code(window(0, nsid, "MyCustomLineHighlight"), true)
     gdb:asm(window(0, nsid, "MyCustomLineHighlight"))
     gdb:open({ "gdb", "-i=mi" })
 end
