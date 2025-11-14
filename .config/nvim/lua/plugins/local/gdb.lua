@@ -194,6 +194,10 @@ function Gdb:disassemblePC(offset)
     self:send(cmd)
 end
 
+function Gdb:breakList()
+    self:send("-break-list")
+end
+
 function Gdb:onReceiveMessage(callback)
     self:on({ "^error" }, function(_, data)
         if data.msg and data.msg ~= "" then
@@ -244,44 +248,20 @@ function Gdb:onStop(callback)
     end)
 end
 
-function Gdb:onChangeBreakpoint(callback)
-    self:on({ "=breakpoint-created" }, function(ctx, data)
-        local bkpt = data.bkpt
+function Gdb:onUpdateBreakpoint(callback)
+    self:on({ "^done" }, function(ctx, data)
+        local BreakpointTable = data.BreakpointTable
 
-        if bkpt and bkpt.number then
-            local id = tonumber(bkpt.number)
+        if BreakpointTable then
+            ctx.bkpt = {}
+            vim.iter(BreakpointTable.bkpt or {}):each(function(bkpt)
+                local id = tonumber(bkpt.number)
 
-            if id then
-                ctx.bkpts = ctx.bkpts or {}
-                ctx.bkpts[id] = bkpt
-                callback(ctx)
-            end
-        end
-    end)
-
-    self:on({ "=breakpoint-deleted" }, function(ctx, data)
-        if data.id then
-            local id = tonumber(data.id)
-
-            if id then
-                ctx.bkpts = ctx.bkpts or {}
-                ctx.bkpts[id] = nil
-                callback(ctx)
-            end
-        end
-    end)
-
-    self:on({ "=breakpoint-modified" }, function(ctx, data)
-        local bkpt = data.bkpt
-
-        if bkpt and bkpt.number then
-            local id = tonumber(bkpt.number)
-
-            if id then
-                ctx.bkpts = ctx.bkpts or {}
-                ctx.bkpts[id] = bkpt
-                callback(ctx)
-            end
+                if id then
+                    ctx.bkpt[id] = bkpt
+                end
+            end)
+            callback(ctx)
         end
     end)
 end
