@@ -153,8 +153,13 @@ function Gdb:interrupt()
     self:send("-exec-interrupt")
 end
 
-function Gdb:disassemble()
+function Gdb:disassembleFunction()
     self:send("-data-disassemble -a $pc -- 0")
+end
+
+function Gdb:disassemblePC(offset)
+    local cmd = string.format("-data-disassemble -s $pc -e $pc+%d -- 0", offset)
+    self:send(cmd)
 end
 
 function Gdb:onReceiveMessage(callback)
@@ -180,11 +185,13 @@ function Gdb:onStop(callback)
                 table.insert(files, frame.fullname)
                 local row = tonumber(frame.line)
                 row = row and row > 0 and row - 1 or nil
+                local func = frame.func
 
                 ctx.stopped = {
                     addr = addr,
                     files = files,
                     row = row,
+                    func = func,
                 }
 
                 callback(ctx)
@@ -248,7 +255,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(display)
+function Gdb:code(display, pcofs)
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -261,8 +268,10 @@ function Gdb:code(display)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
             display(bufid, stopped.row)
+        elseif stopped.func and stopped.func ~= "??" then
+            self:disassembleFunction()
         else
-            self:disassemble()
+            self:disassemblePC(pcofs)
         end
     end)
 
@@ -320,7 +329,7 @@ local function test()
     gdb:prompt()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
-    gdb:code(window(0, nsid, "MyCustomLineHighlight"))
+    gdb:code(window(0, nsid, "MyCustomLineHighlight"), 0x100)
     gdb:open({ "gdb", "-i=mi" })
 end
 
