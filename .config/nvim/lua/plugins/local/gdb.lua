@@ -280,7 +280,7 @@ function Gdb:asm(display)
         local stop = ctx.stop
         local asm_insns = data.asm_insns
 
-        if asm_insns and stop then
+        if stop and asm_insns then
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
                 return tonumber(insn.address) == stop.addr
             end)
