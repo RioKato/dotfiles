@@ -248,7 +248,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(display, fallback)
+function Gdb:code(display)
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -261,30 +261,10 @@ function Gdb:code(display, fallback)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
             display(bufid, stopped.row)
-        elseif fallback then
+        else
             self:disassemble()
         end
     end)
-end
-
-local function window(winid, nsid, hl)
-    return function(bufid, row)
-        vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
-        vim.api.nvim_buf_set_extmark(bufid, nsid, row, 0, {
-            end_line = row + 1,
-            hl_eol = true,
-            hl_group = hl,
-        })
-        vim.api.nvim_win_set_buf(winid, bufid)
-        vim.api.nvim_win_set_cursor(winid, { row + 1, 0 })
-    end
-end
-
----------------------------------------------------------------------------------------------------
-function Gdb:asm(display)
-    local bufid = vim.api.nvim_create_buf(true, true)
-    vim.bo[bufid].modifiable = false
-    vim.bo[bufid].filetype = "asm"
 
     self:on({ "^done" }, function(ctx, data)
         local stopped = ctx.stopped
@@ -303,15 +283,27 @@ function Gdb:asm(display)
                     end)
                     :totable()
 
-                vim.bo[bufid].modifiable = true
+                local bufid = vim.api.nvim_create_buf(false, true)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
+                vim.bo[bufid].filetype = "asm"
                 display(bufid, row)
             end
         end
     end)
+end
 
-    return bufid
+local function window(winid, nsid, hl)
+    return function(bufid, row)
+        vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
+        vim.api.nvim_buf_set_extmark(bufid, nsid, row, 0, {
+            end_line = row + 1,
+            hl_eol = true,
+            hl_group = hl,
+        })
+        vim.api.nvim_win_set_buf(winid, bufid)
+        vim.api.nvim_win_set_cursor(winid, { row + 1, 0 })
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -320,8 +312,7 @@ local function test()
     gdb:prompt()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
-    gdb:code(window(0, nsid, "MyCustomLineHighlight"), true)
-    gdb:asm(window(0, nsid, "MyCustomLineHighlight"))
+    gdb:code(window(0, nsid, "MyCustomLineHighlight"))
     gdb:open({ "gdb", "-i=mi" })
 end
 
