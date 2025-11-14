@@ -186,8 +186,15 @@ function Gdb:onStop(callback)
                 }
 
                 callback(ctx)
+                return
             end
         end
+
+        ctx.stop = nil
+    end)
+
+    self:on("*running", function(ctx)
+        ctx.stop = nil
     end)
 end
 
