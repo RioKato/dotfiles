@@ -171,20 +171,23 @@ function Gdb:onStop(callback)
         local frame = data.frame
 
         if frame and frame.addr then
-            local addr = frame.addr
-            local files = {}
-            table.insert(files, frame.file)
-            table.insert(files, frame.fullname)
-            local row = tonumber(frame.line)
-            row = row and row > 0 and row - 1 or nil
+            local addr = tonumber(frame.addr)
 
-            ctx.stop = {
-                addr = addr,
-                files = files,
-                row = row,
-            }
+            if addr then
+                local files = {}
+                table.insert(files, frame.file)
+                table.insert(files, frame.fullname)
+                local row = tonumber(frame.line)
+                row = row and row > 0 and row - 1 or nil
 
-            callback(ctx)
+                ctx.stop = {
+                    addr = addr,
+                    files = files,
+                    row = row,
+                }
+
+                callback(ctx)
+            end
         end
     end)
 end
@@ -279,7 +282,7 @@ function Gdb:asm(display)
 
         if asm_insns and stop then
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
-                return tonumber(insn.address) == tonumber(stop.addr)
+                return tonumber(insn.address) == stop.addr
             end)
             row = row and row - 1
 
