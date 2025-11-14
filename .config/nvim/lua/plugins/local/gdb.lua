@@ -161,8 +161,7 @@ function Gdb:onReceiveMessage(callback)
     end)
 
     self:on("#msg", function(_, data)
-        assert(data.msg)
-        callback(data.msg)
+        callback(assert(data.msg))
     end)
 end
 
@@ -242,13 +241,13 @@ end
 
 function Gdb:code(display)
     self:onStop(function(ctx)
-        local stop = ctx.stop
+        local stop = assert(ctx.stop)
         local found = vim.iter(stop.files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
 
-        if found and stop.row then
+        if stop.row and found then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
