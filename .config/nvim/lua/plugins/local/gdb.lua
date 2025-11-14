@@ -234,17 +234,25 @@ function Gdb:onChangeBreakpoint(callback)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
-            ctx.bkpts = ctx.bkpts or {}
-            ctx.bkpts[bkpt.number] = bkpt
-            callback(ctx)
+            local id = tonumber(bkpt.number)
+
+            if id then
+                ctx.bkpts = ctx.bkpts or {}
+                ctx.bkpts[id] = bkpt
+                callback(ctx)
+            end
         end
     end)
 
     self:on({ "=breakpoint-deleted" }, function(ctx, data)
         if data.id then
-            ctx.bkpts = ctx.bkpts or {}
-            ctx.bkpts[data.id] = nil
-            callback(ctx)
+            local id = tonumber(data.id)
+
+            if id then
+                ctx.bkpts = ctx.bkpts or {}
+                ctx.bkpts[id] = nil
+                callback(ctx)
+            end
         end
     end)
 
@@ -252,9 +260,13 @@ function Gdb:onChangeBreakpoint(callback)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
-            ctx.bkpts = ctx.bkpts or {}
-            ctx.bkpts[bkpt.number] = bkpt
-            callback(ctx)
+            local id = tonumber(bkpt.number)
+
+            if id then
+                ctx.bkpts = ctx.bkpts or {}
+                ctx.bkpts[id] = bkpt
+                callback(ctx)
+            end
         end
     end)
 end
