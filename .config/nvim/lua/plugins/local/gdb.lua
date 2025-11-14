@@ -206,11 +206,8 @@ function Gdb:onStop(callback)
                 table.insert(files, frame.fullname)
                 local row = tonumber(frame.line)
                 row = row and row > 0 and row - 1 or nil
-                local func = frame.func
-
-                if vim.tbl_contains({ "??" }, func) then
-                    func = nil
-                end
+                local unknowns = { "??" }
+                local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
 
                 ctx.stopped = {
                     addr = addr,
@@ -315,11 +312,13 @@ function Gdb:code(display, pcofs)
             if row then
                 local lines = vim.iter(asm_insns)
                     :map(function(insn)
+                        Logger:write(insn)
                         local address = insn.address or ""
-                        local name = insn["func-name"] or ""
-                        local offset = tonumber(insn.offset) or 0
                         local inst = insn.inst or ""
-                        return string.format("%s<%s+%03d> │ %s", address, name, offset, inst)
+                        local name = insn["func-name"]
+                        local offset = tonumber(insn.offset)
+                        local label = name and offset and string.format("<%s+%03d>", name, offset) or ""
+                        return string.format("%s%s │ %s", address, label, inst)
                     end)
                     :totable()
 
