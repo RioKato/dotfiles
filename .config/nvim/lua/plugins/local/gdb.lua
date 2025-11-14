@@ -278,9 +278,11 @@ end
 function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
+    local last = ""
 
     vim.fn.prompt_setcallback(bufid, function(line)
-        self:send(line)
+        last = line ~= "" and line or last
+        self:send(last)
     end)
 
     self:onReceiveMessage(function(msg)
