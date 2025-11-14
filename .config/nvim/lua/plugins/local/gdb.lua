@@ -78,7 +78,7 @@ function Logger:write(obj)
 
         local text = vim.inspect(obj)
         local lines = vim.split(text, "\n")
-        vim.api.nvim_buf_set_lines(self.bufid, -2, -1, false, lines)
+        vim.api.nvim_buf_set_lines(self.bufid, -1, -1, false, lines)
     end
 end
 
@@ -129,6 +129,7 @@ end
 
 function Gdb:send(cmd)
     if self.jobid then
+        Logger:write({ send = cmd })
         vim.fn.chansend(self.jobid, cmd .. "\n")
     end
 end
@@ -352,7 +353,7 @@ end
 
 ---------------------------------------------------------------------------------------------------
 local function setup()
-    -- Logger:enable()
+    Logger:enable()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
 
