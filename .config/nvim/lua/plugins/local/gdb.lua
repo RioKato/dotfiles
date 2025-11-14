@@ -119,12 +119,14 @@ function Gdb:close()
     end
 end
 
-function Gdb:on(event, callback)
-    if not self.listener[event] then
-        self.listener[event] = {}
-    end
+function Gdb:on(events, callback)
+    vim.iter(events):each(function(event)
+        if not self.listener[event] then
+            self.listener[event] = {}
+        end
 
-    table.insert(self.listener[event], callback)
+        table.insert(self.listener[event], callback)
+    end)
 end
 
 function Gdb:run()
@@ -156,17 +158,17 @@ function Gdb:disassemble()
 end
 
 function Gdb:onReceiveMessage(callback)
-    self:on("^error", function(_, data)
+    self:on({ "^error" }, function(_, data)
         callback(data.msg or "")
     end)
 
-    self:on("#msg", function(_, data)
+    self:on({ "#msg" }, function(_, data)
         callback(assert(data.msg))
     end)
 end
 
 function Gdb:onStop(callback)
-    self:on("*stopped", function(ctx, data)
+    self:on({ "*stopped" }, function(ctx, data)
         local frame = data.frame
 
         if frame and frame.addr then
@@ -193,13 +195,13 @@ function Gdb:onStop(callback)
         ctx.stopped = nil
     end)
 
-    self:on("*running", function(ctx)
+    self:on({ "*running" }, function(ctx)
         ctx.stopped = nil
     end)
 end
 
 function Gdb:onChangeBreakpoint(callback)
-    self:on("=breakpoint-created", function(ctx, data)
+    self:on({ "=breakpoint-created" }, function(ctx, data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
@@ -209,7 +211,7 @@ function Gdb:onChangeBreakpoint(callback)
         end
     end)
 
-    self:on("=breakpoint-deleted", function(ctx, data)
+    self:on({ "=breakpoint-deleted" }, function(ctx, data)
         if data.id then
             ctx.bkpts = ctx.bkpts or {}
             ctx.bkpts[data.id] = nil
@@ -217,7 +219,7 @@ function Gdb:onChangeBreakpoint(callback)
         end
     end)
 
-    self:on("=breakpoint-modified", function(ctx, data)
+    self:on({ "=breakpoint-modified" }, function(ctx, data)
         local bkpt = data.bkpt
 
         if bkpt and bkpt.number then
@@ -282,7 +284,7 @@ function Gdb:asm(display)
     vim.bo[bufid].modifiable = false
     vim.bo[bufid].filetype = "asm"
 
-    self:on("^done", function(ctx, data)
+    self:on({ "^done" }, function(ctx, data)
         local stopped = ctx.stopped
         local asm_insns = data.asm_insns
 
