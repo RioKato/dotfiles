@@ -270,7 +270,7 @@ function Gdb:prompt()
     self:onReceiveMessage(function(msg)
         local lines = vim.split(msg, "\n")
         vim.bo[bufid].buftype = "nofile"
-        vim.api.nvim_buf_set_lines(bufid, -2, -1, false, lines)
+        vim.api.nvim_buf_set_text(bufid, -1, -1, -1, -1, lines)
         vim.bo[bufid].buftype = "prompt"
     end)
 
