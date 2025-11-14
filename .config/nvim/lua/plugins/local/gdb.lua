@@ -185,11 +185,15 @@ end
 
 function Gdb:onReceiveMessage(callback)
     self:on({ "^error" }, function(_, data)
-        callback(data.msg or "")
+        if data.msg and data.msg ~= "" then
+            callback(data.msg .. "\n")
+        end
     end)
 
     self:on({ "#msg" }, function(_, data)
-        callback(assert(data.msg))
+        if assert(data.msg) ~= "" then
+            callback(data.msg)
+        end
     end)
 end
 
