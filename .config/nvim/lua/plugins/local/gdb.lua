@@ -64,6 +64,25 @@ end
 local MI = { parse = parser() }
 
 ---------------------------------------------------------------------------------------------------
+local Logger = { enabled = false }
+
+function Logger:enable()
+    self.enabled = true
+end
+
+function Logger:write(obj)
+    if self.enabled then
+        if not self.bufid then
+            self.bufid = vim.api.nvim_create_buf(true, true)
+        end
+
+        local text = vim.inspect(obj)
+        local lines = vim.split(text, "\n")
+        vim.api.nvim_buf_set_lines(self.bufid, -2, -1, false, lines)
+    end
+end
+
+---------------------------------------------------------------------------------------------------
 local Gdb = {}
 
 function Gdb.new()
@@ -86,6 +105,7 @@ function Gdb:open(cmd, ctx)
                 vim.iter(lines):each(function(line)
                     local result = MI.parse(line) or {}
                     result.line = line
+                    Logger:write(result)
                     local event = result.event or (result.msg and "#msg") or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
@@ -332,6 +352,7 @@ end
 
 ---------------------------------------------------------------------------------------------------
 local function setup()
+    -- Logger:enable()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
 
