@@ -282,7 +282,12 @@ function Gdb:code(display)
                     end)
                     :totable()
 
-                local bufid = vim.api.nvim_create_buf(false, true)
+                if not ctx.cache or not vim.api.nvim_buf_is_valid(ctx.cache) then
+                    ctx.cache = vim.api.nvim_create_buf(false, true)
+                end
+
+                local bufid = ctx.cache
+                vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
