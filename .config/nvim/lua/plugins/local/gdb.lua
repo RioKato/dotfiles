@@ -270,6 +270,9 @@ function Gdb:code(display, pcofs)
         if stopped.row and found then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
+            vim.bo[bufid].buftype = "nofile"
+            vim.bo[bufid].bufhidden = "hide"
+            vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
             display(bufid, stopped.row)
         elseif stopped.func then
