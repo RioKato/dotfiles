@@ -17,8 +17,19 @@ local function parser()
     end
 
     local function toDict(pairs)
+        local special = { "bkpt" }
+
         return vim.iter(pairs):fold({}, function(left, right)
-            left[right[1]] = right[2]
+            local key = right[1]
+            local value = right[2]
+
+            if vim.tbl_contains(special, key) then
+                left[key] = left[key] or {}
+                table.insert(left[key], value)
+            else
+                left[key] = value
+            end
+
             return left
         end)
     end
