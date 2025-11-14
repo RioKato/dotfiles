@@ -312,12 +312,11 @@ function Gdb:code(display, pcofs)
             if row then
                 local lines = vim.iter(asm_insns)
                     :map(function(insn)
-                        Logger:write(insn)
                         local address = insn.address or ""
-                        local inst = insn.inst or ""
                         local name = insn["func-name"]
                         local offset = tonumber(insn.offset)
                         local label = name and offset and string.format("<%s+%03d>", name, offset) or ""
+                        local inst = insn.inst or ""
                         return string.format("%s%s │ %s", address, label, inst)
                     end)
                     :totable()
