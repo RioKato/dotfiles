@@ -179,7 +179,7 @@ function Gdb:onStop(callback)
                 local row = tonumber(frame.line)
                 row = row and row > 0 and row - 1 or nil
 
-                ctx.stop = {
+                ctx.stopped = {
                     addr = addr,
                     files = files,
                     row = row,
@@ -190,11 +190,11 @@ function Gdb:onStop(callback)
             end
         end
 
-        ctx.stop = nil
+        ctx.stopped = nil
     end)
 
     self:on("*running", function(ctx)
-        ctx.stop = nil
+        ctx.stopped = nil
     end)
 end
 
@@ -248,17 +248,17 @@ end
 
 function Gdb:code(display)
     self:onStop(function(ctx)
-        local stop = assert(ctx.stop)
-        local found = vim.iter(stop.files):find(function(file)
+        local stopped = assert(ctx.stopped)
+        local found = vim.iter(stopped.files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
 
-        if stop.row and found then
+        if stopped.row and found then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
-            display(bufid, stop.row)
+            display(bufid, stopped.row)
         end
     end)
 end
@@ -283,12 +283,12 @@ function Gdb:asm(display)
     vim.bo[bufid].filetype = "asm"
 
     self:on("^done", function(ctx, data)
-        local stop = ctx.stop
+        local stopped = ctx.stopped
         local asm_insns = data.asm_insns
 
-        if stop and asm_insns then
+        if stopped and asm_insns then
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
-                return tonumber(insn.address) == stop.addr
+                return tonumber(insn.address) == stopped.addr
             end)
             row = row and row - 1
 
