@@ -187,6 +187,10 @@ function Gdb:onStop(callback)
                 row = row and row > 0 and row - 1 or nil
                 local func = frame.func
 
+                if vim.tbl_contains({ "??" }, func) then
+                    func = nil
+                end
+
                 ctx.stopped = {
                     addr = addr,
                     files = files,
@@ -268,7 +272,7 @@ function Gdb:code(display, pcofs)
             vim.fn.bufload(bufid)
             vim.bo[bufid].modifiable = false
             display(bufid, stopped.row)
-        elseif stopped.func and stopped.func ~= "??" then
+        elseif stopped.func then
             self:disassembleFunction()
         else
             self:disassemblePC(pcofs)
