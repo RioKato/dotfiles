@@ -198,6 +198,21 @@ function Gdb:breakList()
     self:send("-break-list")
 end
 
+function Gdb:breakInsert(file, row)
+    local cmd = string.format("-break-insert %s:%d")
+    self:send(cmd)
+end
+
+function Gdb:breakInsertAddress(addr)
+    local cmd = string.format("-break-insert *%d")
+    self:send(cmd)
+end
+
+function Gdb:breakDelete(id)
+    local cmd = string.format("-break-delete %d", id)
+    self:send(cmd)
+end
+
 function Gdb:onReceiveMessage(callback)
     self:on({ "^error" }, function(_, data)
         if data.msg and data.msg ~= "" then
