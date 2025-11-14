@@ -328,13 +328,22 @@ local function window(winid, nsid, hl)
 end
 
 ---------------------------------------------------------------------------------------------------
-local function test()
-    local gdb = Gdb.new()
-    gdb:prompt()
+local function setup()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
-    gdb:code(window(0, nsid, "MyCustomLineHighlight"), 0x100)
+
+    local gdb = Gdb.new()
+    local bufid = gdb:prompt()
+    vim.api.nvim_open_win(bufid, false, {
+        split = "below",
+        win = -1,
+        style = "minimal",
+        height = 10,
+    })
+
+    local winid = vim.api.nvim_get_current_win()
+    gdb:code(window(winid, nsid, "MyCustomLineHighlight"), 0x100)
     gdb:open({ "gdb", "-i=mi" })
 end
 
-test()
+setup()
