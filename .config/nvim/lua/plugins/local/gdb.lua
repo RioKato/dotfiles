@@ -48,7 +48,7 @@ local function parser()
     local dict = lpeg.V("dict")
     local list = lpeg.V("list")
     local obj = lpeg.V("obj")
-    local event = lpeg.V("event")
+    local info = lpeg.V("info")
     local msg = lpeg.V("msg")
     local begin = lpeg.V("begin")
 
@@ -61,9 +61,9 @@ local function parser()
         list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("]")))
             / norm,
         obj = str + dict + list,
-        event = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 1) * (lpeg.P(",") * pair) ^ 0) / norm,
+        info = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 1) * (lpeg.P(",") * pair) ^ 0) / norm,
         msg = lpeg.Ct(lpeg.C(lpeg.P("~")) * str),
-        begin = event + msg,
+        begin = info + msg,
     })
 
     return function(text)
