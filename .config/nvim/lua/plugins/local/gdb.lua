@@ -244,6 +244,7 @@ end
 
 function Gdb:onStop(callback)
     self:on({ "*stopped", "=thread-selected" }, function(ctx, data)
+        ctx.stopped = nil
         local frame = data.frame
 
         if frame then
@@ -266,11 +267,18 @@ function Gdb:onStop(callback)
                 }
 
                 callback(ctx)
-                return
             end
         end
 
-        ctx.stopped = nil
+        local signal = data["signal-name"]
+
+        if signal then
+            vim.notify(("%s received"):format(signal))
+        end
+
+        if data.reason == "exited-normally" then
+            -- TODO: fallback
+        end
     end)
 
     self:on({ "*running" }, function(ctx)
