@@ -232,7 +232,7 @@ function Gdb:onStop(callback)
     self:on({ "*stopped", "=thread-selected" }, function(ctx, data)
         local frame = data.frame
 
-        if frame and frame.addr then
+        if frame then
             local addr = tonumber(frame.addr)
 
             if addr then
