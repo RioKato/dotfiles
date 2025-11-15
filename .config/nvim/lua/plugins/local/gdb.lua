@@ -195,13 +195,27 @@ function Gdb:breakList()
     self:send("-break-list")
 end
 
-function Gdb:breakInsert(file, row)
-    local cmd = string.format("-break-insert %s:%d")
-    self:send(cmd)
-end
+function Gdb:breakInsert(resolve)
+    local path = vim.fn.expand("%:p")
+    local pos = ""
 
-function Gdb:breakInsertAddress(addr)
-    local cmd = string.format("-break-insert *%d")
+    if path ~= "" then
+        path = resolve and resolve(path) or path
+        local row = vim.fn.line(".")
+        pos = string.format("%s:%d", path, row)
+    else
+        local addr = vim.fn.getline("."):match("0x%x+")
+
+        if not addr then
+            vim.notify("can't insert breakpoint")
+            return
+        end
+
+        pos = string.format("*%s", addr)
+    end
+
+    local cmd = string.format("-break-insert %s", pos)
+    print(cmd)
     self:send(cmd)
 end
 
@@ -372,13 +386,23 @@ local function window(winid, nsid, hl)
     end
 end
 
+local function resolveDebuginfodPath(path)
+    if path:match("debuginfod") then
+        path = path:match("#.+$")
+
+        if path then
+            return path:gsub("#", "/")
+        end
+    end
+end
+
 ---------------------------------------------------------------------------------------------------
 local function setup()
     Logger:enable()
     local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
     vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
 
-    local gdb = Gdb.new()
+    gdb = Gdb.new()
     local bufid = gdb:prompt()
     vim.api.nvim_open_win(bufid, false, {
         split = "below",
