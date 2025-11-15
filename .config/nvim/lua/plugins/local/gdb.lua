@@ -279,7 +279,7 @@ function Gdb:onStop(callback)
         end
 
         if data.reason == "exited-normally" then
-            vim.notif("exited")
+            vim.notify("exited")
         end
     end)
 
