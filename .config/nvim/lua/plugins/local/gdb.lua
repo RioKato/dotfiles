@@ -124,7 +124,7 @@ function Gdb:open(cmd, ctx)
                 end)
             end,
             on_stderr = function(_, lines, _)
-                local text = vim.iter(lines):join("")
+                local text = vim.iter(lines):join("\n")
 
                 if text ~= "" then
                     vim.notify(text)
