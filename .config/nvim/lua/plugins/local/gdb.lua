@@ -264,7 +264,7 @@ function Gdb:onStop(callback)
     end)
 end
 
-function Gdb:onUpdateBreakpoint(callback)
+function Gdb:onListBreakpoint(callback)
     self:on({ "^done" }, function(ctx, data)
         local BreakpointTable = data.BreakpointTable
 
