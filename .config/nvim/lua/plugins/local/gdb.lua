@@ -61,7 +61,7 @@ local function parser()
         list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("]")))
             / norm,
         obj = str + dict + list,
-        event = lpeg.Ct(lpeg.C(lpeg.S("*^") * (any - lpeg.P(",")) ^ 1) * (lpeg.P(",") * pair) ^ 0) / norm,
+        event = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 1) * (lpeg.P(",") * pair) ^ 0) / norm,
         msg = lpeg.Ct(lpeg.C(lpeg.P("~")) * str),
         begin = event + msg,
     })
@@ -214,14 +214,18 @@ end
 
 function Gdb:onReceiveMessage(callback)
     self:on({ "^error" }, function(_, data)
-        if data.msg and data.msg ~= "" then
-            callback(data.msg .. "\n")
+        local msg = data.msg
+
+        if msg and msg ~= "" then
+            callback(msg .. "\n")
         end
     end)
 
     self:on({ "~" }, function(_, data)
-        if data[2] then
-            callback(data[2])
+        local msg = data[2]
+
+        if msg and msg ~= "" then
+            callback(msg)
         end
     end)
 end
