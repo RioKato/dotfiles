@@ -195,27 +195,8 @@ function Gdb:breakList()
     self:send("-break-list")
 end
 
-function Gdb:breakInsert(resolve)
-    local path = vim.fn.expand("%:p")
-    local pos = ""
-
-    if path ~= "" then
-        path = resolve and resolve(path) or path
-        local row = vim.fn.line(".")
-        pos = ("%s:%d"):format(path, row)
-    else
-        local addr = vim.fn.getline("."):match("0x%x+")
-
-        if not addr then
-            vim.notify("can't insert breakpoint")
-            return
-        end
-
-        pos = ("*%s"):format(addr)
-    end
-
+function Gdb:breakInsert(pos)
     local cmd = ("-break-insert %s"):format(pos)
-    print(cmd)
     self:send(cmd)
 end
 
@@ -394,6 +375,27 @@ local function window(winid, nsid, hl)
         vim.api.nvim_win_set_buf(winid, bufid)
         vim.api.nvim_win_set_cursor(winid, { row + 1, 0 })
     end
+end
+
+function Gdb:insertBreakpointAt(resolve)
+    local path = vim.fn.expand("%:p")
+    local pos = ""
+
+    if path ~= "" then
+        path = resolve and resolve(path) or path
+        pos = ("%s:%d"):format(path, vim.fn.line("."))
+    else
+        local addr = vim.fn.getline("."):match("0x%x+")
+
+        if not addr then
+            vim.notify("can't insert breakpoint")
+            return
+        end
+
+        pos = ("*%s"):format(addr)
+    end
+
+    self:breakInsert(pos)
 end
 
 local function resolveDebuginfodPath(path)
