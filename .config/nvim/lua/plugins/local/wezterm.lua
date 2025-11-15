@@ -1,70 +1,70 @@
 local wezterm = {}
 
 function wezterm.exec(cmd)
-	vim.system({ "wezterm", unpack(cmd) })
+    vim.system({ "wezterm", unpack(cmd) })
 end
 
 function wezterm:cli(cmd)
-	self.exec({ "cli", unpack(cmd) })
+    self.exec({ "cli", unpack(cmd) })
 end
 
 function wezterm:activatePaneDirection(direction)
-	self:cli({ "activate-pane-direction", direction })
+    self:cli({ "activate-pane-direction", direction })
 end
 
 function wezterm:zoomPane(opt)
-	opt = opt == nil and "--toggle" or (opt and "--zoom" or "--unzoom")
-	self:cli({ "zoom-pane", opt })
+    opt = opt == nil and "--toggle" or (opt and "--zoom" or "--unzoom")
+    self:cli({ "zoom-pane", opt })
 end
 
 local wrapper = {}
 
 function wrapper.go(hjkl)
-	local map = {
-		h = "Left",
-		j = "Down",
-		k = "Up",
-		l = "Right",
-	}
+    local map = {
+        h = "Left",
+        j = "Down",
+        k = "Up",
+        l = "Right",
+    }
 
-	assert(map[hjkl])
+    assert(map[hjkl])
 
-	local win = vim.api.nvim_get_current_win()
+    local win = vim.api.nvim_get_current_win()
 
-	vim.cmd.wincmd(hjkl)
+    vim.cmd.wincmd(hjkl)
 
-	if win == vim.api.nvim_get_current_win() then
-		wezterm:activatePaneDirection(map[hjkl])
-	end
+    if win == vim.api.nvim_get_current_win() then
+        wezterm:activatePaneDirection(map[hjkl])
+    end
 end
 
 function wrapper.zoom()
-	local opts = {
-		toggles = {
-			dim = false,
-		},
-		on_open = function()
-			wezterm:zoomPane(true)
-		end,
-		on_close = function()
-			wezterm:zoomPane(false)
-		end,
-	}
+    local opts = {
+        toggles = {
+            dim = false,
+        },
+        on_open = function()
+            wezterm:zoomPane(true)
+        end,
+        on_close = function()
+            wezterm:zoomPane(false)
+        end,
+    }
 
-	Snacks.zen(opts)
+    Snacks.zen(opts)
 end
 
 local M = {}
 
 function M.setup()
-	vim.iter({ "h", "j", "k", "l" }):each(function(key)
-		vim.keymap.set("n", "<C-q>" .. key, function()
-			wrapper.go(key)
-		end)
-	end)
+    vim.iter({ "h", "j", "k", "l" }):each(function(key)
+        vim.keymap.set("n", "<C-q>" .. key, function()
+            wrapper.go(key)
+        end)
+    end)
 
-	vim.keymap.set("n", "<C-w>z", wrapper.zoom)
-	vim.keymap.set("n", "<C-q>c", "<cmd>close<cr>")
+    vim.keymap.set("n", "<C-w>z", wrapper.zoom)
+    vim.keymap.set("n", "<C-q>c", "<cmd>close<cr>")
 end
 
 return M
