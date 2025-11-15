@@ -266,11 +266,9 @@ end
 
 function Gdb:onListBreakpoint(callback)
     self:on({ "^done" }, function(ctx, data)
-        local BreakpointTable = data.BreakpointTable
-
-        if BreakpointTable then
+        if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
             ctx.bkpt = {}
-            vim.iter(BreakpointTable.bkpt or {}):each(function(bkpt)
+            vim.iter(data.BreakpointTable.body.bkpt):each(function(bkpt)
                 local id = tonumber(bkpt.number)
 
                 if id then
