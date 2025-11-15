@@ -269,7 +269,9 @@ function Gdb:onStop(callback)
                 callback(ctx)
             end
         end
+    end)
 
+    self:on({ "*stopped" }, function(ctx, data)
         local signal = data["signal-name"]
 
         if signal then
@@ -277,7 +279,7 @@ function Gdb:onStop(callback)
         end
 
         if data.reason == "exited-normally" then
-            -- TODO: fallback
+            vim.notif("exited")
         end
     end)
 
