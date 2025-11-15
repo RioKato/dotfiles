@@ -20,9 +20,19 @@ local function parser()
     end
 
     local function norm(data)
+        local special = { "bkpt" }
+
         return vim.iter(data):fold({}, function(left, right)
             if right.pair then
-                left[right[1]] = right[2]
+                local key = right[1]
+                local value = right[2]
+
+                if vim.tbl_contains(special, key) then
+                    left[key] = left[key] or {}
+                    table.insert(left[key], value)
+                else
+                    left[key] = value
+                end
             else
                 table.insert(left, right)
             end
