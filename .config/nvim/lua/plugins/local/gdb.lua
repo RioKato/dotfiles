@@ -264,7 +264,7 @@ function Gdb:onStop(callback)
     end)
 end
 
-function Gdb:onListBreakpoint(callback)
+function Gdb:onListBreakpoints(callback)
     self:on({ "^done" }, function(ctx, data)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
             ctx.bkpt = {}
