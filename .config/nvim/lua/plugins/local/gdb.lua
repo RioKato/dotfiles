@@ -101,9 +101,9 @@ function Gdb.new()
     return self
 end
 
-function Gdb:open(cmd, ctx)
+function Gdb:open(cmd)
     if not self.jobid then
-        ctx = ctx or {}
+        local ctx = {}
         local buf = ""
 
         self.jobid = vim.fn.jobstart(cmd, {
@@ -213,19 +213,19 @@ function Gdb:breakDelete(id)
 end
 
 function Gdb:onReceiveMessage(callback)
+    self:on({ "~" }, function(_, data)
+        local msg = assert(data[2])
+
+        if msg ~= "" then
+            callback(msg)
+        end
+    end)
+
     self:on({ "^error" }, function(_, data)
         local msg = data.msg
 
         if msg and msg ~= "" then
             callback(msg .. "\n")
-        end
-    end)
-
-    self:on({ "~" }, function(_, data)
-        local msg = data[2]
-
-        if msg and msg ~= "" then
-            callback(msg)
         end
     end)
 end
