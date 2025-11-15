@@ -12,7 +12,7 @@ return {
                 "-it",
                 "--rm",
                 "-v",
-                string.format("%s:/workdir", cwd),
+                ("%s:/workdir"):format(cwd),
                 "texlive/texlive",
                 "uplatex",
                 "-interaction=nonstopmode",

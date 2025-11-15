@@ -162,7 +162,7 @@ function init.lsp()
     local function diagnostic()
         local enabled = not vim.diagnostic.is_enabled()
         vim.diagnostic.enable(enabled)
-        vim.notify(string.format("Diagnostic: %s", enabled and "enable" or "disable"))
+        vim.notify(("Diagnostic: %s"):format(enabled and "enable" or "disable"))
     end
 
     local keys = {

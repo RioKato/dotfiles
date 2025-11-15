@@ -187,7 +187,7 @@ function Gdb:disassembleFunction()
 end
 
 function Gdb:disassemblePC(offset)
-    local cmd = string.format("-data-disassemble -s $pc -e $pc+%d -- 0", offset)
+    local cmd = ("-data-disassemble -s $pc -e $pc+%d -- 0"):format(offset)
     self:send(cmd)
 end
 
@@ -202,7 +202,7 @@ function Gdb:breakInsert(resolve)
     if path ~= "" then
         path = resolve and resolve(path) or path
         local row = vim.fn.line(".")
-        pos = string.format("%s:%d", path, row)
+        pos = ("%s:%d"):format(path, row)
     else
         local addr = vim.fn.getline("."):match("0x%x+")
 
@@ -211,16 +211,16 @@ function Gdb:breakInsert(resolve)
             return
         end
 
-        pos = string.format("*%s", addr)
+        pos = ("*%s"):format(addr)
     end
 
-    local cmd = string.format("-break-insert %s", pos)
+    local cmd = ("-break-insert %s"):format(pos)
     print(cmd)
     self:send(cmd)
 end
 
 function Gdb:breakDelete(id)
-    local cmd = string.format("-break-delete %d", id)
+    local cmd = ("-break-delete %d"):format(id)
     self:send(cmd)
 end
 
@@ -352,9 +352,9 @@ function Gdb:code(display, pcofs)
                         local address = insn.address or ""
                         local name = insn["func-name"]
                         local offset = tonumber(insn.offset)
-                        local label = name and offset and string.format("<%s+%03d>", name, offset) or ""
+                        local label = name and offset and ("<%s+%03d>"):format(name, offset) or ""
                         local inst = insn.inst or ""
-                        return string.format("%s%s │ %s", address, label, inst)
+                        return ("%s%s │ %s"):format(address, label, inst)
                     end)
                     :totable()
 

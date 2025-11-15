@@ -50,7 +50,7 @@ return {
                     vim.ui.select(tasks, {
                         prompt = "Tasks",
                         format_item = function(item)
-                            return string.format("%s %s", item.status, item.name)
+                            return ("%s %s"):format(item.status, item.name)
                         end,
                     }, function(item)
                         if item then

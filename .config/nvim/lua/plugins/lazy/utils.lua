@@ -168,7 +168,7 @@ return {
                 function()
                     require("nvim-rooter").rooter_default()
                     local cwd = vim.fn.getcwd()
-                    vim.notify(string.format("Change Directory:\n  %s", cwd))
+                    vim.notify(("Change Directory:\n  %s"):format(cwd))
                 end,
                 desc = "Rooter",
             },
