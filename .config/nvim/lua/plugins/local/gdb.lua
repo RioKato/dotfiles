@@ -392,6 +392,7 @@ function Window.new(nsid, hl)
     local self = {
         winid = vim.api.nvim_get_current_win(),
         bufid = vim.api.nvim_get_current_buf(),
+        cursor = vim.api.nvim_win_get_cursor(0),
         nsid = nsid,
         hl = hl,
     }
@@ -402,6 +403,7 @@ end
 
 function Window:fallback()
     vim.api.nvim_win_set_buf(self.winid, self.bufid)
+    vim.api.nvim_win_set_cursor(self.winid, self.cursor)
 end
 
 function Window:display(bufid, row)
