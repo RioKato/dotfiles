@@ -258,7 +258,7 @@ function Gdb:onStop(callback)
 end
 
 function Gdb:onExit(callback)
-    self:on({ "*stopped" }, function(ctx, data)
+    self:on({ "*stopped" }, function(_, data)
         if data.reason == "exited-normally" then
             callback()
         end
