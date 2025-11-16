@@ -252,20 +252,16 @@ function Gdb:onStop(callback)
         end
     end)
 
-    self:on({ "*stopped" }, function(ctx, data)
-        local signal = data["signal-name"]
-
-        if signal then
-            vim.notify(("%s received"):format(signal))
-        end
-
-        if data.reason == "exited-normally" then
-            vim.notify("exited")
-        end
-    end)
-
     self:on({ "*running" }, function(ctx)
         ctx.stopped = nil
+    end)
+end
+
+function Gdb:onExit(callback)
+    self:on({ "*stopped" }, function(ctx, data)
+        if data.reason == "exited-normally" then
+            callback(ctx)
+        end
     end)
 end
 
@@ -305,7 +301,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(display, pcofs)
+function Gdb:code(window, pcofs)
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -320,7 +316,7 @@ function Gdb:code(display, pcofs)
             vim.bo[bufid].bufhidden = "hide"
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
-            display(bufid, stopped.row)
+            window:display(bufid, stopped.row)
         elseif stopped.func then
             self:disassembleFunction()
         else
@@ -358,23 +354,14 @@ function Gdb:code(display, pcofs)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
-                display(bufid, row - 1)
+                window:display(bufid, row - 1)
             end
         end
     end)
-end
 
-local function window(winid, nsid, hl)
-    return function(bufid, row)
-        vim.api.nvim_buf_clear_namespace(bufid, nsid, 0, -1)
-        vim.api.nvim_buf_set_extmark(bufid, nsid, row, 0, {
-            end_line = row + 1,
-            hl_eol = true,
-            hl_group = hl,
-        })
-        vim.api.nvim_win_set_buf(winid, bufid)
-        vim.api.nvim_win_set_cursor(winid, { row + 1, 0 })
-    end
+    self:onExit(function(ctx)
+        window:fallback()
+    end)
 end
 
 function Gdb:insertBreakpointAt(resolve)
@@ -396,6 +383,36 @@ function Gdb:insertBreakpointAt(resolve)
     end
 
     self:breakInsert(pos)
+end
+
+---------------------------------------------------------------------------------------------------
+local Window = {}
+
+function Window.new(nsid, hl)
+    local self = {
+        winid = vim.api.nvim_get_current_win(),
+        bufid = vim.api.nvim_get_current_buf(),
+        nsid = nsid,
+        hl = hl,
+    }
+
+    setmetatable(self, { __index = Window })
+    return self
+end
+
+function Window:fallback()
+    vim.api.nvim_win_set_buf(self.winid, self.bufid)
+end
+
+function Window:display(bufid, row)
+    vim.api.nvim_buf_clear_namespace(bufid, self.nsid, 0, -1)
+    vim.api.nvim_buf_set_extmark(bufid, self.nsid, row, 0, {
+        end_line = row + 1,
+        hl_eol = true,
+        hl_group = self.hl,
+    })
+    vim.api.nvim_win_set_buf(self.winid, bufid)
+    vim.api.nvim_win_set_cursor(self.winid, { row + 1, 0 })
 end
 
 local function resolveDebuginfodPath(path)
@@ -423,8 +440,8 @@ local function setup()
         height = 10,
     })
 
-    local winid = vim.api.nvim_get_current_win()
-    gdb:code(window(winid, nsid, "MyCustomLineHighlight"), 0x100)
+    local window = Window.new(nsid, "MyCustomLineHighlight")
+    gdb:code(window, 0x100)
     gdb:open({ "gdb", "-i=mi" })
 end
 
