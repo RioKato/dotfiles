@@ -259,8 +259,20 @@ end
 
 function Gdb:onExit(callback)
     self:on({ "*stopped" }, function(_, data)
-        if data.reason == "exited-normally" then
+        local reason = data.reason
+
+        if reason and vim.startswith(reason, "exited") then
             callback()
+        end
+    end)
+end
+
+function Gdb:onReceiveSignal()
+    self:on({ "*stopped" }, function(_, data)
+        local signal = data["signal-name"]
+
+        if signal then
+            vim.notify(("%s received"):format(signal))
         end
     end)
 end
@@ -444,6 +456,7 @@ local function setup()
 
     local window = Window.new(nsid, "MyCustomLineHighlight")
     gdb:code(window, 0x100)
+    gdb:onReceiveSignal()
     gdb:open({ "gdb", "-i=mi" })
 end
 
