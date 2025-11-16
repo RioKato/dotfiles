@@ -271,7 +271,7 @@ function Gdb:onReceiveSignal()
     self:on({ "*stopped" }, function(_, data)
         local signal = data["signal-name"]
 
-        if signal then
+        if signal ~= "" then
             vim.notify(("%s received"):format(signal))
         end
     end)
