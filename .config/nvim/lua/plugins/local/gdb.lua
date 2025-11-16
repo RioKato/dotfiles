@@ -260,7 +260,7 @@ end
 function Gdb:onExit(callback)
     self:on({ "*stopped" }, function(ctx, data)
         if data.reason == "exited-normally" then
-            callback(ctx)
+            callback()
         end
     end)
 end
@@ -359,7 +359,7 @@ function Gdb:code(window, pcofs)
         end
     end)
 
-    self:onExit(function(ctx)
+    self:onExit(function()
         window:fallback()
     end)
 end
