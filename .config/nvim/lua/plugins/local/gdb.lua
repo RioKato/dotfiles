@@ -366,8 +366,8 @@ function Gdb:code(window, opts)
                     end)
                     :totable()
 
-                name = vim.fs.joinpath(opts.prefix, stopped.func or "$pc")
-                local bufid = loadScratchBuf(name)
+                local path = vim.fs.joinpath(opts.prefix, stopped.func or "$pc")
+                local bufid = loadScratchBuf(path)
                 vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
