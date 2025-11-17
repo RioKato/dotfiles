@@ -418,6 +418,30 @@ function Window:display(bufid, row)
 end
 
 ---------------------------------------------------------------------------------------------------
+local function setupBreakpoints(gdb)
+    gdb:onListBreakpoints(function(ctx)
+        -- vim.fn.sign_unplace(self.sign.group)
+
+        vim.iter(pairs(assert(ctx.bkpt))):each(function(_, info)
+            local files = {}
+            table.insert(files, info.file)
+            table.insert(files, info.fullname)
+            local row = tonumber(info.line)
+
+            local found = vim.iter(files):find(function(file)
+                local stat = vim.uv.fs_stat(file)
+                return stat and stat.type == "file"
+            end)
+
+            if found and row then
+                local bufid = vim.fn.bufadd(found)
+                vim.fn.bufload(bufid)
+                -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
+            end
+        end)
+    end)
+end
+
 local function insertBreakpointAt(gdb)
     local path = vim.fn.expand("%:p")
     local pos = ""
@@ -467,6 +491,7 @@ local function setup()
     local window = Window.new()
     gdb:code(window, 0x100)
     gdb:notify()
+    setupBreakpoints(gdb)
     gdb:open({ "gdb", "-i=mi" })
 end
 
