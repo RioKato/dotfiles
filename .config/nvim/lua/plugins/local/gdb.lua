@@ -429,7 +429,10 @@ function Window:fallback()
 end
 
 function Window:display(bufid, row)
-    vim.api.nvim_buf_clear_namespace(bufid, self.nsid, 0, -1)
+    vim.iter(vim.api.nvim_list_bufs()):each(function(n)
+        vim.api.nvim_buf_clear_namespace(n, self.nsid, 0, -1)
+    end)
+
     vim.api.nvim_buf_set_extmark(bufid, self.nsid, row, 0, {
         end_line = row + 1,
         hl_eol = true,
