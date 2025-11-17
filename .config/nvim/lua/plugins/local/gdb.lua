@@ -313,6 +313,16 @@ function Gdb:prompt()
 end
 
 function Gdb:code(window, opts)
+    local function loadScratchBuf(path)
+        local bufid = vim.fn.bufadd(path)
+        vim.fn.bufload(bufid)
+        vim.bo[bufid].buftype = "nofile"
+        vim.bo[bufid].bufhidden = "hide"
+        vim.bo[bufid].swapfile = false
+        vim.bo[bufid].modifiable = false
+        return bufid
+    end
+
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -321,12 +331,7 @@ function Gdb:code(window, opts)
         end)
 
         if stopped.row and found then
-            local bufid = vim.fn.bufadd(found)
-            vim.fn.bufload(bufid)
-            vim.bo[bufid].buftype = "nofile"
-            vim.bo[bufid].bufhidden = "hide"
-            vim.bo[bufid].swapfile = false
-            vim.bo[bufid].modifiable = false
+            local bufid = loadScratchBuf(found)
             window:display(bufid, stopped.row)
         elseif stopped.func then
             self:disassembleFunction()
@@ -358,15 +363,8 @@ function Gdb:code(window, opts)
 
                 local name = asm_insns[1] and asm_insns[1]["func-name"] or ""
                 name = vim.fs.joinpath(opts.prefix, name ~= "" and name or "pc")
-
-                local bufid = vim.fn.bufadd(name)
-                vim.fn.bufload(bufid)
-                vim.bo[bufid].buftype = "nofile"
-                vim.bo[bufid].bufhidden = "hide"
-                vim.bo[bufid].swapfile = false
-                vim.bo[bufid].modifiable = false
+                local bufid = loadScratchBuf(name)
                 vim.bo[bufid].filetype = "asm"
-
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
