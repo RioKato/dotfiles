@@ -417,6 +417,7 @@ function Window.new()
         sign = {
             id = 1,
             name = "GdbLine",
+            group = "",
         },
     }
 
@@ -432,7 +433,7 @@ end
 
 function Window:display(bufid, row)
     vim.fn.sign_unplace(self.sign.name, { id = self.sign.id })
-    vim.fn.sign_place(self.sign.id, "", self.sign.name, bufid, { lnum = row })
+    vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
     vim.api.nvim_win_set_buf(self.winid, bufid)
     vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
 end
