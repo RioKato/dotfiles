@@ -357,19 +357,15 @@ function Gdb:code(window, opts)
                     :totable()
 
                 local name = asm_insns[1] and asm_insns[1]["func-name"] or ""
+                name = vim.fs.joinpath(opts.prefix, name ~= "" and name or "pc")
 
-                if name == "" then
-                    name = "pc"
-                end
-
-                name = vim.fs.joinpath(opts.prefix, name)
                 local bufid = vim.fn.bufadd(name)
                 vim.fn.bufload(bufid)
                 vim.bo[bufid].buftype = "nofile"
                 vim.bo[bufid].bufhidden = "hide"
                 vim.bo[bufid].swapfile = false
-                vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].modifiable = false
+                vim.bo[bufid].filetype = "asm"
 
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
