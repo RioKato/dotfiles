@@ -362,12 +362,10 @@ function Gdb:code(window, offset)
                     :totable()
 
                 local bufid = vim.api.nvim_create_buf(false, true)
+                vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].buftype = "nofile"
                 vim.bo[bufid].bufhidden = "hide"
                 vim.bo[bufid].swapfile = false
-                vim.bo[bufid].modifiable = false
-                vim.bo[bufid].filetype = "asm"
-                vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 window:display(bufid, row)
