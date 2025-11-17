@@ -427,6 +427,7 @@ local function setupBreakpoints(gdb)
             table.insert(files, info.file)
             table.insert(files, info.fullname)
             local row = tonumber(info.line)
+            local addr = tonumber(info.addr)
 
             local found = vim.iter(files):find(function(file)
                 local stat = vim.uv.fs_stat(file)
@@ -437,6 +438,8 @@ local function setupBreakpoints(gdb)
                 local bufid = vim.fn.bufadd(found)
                 vim.fn.bufload(bufid)
                 -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
+            elseif addr and ctx.cache and vim.api.nvim_buf_is_valid(ctx.cache) then
+                -- parse
             end
         end)
     end)
