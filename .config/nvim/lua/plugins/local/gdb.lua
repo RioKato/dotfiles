@@ -236,7 +236,6 @@ function Gdb:onStop(callback)
                 table.insert(files, frame.file)
                 table.insert(files, frame.fullname)
                 local row = tonumber(frame.line)
-                row = row and row > 0 and row - 1 or nil
                 local unknowns = { "??" }
                 local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
 
@@ -366,7 +365,7 @@ function Gdb:code(window, pcofs)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
-                window:display(bufid, row - 1)
+                window:display(bufid, row)
             end
         end
     end)
@@ -410,13 +409,15 @@ end
 ---------------------------------------------------------------------------------------------------
 local Window = {}
 
-function Window.new(nsid, hl)
+function Window.new()
     local self = {
         winid = vim.api.nvim_get_current_win(),
         bufid = vim.api.nvim_get_current_buf(),
         cursor = vim.api.nvim_win_get_cursor(0),
-        nsid = nsid,
-        hl = hl,
+        sign = {
+            id = 1,
+            name = "GdbLine",
+        },
     }
 
     setmetatable(self, { __index = Window })
@@ -424,22 +425,16 @@ function Window.new(nsid, hl)
 end
 
 function Window:fallback()
+    vim.fn.sign_unplace(self.sign.name, { id = self.sign.id })
     vim.api.nvim_win_set_buf(self.winid, self.bufid)
     vim.api.nvim_win_set_cursor(self.winid, self.cursor)
 end
 
 function Window:display(bufid, row)
-    vim.iter(vim.api.nvim_list_bufs()):each(function(n)
-        vim.api.nvim_buf_clear_namespace(n, self.nsid, 0, -1)
-    end)
-
-    vim.api.nvim_buf_set_extmark(bufid, self.nsid, row, 0, {
-        end_line = row + 1,
-        hl_eol = true,
-        hl_group = self.hl,
-    })
+    vim.fn.sign_unplace(self.sign.name, { id = self.sign.id })
+    vim.fn.sign_place(self.sign.id, "", self.sign.name, bufid, { lnum = row })
     vim.api.nvim_win_set_buf(self.winid, bufid)
-    vim.api.nvim_win_set_cursor(self.winid, { row + 1, 0 })
+    vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
 end
 
 local function resolveDebuginfodPath(path)
@@ -455,8 +450,8 @@ end
 ---------------------------------------------------------------------------------------------------
 local function setup()
     Logger:enable()
-    local nsid = vim.api.nvim_create_namespace("MyLineHighlightsNS")
-    vim.api.nvim_set_hl(0, "MyCustomLineHighlight", { bg = "#501010", force = true })
+    vim.fn.sign_define("GdbLine", { linehl = "GdbLine" })
+    vim.api.nvim_set_hl(0, "GdbLine", { reverse = true, ctermbg = "darkblue" })
 
     gdb = Gdb.new()
     local bufid = gdb:prompt()
@@ -467,7 +462,7 @@ local function setup()
         height = 10,
     })
 
-    local window = Window.new(nsid, "MyCustomLineHighlight")
+    local window = Window.new()
     gdb:code(window, 0x100)
     gdb:notify()
     gdb:open({ "gdb", "-i=mi" })
