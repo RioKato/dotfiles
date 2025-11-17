@@ -356,15 +356,26 @@ function Gdb:code(window, pcofs)
                     end)
                     :totable()
 
-                if not ctx.cache or not vim.api.nvim_buf_is_valid(ctx.cache) then
-                    ctx.cache = vim.api.nvim_create_buf(false, true)
+                local name = asm_insns[1] and asm_insns[1]["func-name"] or ""
+
+                if name == "" then
+                    name = "F:$pc"
+                else
+                    name = ("F:%s"):format(name)
                 end
 
-                local bufid = ctx.cache
+                local bufid = vim.fn.bufadd(name)
+                vim.fn.bufload(bufid)
+                vim.bo[bufid].buftype = "nofile"
+                vim.bo[bufid].bufhidden = "hide"
+                vim.bo[bufid].swapfile = false
+                vim.bo[bufid].filetype = "asm"
+                vim.bo[bufid].modifiable = false
+
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
-                vim.bo[bufid].filetype = "asm"
+
                 window:display(bufid, row)
             end
         end
@@ -438,8 +449,6 @@ local function setupBreakpoints(gdb)
                 local bufid = vim.fn.bufadd(found)
                 vim.fn.bufload(bufid)
                 -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
-            elseif addr and ctx.cache and vim.api.nvim_buf_is_valid(ctx.cache) then
-                -- parse
             end
         end)
     end)
