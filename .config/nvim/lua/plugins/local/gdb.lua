@@ -368,7 +368,6 @@ function Gdb:code(window, opts)
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
-
                 window:display(bufid, row)
             end
         end
