@@ -313,6 +313,11 @@ function Gdb:prompt()
 end
 
 function Gdb:code(window, opts)
+    opts = {
+        offset = opts and opts.offset or 0x100,
+        prefix = opts and opts.prefix or ("/%d"):format(vim.fn.rand()),
+    }
+
     local function loadScratchBuf(path)
         local bufid = vim.fn.bufadd(path)
         vim.fn.bufload(bufid)
@@ -493,7 +498,7 @@ local function setup()
     })
 
     local window = Window.new()
-    gdb:code(window, { offset = 0x100, prefix = "~/Desktop/sample/hoge" })
+    gdb:code(window)
     gdb:notify()
     setupBreakpoints(gdb)
     gdb:open({ "gdb", "-i=mi" })
