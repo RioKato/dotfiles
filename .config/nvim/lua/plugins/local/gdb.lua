@@ -267,12 +267,12 @@ function Gdb:onExit(callback)
     end)
 end
 
-function Gdb:onReceiveSignal()
+function Gdb:onReceiveSignal(callback)
     self:on({ "*stopped" }, function(_, data)
         local signal = data["signal-name"]
 
-        if signal ~= "" then
-            vim.notify(("%s received"):format(signal))
+        if signal then
+            callback(signal)
         end
     end)
 end
@@ -376,6 +376,16 @@ function Gdb:code(window, pcofs)
     end)
 end
 
+function Gdb:notify()
+    self:onExit(function()
+        vim.notify("exited")
+    end)
+
+    self:onReceiveSignal(function(signal)
+        vim.notify(("%s received"):format(signal))
+    end)
+end
+
 function Gdb:insertBreakpointAt(resolve)
     local path = vim.fn.expand("%:p")
     local pos = ""
@@ -456,7 +466,7 @@ local function setup()
 
     local window = Window.new(nsid, "MyCustomLineHighlight")
     gdb:code(window, 0x100)
-    gdb:onReceiveSignal()
+    gdb:notify()
     gdb:open({ "gdb", "-i=mi" })
 end
 
