@@ -312,11 +312,9 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(window, opts)
-    opts = {
-        offset = opts and opts.offset or 0x100,
-        prefix = opts and opts.prefix or ("/%d"):format(vim.fn.rand()),
-    }
+function Gdb:code(window, offset)
+    offset = offset or 0x100
+    local id = vim.fn.rand()
 
     local function loadScratchBuf(path)
         local bufid = vim.fn.bufadd(path)
@@ -341,7 +339,7 @@ function Gdb:code(window, opts)
         elseif stopped.func then
             self:disassembleFunction()
         else
-            self:disassemblePC(opts.offset)
+            self:disassemblePC(offset)
         end
     end)
 
@@ -366,7 +364,7 @@ function Gdb:code(window, opts)
                     end)
                     :totable()
 
-                local path = vim.fs.joinpath(opts.prefix, stopped.func or "$pc")
+                local path = ("%d/%s"):format(id, stopped.func or "pc")
                 local bufid = loadScratchBuf(path)
                 vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].modifiable = true
