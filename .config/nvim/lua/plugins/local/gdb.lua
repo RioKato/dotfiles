@@ -426,7 +426,7 @@ function Window.new()
 end
 
 function Window:fallback()
-    vim.fn.sign_unplace(self.sign.name, { id = self.sign.id })
+    vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
     vim.api.nvim_win_set_buf(self.winid, self.bufid)
     vim.api.nvim_win_set_cursor(self.winid, self.cursor)
 end
