@@ -348,6 +348,8 @@ function Gdb:code(window, offset)
         local asm_insns = data.asm_insns
 
         if stopped and asm_insns then
+            assert(#asm_insns ~= 0)
+
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
                 return tonumber(insn.address) == stopped.addr
             end)
@@ -364,8 +366,13 @@ function Gdb:code(window, offset)
                     end)
                     :totable()
 
+                local range = { tonumber(asm_insns[1].address), tonumber(asm_insns[#asm_insns].address) }
                 local path = ("%d/%s"):format(id, stopped.func or "pc")
                 local bufid = loadScratchBuf(path)
+                vim.b[bufid].info = {
+                    id = id,
+                    range = range,
+                }
                 vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
