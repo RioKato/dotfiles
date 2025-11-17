@@ -312,7 +312,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(window, pcofs)
+function Gdb:code(window, opts)
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -331,7 +331,7 @@ function Gdb:code(window, pcofs)
         elseif stopped.func then
             self:disassembleFunction()
         else
-            self:disassemblePC(pcofs)
+            self:disassemblePC(opts.offset)
         end
     end)
 
@@ -359,11 +359,10 @@ function Gdb:code(window, pcofs)
                 local name = asm_insns[1] and asm_insns[1]["func-name"] or ""
 
                 if name == "" then
-                    name = "F:$pc"
-                else
-                    name = ("F:%s"):format(name)
+                    name = "pc"
                 end
 
+                name = vim.fs.joinpath(opts.prefix, name)
                 local bufid = vim.fn.bufadd(name)
                 vim.fn.bufload(bufid)
                 vim.bo[bufid].buftype = "nofile"
@@ -501,7 +500,7 @@ local function setup()
     })
 
     local window = Window.new()
-    gdb:code(window, 0x100)
+    gdb:code(window, { offset = 0x100, prefix = "~/Desktop/sample/hoge" })
     gdb:notify()
     setupBreakpoints(gdb)
     gdb:open({ "gdb", "-i=mi" })
