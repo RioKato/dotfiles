@@ -366,8 +366,7 @@ function Gdb:code(window, opts)
                     end)
                     :totable()
 
-                local name = asm_insns[1] and asm_insns[1]["func-name"] or ""
-                name = vim.fs.joinpath(opts.prefix, name ~= "" and name or "pc")
+                name = vim.fs.joinpath(opts.prefix, stopped.func or "$pc")
                 local bufid = loadScratchBuf(name)
                 vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].modifiable = true
