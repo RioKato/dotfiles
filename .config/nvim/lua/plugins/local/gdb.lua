@@ -316,16 +316,6 @@ function Gdb:code(window, offset)
     offset = offset or 0x100
     local id = vim.fn.rand()
 
-    local function loadScratchBuf(path)
-        local bufid = vim.fn.bufadd(path)
-        vim.fn.bufload(bufid)
-        vim.bo[bufid].buftype = "nofile"
-        vim.bo[bufid].bufhidden = "hide"
-        vim.bo[bufid].swapfile = false
-        vim.bo[bufid].modifiable = false
-        return bufid
-    end
-
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
         local found = vim.iter(stopped.files):find(function(file)
@@ -371,13 +361,11 @@ function Gdb:code(window, offset)
                     end)
                     :totable()
 
-                local range = { tonumber(asm_insns[1].address), tonumber(asm_insns[#asm_insns].address) }
-                local path = ("%d/%s"):format(id, stopped.func or "pc")
-                local bufid = loadScratchBuf(path)
-                vim.b[bufid].info = {
-                    id = id,
-                    range = range,
-                }
+                local bufid = vim.api.nvim_create_buf(false, true)
+                vim.bo[bufid].buftype = "nofile"
+                vim.bo[bufid].bufhidden = "hide"
+                vim.bo[bufid].swapfile = false
+                vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
                 vim.bo[bufid].modifiable = true
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
