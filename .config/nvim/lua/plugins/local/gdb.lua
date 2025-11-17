@@ -432,7 +432,7 @@ function Window:fallback()
 end
 
 function Window:display(bufid, row)
-    vim.fn.sign_unplace(self.sign.name, { id = self.sign.id })
+    vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
     vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
     vim.api.nvim_win_set_buf(self.winid, bufid)
     vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
