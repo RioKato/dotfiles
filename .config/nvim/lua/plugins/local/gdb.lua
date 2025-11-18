@@ -356,21 +356,20 @@ function Gdb:code(window, offset)
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
             window:display(bufid, stopped.row)
-        else
-            local bufid = nil
-            local row = nil
-
-            if ctx.cache then
-                bufid, row = ctx.cache:get(stopped.addr)
-            end
+            return
+        elseif ctx.cache then
+            local bufid, row = ctx.cache:get(stopped.addr)
 
             if bufid and row then
                 window:display(bufid, row)
-            elseif stopped.func then
-                self:disassembleFunction()
-            else
-                self:disassemblePC(offset or 0x100)
+                return
             end
+        end
+
+        if stopped.func then
+            self:disassembleFunction()
+        else
+            self:disassemblePC(offset or 0x100)
         end
     end)
 
