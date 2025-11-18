@@ -312,34 +312,32 @@ function Gdb:prompt()
     return bufid
 end
 
-local CodeCache = {}
-
-function CodeCache.new()
-    local self = { buf = {} }
-    setmetatable(self, { __index = CodeCache })
-    return self
-end
-
-function CodeCache:set(bufid, range)
-    self.buf[bufid] = range
-end
-
-function CodeCache:get(addr)
-    vim.iter(pairs(self.buf)):each(function(bufid)
-        if not vim.api.nvim_buf_is_valid(bufid) then
-            self.buf[bufid] = nil
-        end
-    end)
-
-    local bufid, range = vim.iter(pairs(self.buf)):find(function(_, range)
-        return range[addr]
-    end)
-
-    return bufid, range and range[addr]
-end
-
 function Gdb:code(window, offset)
-    offset = offset or 0x100
+    local CodeCache = {}
+
+    function CodeCache.new()
+        local self = { buf = {} }
+        setmetatable(self, { __index = CodeCache })
+        return self
+    end
+
+    function CodeCache:set(bufid, range)
+        self.buf[bufid] = range
+    end
+
+    function CodeCache:get(addr)
+        vim.iter(pairs(self.buf)):each(function(bufid)
+            if not vim.api.nvim_buf_is_valid(bufid) then
+                self.buf[bufid] = nil
+            end
+        end)
+
+        local bufid, range = vim.iter(pairs(self.buf)):find(function(_, range)
+            return range[addr]
+        end)
+
+        return bufid, range and range[addr]
+    end
 
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
@@ -369,7 +367,7 @@ function Gdb:code(window, offset)
             elseif stopped.func then
                 self:disassembleFunction()
             else
-                self:disassemblePC(offset)
+                self:disassemblePC(offset or 0x100)
             end
         end
     end)
