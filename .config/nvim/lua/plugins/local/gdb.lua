@@ -418,6 +418,8 @@ function Gdb:code(window, offset)
     end)
 
     self:onExit(function()
+        ctx.stopped = nil
+        ctx.cache = nil
         window:fallback()
     end)
 end
