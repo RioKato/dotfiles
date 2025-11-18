@@ -332,11 +332,15 @@ function Gdb:code(window, offset)
             end
         end)
 
-        local bufid, range = vim.iter(pairs(self.buf)):find(function(_, range)
-            return range[addr]
-        end)
+        local bufid, row = vim.iter(pairs(self.buf))
+            :map(function(bufid, range)
+                return bufid, range[addr]
+            end)
+            :find(function(_, found)
+                return found
+            end)
 
-        return bufid, range and range[addr]
+        return bufid, row
     end
 
     self:onStop(function(ctx)
