@@ -475,16 +475,21 @@ local function setupBreakpoints(gdb)
                 return stat and stat.type == "file"
             end)
 
-            if found and row then
-                local bufid = vim.fn.bufadd(found)
-                vim.fn.bufload(bufid)
-                -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
-            elseif ctx.cache then
-                local bufid, range = ctx.cache:get(addr)
+            local bufid, row = nil, nil
 
-                if bufid then
-                    local row = assert(range[addr])
+            if found and row then
+                bufid, row = vim.fn.bufadd(found), row
+                vim.fn.bufload(bufid)
+            elseif ctx.cache then
+                local ok, range = ctx.cache:get(addr)
+
+                if ok then
+                    bufid, row = ok, assert(range[addr])
                 end
+            end
+
+            if bufid and row then
+                -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
             end
         end)
     end)
