@@ -336,8 +336,8 @@ function Gdb:code(window, offset)
             :map(function(bufid, range)
                 return bufid, range[addr]
             end)
-            :find(function(_, found)
-                return found
+            :find(function(_, row)
+                return row
             end)
     end
 
