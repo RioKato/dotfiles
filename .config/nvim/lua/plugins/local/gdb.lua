@@ -462,8 +462,8 @@ function Window.new()
         cursor = vim.api.nvim_win_get_cursor(0),
         sign = {
             id = 1,
-            name = "GdbLine",
-            group = "",
+            name = "DebugPC",
+            group = "DebugPC",
         },
     }
 
@@ -482,6 +482,29 @@ function Window:display(bufid, row)
     vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
     vim.api.nvim_win_set_buf(self.winid, bufid)
     vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
+end
+
+---------------------------------------------------------------------------------------------------
+local Breakpoint = {}
+
+function Breakpoint.new()
+    local self = {
+        sign = {
+            name = "DebugBreakpoint",
+            group = "DebugBreakpoint",
+        },
+    }
+
+    setmetatable(self, { __index = Breakpoint })
+    return self
+end
+
+function Breakpoint:clear()
+    vim.fn.sign_unplace(self.sign.group)
+end
+
+function Breakpoint:display(bufid, row)
+    vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -519,8 +542,10 @@ end
 ---------------------------------------------------------------------------------------------------
 local function setup()
     Logger:enable()
-    vim.fn.sign_define("GdbLine", { linehl = "GdbLine" })
-    vim.api.nvim_set_hl(0, "GdbLine", { reverse = true, ctermbg = "darkblue" })
+    vim.fn.sign_define("DebugPC", { linehl = "DebugPC" })
+    vim.api.nvim_set_hl(0, "DebugPC", { reverse = true, ctermbg = "darkblue" })
+    vim.fn.sign_define("DebugBreakpoint", { linehl = "DebugBreakpoint" })
+    vim.api.nvim_set_hl(0, "DebugBreakpoint", { reverse = true, ctermbg = "darkblue" })
 
     gdb = Gdb.new()
     local bufid = gdb:prompt()
@@ -532,7 +557,8 @@ local function setup()
     })
 
     local window = Window.new()
-    gdb:code(window)
+    local breakpoint = Breakpoint.new()
+    gdb:code(window, breakpoint)
     gdb:notify()
     gdb:open({ "gdb", "-i=mi" })
 end
