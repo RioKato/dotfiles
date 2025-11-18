@@ -477,8 +477,6 @@ local function setupBreakpoints(gdb)
             local files = {}
             table.insert(files, info.file)
             table.insert(files, info.fullname)
-            local row = info.line
-            local addr = info.addr
 
             local found = vim.iter(files):find(function(file)
                 local stat = vim.uv.fs_stat(file)
@@ -487,14 +485,14 @@ local function setupBreakpoints(gdb)
 
             local bufid, row = nil, nil
 
-            if found and row then
-                bufid, row = vim.fn.bufadd(found), row
+            if found and info.line then
+                bufid, row = vim.fn.bufadd(found), info.line
                 vim.fn.bufload(bufid)
             elseif ctx.cache then
-                local ok, range = ctx.cache:get(addr)
+                local ok, range = ctx.cache:get(info.addr)
 
                 if ok then
-                    bufid, row = ok, assert(range[addr])
+                    bufid, row = ok, assert(range[info.addr])
                 end
             end
 
