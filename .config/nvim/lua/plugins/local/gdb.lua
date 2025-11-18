@@ -380,36 +380,43 @@ function Gdb:code(window, offset)
         local asm_insns = data.asm_insns
 
         if stopped and asm_insns then
-            local range = vim.iter(asm_insns):enumerate():fold({}, function(init, row, insn)
-                assert(insn.address)
-                init[insn.address] = row
-                return init
+            local valid = vim.iter(asm_insns):all(function(insn)
+                return insn.address
             end)
 
-            local row = range[stopped.addr]
+            if valid then
+                local range = vim.iter(asm_insns):enumerate():fold({}, function(init, row, insn)
+                    assert(insn.address)
+                    init[insn.address] = row
+                    return init
+                end)
 
-            if row then
-                local lines = vim.iter(asm_insns)
-                    :map(function(insn)
-                        assert(insn.address)
-                        local name = insn["func-name"]
-                        local label = name and insn.offset and ("<%s+%03d>"):format(name, insn.offset) or ""
-                        local inst = insn.inst or ""
-                        return ("0x%016x%s │ %s"):format(insn.address, label, inst)
-                    end)
-                    :totable()
+                local row = range[stopped.addr]
 
-                local bufid = vim.api.nvim_create_buf(false, true)
-                vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
-                vim.bo[bufid].modifiable = false
-                vim.bo[bufid].filetype = "asm"
-                window:display(bufid, row)
+                if row then
+                    local lines = vim.iter(asm_insns)
+                        :map(function(insn)
+                            assert(insn.address)
+                            local func = insn["func-name"]
+                            local offset = insn.offset
+                            local label = func and offset and ("<%s+%03d>"):format(func, offset) or ""
+                            local inst = insn.inst or ""
+                            return ("0x%016x%s │ %s"):format(insn.address, label, inst)
+                        end)
+                        :totable()
 
-                if not ctx.cache then
-                    ctx.cache = Cache.new()
+                    local bufid = vim.api.nvim_create_buf(false, true)
+                    vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+                    vim.bo[bufid].modifiable = false
+                    vim.bo[bufid].filetype = "asm"
+                    window:display(bufid, row)
+
+                    if not ctx.cache then
+                        ctx.cache = Cache.new()
+                    end
+
+                    ctx.cache:set(bufid, range)
                 end
-
-                ctx.cache:set(bufid, range)
             end
         end
     end)
