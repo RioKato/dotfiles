@@ -358,10 +358,8 @@ function Gdb:code(window, breakpoint, offset)
             return bufid, row
         elseif ctx.cache then
             local bufid, range = ctx.cache:get(addr)
-
-            if bufid then
-                return bufid, assert(range[addr])
-            end
+            row = bufid and assert(range[addr])
+            return bufid, row
         end
     end
 
