@@ -379,10 +379,9 @@ function Gdb:code(window, offset)
         local asm_insns = data.asm_insns
 
         if stopped and asm_insns then
-            local range = {}
-
-            vim.iter(asm_insns):enumerate():each(function(row, insn)
-                range[tonumber(insn.address)] = row
+            local range = vim.iter(asm_insns):enumerate():fold({}, function(init, row, insn)
+                init[tonumber(insn.address)] = row
+                return init
             end)
 
             local row = range[stopped.addr]

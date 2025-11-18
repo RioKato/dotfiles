@@ -1,0 +1,7 @@
+local val = vim.iter({10,2,3}):enumerate():fold({}, function(left, i, v)
+  print(i,v)
+  left[v] = i
+  return left
+end)
+
+print(vim.inspect(val))
