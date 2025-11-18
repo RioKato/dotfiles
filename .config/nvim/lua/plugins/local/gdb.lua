@@ -312,6 +312,32 @@ function Gdb:prompt()
     return bufid
 end
 
+local CodeCache = {}
+
+function CodeCache.new()
+    local self = { buf = {} }
+    setmetatable(self, { __index = CodeCache })
+    return self
+end
+
+function CodeCache:set(bufid, range)
+    self.buf[bufid] = range
+end
+
+function CodeCache:get(addr)
+    vim.iter(pairs(self.buf)):each(function(bufid)
+        if not vim.api.nvim_buf_is_valid(bufid) then
+            self.buf[bufid] = nil
+        end
+    end)
+
+    local bufid, range = vim.iter(pairs(self.buf)):find(function(_, range)
+        return range[addr]
+    end)
+
+    return bufid, range and range[addr]
+end
+
 function Gdb:code(window, offset)
     offset = offset or 0x100
 
@@ -330,10 +356,21 @@ function Gdb:code(window, offset)
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
             window:display(bufid, stopped.row)
-        elseif stopped.func then
-            self:disassembleFunction()
         else
-            self:disassemblePC(offset)
+            local bufid = nil
+            local row = nil
+
+            if ctx.cache then
+                bufid, row = ctx.cache:get(stopped.addr)
+            end
+
+            if bufid and row then
+                window:display(bufid, row)
+            elseif stopped.func then
+                self:disassembleFunction()
+            else
+                self:disassemblePC(offset)
+            end
         end
     end)
 
@@ -342,9 +379,13 @@ function Gdb:code(window, offset)
         local asm_insns = data.asm_insns
 
         if stopped and asm_insns then
-            local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
-                return tonumber(insn.address) == stopped.addr
+            local range = {}
+
+            vim.iter(asm_insns):enumerate():each(function(row, insn)
+                range[tonumber(insn.address)] = row
             end)
+
+            local row = range[stopped.addr]
 
             if row then
                 local lines = vim.iter(asm_insns)
@@ -366,6 +407,12 @@ function Gdb:code(window, offset)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 window:display(bufid, row)
+
+                if not ctx.cache then
+                    ctx.cache = CodeCache.new()
+                end
+
+                ctx.cache:set(bufid, range)
             end
         end
     end)
