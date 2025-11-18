@@ -342,29 +342,32 @@ function Gdb:code(window, breakpoint, offset)
         end)
     end
 
-    self:onStop(function(ctx)
-        local stopped = assert(ctx.stopped)
-        local found = vim.iter(stopped.files):find(function(file)
+    local function load(ctx, files, row, addr)
+        local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
 
-        local bufid, row = nil, nil
-
-        if found and stopped.row then
-            bufid, row = vim.fn.bufadd(found), stopped.row
+        if found and row then
+            local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].buftype = "nofile"
             vim.bo[bufid].bufhidden = "hide"
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
+            return bufid, row
         elseif ctx.cache then
-            local ok, range = ctx.cache:get(stopped.addr)
+            local bufid, range = ctx.cache:get(addr)
 
-            if ok then
-                bufid, row = ok, assert(range[stopped.addr])
+            if bufid then
+                return bufid, assert(range[addr])
             end
         end
+    end
+
+    self:onStop(function(ctx)
+        local stopped = assert(ctx.stopped)
+        local bufid, row = load(ctx, stopped.files, stopped.row, stopped.addr)
 
         if bufid and row then
             window:display(bufid, row)
@@ -432,28 +435,7 @@ function Gdb:code(window, breakpoint, offset)
             local files = {}
             table.insert(files, info.file)
             table.insert(files, info.fullname)
-
-            local found = vim.iter(files):find(function(file)
-                local stat = vim.uv.fs_stat(file)
-                return stat and stat.type == "file"
-            end)
-
-            local bufid, row = nil, nil
-
-            if found and info.line then
-                bufid, row = vim.fn.bufadd(found), info.line
-                vim.fn.bufload(bufid)
-                vim.bo[bufid].buftype = "nofile"
-                vim.bo[bufid].bufhidden = "hide"
-                vim.bo[bufid].swapfile = false
-                vim.bo[bufid].modifiable = false
-            elseif ctx.cache then
-                local ok, range = ctx.cache:get(info.addr)
-
-                if ok then
-                    bufid, row = ok, assert(range[info.addr])
-                end
-            end
+            local bufid, row = load(ctx, files, info.line, info.addr)
 
             if bufid and row then
                 breakpoint:display(bufid, row)
