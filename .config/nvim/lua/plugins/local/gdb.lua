@@ -488,6 +488,10 @@ local function setupBreakpoints(gdb)
             if found and info.line then
                 bufid, row = vim.fn.bufadd(found), info.line
                 vim.fn.bufload(bufid)
+                vim.bo[bufid].buftype = "nofile"
+                vim.bo[bufid].bufhidden = "hide"
+                vim.bo[bufid].swapfile = false
+                vim.bo[bufid].modifiable = false
             elseif ctx.cache then
                 local ok, range = ctx.cache:get(info.addr)
 
