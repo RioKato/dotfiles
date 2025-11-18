@@ -462,11 +462,17 @@ function Gdb:notify()
 end
 
 ---------------------------------------------------------------------------------------------------
-local Window = {}
+local Window = {
+    sign = {
+        id = 1,
+        name = "DebugPC",
+        group = "DebugPC",
+    },
+}
 
 function Window.setup()
-    vim.fn.sign_define("DebugPC", { linehl = "DebugPC" })
-    vim.api.nvim_set_hl(0, "DebugPC", { reverse = true, ctermbg = "darkblue" })
+    vim.fn.sign_define(Window.sign.name, { linehl = Window.sign.name })
+    vim.api.nvim_set_hl(0, Window.sign.name, { reverse = true, ctermbg = "darkblue" })
 end
 
 function Window.new()
@@ -474,11 +480,6 @@ function Window.new()
         winid = vim.api.nvim_get_current_win(),
         bufid = vim.api.nvim_get_current_buf(),
         cursor = vim.api.nvim_win_get_cursor(0),
-        sign = {
-            id = 1,
-            name = "DebugPC",
-            group = "DebugPC",
-        },
     }
 
     setmetatable(self, { __index = Window })
@@ -499,21 +500,20 @@ function Window:display(bufid, row)
 end
 
 ---------------------------------------------------------------------------------------------------
-local Breakpoint = {}
+local Breakpoint = {
+    sign = {
+        name = "DebugBreakpoint",
+        group = "DebugBreakpoint",
+    },
+}
 
 function Breakpoint.setup()
-    vim.fn.sign_define("DebugBreakpoint", { linehl = "DebugBreakpoint" })
-    vim.api.nvim_set_hl(0, "DebugBreakpoint", { reverse = true, ctermbg = "darkblue" })
+    vim.fn.sign_define(Breakpoint.sign.name, { linehl = Breakpoint.sign.name })
+    vim.api.nvim_set_hl(0, Breakpoint.sign.name, { reverse = true, ctermbg = "red" })
 end
 
 function Breakpoint.new()
-    local self = {
-        sign = {
-            name = "DebugBreakpoint",
-            group = "DebugBreakpoint",
-        },
-    }
-
+    local self = {}
     setmetatable(self, { __index = Breakpoint })
     return self
 end
