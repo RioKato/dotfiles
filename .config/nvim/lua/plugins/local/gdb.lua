@@ -283,6 +283,22 @@ function Gdb:onReceiveSignal(callback)
     end)
 end
 
+function Gdb:onReceiveInsns(callback)
+    self:on({ "^done" }, function(ctx, data)
+        local insns = data.asm_insns
+
+        if insns then
+            local valid = vim.iter(insns):all(function(insn)
+                return insn.address
+            end)
+
+            if valid then
+                callback(ctx, insns)
+            end
+        end
+    end)
+end
+
 function Gdb:onListBreakpoints(callback)
     self:on({ "^done" }, function(ctx, data)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
@@ -376,46 +392,39 @@ function Gdb:code(window, breakpoint, offset)
         end
     end)
 
-    self:on({ "^done" }, function(ctx, data)
+    self:onReceiveInsns(function(ctx, insns)
         local stopped = ctx.stopped
-        local asm_insns = data.asm_insns
 
-        if stopped and asm_insns then
-            local valid = vim.iter(asm_insns):all(function(insn)
-                return insn.address
+        if stopped then
+            local range = vim.iter(insns):enumerate():fold({}, function(init, row, insn)
+                init[insn.address] = row
+                return init
             end)
 
-            if valid then
-                local range = vim.iter(asm_insns):enumerate():fold({}, function(init, row, insn)
-                    init[insn.address] = row
-                    return init
-                end)
+            local row = range[stopped.addr]
 
-                local row = range[stopped.addr]
+            if row then
+                local lines = vim.iter(insns)
+                    :map(function(insn)
+                        local func = insn["func-name"]
+                        local offset = insn.offset
+                        local label = func and offset and ("<%s+0x%04x>"):format(func, offset) or ""
+                        local inst = insn.inst or ""
+                        return ("0x%016x%s │ %s"):format(insn.address, label, inst)
+                    end)
+                    :totable()
 
-                if row then
-                    local lines = vim.iter(asm_insns)
-                        :map(function(insn)
-                            local func = insn["func-name"]
-                            local offset = insn.offset
-                            local label = func and offset and ("<%s+0x%04x>"):format(func, offset) or ""
-                            local inst = insn.inst or ""
-                            return ("0x%016x%s │ %s"):format(insn.address, label, inst)
-                        end)
-                        :totable()
+                local bufid = vim.api.nvim_create_buf(false, true)
+                vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+                vim.bo[bufid].modifiable = false
+                vim.bo[bufid].filetype = "asm"
+                window:display(bufid, row)
 
-                    local bufid = vim.api.nvim_create_buf(false, true)
-                    vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
-                    vim.bo[bufid].modifiable = false
-                    vim.bo[bufid].filetype = "asm"
-                    window:display(bufid, row)
-
-                    if not ctx.cache then
-                        ctx.cache = Cache.new()
-                    end
-
-                    ctx.cache:set(bufid, range)
+                if not ctx.cache then
+                    ctx.cache = Cache.new()
                 end
+
+                ctx.cache:set(bufid, range)
             end
         end
     end)
