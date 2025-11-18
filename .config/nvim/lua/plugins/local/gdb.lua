@@ -314,7 +314,6 @@ end
 
 function Gdb:code(window, offset)
     offset = offset or 0x100
-    local id = vim.fn.rand()
 
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
@@ -343,8 +342,6 @@ function Gdb:code(window, offset)
         local asm_insns = data.asm_insns
 
         if stopped and asm_insns then
-            assert(#asm_insns ~= 0)
-
             local row = vim.iter(asm_insns):enumerate():find(function(_, insn)
                 return tonumber(insn.address) == stopped.addr
             end)
