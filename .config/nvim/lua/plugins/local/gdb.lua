@@ -455,6 +455,11 @@ end
 ---------------------------------------------------------------------------------------------------
 local Window = {}
 
+function Window.setup()
+    vim.fn.sign_define("DebugPC", { linehl = "DebugPC" })
+    vim.api.nvim_set_hl(0, "DebugPC", { reverse = true, ctermbg = "darkblue" })
+end
+
 function Window.new()
     local self = {
         winid = vim.api.nvim_get_current_win(),
@@ -486,6 +491,11 @@ end
 
 ---------------------------------------------------------------------------------------------------
 local Breakpoint = {}
+
+function Breakpoint.setup()
+    vim.fn.sign_define("DebugBreakpoint", { linehl = "DebugBreakpoint" })
+    vim.api.nvim_set_hl(0, "DebugBreakpoint", { reverse = true, ctermbg = "darkblue" })
+end
 
 function Breakpoint.new()
     local self = {
@@ -542,10 +552,8 @@ end
 ---------------------------------------------------------------------------------------------------
 local function setup()
     Logger:enable()
-    vim.fn.sign_define("DebugPC", { linehl = "DebugPC" })
-    vim.api.nvim_set_hl(0, "DebugPC", { reverse = true, ctermbg = "darkblue" })
-    vim.fn.sign_define("DebugBreakpoint", { linehl = "DebugBreakpoint" })
-    vim.api.nvim_set_hl(0, "DebugBreakpoint", { reverse = true, ctermbg = "darkblue" })
+    Window.setup()
+    Breakpoint.setup()
 
     gdb = Gdb.new()
     local bufid = gdb:prompt()
