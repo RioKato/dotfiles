@@ -356,7 +356,7 @@ function Gdb:code(window, breakpoint, offset)
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
             return bufid, row
-        elseif ctx.cache then
+        elseif ctx.cache and addr then
             local bufid, range = ctx.cache:get(addr)
             row = bufid and assert(range[addr])
             return bufid, row
