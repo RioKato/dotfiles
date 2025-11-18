@@ -386,7 +386,6 @@ function Gdb:code(window, offset)
 
             if valid then
                 local range = vim.iter(asm_insns):enumerate():fold({}, function(init, row, insn)
-                    assert(insn.address)
                     init[insn.address] = row
                     return init
                 end)
@@ -396,7 +395,6 @@ function Gdb:code(window, offset)
                 if row then
                     local lines = vim.iter(asm_insns)
                         :map(function(insn)
-                            assert(insn.address)
                             local func = insn["func-name"]
                             local offset = insn.offset
                             local label = func and offset and ("<%s+%03d>"):format(func, offset) or ""
