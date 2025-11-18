@@ -357,7 +357,7 @@ function Gdb:code(window, offset)
             local bufid, range = ctx.cache:get(stopped.addr)
 
             if bufid then
-                window:display(bufid, range[stopped.addr])
+                window:display(bufid, assert(range[stopped.addr]))
                 return
             end
         end
