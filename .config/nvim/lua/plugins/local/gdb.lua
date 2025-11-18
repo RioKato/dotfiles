@@ -367,8 +367,8 @@ function Gdb:code(window, breakpoint, offset)
         local stopped = assert(ctx.stopped)
         local bufid, row = load(ctx, stopped.files, stopped.row, stopped.addr)
 
-        if bufid and row then
-            window:display(bufid, row)
+        if bufid then
+            window:display(bufid, assert(row))
         elseif stopped.func then
             self:disassembleFunction()
         else
@@ -435,8 +435,8 @@ function Gdb:code(window, breakpoint, offset)
             table.insert(files, info.fullname)
             local bufid, row = load(ctx, files, info.line, info.addr)
 
-            if bufid and row then
-                breakpoint:display(bufid, row)
+            if bufid then
+                breakpoint:display(bufid, assert(row))
             end
         end)
     end)
