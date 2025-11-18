@@ -397,7 +397,7 @@ function Gdb:code(window, offset)
                         :map(function(insn)
                             local func = insn["func-name"]
                             local offset = insn.offset
-                            local label = func and offset and ("<%s+%03d>"):format(func, offset) or ""
+                            local label = func and offset and ("<%s+0x%04x>"):format(func, offset) or ""
                             local inst = insn.inst or ""
                             return ("0x%016x%s │ %s"):format(insn.address, label, inst)
                         end)
