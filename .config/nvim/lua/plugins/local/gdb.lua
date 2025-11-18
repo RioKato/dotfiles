@@ -313,19 +313,19 @@ function Gdb:prompt()
 end
 
 function Gdb:code(window, offset)
-    local CodeCache = {}
+    local Cache = {}
 
-    function CodeCache.new()
+    function Cache.new()
         local self = { buf = {} }
-        setmetatable(self, { __index = CodeCache })
+        setmetatable(self, { __index = Cache })
         return self
     end
 
-    function CodeCache:set(bufid, range)
+    function Cache:set(bufid, range)
         self.buf[bufid] = range
     end
 
-    function CodeCache:get(addr)
+    function Cache:get(addr)
         vim.iter(pairs(self.buf)):each(function(bufid)
             if not vim.api.nvim_buf_is_valid(bufid) then
                 self.buf[bufid] = nil
@@ -407,7 +407,7 @@ function Gdb:code(window, offset)
                 window:display(bufid, row)
 
                 if not ctx.cache then
-                    ctx.cache = CodeCache.new()
+                    ctx.cache = Cache.new()
                 end
 
                 ctx.cache:set(bufid, range)
