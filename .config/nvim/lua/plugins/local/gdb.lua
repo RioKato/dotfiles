@@ -15,6 +15,18 @@ local function parser()
     end
 
     local function toPair(data)
+        local intkey = {
+            "addr",
+            "line",
+            "address",
+            "offset",
+            "number",
+        }
+
+        if vim.tbl_contains(intkey, data[1]) then
+            data[2] = tonumber(data[2])
+        end
+
         data.pair = true
         return data
     end
@@ -229,20 +241,17 @@ function Gdb:onStop(callback)
         local frame = data.frame
 
         if frame then
-            local addr = tonumber(frame.addr)
-
-            if addr then
+            if frame.addr then
                 local files = {}
                 table.insert(files, frame.file)
                 table.insert(files, frame.fullname)
-                local row = tonumber(frame.line)
                 local unknowns = { "??" }
                 local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
 
                 ctx.stopped = {
-                    addr = addr,
+                    addr = frame.addr,
                     files = files,
-                    row = row,
+                    row = frame.line,
                     func = func,
                 }
 
@@ -281,10 +290,8 @@ function Gdb:onListBreakpoints(callback)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
             ctx.bkpt = {}
             vim.iter(data.BreakpointTable.body.bkpt):each(function(bkpt)
-                local id = tonumber(bkpt.number)
-
-                if id then
-                    ctx.bkpt[id] = bkpt
+                if bkpt.number then
+                    ctx.bkpt[bkpt.number] = bkpt
                 end
             end)
             callback(ctx)
@@ -376,7 +383,8 @@ function Gdb:code(window, offset)
 
         if stopped and asm_insns then
             local range = vim.iter(asm_insns):enumerate():fold({}, function(init, row, insn)
-                init[tonumber(insn.address)] = row
+                assert(insn.address)
+                init[insn.address] = row
                 return init
             end)
 
@@ -385,12 +393,11 @@ function Gdb:code(window, offset)
             if row then
                 local lines = vim.iter(asm_insns)
                     :map(function(insn)
-                        local address = insn.address or ""
+                        assert(insn.address)
                         local name = insn["func-name"]
-                        local offset = tonumber(insn.offset)
-                        local label = name and offset and ("<%s+%03d>"):format(name, offset) or ""
+                        local label = name and insn.offset and ("<%s+%03d>"):format(name, insn.offset) or ""
                         local inst = insn.inst or ""
-                        return ("%s%s │ %s"):format(address, label, inst)
+                        return ("0x%016x%s │ %s"):format(insn.address, label, inst)
                     end)
                     :totable()
 
@@ -467,8 +474,8 @@ local function setupBreakpoints(gdb)
             local files = {}
             table.insert(files, info.file)
             table.insert(files, info.fullname)
-            local row = tonumber(info.line)
-            local addr = tonumber(info.addr)
+            local row = info.line
+            local addr = info.addr
 
             local found = vim.iter(files):find(function(file)
                 local stat = vim.uv.fs_stat(file)
