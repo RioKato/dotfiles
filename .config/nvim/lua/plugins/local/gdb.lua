@@ -240,23 +240,21 @@ function Gdb:onStop(callback)
         ctx.stopped = nil
         local frame = data.frame
 
-        if frame then
-            if frame.addr then
-                local files = {}
-                table.insert(files, frame.file)
-                table.insert(files, frame.fullname)
-                local unknowns = { "??" }
-                local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
+        if frame and frame.addr then
+            local files = {}
+            table.insert(files, frame.file)
+            table.insert(files, frame.fullname)
+            local unknowns = { "??" }
+            local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
 
-                ctx.stopped = {
-                    addr = frame.addr,
-                    files = files,
-                    row = frame.line,
-                    func = func,
-                }
+            ctx.stopped = {
+                addr = frame.addr,
+                files = files,
+                row = frame.line,
+                func = func,
+            }
 
-                callback(ctx)
-            end
+            callback(ctx)
         end
     end)
 
