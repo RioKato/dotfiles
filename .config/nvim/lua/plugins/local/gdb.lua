@@ -344,25 +344,26 @@ function Gdb:code(window, offset)
             return stat and stat.type == "file"
         end)
 
-        if stopped.row and found then
-            local bufid = vim.fn.bufadd(found)
+        local bufid, row = nil, nil
+
+        if found and stopped.row then
+            bufid, row = vim.fn.bufadd(found), stopped.row
             vim.fn.bufload(bufid)
             vim.bo[bufid].buftype = "nofile"
             vim.bo[bufid].bufhidden = "hide"
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
-            window:display(bufid, stopped.row)
-            return
         elseif ctx.cache then
-            local bufid, range = ctx.cache:get(stopped.addr)
+            local ok, range = ctx.cache:get(stopped.addr)
 
-            if bufid then
-                window:display(bufid, assert(range[stopped.addr]))
-                return
+            if ok then
+                bufid, row = ok, assert(range[stopped.addr])
             end
         end
 
-        if stopped.func then
+        if bufid and row then
+            window:display(bufid, row)
+        elseif stopped.func then
             self:disassembleFunction()
         else
             self:disassemblePC(offset or 0x100)
@@ -478,6 +479,12 @@ local function setupBreakpoints(gdb)
                 local bufid = vim.fn.bufadd(found)
                 vim.fn.bufload(bufid)
                 -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
+            elseif ctx.cache then
+                local bufid, range = ctx.cache:get(addr)
+
+                if bufid then
+                    local row = assert(range[addr])
+                end
             end
         end)
     end)
