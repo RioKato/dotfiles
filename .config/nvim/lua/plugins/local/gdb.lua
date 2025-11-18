@@ -317,7 +317,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(window, offset)
+function Gdb:code(window, breakpoint, offset)
     local Cache = {}
 
     function Cache.new()
@@ -424,6 +424,42 @@ function Gdb:code(window, offset)
         ctx.cache = nil
         window:fallback()
     end)
+
+    self:onListBreakpoints(function(ctx)
+        breakpoint:clear()
+
+        vim.iter(pairs(assert(ctx.bkpt))):each(function(_, info)
+            local files = {}
+            table.insert(files, info.file)
+            table.insert(files, info.fullname)
+
+            local found = vim.iter(files):find(function(file)
+                local stat = vim.uv.fs_stat(file)
+                return stat and stat.type == "file"
+            end)
+
+            local bufid, row = nil, nil
+
+            if found and info.line then
+                bufid, row = vim.fn.bufadd(found), info.line
+                vim.fn.bufload(bufid)
+                vim.bo[bufid].buftype = "nofile"
+                vim.bo[bufid].bufhidden = "hide"
+                vim.bo[bufid].swapfile = false
+                vim.bo[bufid].modifiable = false
+            elseif ctx.cache then
+                local ok, range = ctx.cache:get(info.addr)
+
+                if ok then
+                    bufid, row = ok, assert(range[info.addr])
+                end
+            end
+
+            if bufid and row then
+                breakpoint:display(bufid, row)
+            end
+        end)
+    end)
 end
 
 function Gdb:notify()
@@ -469,44 +505,6 @@ function Window:display(bufid, row)
 end
 
 ---------------------------------------------------------------------------------------------------
-local function setupBreakpoints(gdb)
-    gdb:onListBreakpoints(function(ctx)
-        -- vim.fn.sign_unplace(self.sign.group)
-
-        vim.iter(pairs(assert(ctx.bkpt))):each(function(_, info)
-            local files = {}
-            table.insert(files, info.file)
-            table.insert(files, info.fullname)
-
-            local found = vim.iter(files):find(function(file)
-                local stat = vim.uv.fs_stat(file)
-                return stat and stat.type == "file"
-            end)
-
-            local bufid, row = nil, nil
-
-            if found and info.line then
-                bufid, row = vim.fn.bufadd(found), info.line
-                vim.fn.bufload(bufid)
-                vim.bo[bufid].buftype = "nofile"
-                vim.bo[bufid].bufhidden = "hide"
-                vim.bo[bufid].swapfile = false
-                vim.bo[bufid].modifiable = false
-            elseif ctx.cache then
-                local ok, range = ctx.cache:get(info.addr)
-
-                if ok then
-                    bufid, row = ok, assert(range[info.addr])
-                end
-            end
-
-            if bufid and row then
-                -- vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
-            end
-        end)
-    end)
-end
-
 local function insertBreakpointAt(gdb)
     local path = vim.fn.expand("%:p")
     local pos = ""
@@ -556,7 +554,6 @@ local function setup()
     local window = Window.new()
     gdb:code(window)
     gdb:notify()
-    setupBreakpoints(gdb)
     gdb:open({ "gdb", "-i=mi" })
 end
 
