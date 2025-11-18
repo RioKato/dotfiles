@@ -332,13 +332,9 @@ function Gdb:code(window, offset)
             end
         end)
 
-        return vim.iter(pairs(self.buf))
-            :map(function(bufid, range)
-                return bufid, range[addr]
-            end)
-            :find(function(_, row)
-                return row
-            end)
+        return vim.iter(pairs(self.buf)):find(function(_, range)
+            return range[addr]
+        end)
     end
 
     self:onStop(function(ctx)
@@ -358,10 +354,10 @@ function Gdb:code(window, offset)
             window:display(bufid, stopped.row)
             return
         elseif ctx.cache then
-            local bufid, row = ctx.cache:get(stopped.addr)
+            local bufid, range = ctx.cache:get(stopped.addr)
 
-            if bufid and row then
-                window:display(bufid, row)
+            if bufid then
+                window:display(bufid, range[stopped.addr])
                 return
             end
         end
