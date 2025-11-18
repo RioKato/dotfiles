@@ -240,7 +240,7 @@ function Gdb:onStop(callback)
         ctx.stopped = nil
         local frame = data.frame
 
-        if frame and frame.addr then
+        if frame then
             local files = {}
             table.insert(files, frame.file)
             table.insert(files, frame.fullname)
