@@ -21,6 +21,7 @@ local function parser()
             "address",
             "offset",
             "number",
+            "id",
         }
 
         if vim.tbl_contains(intkey, data[1]) then
