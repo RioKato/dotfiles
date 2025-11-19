@@ -301,8 +301,8 @@ function Gdb:onChangeBkpts(callback)
                 return iv
             end)
 
-            ctx.bkpts = ctx.bkpts or {}
             callback(ctx, bkpts, rename[event])
+            ctx.bkpts = ctx.bkpts or {}
 
             vim.iter(pairs(bkpts)):each(function(id, bkpt)
                 ctx.bkpts[id] = bkpt
@@ -314,8 +314,8 @@ function Gdb:onChangeBkpts(callback)
         local id = data.id
 
         if id then
-            ctx.bkpts = ctx.bkpts or {}
             callback(ctx, id, rename[event])
+            ctx.bkpts = ctx.bkpts or {}
             ctx.bkpts[id] = nil
         end
     end)
@@ -329,7 +329,6 @@ function Gdb:onChangeBkpts(callback)
                 return iv
             end)
 
-            ctx.bkpts = ctx.bkpts or {}
             callback(ctx, bkpts, rename[event])
             ctx.bkpts = bkpts
         end
@@ -469,7 +468,7 @@ function Gdb:code(window, breakpoint, offset)
         function handlers.sync()
             breakpoint:clear()
 
-            vim.iter(pairs(assert(data))):each(function(_, bkpt)
+            vim.iter(pairs(data)):each(function(_, bkpt)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
