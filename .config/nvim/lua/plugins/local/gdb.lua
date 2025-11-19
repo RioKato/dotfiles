@@ -461,11 +461,13 @@ function Gdb:code(window, breakpoint, offset)
         local handler = {}
 
         function handler.create()
+            local toBool = { y = true, n = false }
+
             vim.iter(pairs(data)):each(function(_, bkpt)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row), bkpt.enabled)
+                    breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
                 end
             end)
         end
