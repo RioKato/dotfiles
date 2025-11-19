@@ -605,35 +605,31 @@ function Breakpoint:clear()
 end
 
 ---------------------------------------------------------------------------------------------------
-local function insertBreakpointAt(gdb)
-    local path = vim.fn.expand("%:p")
+local util = {}
+
+function util.createBreakpointAt(gdb)
+    local winid = vim.api.nvim_get_current_win()
+    local bufid = vim.api.nvim_win_get_buf(winid)
+    local cursor = vim.api.nvim_win_get_cursor(winid)
+    local path = vim.api.nvim_buf_get_name(bufid)
+    assert(cursor[1] > 0)
+    local line = vim.api.nvim_buf_get_lines(bufid, cursor[1] - 1, cursor[1], true)
     local pos = ""
 
     if path ~= "" then
-        path = resolveDebuginfodPath(path) or path
-        pos = ("%s:%d"):format(path, vim.fn.line("."))
+        pos = ("%s:%d"):format(path, cursor[1])
     else
-        local addr = vim.fn.getline("."):match("0x%x+")
+        local addr = tonumber(line:match("0x%x+"))
 
         if not addr then
             vim.notify("can't insert breakpoint")
             return
         end
 
-        pos = ("*%s"):format(addr)
+        pos = ("*0x%016x"):format(addr)
     end
 
     gdb:breakInsert(pos)
-end
-
-local function resolveDebuginfodPath(path)
-    if path:match("debuginfod") then
-        path = path:match("#.+$")
-
-        if path then
-            return path:gsub("#", "/")
-        end
-    end
 end
 
 ---------------------------------------------------------------------------------------------------
