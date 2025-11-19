@@ -465,7 +465,7 @@ function Gdb:code(window, breakpoint, offset)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row))
+                    breakpoint:create(bufid, assert(row), bkpt.enabled)
                 end
             end)
         end
@@ -475,7 +475,8 @@ function Gdb:code(window, breakpoint, offset)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:modify(bufid, assert(row))
+                    breakpoint:delete(bufid, assert(row))
+                    breakpoint:create(bufid, assert(row), bkpt.enabled)
                 end
             end)
         end
@@ -499,7 +500,7 @@ function Gdb:code(window, breakpoint, offset)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row))
+                    breakpoint:create(bufid, assert(row), bkpt.enabled)
                 end
             end)
         end
@@ -575,13 +576,8 @@ function Breakpoint.new()
     return self
 end
 
-function Breakpoint:create(bufid, row)
+function Breakpoint:create(bufid, row, enabled)
     vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
-end
-
-function Breakpoint:modify(bufid, row)
-    self:delete(bufid, row)
-    self:create(bufid, row)
 end
 
 function Breakpoint:delete(bufid, row)
