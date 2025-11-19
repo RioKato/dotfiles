@@ -581,7 +581,14 @@ end
 
 function Breakpoint:modify(bufid, row) end
 
-function Breakpoint:delete(bufid, row) end
+function Breakpoint:delete(bufid, row)
+    local placed = vim.fn.sign_getplaced(bufid, { group = self.sign.group, lnum = row })
+    local signs = assert(placed[1]).signs
+
+    vim.iter(signs):each(function(sign)
+        vim.fn.sign_unplace(self.sign.group, { id = sign.id })
+    end)
+end
 
 function Breakpoint:clear()
     vim.fn.sign_unplace(self.sign.group)
