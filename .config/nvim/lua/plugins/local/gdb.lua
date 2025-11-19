@@ -397,7 +397,7 @@ function Gdb:code(window, breakpoint, offset)
         local bufid, row = load(ctx, stopped)
 
         if bufid then
-            window:display(bufid, assert(row))
+            window:set(bufid, assert(row))
         elseif stopped.func then
             self:disassembleFunction()
         else
@@ -434,7 +434,7 @@ function Gdb:code(window, breakpoint, offset)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
-                window:display(bufid, row)
+                window:set(bufid, row)
 
                 ctx.cache = ctx.cache or Cache.new()
                 ctx.cache:set(bufid, range)
@@ -542,7 +542,7 @@ function Window:fallback()
     vim.api.nvim_win_set_cursor(self.winid, self.cursor)
 end
 
-function Window:display(bufid, row)
+function Window:set(bufid, row)
     vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
     vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
     vim.api.nvim_win_set_buf(self.winid, bufid)
