@@ -575,12 +575,16 @@ function Breakpoint.new()
     return self
 end
 
-function Breakpoint:clear()
-    vim.fn.sign_unplace(self.sign.group)
+function Breakpoint:create(bufid, row)
+    vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
 end
 
-function Breakpoint:display(bufid, row)
-    vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
+function Breakpoint:modify(bufid, row) end
+
+function Breakpoint:delete(bufid, row) end
+
+function Breakpoint:clear()
+    vim.fn.sign_unplace(self.sign.group)
 end
 
 ---------------------------------------------------------------------------------------------------
