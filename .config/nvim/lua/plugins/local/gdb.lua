@@ -481,7 +481,7 @@ function Gdb:code(window, breakpoint, offset)
         end
 
         function handler.delete()
-            local bkpt = ctx.bkpts[data]
+            local bkpt = ctx.bkpts and ctx.bkpts[data]
 
             if bkpt then
                 local bufid, row = load(ctx, bkpt)
