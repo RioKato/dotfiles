@@ -460,11 +460,37 @@ function Gdb:code(window, breakpoint, offset)
     self:onChangeBkpts(function(ctx, data, event)
         local handler = {}
 
-        function handler.create() end
+        function handler.create()
+            vim.iter(pairs(data)):each(function(_, bkpt)
+                local bufid, row = load(ctx, bkpt)
 
-        function handler.modify() end
+                if bufid then
+                    breakpoint:create(bufid, assert(row))
+                end
+            end)
+        end
 
-        function handler.delete() end
+        function handler.modify()
+            vim.iter(pairs(data)):each(function(_, bkpt)
+                local bufid, row = load(ctx, bkpt)
+
+                if bufid then
+                    breakpoint:modify(bufid, assert(row))
+                end
+            end)
+        end
+
+        function handler.delete()
+            local bkpt = ctx.bkpts[data]
+
+            if bkpt then
+                local bufid, row = load(ctx, bkpt)
+
+                if bufid then
+                    breakpoint:delete(bufid, assert(row))
+                end
+            end
+        end
 
         function handler.sync()
             breakpoint:clear()
@@ -473,7 +499,7 @@ function Gdb:code(window, breakpoint, offset)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:display(bufid, assert(row))
+                    breakpoint:create(bufid, assert(row))
                 end
             end)
         end
