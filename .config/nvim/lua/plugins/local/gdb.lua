@@ -359,23 +359,23 @@ function Gdb:code(window, breakpoint, offset)
     local Cache = {}
 
     function Cache.new()
-        local self = { buf = {} }
+        local self = { range = {} }
         setmetatable(self, { __index = Cache })
         return self
     end
 
     function Cache:set(bufid, range)
-        self.buf[bufid] = range
+        self.range[bufid] = range
     end
 
     function Cache:get(addr)
-        vim.iter(pairs(self.buf)):each(function(bufid)
+        vim.iter(pairs(self.range)):each(function(bufid)
             if not vim.api.nvim_buf_is_valid(bufid) then
-                self.buf[bufid] = nil
+                self.range[bufid] = nil
             end
         end)
 
-        return vim.iter(pairs(self.buf)):find(function(_, range)
+        return vim.iter(pairs(self.range)):find(function(_, range)
             return range[addr]
         end)
     end
