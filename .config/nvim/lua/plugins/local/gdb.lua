@@ -279,13 +279,7 @@ function Gdb:onReceiveInsns(callback)
         local insns = data.asm_insns
 
         if insns then
-            local valid = vim.iter(insns):all(function(insn)
-                return insn.address
-            end)
-
-            if valid then
-                callback(ctx, insns)
-            end
+            callback(ctx, insns)
         end
     end)
 end
@@ -389,7 +383,9 @@ function Gdb:code(window, breakpoint, offset)
 
         if stopped then
             local range = vim.iter(insns):enumerate():fold({}, function(iv, row, insn)
-                iv[assert(insn.address)] = row
+                if insn.address then
+                    iv[insn.address] = row
+                end
                 return iv
             end)
 
@@ -398,11 +394,12 @@ function Gdb:code(window, breakpoint, offset)
             if row then
                 local lines = vim.iter(insns)
                     :map(function(insn)
+                        local addr = insn.address or -1
                         local func = insn["func-name"]
                         local offset = insn.offset
                         local label = func and offset and ("<%s+0x%04x>"):format(func, offset) or ""
                         local inst = insn.inst or ""
-                        return ("0x%016x%s │ %s"):format(assert(insn.address), label, inst)
+                        return ("0x%016x%s │ %s"):format(addr, label, inst)
                     end)
                     :totable()
 
