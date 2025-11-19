@@ -476,8 +476,7 @@ function Gdb:code(window, breakpoint, offset)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:delete(bufid, assert(row))
-                    breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
+                    breakpoint:modify(bufid, assert(row), toBool[bkpt.enabled])
                 end
             end)
         end
@@ -561,14 +560,17 @@ end
 ---------------------------------------------------------------------------------------------------
 local Breakpoint = {
     sign = {
-        name = "DebugBreakpoint",
+        name = {
+            [true] = "DebugBreakpointEnabled",
+            [false] = "DebugBreakpointDisabled",
+        },
         group = "DebugBreakpoint",
     },
 }
 
 function Breakpoint.setup()
-    vim.fn.sign_define(Breakpoint.sign.name, { linehl = Breakpoint.sign.name })
-    vim.api.nvim_set_hl(0, Breakpoint.sign.name, { reverse = true, ctermbg = "red" })
+    vim.fn.sign_define(Breakpoint.sign.name[true], { linehl = Breakpoint.sign.name[true], text = "E" })
+    vim.fn.sign_define(Breakpoint.sign.name[false], { linehl = Breakpoint.sign.name[false], text = "D" })
 end
 
 function Breakpoint.new()
@@ -578,7 +580,13 @@ function Breakpoint.new()
 end
 
 function Breakpoint:create(bufid, row, enabled)
-    vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
+    local name = self.sign.name[enabled or enabled == nil]
+    vim.fn.sign_place(0, self.sign.group, name, bufid, { lnum = row })
+end
+
+function Breakpoint:modify(bufid, row, enabled)
+    self:delete(bufid, row)
+    self:create(bufid, row, enabled)
 end
 
 function Breakpoint:delete(bufid, row)
