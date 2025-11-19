@@ -389,7 +389,7 @@ function Gdb:code(window, breakpoint, offset)
 
         if stopped then
             local range = vim.iter(insns):enumerate():fold({}, function(iv, row, insn)
-                iv[insn.address] = row
+                iv[assert(insn.address)] = row
                 return iv
             end)
 
@@ -402,7 +402,7 @@ function Gdb:code(window, breakpoint, offset)
                         local offset = insn.offset
                         local label = func and offset and ("<%s+0x%04x>"):format(func, offset) or ""
                         local inst = insn.inst or ""
-                        return ("0x%016x%s │ %s"):format(insn.address, label, inst)
+                        return ("0x%016x%s │ %s"):format(assert(insn.address), label, inst)
                     end)
                     :totable()
 
