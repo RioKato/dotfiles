@@ -284,39 +284,54 @@ function Gdb:onReceiveInsns(callback)
     end)
 end
 
-function Gdb:onReceiveBkpts(callback)
-    self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(ctx, data)
-        if data.bkpt then
-            vim.iter(data.bkpt):each(function(bkpt)
-                if bkpt.number then
-                    ctx.bkpts = ctx.bkpts or {}
-                    ctx.bkpts[bkpt.number] = bkpt
-                end
-            end)
-        end
-    end)
+function Gdb:onChangeBkpts(callback)
+    local rename = {
+        ["=breakpoint-created"] = "create",
+        ["=breakpoint-modified"] = "modify",
+        ["=breakpoint-deleted"] = "delete",
+        ["^done"] = "sync",
+    }
 
-    self:on({ "=breakpoint-deleted" }, function(ctx, data)
+    self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(ctx, data, event)
         if data.bkpt then
-            vim.iter(data.bkpt):each(function(bkpt)
-                if bkpt.id then
-                    ctx.bkpts = ctx.bkpts or {}
-                    ctx.bkpts[bkpt.id] = nil
-                end
-            end)
-        end
-    end)
-
-    self:on({ "^done" }, function(ctx, data)
-        if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
-            ctx.bkpts = vim.iter(data.BreakpointTable.body.bkpt):fold({}, function(iv, bkpt)
+            local bkpts = vim.iter(data.bkpt):fold({}, function(iv, bkpt)
                 if bkpt.number then
                     iv[bkpt.number] = bkpt
                 end
                 return iv
             end)
 
-            callback(ctx)
+            ctx.bkpts = ctx.bkpts or {}
+            callback(ctx, bkpts, rename[event])
+
+            vim.iter(pairs(bkpts)):each(function(id, bkpt)
+                ctx.bkpts[id] = bkpt
+            end)
+        end
+    end)
+
+    self:on({ "=breakpoint-deleted" }, function(ctx, data, event)
+        local id = data.id
+
+        if id then
+            ctx.bkpts = ctx.bkpts or {}
+            callback(ctx, id, rename[event])
+            ctx.bkpts[id] = nil
+        end
+    end)
+
+    self:on({ "^done" }, function(ctx, data, event)
+        if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
+            local bkpts = vim.iter(data.BreakpointTable.body.bkpt):fold({}, function(iv, bkpt)
+                if bkpt.number then
+                    iv[bkpt.number] = bkpt
+                end
+                return iv
+            end)
+
+            ctx.bkpts = ctx.bkpts or {}
+            callback(ctx, bkpts, rename[event])
+            ctx.bkpts = bkpts
         end
     end)
 end
@@ -442,16 +457,28 @@ function Gdb:code(window, breakpoint, offset)
         window:fallback()
     end)
 
-    self:onReceiveBkpts(function(ctx)
-        breakpoint:clear()
+    self:onChangeBkpts(function(ctx, data, event)
+        local handlers = {}
 
-        vim.iter(pairs(assert(ctx.bkpts))):each(function(_, bkpt)
-            local bufid, row = load(ctx, bkpt)
+        function handlers.create() end
 
-            if bufid then
-                breakpoint:display(bufid, assert(row))
-            end
-        end)
+        function handlers.modify() end
+
+        function handlers.delete() end
+
+        function handlers.sync()
+            breakpoint:clear()
+
+            vim.iter(pairs(assert(data))):each(function(_, bkpt)
+                local bufid, row = load(ctx, bkpt)
+
+                if bufid then
+                    breakpoint:display(bufid, assert(row))
+                end
+            end)
+        end
+
+        handlers[event]()
     end)
 end
 
