@@ -85,25 +85,6 @@ end
 local MI = { parse = parser() }
 
 ---------------------------------------------------------------------------------------------------
-local Logger = { enabled = false }
-
-function Logger:enable()
-    self.enabled = true
-end
-
-function Logger:write(obj)
-    if self.enabled then
-        if not self.bufid then
-            self.bufid = vim.api.nvim_create_buf(true, true)
-        end
-
-        local text = vim.inspect(obj)
-        local lines = vim.split(text, "\n")
-        vim.api.nvim_buf_set_lines(self.bufid, -1, -1, false, lines)
-    end
-end
-
----------------------------------------------------------------------------------------------------
 local Gdb = {}
 
 function Gdb.new()
@@ -127,7 +108,6 @@ function Gdb:open(cmd)
                     local result = MI.parse(line) or {}
                     result.text = line
                     local event = result[1] or ""
-                    Logger:write(result)
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
                         callback(ctx, result, event)
@@ -150,7 +130,6 @@ end
 
 function Gdb:send(cmd)
     if self.jobid then
-        Logger:write({ send = cmd })
         vim.fn.chansend(self.jobid, cmd .. "\n")
     end
 end
@@ -623,25 +602,68 @@ function util.createBreakpointAt(gdb)
 end
 
 ---------------------------------------------------------------------------------------------------
-local function setup()
-    Logger:enable()
-    Window.setup()
-    Breakpoint.setup()
+local M = {}
 
-    gdb = Gdb.new()
-    local bufid = gdb:prompt()
-    vim.api.nvim_open_win(bufid, false, {
+local default = {
+    template = {
+        gdb = {
+            command = { "gdb", "-i=mi" },
+            executable = "gdb",
+        },
+
+        rr = {
+            command = { "rr", "replay", "-i=mi" },
+            executable = "rr",
+        },
+    },
+    window = {
         split = "below",
         win = -1,
         style = "minimal",
         height = 10,
-    })
+    },
+    notification = true,
+}
 
-    local window = Window.new()
-    local breakpoint = Breakpoint.new()
-    gdb:code(window, breakpoint)
-    gdb:notify()
-    gdb:open({ "gdb", "-i=mi" })
+function M.setup(opts)
+    opts = vim.tbl_deep_extend("force", default, opts or {})
+    Window.setup()
+    Breakpoint.setup()
+
+    local G = {}
+
+    local function GdbOpen()
+        local template = vim.iter(opts.template)
+            :filter(function(key, value)
+                return vim.fn.executable(value.executable) == 1
+            end)
+            :totable()
+
+        vim.ui.select(template, {
+            format_item = function(item)
+                return item[1]
+            end,
+        }, function(item)
+            if item then
+                local command = item[2].command
+                G.gdb = Gdb.new()
+
+                local bufid = G.gdb:prompt()
+                vim.api.nvim_open_win(bufid, false, opts.window)
+                local window = Window.new()
+                local breakpoint = Breakpoint.new()
+                G.gdb:code(window, breakpoint)
+
+                if opts.notification then
+                    G.gdb:notify()
+                end
+
+                G.gdb:open(command)
+            end
+        end)
+    end
+
+    vim.api.nvim_create_user_command("GdbOpen", GdbOpen, {})
 end
 
-setup()
+M.setup()
