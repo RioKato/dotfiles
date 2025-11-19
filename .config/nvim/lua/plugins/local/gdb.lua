@@ -241,19 +241,10 @@ function Gdb:onStop(callback)
         local frame = data.frame
 
         if frame then
-            local files = {}
-            table.insert(files, frame.file)
-            table.insert(files, frame.fullname)
             local unknowns = { "??" }
             local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
-
-            ctx.stopped = {
-                addr = frame.addr,
-                files = files,
-                row = frame.line,
-                func = func,
-            }
-
+            ctx.stopped = vim.deepcopy(frame)
+            ctx.stopped.func = func
             callback(ctx)
         end
     end)
@@ -299,15 +290,16 @@ function Gdb:onReceiveInsns(callback)
     end)
 end
 
-function Gdb:onListBreakpoints(callback)
+function Gdb:onReceiveBkpts(callback)
     self:on({ "^done" }, function(ctx, data)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
-            ctx.bkpt = {}
-            vim.iter(data.BreakpointTable.body.bkpt):each(function(bkpt)
+            ctx.bkpts = vim.iter(data.BreakpointTable.body.bkpt):fold({}, function(iv, bkpt)
                 if bkpt.number then
-                    ctx.bkpt[bkpt.number] = bkpt
+                    iv[bkpt.number] = bkpt
                 end
+                return iv
             end)
+
             callback(ctx)
         end
     end)
@@ -358,30 +350,34 @@ function Gdb:code(window, breakpoint, offset)
         end)
     end
 
-    local function load(ctx, files, row, addr)
+    local function load(ctx, frame)
+        local files = {}
+        table.insert(files, frame.file)
+        table.insert(files, frame.fullname)
+
         local found = vim.iter(files):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
 
-        if found and row then
+        if found and frame.line then
             local bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].buftype = "nofile"
             vim.bo[bufid].bufhidden = "hide"
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
-            return bufid, row
-        elseif ctx.cache and addr then
-            local bufid, range = ctx.cache:get(addr)
-            row = bufid and assert(range[addr])
-            return bufid, row
+            return bufid, frame.line
+        elseif ctx.cache and frame.addr then
+            local bufid, range = ctx.cache:get(frame.addr)
+            line = bufid and assert(range[frame.addr])
+            return bufid, line
         end
     end
 
     self:onStop(function(ctx)
         local stopped = assert(ctx.stopped)
-        local bufid, row = load(ctx, stopped.files, stopped.row, stopped.addr)
+        local bufid, row = load(ctx, stopped)
 
         if bufid then
             window:display(bufid, assert(row))
@@ -396,9 +392,9 @@ function Gdb:code(window, breakpoint, offset)
         local stopped = ctx.stopped
 
         if stopped then
-            local range = vim.iter(insns):enumerate():fold({}, function(init, row, insn)
-                init[insn.address] = row
-                return init
+            local range = vim.iter(insns):enumerate():fold({}, function(iv, row, insn)
+                iv[insn.address] = row
+                return iv
             end)
 
             local row = range[stopped.addr]
@@ -435,14 +431,11 @@ function Gdb:code(window, breakpoint, offset)
         window:fallback()
     end)
 
-    self:onListBreakpoints(function(ctx)
+    self:onReceiveBkpts(function(ctx)
         breakpoint:clear()
 
-        vim.iter(pairs(assert(ctx.bkpt))):each(function(_, info)
-            local files = {}
-            table.insert(files, info.file)
-            table.insert(files, info.fullname)
-            local bufid, row = load(ctx, files, info.line, info.addr)
+        vim.iter(pairs(assert(ctx.bkpts))):each(function(_, bkpt)
+            local bufid, row = load(ctx, bkpt)
 
             if bufid then
                 breakpoint:display(bufid, assert(row))
