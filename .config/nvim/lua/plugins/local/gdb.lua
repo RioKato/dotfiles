@@ -458,11 +458,10 @@ function Gdb:code(window, breakpoint, offset)
     end)
 
     self:onChangeBkpts(function(ctx, data, event)
+        local toBool = { y = true, n = false }
         local handler = {}
 
         function handler.create()
-            local toBool = { y = true, n = false }
-
             vim.iter(pairs(data)):each(function(_, bkpt)
                 local bufid, row = load(ctx, bkpt)
 
@@ -478,7 +477,7 @@ function Gdb:code(window, breakpoint, offset)
 
                 if bufid then
                     breakpoint:delete(bufid, assert(row))
-                    breakpoint:create(bufid, assert(row), bkpt.enabled)
+                    breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
                 end
             end)
         end
@@ -502,7 +501,7 @@ function Gdb:code(window, breakpoint, offset)
                 local bufid, row = load(ctx, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row), bkpt.enabled)
+                    breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
                 end
             end)
         end
