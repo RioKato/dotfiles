@@ -285,6 +285,28 @@ function Gdb:onReceiveInsns(callback)
 end
 
 function Gdb:onReceiveBkpts(callback)
+    self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(ctx, data)
+        if data.bkpt then
+            vim.iter(data.bkpt):each(function(bkpt)
+                if bkpt.number then
+                    ctx.bkpts = ctx.bkpts or {}
+                    ctx.bkpts[bkpt.number] = bkpt
+                end
+            end)
+        end
+    end)
+
+    self:on({ "=breakpoint-deleted" }, function(ctx, data)
+        if data.bkpt then
+            vim.iter(data.bkpt):each(function(bkpt)
+                if bkpt.id then
+                    ctx.bkpts = ctx.bkpts or {}
+                    ctx.bkpts[bkpt.id] = nil
+                end
+            end)
+        end
+    end)
+
     self:on({ "^done" }, function(ctx, data)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
             ctx.bkpts = vim.iter(data.BreakpointTable.body.bkpt):fold({}, function(iv, bkpt)
@@ -409,10 +431,7 @@ function Gdb:code(window, breakpoint, offset)
                 vim.bo[bufid].filetype = "asm"
                 window:display(bufid, row)
 
-                if not ctx.cache then
-                    ctx.cache = Cache.new()
-                end
-
+                ctx.cache = ctx.cache or Cache.new()
                 ctx.cache:set(bufid, range)
             end
         end
