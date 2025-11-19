@@ -478,7 +478,7 @@ function Gdb:code(window, breakpoint, offset)
             end)
         end
 
-        handlers[event]()
+        assert(handlers[event])()
     end)
 end
 
