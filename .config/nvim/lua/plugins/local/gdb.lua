@@ -422,7 +422,6 @@ function Gdb:code(window, breakpoint, offset)
     end)
 
     self:onExit(function()
-        ctx.stopped = nil
         ctx.cache = nil
         window:fallback()
     end)
