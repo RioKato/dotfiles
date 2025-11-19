@@ -351,11 +351,7 @@ function Gdb:code(window, breakpoint, offset)
     end
 
     local function load(ctx, frame)
-        local files = {}
-        table.insert(files, frame.file)
-        table.insert(files, frame.fullname)
-
-        local found = vim.iter(files):find(function(file)
+        local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
