@@ -579,7 +579,10 @@ function Breakpoint:create(bufid, row)
     vim.fn.sign_place(0, self.sign.group, self.sign.name, bufid, { lnum = row })
 end
 
-function Breakpoint:modify(bufid, row) end
+function Breakpoint:modify(bufid, row)
+    self:delete(bufid, row)
+    self:create(bufid, row)
+end
 
 function Breakpoint:delete(bufid, row)
     local placed = vim.fn.sign_getplaced(bufid, { group = self.sign.group, lnum = row })
