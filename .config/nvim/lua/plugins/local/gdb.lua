@@ -208,16 +208,6 @@ function Gdb:breakList()
     self:send("-break-list")
 end
 
-function Gdb:breakInsert(pos)
-    local cmd = ("-break-insert %s"):format(pos)
-    self:send(cmd)
-end
-
-function Gdb:breakDelete(id)
-    local cmd = ("-break-delete %d"):format(id)
-    self:send(cmd)
-end
-
 function Gdb:onReceiveMessage(callback)
     self:on({ "~" }, function(_, data)
         local msg = assert(data[2])
@@ -614,10 +604,10 @@ function util.createBreakpointAt(gdb)
     local path = vim.api.nvim_buf_get_name(bufid)
     assert(cursor[1] > 0)
     local line = vim.api.nvim_buf_get_lines(bufid, cursor[1] - 1, cursor[1], true)
-    local pos = ""
+    local cmd = ""
 
     if path ~= "" then
-        pos = ("%s:%d"):format(path, cursor[1])
+        pos = ("break %s:%d"):format(path, cursor[1])
     else
         local addr = tonumber(line:match("0x%x+"))
 
@@ -626,10 +616,10 @@ function util.createBreakpointAt(gdb)
             return
         end
 
-        pos = ("*0x%016x"):format(addr)
+        pos = ("break *0x%016x"):format(addr)
     end
 
-    gdb:breakInsert(pos)
+    gdb:send(cmd)
 end
 
 ---------------------------------------------------------------------------------------------------
