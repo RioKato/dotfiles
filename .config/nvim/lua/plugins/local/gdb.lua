@@ -256,11 +256,11 @@ function Gdb:onStop(callback)
 end
 
 function Gdb:onExit(callback)
-    self:on({ "*stopped" }, function(_, data)
+    self:on({ "*stopped" }, function(ctx, data)
         local reason = data.reason
 
         if reason and vim.startswith(reason, "exited") then
-            callback()
+            callback(ctx)
         end
     end)
 end
@@ -452,7 +452,7 @@ function Gdb:code(window, breakpoint, offset)
         end
     end)
 
-    self:onExit(function()
+    self:onExit(function(ctx)
         ctx.cache = nil
         window:fallback()
     end)
@@ -534,10 +534,12 @@ function Window.setup()
 end
 
 function Window.new()
+    local winid = vim.api.nvim_get_current_win()
+
     local self = {
-        winid = vim.api.nvim_get_current_win(),
-        bufid = vim.api.nvim_get_current_buf(),
-        cursor = vim.api.nvim_win_get_cursor(0),
+        winid = winid,
+        bufid = vim.api.nvim_win_get_buf(winid),
+        cursor = vim.api.nvim_win_get_cursor(winid),
     }
 
     setmetatable(self, { __index = Window })
