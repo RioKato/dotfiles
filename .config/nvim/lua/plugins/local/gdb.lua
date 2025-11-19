@@ -530,7 +530,7 @@ local Window = {
 
 function Window.setup()
     vim.fn.sign_define(Window.sign.name, { linehl = Window.sign.name })
-    vim.api.nvim_set_hl(0, Window.sign.name, { reverse = true, ctermbg = "darkblue" })
+    vim.api.nvim_set_hl(0, Window.sign.name, { reverse = true })
 end
 
 function Window.new()
@@ -561,16 +561,16 @@ end
 local Breakpoint = {
     sign = {
         name = {
-            [true] = "DebugBreakpointEnabled",
-            [false] = "DebugBreakpointDisabled",
+            [true] = "BreakpointEnabled",
+            [false] = "BreakpointDisabled",
         },
-        group = "DebugBreakpoint",
+        group = "Breakpoint",
     },
 }
 
 function Breakpoint.setup()
-    vim.fn.sign_define(Breakpoint.sign.name[true], { linehl = Breakpoint.sign.name[true], text = "E" })
-    vim.fn.sign_define(Breakpoint.sign.name[false], { linehl = Breakpoint.sign.name[false], text = "D" })
+    vim.fn.sign_define(Breakpoint.sign.name[true], { text = "E" })
+    vim.fn.sign_define(Breakpoint.sign.name[false], { text = "D" })
 end
 
 function Breakpoint.new()
