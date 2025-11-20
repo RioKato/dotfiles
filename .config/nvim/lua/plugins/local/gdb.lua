@@ -650,16 +650,19 @@ function M.setup(opts)
             end)
             :totable()
 
-        vim.ui.select(template, {
-            format_item = function(item)
-                return item[1]
-            end,
-        }, function(item)
-            if item then
-                local command = item[2].command
-                G.gdb:open(command)
-            end
-        end)
+        if #template > 1 then
+            vim.ui.select(template, {
+                format_item = function(item)
+                    return item[1]
+                end,
+            }, function(item)
+                if item then
+                    G.gdb:open(item[2].command)
+                end
+            end)
+        elseif #template == 1 then
+            G.gdb:open(template[1][2].command)
+        end
     end
 
     vim.api.nvim_create_user_command("GdbOpen", GdbOpen, {})
