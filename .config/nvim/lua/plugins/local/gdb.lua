@@ -407,7 +407,7 @@ function Gdb:code(window, breakpoint)
                         local offset = insn.offset
                         local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
                         local inst = insn.inst or ""
-                        return ("0x%016x%s │ %s"):format(addr, label, inst)
+                        return ("0x%x%s │ %s"):format(addr, label, inst)
                     end)
                     :totable()
 
