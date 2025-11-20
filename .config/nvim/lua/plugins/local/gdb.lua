@@ -348,7 +348,7 @@ function Gdb:code(window, breakpoint)
         end)
     end
 
-    local function load(ctx, frame)
+    local function load(cache, frame)
         local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
@@ -365,9 +365,9 @@ function Gdb:code(window, breakpoint)
             vim.bo[bufid].modifiable = false
             vim.bo[bufid].buflisted = false
             row = frame.line
-        elseif ctx.cache and frame.addr then
+        elseif cache and frame.addr then
             local range = nil
-            bufid, range = ctx.cache:get(frame.addr)
+            bufid, range = cache:get(frame.addr)
             row = bufid and assert(range[frame.addr])
         end
 
@@ -376,7 +376,7 @@ function Gdb:code(window, breakpoint)
 
     self:onStop(function()
         local stopped = assert(self.ctx.stopped)
-        local bufid, row = load(self.ctx, stopped)
+        local bufid, row = load(self.ctx.cache, stopped)
 
         if bufid then
             window:set(bufid, assert(row))
@@ -435,7 +435,7 @@ function Gdb:code(window, breakpoint)
 
         function handler.create()
             vim.iter(pairs(data)):each(function(_, bkpt)
-                local bufid, row = load(self.ctx, bkpt)
+                local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
@@ -445,7 +445,7 @@ function Gdb:code(window, breakpoint)
 
         function handler.modify()
             vim.iter(pairs(data)):each(function(_, bkpt)
-                local bufid, row = load(self.ctx, bkpt)
+                local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:modify(bufid, assert(row), toBool[bkpt.enabled])
@@ -457,7 +457,7 @@ function Gdb:code(window, breakpoint)
             local bkpt = self.ctx.bkpts and self.ctx.bkpts[data]
 
             if bkpt then
-                local bufid, row = load(self.ctx, bkpt)
+                local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:delete(bufid, assert(row))
@@ -469,7 +469,7 @@ function Gdb:code(window, breakpoint)
             breakpoint:clear()
 
             vim.iter(pairs(data)):each(function(_, bkpt)
-                local bufid, row = load(self.ctx, bkpt)
+                local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
