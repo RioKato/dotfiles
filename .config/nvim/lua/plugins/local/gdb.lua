@@ -722,21 +722,23 @@ function M.setup(opts)
 
     local ui = Ui.new(opts)
 
-    local commands = {
-        "GdbOpen",
-        "GdbClose",
-        "GdbRun",
-        "GdbStep",
-        "GdbNext",
-        "GdbFinish",
-        "GdbContinue",
-        "GdbInterrupt",
+    local items = {
+        { "GdbOpen", "<leader>do" },
+        { "GdbClose", "<leader>dc" },
+        { "GdbRun", "<leader>dr" },
+        { "GdbStep", "<leader>ds" },
+        { "GdbNext", "<leader>dn" },
+        { "GdbFinish", "<leader>df" },
+        { "GdbContinue", "<leader>dc" },
+        { "GdbInterrupt", "<leader>di" },
     }
 
-    vim.iter(commands):each(function(command)
-        vim.api.nvim_create_user_command(command, function()
-            ui[command](ui)
+    vim.iter(items):each(function(item)
+        vim.api.nvim_create_user_command(item[1], function()
+            ui[item[1]](ui)
         end, {})
+
+        vim.keymap.set("n", item[2], ("<cmd>%s<cr>"):format(item[1]))
     end)
 end
 
