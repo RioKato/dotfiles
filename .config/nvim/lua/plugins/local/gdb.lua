@@ -375,12 +375,11 @@ function Gdb:code(window, breakpoint)
     end
 
     self:onStop(function()
-        local stopped = assert(self.ctx.stopped)
-        local bufid, row = load(self.ctx.cache, stopped)
+        local bufid, row = load(self.ctx.cache, self.ctx.stopped)
 
         if bufid then
             window:set(bufid, assert(row))
-        elseif stopped.func then
+        elseif self.ctx.stopped.func then
             self:disassembleFunction()
         else
             self:disassemblePC()
@@ -388,9 +387,7 @@ function Gdb:code(window, breakpoint)
     end)
 
     self:onReceiveInsns(function(insns)
-        local stopped = self.ctx.stopped
-
-        if stopped then
+        if self.ctx.stopped then
             local range = vim.iter(insns):enumerate():fold({}, function(iv, row, insn)
                 if insn.address then
                     iv[insn.address] = row
@@ -398,7 +395,7 @@ function Gdb:code(window, breakpoint)
                 return iv
             end)
 
-            local row = range[stopped.addr]
+            local row = range[self.ctx.stopped.addr]
 
             if row then
                 local lines = vim.iter(insns)
