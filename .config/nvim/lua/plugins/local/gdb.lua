@@ -235,7 +235,7 @@ function Gdb:onExit(callback)
 end
 
 function Gdb:onReceiveSignal(callback)
-    self:on({ "*stopped" }, function(_, data)
+    self:on({ "*stopped" }, function(data)
         local signal = data["signal-name"]
 
         if signal then
