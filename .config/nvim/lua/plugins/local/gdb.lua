@@ -345,7 +345,7 @@ function Gdb:code(window, breakpoint)
         self.range[bufid] = range
     end
 
-    function Cache:getBufid(addr)
+    function Cache:getBufId(addr)
         vim.iter(pairs(self.range)):each(function(bufid)
             if not vim.api.nvim_buf_is_valid(bufid) then
                 self.range[bufid] = nil
@@ -357,7 +357,7 @@ function Gdb:code(window, breakpoint)
         end)
     end
 
-    function Cache:getAddr(bufid, row)
+    function Cache:getAddress(bufid, row)
         return vim.iter(pairs(self.range[bufid] or {})):find(function(addr, i)
             return i == row
         end)
@@ -382,7 +382,7 @@ function Gdb:code(window, breakpoint)
             row = frame.line
         elseif cache and frame.addr then
             local range = nil
-            bufid, range = cache:getBufid(frame.addr)
+            bufid, range = cache:getBufId(frame.addr)
             row = bufid and assert(range[frame.addr])
         end
 
@@ -524,7 +524,7 @@ function Gdb:toggleBreakpoint()
         end)
         cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
     elseif self.ctx.cache then
-        local addr = self.ctx.cache:getAddr(bufid, cursor[1])
+        local addr = self.ctx.cache:getAddress(bufid, cursor[1])
 
         if addr then
             local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
