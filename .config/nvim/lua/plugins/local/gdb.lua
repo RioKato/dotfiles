@@ -403,7 +403,7 @@ function Gdb:code(window, breakpoint)
                         local addr = insn.address or -1
                         local func = insn["func-name"]
                         local offset = insn.offset
-                        local label = func and offset and ("<%s+0x%04x>"):format(func, offset) or ""
+                        local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
                         local inst = insn.inst or ""
                         return ("0x%016x%s │ %s"):format(addr, label, inst)
                     end)
@@ -643,7 +643,7 @@ function Ui:GdbClose()
     end
 
     if self.winid then
-        if vim.api.nvim_win_is_valid(self.winid) then
+        if vim.api.nvim_win_is_valid(self.winid) and #vim.api.nvim_list_wins() ~= 1 then
             vim.api.nvim_win_close(self.winid, true)
         end
 
