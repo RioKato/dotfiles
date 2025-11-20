@@ -610,6 +610,8 @@ function Ui:GdbOpen()
             }, function(item)
                 if item then
                     self.gdb:open(item[2].command)
+                else
+                    self:GdbClose()
                 end
             end)
         elseif #template == 1 then
@@ -647,6 +649,42 @@ function Ui:GdbClose()
     end
 end
 
+function Ui:GdbRun()
+    if self.gdb then
+        self.gdb:run()
+    end
+end
+
+function Ui:GdbStep()
+    if self.gdb then
+        self.gdb:step()
+    end
+end
+
+function Ui:GdbNext()
+    if self.gdb then
+        self.gdb:next()
+    end
+end
+
+function Ui:GdbFinish()
+    if self.gdb then
+        self.gdb:finish()
+    end
+end
+
+function Ui:GdbContinue()
+    if self.gdb then
+        self.gdb:continue()
+    end
+end
+
+function Ui:GdbInterrupt()
+    if self.gdb then
+        self.gdb:interrupt()
+    end
+end
+
 ---------------------------------------------------------------------------------------------------
 local M = {}
 
@@ -677,13 +715,22 @@ function M.setup(opts)
 
     local ui = Ui.new(opts)
 
-    vim.api.nvim_create_user_command("GdbOpen", function()
-        ui:GdbOpen()
-    end, {})
+    local commands = {
+        "GdbOpen",
+        "GdbClose",
+        "GdbRun",
+        "GdbStep",
+        "GdbNext",
+        "GdbFinish",
+        "GdbContinue",
+        "GdbInterrupt",
+    }
 
-    vim.api.nvim_create_user_command("GdbClose", function()
-        ui:GdbClose()
-    end, {})
+    vim.iter(commands):each(function(command)
+        vim.api.nvim_create_user_command(command, function()
+            ui[command](ui)
+        end, {})
+    end)
 end
 
 M.setup()
