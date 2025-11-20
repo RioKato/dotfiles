@@ -686,7 +686,13 @@ function Ui:GdbInterrupt()
 end
 
 ---------------------------------------------------------------------------------------------------
-local M = {}
+local M = {
+    Mi = Mi,
+    Gdb = Gdb,
+    Window = Window,
+    Breakpoint = Breakpoint,
+    Ui = Ui,
+}
 
 local default = {
     template = {
@@ -733,4 +739,4 @@ function M.setup(opts)
     end)
 end
 
-M.setup()
+return M

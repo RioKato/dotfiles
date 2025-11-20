@@ -10,9 +10,14 @@ function init.wezterm()
     require(root .. ".wezterm").setup()
 end
 
+function init.gdb()
+    require(root .. ".gdb").setup()
+end
+
 function init:all()
     self.hover()
     self.wezterm()
+    self.gdb()
 end
 
 init:all()
