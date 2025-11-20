@@ -504,6 +504,18 @@ function Gdb:notify()
     end)
 end
 
+function Gdb:toggleEnableBreakpoint()
+    vim.ui.select(self.ctx.bkpts or {}, {
+        format_item = function(item)
+            return ("%s 0x%x │ %s %d"):format(item.enabled and "E" or "D", item.addr, item.file, item.line)
+        end,
+    }, function(item)
+        if item and item.enabled ~= nil then
+            self:send(("%s %d"):format(item.enabled and "disable" or "enable", item.number))
+        end
+    end)
+end
+
 ---------------------------------------------------------------------------------------------------
 local Window = {
     sign = {
@@ -703,6 +715,12 @@ function Ui:GdbInterrupt()
     end
 end
 
+function Ui:GdbToggleEnableBreakpoint()
+    if self.gdb then
+        self.gdb:toggleEnableBreakpoint()
+    end
+end
+
 ---------------------------------------------------------------------------------------------------
 local M = {
     Mi = Mi,
@@ -748,6 +766,7 @@ function M.setup(opts)
         { "GdbFinish", "<leader>df" },
         { "GdbContinue", "<leader>dc" },
         { "GdbInterrupt", "<leader>di" },
+        { "GdbToggleEnableBreakpoint", "<leader>db" },
     }
 
     vim.iter(items):each(function(item)
