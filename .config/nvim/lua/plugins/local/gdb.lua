@@ -711,10 +711,9 @@ local default = {
         },
     },
     window = {
-        split = "below",
+        split = "right",
         win = -1,
         style = "minimal",
-        height = 10,
     },
     notification = true,
     keymap = true,
