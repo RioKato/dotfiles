@@ -726,7 +726,7 @@ function M.setup(opts)
 
     local items = {
         { "GdbOpen", "<leader>do" },
-        { "GdbClose", "<leader>dc" },
+        { "GdbClose", "<leader>dO" },
         { "GdbRun", "<leader>dr" },
         { "GdbStep", "<leader>ds" },
         { "GdbNext", "<leader>dn" },
