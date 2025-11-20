@@ -88,14 +88,13 @@ local MI = { parse = parser() }
 local Gdb = {}
 
 function Gdb.new()
-    local self = { listener = {} }
+    local self = { listener = {}, ctx = {} }
     setmetatable(self, { __index = Gdb })
     return self
 end
 
 function Gdb:open(cmd)
     if not self.jobid then
-        local ctx = {}
         local buf = ""
 
         self.jobid = vim.fn.jobstart(cmd, {
@@ -110,7 +109,7 @@ function Gdb:open(cmd)
                     local event = result[1] or ""
 
                     vim.iter(self.listener[event] or {}):each(function(callback)
-                        callback(ctx, result, event)
+                        callback(result, event)
                     end)
                 end)
             end,
@@ -187,7 +186,7 @@ function Gdb:breakList()
 end
 
 function Gdb:onReceiveMessage(callback)
-    self:on({ "~" }, function(_, data)
+    self:on({ "~" }, function(data)
         local msg = assert(data[2])
 
         if msg ~= "" then
@@ -195,7 +194,7 @@ function Gdb:onReceiveMessage(callback)
         end
     end)
 
-    self:on({ "^error" }, function(_, data)
+    self:on({ "^error" }, function(data)
         local msg = data.msg
 
         if msg and msg ~= "" then
@@ -205,30 +204,30 @@ function Gdb:onReceiveMessage(callback)
 end
 
 function Gdb:onStop(callback)
-    self:on({ "*stopped", "=thread-selected" }, function(ctx, data)
-        ctx.stopped = nil
+    self:on({ "*stopped", "=thread-selected" }, function(data)
+        self.ctx.stopped = nil
         local frame = data.frame
 
         if frame then
             local unknowns = { "??" }
             local func = not vim.tbl_contains(unknowns, frame.func) and frame.func or nil
-            ctx.stopped = vim.deepcopy(frame)
-            ctx.stopped.func = func
-            callback(ctx)
+            self.ctx.stopped = vim.deepcopy(frame)
+            self.ctx.stopped.func = func
+            callback()
         end
     end)
 
-    self:on({ "*running" }, function(ctx)
-        ctx.stopped = nil
+    self:on({ "*running" }, function()
+        self.ctx.stopped = nil
     end)
 end
 
 function Gdb:onExit(callback)
-    self:on({ "*stopped" }, function(ctx, data)
+    self:on({ "*stopped" }, function(data)
         local reason = data.reason
 
         if reason and vim.startswith(reason, "exited") then
-            callback(ctx)
+            callback()
         end
     end)
 end
@@ -244,11 +243,11 @@ function Gdb:onReceiveSignal(callback)
 end
 
 function Gdb:onReceiveInsns(callback)
-    self:on({ "^done" }, function(ctx, data)
+    self:on({ "^done" }, function(data)
         local insns = data.asm_insns
 
         if insns then
-            callback(ctx, insns)
+            callback(insns)
         end
     end)
 end
@@ -261,7 +260,7 @@ function Gdb:onChangeBkpts(callback)
         ["^done"] = "sync",
     }
 
-    self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(ctx, data, event)
+    self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(data, event)
         if data.bkpt then
             local bkpts = vim.iter(data.bkpt):fold({}, function(iv, bkpt)
                 if bkpt.number then
@@ -270,26 +269,26 @@ function Gdb:onChangeBkpts(callback)
                 return iv
             end)
 
-            callback(ctx, bkpts, assert(rename[event]))
-            ctx.bkpts = ctx.bkpts or {}
+            callback(bkpts, assert(rename[event]))
+            self.ctx.bkpts = self.ctx.bkpts or {}
 
             vim.iter(pairs(bkpts)):each(function(id, bkpt)
-                ctx.bkpts[id] = bkpt
+                self.ctx.bkpts[id] = bkpt
             end)
         end
     end)
 
-    self:on({ "=breakpoint-deleted" }, function(ctx, data, event)
+    self:on({ "=breakpoint-deleted" }, function(data, event)
         local id = data.id
 
         if id then
-            callback(ctx, id, assert(rename[event]))
-            ctx.bkpts = ctx.bkpts or {}
-            ctx.bkpts[id] = nil
+            callback(id, assert(rename[event]))
+            self.ctx.bkpts = self.ctx.bkpts or {}
+            self.ctx.bkpts[id] = nil
         end
     end)
 
-    self:on({ "^done" }, function(ctx, data, event)
+    self:on({ "^done" }, function(data, event)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
             local bkpts = vim.iter(data.BreakpointTable.body.bkpt):fold({}, function(iv, bkpt)
                 if bkpt.number then
@@ -298,8 +297,8 @@ function Gdb:onChangeBkpts(callback)
                 return iv
             end)
 
-            callback(ctx, bkpts, assert(rename[event]))
-            ctx.bkpts = bkpts
+            callback(bkpts, assert(rename[event]))
+            self.ctx.bkpts = bkpts
         end
     end)
 end
@@ -375,9 +374,9 @@ function Gdb:code(window, breakpoint)
         return bufid, row
     end
 
-    self:onStop(function(ctx)
-        local stopped = assert(ctx.stopped)
-        local bufid, row = load(ctx, stopped)
+    self:onStop(function()
+        local stopped = assert(self.ctx.stopped)
+        local bufid, row = load(self.ctx, stopped)
 
         if bufid then
             window:set(bufid, assert(row))
@@ -388,8 +387,8 @@ function Gdb:code(window, breakpoint)
         end
     end)
 
-    self:onReceiveInsns(function(ctx, insns)
-        local stopped = ctx.stopped
+    self:onReceiveInsns(function(insns)
+        local stopped = self.ctx.stopped
 
         if stopped then
             local range = vim.iter(insns):enumerate():fold({}, function(iv, row, insn)
@@ -419,24 +418,24 @@ function Gdb:code(window, breakpoint)
                 vim.bo[bufid].filetype = "asm"
                 window:set(bufid, row)
 
-                ctx.cache = ctx.cache or Cache.new()
-                ctx.cache:set(bufid, range)
+                self.ctx.cache = self.ctx.cache or Cache.new()
+                self.ctx.cache:set(bufid, range)
             end
         end
     end)
 
-    self:onExit(function(ctx)
-        ctx.cache = nil
+    self:onExit(function()
+        self.ctx.cache = nil
         window:fallback()
     end)
 
-    self:onChangeBkpts(function(ctx, data, event)
+    self:onChangeBkpts(function(data, event)
         local toBool = { y = true, n = false }
         local handler = {}
 
         function handler.create()
             vim.iter(pairs(data)):each(function(_, bkpt)
-                local bufid, row = load(ctx, bkpt)
+                local bufid, row = load(self.ctx, bkpt)
 
                 if bufid then
                     breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
@@ -446,7 +445,7 @@ function Gdb:code(window, breakpoint)
 
         function handler.modify()
             vim.iter(pairs(data)):each(function(_, bkpt)
-                local bufid, row = load(ctx, bkpt)
+                local bufid, row = load(self.ctx, bkpt)
 
                 if bufid then
                     breakpoint:modify(bufid, assert(row), toBool[bkpt.enabled])
@@ -455,10 +454,10 @@ function Gdb:code(window, breakpoint)
         end
 
         function handler.delete()
-            local bkpt = ctx.bkpts and ctx.bkpts[data]
+            local bkpt = self.ctx.bkpts and self.ctx.bkpts[data]
 
             if bkpt then
-                local bufid, row = load(ctx, bkpt)
+                local bufid, row = load(self.ctx, bkpt)
 
                 if bufid then
                     breakpoint:delete(bufid, assert(row))
@@ -470,7 +469,7 @@ function Gdb:code(window, breakpoint)
             breakpoint:clear()
 
             vim.iter(pairs(data)):each(function(_, bkpt)
-                local bufid, row = load(ctx, bkpt)
+                local bufid, row = load(self.ctx, bkpt)
 
                 if bufid then
                     breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
