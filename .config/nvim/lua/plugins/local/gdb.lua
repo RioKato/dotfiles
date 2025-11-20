@@ -412,7 +412,6 @@ function Gdb:code(window, breakpoint)
                 local bufid = vim.api.nvim_create_buf(false, true)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
-                vim.bo[bufid].buflisted = false
                 vim.bo[bufid].filetype = "asm"
                 window:set(bufid, row)
 
