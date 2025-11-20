@@ -345,7 +345,7 @@ function Gdb:code(window, breakpoint)
         self.range[bufid] = range
     end
 
-    function Cache:get(addr)
+    function Cache:getBufid(addr)
         vim.iter(pairs(self.range)):each(function(bufid)
             if not vim.api.nvim_buf_is_valid(bufid) then
                 self.range[bufid] = nil
@@ -354,6 +354,12 @@ function Gdb:code(window, breakpoint)
 
         return vim.iter(pairs(self.range)):find(function(_, range)
             return range[addr]
+        end)
+    end
+
+    function Cache:getAddr(bufid, row)
+        return vim.iter(pairs(self.range[bufid] or {})):find(function(addr, i)
+            return i == row
         end)
     end
 
@@ -376,7 +382,7 @@ function Gdb:code(window, breakpoint)
             row = frame.line
         elseif cache and frame.addr then
             local range = nil
-            bufid, range = cache:get(frame.addr)
+            bufid, range = cache:getBufid(frame.addr)
             row = bufid and assert(range[frame.addr])
         end
 
@@ -509,12 +515,28 @@ function Gdb:toggleBreakpoint()
     local bufid = vim.api.nvim_win_get_buf(winid)
     local cursor = vim.api.nvim_win_get_cursor(winid)
     local path = vim.api.nvim_buf_get_name(bufid)
-    local base = vim.fs.basename(path)
-    local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
-        return bkpt.file == base and bkpt.line == cursor[1]
-    end)
-    local cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-    self:send(cmd)
+    local cmd = nil
+
+    if path ~= "" then
+        local base = vim.fs.basename(path)
+        local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
+            return bkpt.file == base and bkpt.line == cursor[1]
+        end)
+        cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
+    else
+        local addr = self.ctx.cache:getAddr(bufid, cursor[1])
+
+        if addr then
+            local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
+                return bkpt.addr == addr
+            end)
+            cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
+        end
+    end
+
+    if cmd then
+        self:send(cmd)
+    end
 end
 
 function Gdb:toggleEnableBreakpoint()
@@ -526,7 +548,17 @@ function Gdb:toggleEnableBreakpoint()
 
     vim.ui.select(bkpts, {
         format_item = function(item)
-            return ("%s 0x%x │ %s %d"):format(item.enabled and "E" or "D", item.addr, item.file, item.line)
+            local enabled = nil
+
+            if item.enabled ~= nil then
+                enabled = item.enabled and "E" or "D"
+            else
+                enabled = " "
+            end
+
+            local addr = item.addr or 0
+            local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
+            return ("%s 0x%x │ %s"):format(enabled, addr, location)
         end,
     }, function(item)
         if item and item.enabled ~= nil then
