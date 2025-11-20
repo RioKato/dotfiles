@@ -504,6 +504,19 @@ function Gdb:notify()
     end)
 end
 
+function Gdb:toggleBreakpoint()
+    local winid = vim.api.nvim_get_current_win()
+    local bufid = vim.api.nvim_win_get_buf(winid)
+    local cursor = vim.api.nvim_win_get_cursor(winid)
+    local path = vim.api.nvim_buf_get_name(bufid)
+    local base = vim.fs.basename(path)
+    local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
+        return bkpt.file == base and bkpt.line == cursor[1]
+    end)
+    local cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
+    self:send(cmd)
+end
+
 function Gdb:toggleEnableBreakpoint()
     local bkpts = vim.iter(pairs(self.ctx.bkpts or {}))
         :map(function(_, bkpt)
@@ -721,6 +734,12 @@ function Ui:GdbInterrupt()
     end
 end
 
+function Ui:GdbToggleBreakpoint()
+    if self.gdb then
+        self.gdb:toggleBreakpoint()
+    end
+end
+
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb then
         self.gdb:toggleEnableBreakpoint()
@@ -772,7 +791,8 @@ function M.setup(opts)
         { "GdbFinish", "<leader>df" },
         { "GdbContinue", "<leader>dc" },
         { "GdbInterrupt", "<leader>di" },
-        { "GdbToggleEnableBreakpoint", "<leader>db" },
+        { "GdbToggleBreakpoint", "<leader>db" },
+        { "GdbToggleEnableBreakpoint", "<leader>dB" },
     }
 
     vim.iter(items):each(function(item)
