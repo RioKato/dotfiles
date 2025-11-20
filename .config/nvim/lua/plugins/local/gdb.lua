@@ -598,7 +598,7 @@ function Ui:GdbOpen()
 
         local template = vim.iter(self.opts.template)
             :filter(function(key, value)
-                return vim.fn.executable(value.executable) == 1
+                return not value.executable or vim.fn.executable(value.executable) == 1
             end)
             :totable()
 
