@@ -178,9 +178,8 @@ function Gdb:disassembleFunction()
     self:send("-data-disassemble -a $pc -- 0")
 end
 
-function Gdb:disassemblePC(offset)
-    local cmd = ("-data-disassemble -s $pc -e $pc+%d -- 0"):format(offset)
-    self:send(cmd)
+function Gdb:disassemblePC()
+    self:send("-data-disassemble -s $pc -e $pc+0x100 -- 0")
 end
 
 function Gdb:breakList()
@@ -325,7 +324,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(window, breakpoint, offset)
+function Gdb:code(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
@@ -380,7 +379,7 @@ function Gdb:code(window, breakpoint, offset)
         elseif stopped.func then
             self:disassembleFunction()
         else
-            self:disassemblePC(offset or 0x100)
+            self:disassemblePC()
         end
     end)
 
@@ -633,6 +632,18 @@ function M.setup(opts)
     local G = {}
 
     local function GdbOpen()
+        G.gdb = Gdb.new()
+
+        local bufid = G.gdb:prompt()
+        vim.api.nvim_open_win(bufid, false, opts.window)
+        local window = Window.new()
+        local breakpoint = Breakpoint.new()
+        G.gdb:code(window, breakpoint)
+
+        if opts.notification then
+            G.gdb:notify()
+        end
+
         local template = vim.iter(opts.template)
             :filter(function(key, value)
                 return vim.fn.executable(value.executable) == 1
@@ -646,18 +657,6 @@ function M.setup(opts)
         }, function(item)
             if item then
                 local command = item[2].command
-                G.gdb = Gdb.new()
-
-                local bufid = G.gdb:prompt()
-                vim.api.nvim_open_win(bufid, false, opts.window)
-                local window = Window.new()
-                local breakpoint = Breakpoint.new()
-                G.gdb:code(window, breakpoint)
-
-                if opts.notification then
-                    G.gdb:notify()
-                end
-
                 G.gdb:open(command)
             end
         end)
