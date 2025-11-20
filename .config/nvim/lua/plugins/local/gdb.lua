@@ -523,7 +523,7 @@ function Gdb:toggleBreakpoint()
             return bkpt.file == base and bkpt.line == cursor[1]
         end)
         cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-    else
+    elseif self.ctx.cache then
         local addr = self.ctx.cache:getAddr(bufid, cursor[1])
 
         if addr then
