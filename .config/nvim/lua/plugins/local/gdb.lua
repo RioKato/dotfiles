@@ -426,6 +426,14 @@ function Gdb:code(window, breakpoint)
 
                 self.ctx.cache = self.ctx.cache or Cache.new()
                 self.ctx.cache:set(bufid, range)
+
+                vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
+                    local row = range[bkpt.addr]
+
+                    if row then
+                        breakpoint:create(bufid, row, bkpt.enabled)
+                    end
+                end)
             end
         end
     end)
