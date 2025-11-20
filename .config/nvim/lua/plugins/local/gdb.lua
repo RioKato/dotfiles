@@ -355,20 +355,24 @@ function Gdb:code(window, breakpoint)
             return stat and stat.type == "file"
         end)
 
+        local bufid, row = nil, nil
+
         if found and frame.line then
-            local bufid = vim.fn.bufadd(found)
+            bufid = vim.fn.bufadd(found)
             vim.fn.bufload(bufid)
             vim.bo[bufid].buftype = "nofile"
             vim.bo[bufid].bufhidden = "hide"
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
             vim.bo[bufid].buflisted = false
-            return bufid, frame.line
+            row = frame.line
         elseif ctx.cache and frame.addr then
-            local bufid, range = ctx.cache:get(frame.addr)
-            line = bufid and assert(range[frame.addr])
-            return bufid, line
+            local range = nil
+            bufid, range = ctx.cache:get(frame.addr)
+            row = bufid and assert(range[frame.addr])
         end
+
+        return bufid, row
     end
 
     self:onStop(function(ctx)
