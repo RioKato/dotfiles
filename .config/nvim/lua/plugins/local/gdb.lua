@@ -137,6 +137,8 @@ function Gdb:close()
     if self.jobid then
         vim.fn.jobstop(self.jobid)
     end
+
+    self.ctx = {}
 end
 
 function Gdb:on(events, callback)
