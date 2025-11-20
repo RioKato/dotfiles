@@ -714,6 +714,7 @@ local default = {
         height = 10,
     },
     notification = true,
+    keymap = true,
 }
 
 function M.setup(opts)
@@ -738,7 +739,9 @@ function M.setup(opts)
             ui[item[1]](ui)
         end, {})
 
-        vim.keymap.set("n", item[2], ("<cmd>%s<cr>"):format(item[1]))
+        if opts.keymap then
+            vim.keymap.set("n", item[2], ("<cmd>%s<cr>"):format(item[1]))
+        end
     end)
 end
 
