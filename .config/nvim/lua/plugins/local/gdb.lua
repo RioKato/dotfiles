@@ -573,31 +573,78 @@ function Breakpoint:clear()
 end
 
 ---------------------------------------------------------------------------------------------------
-local util = {}
+local Ui = {}
 
-function util.createBreakpointAt(gdb)
-    local winid = vim.api.nvim_get_current_win()
-    local bufid = vim.api.nvim_win_get_buf(winid)
-    local cursor = vim.api.nvim_win_get_cursor(winid)
-    local path = vim.api.nvim_buf_get_name(bufid)
-    assert(cursor[1] > 0)
-    local line = vim.api.nvim_buf_get_lines(bufid, cursor[1] - 1, cursor[1], true)
-    local cmd = ""
+function Ui.setup()
+    Window.setup()
+    Breakpoint.setup()
+end
 
-    if path ~= "" then
-        pos = ("break %s:%d"):format(path, cursor[1])
-    else
-        local addr = tonumber(line:match("0x%x+"))
+function Ui.new(opts)
+    local self = { opts = opts }
+    setmetatable(self, { __index = Ui })
+    return self
+end
 
-        if not addr then
-            vim.notify("can't insert breakpoint")
-            return
+function Ui:GdbOpen()
+    if not self.gdb then
+        self.gdb = Gdb.new()
+        self.bufid = self.gdb:prompt()
+        self.gdb:code(Window.new(), Breakpoint.new())
+
+        if self.opts.notification then
+            self.gdb:notify()
         end
 
-        pos = ("break *0x%016x"):format(addr)
+        local template = vim.iter(self.opts.template)
+            :filter(function(key, value)
+                return vim.fn.executable(value.executable) == 1
+            end)
+            :totable()
+
+        if #template > 1 then
+            vim.ui.select(template, {
+                format_item = function(item)
+                    return item[1]
+                end,
+            }, function(item)
+                if item then
+                    self.gdb:open(item[2].command)
+                end
+            end)
+        elseif #template == 1 then
+            self.gdb:open(template[1][2].command)
+        else
+            vim.notify("template not found")
+        end
     end
 
-    gdb:send(cmd)
+    if not self.winid or not vim.api.nvim_win_is_valid(self.winid) then
+        self.winid = vim.api.nvim_open_win(self.bufid, false, self.opts.window)
+    end
+end
+
+function Ui:GdbClose()
+    if self.gdb then
+        self.gdb:close()
+        self.gdb = nil
+    end
+
+    if self.bufid then
+        if vim.api.nvim_buf_is_valid(self.bufid) then
+            vim.api.nvim_buf_delete(self.bufid, { force = true })
+        end
+
+        self.bufid = nil
+    end
+
+    if self.winid then
+        if vim.api.nvim_win_is_valid(self.winid) then
+            vim.api.nvim_win_close(self.winid, true)
+        end
+
+        self.winid = nil
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -626,46 +673,17 @@ local default = {
 
 function M.setup(opts)
     opts = vim.tbl_deep_extend("force", default, opts or {})
-    Window.setup()
-    Breakpoint.setup()
+    Ui.setup()
 
-    local G = {}
+    local ui = Ui.new(opts)
 
-    local function GdbOpen()
-        G.gdb = Gdb.new()
+    vim.api.nvim_create_user_command("GdbOpen", function()
+        ui:GdbOpen()
+    end, {})
 
-        local bufid = G.gdb:prompt()
-        vim.api.nvim_open_win(bufid, false, opts.window)
-        local window = Window.new()
-        local breakpoint = Breakpoint.new()
-        G.gdb:code(window, breakpoint)
-
-        if opts.notification then
-            G.gdb:notify()
-        end
-
-        local template = vim.iter(opts.template)
-            :filter(function(key, value)
-                return vim.fn.executable(value.executable) == 1
-            end)
-            :totable()
-
-        if #template > 1 then
-            vim.ui.select(template, {
-                format_item = function(item)
-                    return item[1]
-                end,
-            }, function(item)
-                if item then
-                    G.gdb:open(item[2].command)
-                end
-            end)
-        elseif #template == 1 then
-            G.gdb:open(template[1][2].command)
-        end
-    end
-
-    vim.api.nvim_create_user_command("GdbOpen", GdbOpen, {})
+    vim.api.nvim_create_user_command("GdbClose", function()
+        ui:GdbClose()
+    end, {})
 end
 
 M.setup()
