@@ -24,8 +24,15 @@ local function parser()
             "id",
         }
 
+        local boolkey = {
+            "enabled",
+        }
+
         if vim.tbl_contains(intkey, data[1]) then
             data[2] = tonumber(data[2])
+        elseif vim.tbl_contains(boolkey, data[1]) then
+            local map = { y = true, n = false }
+            data[2] = map[data[2]]
         end
 
         data.pair = true
@@ -429,7 +436,6 @@ function Gdb:code(window, breakpoint)
     end)
 
     self:onChangeBkpts(function(event, data)
-        local toBool = { y = true, n = false }
         local handler = {}
 
         function handler.create()
@@ -437,7 +443,7 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
+                    breakpoint:create(bufid, assert(row), bkpt.enabled)
                 end
             end)
         end
@@ -447,7 +453,7 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:modify(bufid, assert(row), toBool[bkpt.enabled])
+                    breakpoint:modify(bufid, assert(row), bkpt.enabled)
                 end
             end)
         end
@@ -471,7 +477,7 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row), toBool[bkpt.enabled])
+                    breakpoint:create(bufid, assert(row), bkpt.enabled)
                 end
             end)
         end
