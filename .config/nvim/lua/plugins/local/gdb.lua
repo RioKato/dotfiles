@@ -362,6 +362,7 @@ function Gdb:code(window, breakpoint)
             vim.bo[bufid].bufhidden = "hide"
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
+            vim.bo[bufid].buflisted = false
             return bufid, frame.line
         elseif ctx.cache and frame.addr then
             local bufid, range = ctx.cache:get(frame.addr)
@@ -411,6 +412,7 @@ function Gdb:code(window, breakpoint)
                 local bufid = vim.api.nvim_create_buf(false, true)
                 vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                 vim.bo[bufid].modifiable = false
+                vim.bo[bufid].buflisted = false
                 vim.bo[bufid].filetype = "asm"
                 window:set(bufid, row)
 
