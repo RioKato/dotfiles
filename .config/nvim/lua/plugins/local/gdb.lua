@@ -616,7 +616,8 @@ function Ui:GdbOpen()
                 end
             end)
         elseif #template == 1 then
-            self.gdb:open(template[1][2].command)
+            local item = template[1]
+            self.gdb:open(item[2].command)
         else
             vim.notify("template not found")
         end
