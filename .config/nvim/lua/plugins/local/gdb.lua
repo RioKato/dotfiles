@@ -505,7 +505,13 @@ function Gdb:notify()
 end
 
 function Gdb:toggleEnableBreakpoint()
-    vim.ui.select(self.ctx.bkpts or {}, {
+    local bkpts = vim.iter(pairs(self.ctx.bkpts or {}))
+        :map(function(_, bkpt)
+            return bkpt
+        end)
+        :totable()
+
+    vim.ui.select(bkpts, {
         format_item = function(item)
             return ("%s 0x%x │ %s %d"):format(item.enabled and "E" or "D", item.addr, item.file, item.line)
         end,
