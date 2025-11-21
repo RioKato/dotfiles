@@ -339,7 +339,7 @@ function Gdb:prompt()
     return bufid
 end
 
-function Gdb:code(window, breakpoint)
+function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
@@ -697,7 +697,7 @@ function Ui:GdbOpen()
     if not self.gdb then
         local window = Window.new()
         self.gdb = Gdb.new()
-        self.gdb:code(window, Breakpoint.new())
+        self.gdb:viwer(window, Breakpoint.new())
         local stderr = nil
 
         if self.opts.notification then
