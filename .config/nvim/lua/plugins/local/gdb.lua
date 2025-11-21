@@ -100,7 +100,7 @@ function Gdb.new()
     return self
 end
 
-function Gdb:open(cmd)
+function Gdb:open(cmd, opts)
     if not self.job then
         local buf = ""
 
@@ -126,15 +126,16 @@ function Gdb:open(cmd)
                     end)
                 end
             end,
-            stderr = function(_, text)
-                if text then
-                    vim.schedule(function()
-                        vim.notify(text)
-                    end)
-                end
-            end,
+            stderr = opts.stderr,
+            cwd = opts.cwd,
+            env = opts.env,
+            detach = opts.detach,
         }, function()
             self.job = nil
+
+            if opts.exit then
+                opts.exit()
+            end
         end)
     end
 end
@@ -652,13 +653,25 @@ end
 
 function Ui:GdbOpen()
     if not self.gdb then
+        local window = Window.new()
+        local breakpoint = Breakpoint.new()
         self.gdb = Gdb.new()
-        self.bufid = self.gdb:prompt()
-        self.gdb:code(Window.new(), Breakpoint.new())
+        self.gdb:code(window, breakpoint)
+        local stderr = nil
 
         if self.opts.notification then
             self.gdb:notify()
+
+            stderr = function(_, text)
+                if text then
+                    vim.schedule(function()
+                        vim.notify(text)
+                    end)
+                end
+            end
         end
+
+        local bufid = self.gdb:prompt()
 
         local template = vim.iter(self.opts.template)
             :filter(function(key, value)
@@ -666,51 +679,37 @@ function Ui:GdbOpen()
             end)
             :totable()
 
-        if #template > 1 then
-            vim.ui.select(template, {
-                format_item = function(item)
-                    return item[1]
-                end,
-            }, function(item)
-                if item then
-                    self.gdb:open(item[2].command)
-                else
-                    self:GdbClose()
-                end
-            end)
-        elseif #template == 1 then
-            local item = template[1]
-            self.gdb:open(item[2].command)
-        else
-            vim.notify("template not found")
-        end
-    end
+        vim.ui.select(template, {
+            format_item = function(item)
+                return item[1]
+            end,
+        }, function(item)
+            if item then
+                self.gdb:open(item[2].command, {
+                    stderr = stderr,
+                    exit = function()
+                        vim.schedule(function()
+                            if vim.api.nvim_buf_is_valid(bufid) then
+                                vim.api.nvim_buf_delete(bufid, { force = true })
+                            end
 
-    if not self.winid or not vim.api.nvim_win_is_valid(self.winid) then
-        self.winid = vim.api.nvim_open_win(self.bufid, false, self.opts.window)
+                            window:fallback()
+                            self.gdb = nil
+                        end)
+                    end,
+                })
+
+                vim.api.nvim_open_win(bufid, false, self.opts.window)
+            else
+                vim.api.nvim_buf_delete(bufid, { force = true })
+            end
+        end)
     end
 end
 
 function Ui:GdbClose()
     if self.gdb then
         self.gdb:close()
-        self.gdb = nil
-    end
-
-    if self.bufid then
-        if vim.api.nvim_buf_is_valid(self.bufid) then
-            vim.api.nvim_buf_delete(self.bufid, { force = true })
-        end
-
-        self.bufid = nil
-    end
-
-    if self.winid then
-        if vim.api.nvim_win_is_valid(self.winid) and #vim.api.nvim_list_wins() ~= 1 then
-            vim.api.nvim_win_close(self.winid, true)
-        end
-
-        self.winid = nil
     end
 end
 
