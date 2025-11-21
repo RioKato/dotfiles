@@ -342,24 +342,30 @@ function Gdb:code(window, breakpoint)
     end
 
     function Cache:set(bufid, range)
-        self.range[bufid] = range
+        vim.iter(pairs(range)):each(function(addr, row)
+            self.range[addr] = { bufid, row }
+        end)
     end
 
-    function Cache:getBufId(addr)
-        vim.iter(pairs(self.range)):each(function(bufid)
-            if not vim.api.nvim_buf_is_valid(bufid) then
-                self.range[bufid] = nil
-            end
-        end)
+    function Cache:getPosition(addr)
+        local bufid, row = nil, nil
+        local pos = self.range[addr]
 
-        return vim.iter(pairs(self.range)):find(function(_, range)
-            return range[addr]
-        end)
+        if pos then
+            bufid, row = pos[1], pos[2]
+
+            if bufid and not vim.api.nvim_buf_is_valid(bufid) then
+                bufid, row = nil, nil
+                self.range[addr] = nil
+            end
+        end
+
+        return bufid, row
     end
 
     function Cache:getAddress(bufid, row)
-        return vim.iter(pairs(self.range[bufid] or {})):find(function(addr, i)
-            return i == row
+        return vim.iter(pairs(self.range)):find(function(addr, pos)
+            return pos[1] == bufid and pos[2] == row
         end)
     end
 
@@ -381,9 +387,7 @@ function Gdb:code(window, breakpoint)
             vim.bo[bufid].buflisted = false
             row = frame.line
         elseif cache and frame.addr then
-            local range = nil
-            bufid, range = cache:getBufId(frame.addr)
-            row = bufid and assert(range[frame.addr])
+            bufid, row = cache:getPosition(frame.addr)
         end
 
         return bufid, row
