@@ -503,63 +503,6 @@ function Gdb:notify()
     end)
 end
 
-function Gdb:toggleBreakpoint()
-    local winid = vim.api.nvim_get_current_win()
-    local bufid = vim.api.nvim_win_get_buf(winid)
-    local cursor = vim.api.nvim_win_get_cursor(winid)
-    local path = vim.api.nvim_buf_get_name(bufid)
-    local cmd = nil
-
-    if path ~= "" then
-        local base = vim.fs.basename(path)
-        local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
-            return bkpt.file == base and bkpt.line == cursor[1]
-        end)
-        cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-    elseif self.ctx.cache then
-        local addr = self.ctx.cache:getAddress(bufid, cursor[1])
-
-        if addr then
-            local found = vim.iter(pairs(self.ctx.bkpts or {})):find(function(_, bkpt)
-                return bkpt.addr == addr
-            end)
-            cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
-        end
-    end
-
-    if cmd then
-        self:send(cmd)
-    end
-end
-
-function Gdb:toggleEnableBreakpoint()
-    local bkpts = vim.iter(pairs(self.ctx.bkpts or {}))
-        :map(function(_, bkpt)
-            return bkpt
-        end)
-        :totable()
-
-    vim.ui.select(bkpts, {
-        format_item = function(item)
-            local enabled = nil
-
-            if item.enabled ~= nil then
-                enabled = item.enabled and "E" or "D"
-            else
-                enabled = " "
-            end
-
-            local addr = item.addr or 0
-            local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
-            return ("%s 0x%x │ %s"):format(enabled, addr, location)
-        end,
-    }, function(item)
-        if item and item.enabled ~= nil then
-            self:send(("%s %d"):format(item.enabled and "disable" or "enable", item.number))
-        end
-    end)
-end
-
 ---------------------------------------------------------------------------------------------------
 local Window = {
     sign = {
@@ -763,13 +706,62 @@ end
 
 function Ui:GdbToggleBreakpoint()
     if self.gdb then
-        self.gdb:toggleBreakpoint()
+        local winid = vim.api.nvim_get_current_win()
+        local bufid = vim.api.nvim_win_get_buf(winid)
+        local cursor = vim.api.nvim_win_get_cursor(winid)
+        local path = vim.api.nvim_buf_get_name(bufid)
+        local cmd = nil
+
+        if path ~= "" then
+            local base = vim.fs.basename(path)
+            local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+                return bkpt.file == base and bkpt.line == cursor[1]
+            end)
+            cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
+        elseif self.gdb.ctx.cache then
+            local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
+
+            if addr then
+                local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+                    return bkpt.addr == addr
+                end)
+                cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
+            end
+        end
+
+        if cmd then
+            self.gdb:send(cmd)
+        end
     end
 end
 
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb then
-        self.gdb:toggleEnableBreakpoint()
+        local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts or {}))
+            :map(function(_, bkpt)
+                return bkpt
+            end)
+            :totable()
+
+        vim.ui.select(bkpts, {
+            format_item = function(item)
+                local enabled = nil
+
+                if item.enabled ~= nil then
+                    enabled = item.enabled and "E" or "D"
+                else
+                    enabled = " "
+                end
+
+                local addr = item.addr or 0
+                local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
+                return ("%s 0x%x │ %s"):format(enabled, addr, location)
+            end,
+        }, function(item)
+            if item and item.enabled ~= nil then
+                self.gdb:send(("%s %d"):format(item.enabled and "disable" or "enable", item.number))
+            end
+        end)
     end
 end
 
