@@ -185,7 +185,7 @@ end
 
 function Gdb:onReceiveMessage(callback)
     self:on({ "~" }, function(data)
-        local msg = assert(data[2])
+        local msg = data[2]
 
         if msg ~= "" then
             callback(msg)
@@ -267,7 +267,7 @@ function Gdb:onChangeBkpts(callback)
                 return iv
             end)
 
-            callback(assert(rename[event]), bkpts)
+            callback(rename[event], bkpts)
             self.ctx.bkpts = self.ctx.bkpts or {}
 
             vim.iter(pairs(bkpts)):each(function(id, bkpt)
@@ -280,7 +280,7 @@ function Gdb:onChangeBkpts(callback)
         local id = data.id
 
         if id then
-            callback(assert(rename[event]), id)
+            callback(rename[event], id)
             self.ctx.bkpts = self.ctx.bkpts or {}
             self.ctx.bkpts[id] = nil
         end
@@ -295,7 +295,7 @@ function Gdb:onChangeBkpts(callback)
                 return iv
             end)
 
-            callback(assert(rename[event]), bkpts)
+            callback(rename[event], bkpts)
             self.ctx.bkpts = bkpts
         end
     end)
@@ -365,10 +365,6 @@ function Gdb:code(window, breakpoint)
             row = frame.line
         elseif cache and frame.addr then
             bufid, row = cache:getPosition(frame.addr)
-
-            if bufid and not vim.api.nvim_buf_is_valid(bufid) then
-                bufid, row = nil, nil
-            end
         end
 
         return bufid, row
@@ -377,12 +373,12 @@ function Gdb:code(window, breakpoint)
     self:onStop(function()
         local bufid, row = load(self.ctx.cache, self.ctx.stopped)
 
-        if bufid then
-            window:set(bufid, assert(row))
-        elseif self.ctx.stopped.func then
-            self:disassembleFunction()
-        else
-            self:disassemblePC()
+        if not bufid or not window:set(bufid, row) then
+            if self.ctx.stopped.func then
+                self:disassembleFunction()
+            else
+                self:disassemblePC()
+            end
         end
     end)
 
@@ -442,7 +438,7 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row), bkpt.enabled)
+                    breakpoint:create(bufid, row, bkpt.enabled)
                 end
             end)
         end
@@ -452,7 +448,7 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:modify(bufid, assert(row), bkpt.enabled)
+                    breakpoint:modify(bufid, row, bkpt.enabled)
                 end
             end)
         end
@@ -464,7 +460,7 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:delete(bufid, assert(row))
+                    breakpoint:delete(bufid, row)
                 end
             end
         end
@@ -476,12 +472,12 @@ function Gdb:code(window, breakpoint)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
-                    breakpoint:create(bufid, assert(row), bkpt.enabled)
+                    breakpoint:create(bufid, row, bkpt.enabled)
                 end
             end)
         end
 
-        assert(handler[event])()
+        handler[event]()
     end)
 end
 
@@ -580,16 +576,26 @@ function Window.new()
 end
 
 function Window:fallback()
-    vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
-    vim.api.nvim_win_set_buf(self.winid, self.bufid)
-    vim.api.nvim_win_set_cursor(self.winid, self.cursor)
+    if vim.api.nvim_buf_is_valid(bufid) and vim.api.nvim_win_is_valid(self.winid) then
+        vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
+        vim.api.nvim_win_set_buf(self.winid, self.bufid)
+        vim.api.nvim_win_set_cursor(self.winid, self.cursor)
+        return true
+    else
+        return false
+    end
 end
 
 function Window:set(bufid, row)
-    vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
-    vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
-    vim.api.nvim_win_set_buf(self.winid, bufid)
-    vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
+    if vim.api.nvim_buf_is_valid(bufid) and vim.api.nvim_win_is_valid(self.winid) then
+        vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
+        vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
+        vim.api.nvim_win_set_buf(self.winid, bufid)
+        vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
+        return true
+    else
+        return false
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -615,8 +621,10 @@ function Breakpoint.new()
 end
 
 function Breakpoint:create(bufid, row, enabled)
-    local name = self.sign.name[enabled or enabled == nil]
-    vim.fn.sign_place(0, self.sign.group, name, bufid, { lnum = row })
+    if vim.api.nvim_buf_is_valid(bufid) then
+        local name = self.sign.name[enabled or enabled == nil]
+        vim.fn.sign_place(0, self.sign.group, name, bufid, { lnum = row })
+    end
 end
 
 function Breakpoint:modify(bufid, row, enabled)
@@ -625,12 +633,14 @@ function Breakpoint:modify(bufid, row, enabled)
 end
 
 function Breakpoint:delete(bufid, row)
-    local placed = vim.fn.sign_getplaced(bufid, { group = self.sign.group, lnum = row })
-    local signs = assert(placed[1]).signs
+    if vim.api.nvim_buf_is_valid(bufid) then
+        local placed = vim.fn.sign_getplaced(bufid, { group = self.sign.group, lnum = row })
+        local signs = assert(placed[1]).signs
 
-    vim.iter(signs):each(function(sign)
-        vim.fn.sign_unplace(self.sign.group, { id = sign.id })
-    end)
+        vim.iter(signs):each(function(sign)
+            vim.fn.sign_unplace(self.sign.group, { id = sign.id })
+        end)
+    end
 end
 
 function Breakpoint:clear()
