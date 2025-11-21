@@ -268,35 +268,60 @@ function Gdb:onChangeBkpts(callback)
         end)
     end
 
-    self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(data, event)
-        if data.bkpt then
-            local bkpts = dict(data.bkpt)
-            callback(rename[event], bkpts)
-            self.ctx.bkpts = self.ctx.bkpts or {}
+    local create = callback.create
+    local modify = callback.modify
+    local delete = callback.delete
+    local sync = callback.sync
 
-            vim.iter(pairs(bkpts)):each(function(id, bkpt)
-                self.ctx.bkpts[id] = bkpt
-            end)
-        end
-    end)
+    if create then
+        self:on({ "=breakpoint-created" }, function(data, event)
+            if data.bkpt then
+                local bkpts = dict(data.bkpt)
+                create(bkpts)
+                self.ctx.bkpts = self.ctx.bkpts or {}
 
-    self:on({ "=breakpoint-deleted" }, function(data, event)
-        local id = data.id
+                vim.iter(pairs(bkpts)):each(function(id, bkpt)
+                    self.ctx.bkpts[id] = bkpt
+                end)
+            end
+        end)
+    end
 
-        if id then
-            callback(rename[event], id)
-            self.ctx.bkpts = self.ctx.bkpts or {}
-            self.ctx.bkpts[id] = nil
-        end
-    end)
+    if modify then
+        self:on({ "=breakpoint-modified" }, function(data, event)
+            if data.bkpt then
+                local bkpts = dict(data.bkpt)
+                modify(bkpts)
+                self.ctx.bkpts = self.ctx.bkpts or {}
 
-    self:on({ "^done" }, function(data, event)
-        if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
-            local bkpts = dict(data.BreakpointTable.body.bkpt)
-            callback(rename[event], bkpts)
-            self.ctx.bkpts = bkpts
-        end
-    end)
+                vim.iter(pairs(bkpts)):each(function(id, bkpt)
+                    self.ctx.bkpts[id] = bkpt
+                end)
+            end
+        end)
+    end
+
+    if delete then
+        self:on({ "=breakpoint-deleted" }, function(data, event)
+            local id = data.id
+
+            if id then
+                delete(id)
+                self.ctx.bkpts = self.ctx.bkpts or {}
+                self.ctx.bkpts[id] = nil
+            end
+        end)
+    end
+
+    if sync then
+        self:on({ "^done" }, function(data, event)
+            if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
+                local bkpts = dict(data.BreakpointTable.body.bkpt)
+                sync(bkpts)
+                self.ctx.bkpts = bkpts
+            end
+        end)
+    end
 end
 
 function Gdb:prompt()
@@ -428,31 +453,29 @@ function Gdb:code(window, breakpoint)
         window:fallback()
     end)
 
-    self:onChangeBkpts(function(event, data)
-        local handler = {}
-
-        function handler.create()
-            vim.iter(pairs(data)):each(function(_, bkpt)
+    self:onChangeBkpts({
+        create = function(bkpts)
+            vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:create(bufid, row, bkpt.enabled)
                 end
             end)
-        end
+        end,
 
-        function handler.modify()
-            vim.iter(pairs(data)):each(function(_, bkpt)
+        modify = function(bkpts)
+            vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:modify(bufid, row, bkpt.enabled)
                 end
             end)
-        end
+        end,
 
-        function handler.delete()
-            local bkpt = self.ctx.bkpts and self.ctx.bkpts[data]
+        delete = function(id)
+            local bkpt = self.ctx.bkpts and self.ctx.bkpts[id]
 
             if bkpt then
                 local bufid, row = load(self.ctx.cache, bkpt)
@@ -461,22 +484,20 @@ function Gdb:code(window, breakpoint)
                     breakpoint:delete(bufid, row)
                 end
             end
-        end
+        end,
 
-        function handler.sync()
+        sync = function(bkpts)
             breakpoint:clear()
 
-            vim.iter(pairs(data)):each(function(_, bkpt)
+            vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid then
                     breakpoint:create(bufid, row, bkpt.enabled)
                 end
             end)
-        end
-
-        handler[event]()
-    end)
+        end,
+    })
 end
 
 function Gdb:notify()
