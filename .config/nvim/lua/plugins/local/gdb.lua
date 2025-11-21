@@ -704,6 +704,12 @@ function Ui:GdbInterrupt()
     end
 end
 
+function Ui:GdbSyncBreakpoint()
+    if self.gdb then
+        self.gdb:breakList()
+    end
+end
+
 function Ui:GdbToggleBreakpoint()
     if self.gdb then
         local winid = vim.api.nvim_get_current_win()
@@ -782,6 +788,7 @@ function M.setup(opts)
         "GdbOpen",
         "GdbClose",
         "GdbInterrupt",
+        "GdbSyncBreakpoint",
         "GdbToggleBreakpoint",
         "GdbToggleEnableBreakpoint",
     }
