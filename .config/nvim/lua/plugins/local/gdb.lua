@@ -576,7 +576,7 @@ function Window.new()
 end
 
 function Window:fallback()
-    if vim.api.nvim_buf_is_valid(bufid) and vim.api.nvim_win_is_valid(self.winid) then
+    if vim.api.nvim_buf_is_valid(self.bufid) and vim.api.nvim_win_is_valid(self.winid) then
         vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
         vim.api.nvim_win_set_buf(self.winid, self.bufid)
         vim.api.nvim_win_set_cursor(self.winid, self.cursor)
