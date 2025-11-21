@@ -127,9 +127,11 @@ function Gdb:open(cmd)
                 end
             end,
             stderr = function(_, text)
-                vim.schedule(function()
-                    vim.notify(text)
-                end)
+                if text then
+                    vim.schedule(function()
+                        vim.notify(text)
+                    end)
+                end
             end,
         }, function()
             self.job = nil
