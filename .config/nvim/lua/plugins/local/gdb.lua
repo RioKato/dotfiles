@@ -258,15 +258,19 @@ function Gdb:onChangeBkpts(callback)
         ["^done"] = "sync",
     }
 
+    local function dict(bkpts)
+        return vim.iter(bkpts):fold({}, function(left, right)
+            if right.number then
+                left[right.number] = right
+            end
+
+            return left
+        end)
+    end
+
     self:on({ "=breakpoint-created", "=breakpoint-modified" }, function(data, event)
         if data.bkpt then
-            local bkpts = vim.iter(data.bkpt):fold({}, function(iv, bkpt)
-                if bkpt.number then
-                    iv[bkpt.number] = bkpt
-                end
-                return iv
-            end)
-
+            local bkpts = dict(data.bkpt)
             callback(rename[event], bkpts)
             self.ctx.bkpts = self.ctx.bkpts or {}
 
@@ -288,13 +292,7 @@ function Gdb:onChangeBkpts(callback)
 
     self:on({ "^done" }, function(data, event)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
-            local bkpts = vim.iter(data.BreakpointTable.body.bkpt):fold({}, function(iv, bkpt)
-                if bkpt.number then
-                    iv[bkpt.number] = bkpt
-                end
-                return iv
-            end)
-
+            local bkpts = dict(data.BreakpointTable.body.bkpt)
             callback(rename[event], bkpts)
             self.ctx.bkpts = bkpts
         end
@@ -719,7 +717,7 @@ function Ui:GdbOpen()
                     stderr = stderr,
                     exit = function()
                         vim.schedule(function()
-                            if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() ~= 1 then
+                            if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
                                 vim.api.nvim_win_close(winid, true)
                             end
 
