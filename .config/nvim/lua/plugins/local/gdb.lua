@@ -348,14 +348,7 @@ function Gdb:code(window, breakpoint)
     end
 
     function Cache:getPosition(addr)
-        local bufid, row = unpack(self.range[addr] or {})
-
-        if bufid and not vim.api.nvim_buf_is_valid(bufid) then
-            bufid, row = nil, nil
-            self.range[addr] = nil
-        end
-
-        return bufid, row
+        return unpack(self.range[addr] or {})
     end
 
     function Cache:getAddress(bufid, row)
@@ -383,6 +376,10 @@ function Gdb:code(window, breakpoint)
             row = frame.line
         elseif cache and frame.addr then
             bufid, row = cache:getPosition(frame.addr)
+
+            if bufid and not vim.api.nvim_buf_is_valid(bufid) then
+                bufid, row = nil, nil
+            end
         end
 
         return bufid, row
