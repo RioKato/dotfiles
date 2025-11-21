@@ -331,10 +331,8 @@ function Gdb:code(window, breakpoint)
         return self
     end
 
-    function Cache:set(bufid, range)
-        vim.iter(pairs(range)):each(function(addr, row)
-            self.range[addr] = { bufid, row }
-        end)
+    function Cache:set(addr, bufid, row)
+        self.range[addr] = { bufid, row }
     end
 
     function Cache:getPosition(addr)
@@ -389,14 +387,9 @@ function Gdb:code(window, breakpoint)
 
     self:onReceiveInsns(function(insns)
         if self.ctx.stopped then
-            local range = vim.iter(insns):enumerate():fold({}, function(iv, row, insn)
-                if insn.address then
-                    iv[insn.address] = row
-                end
-                return iv
+            local row = vim.iter(insns):enumerate():find(function(_, insn)
+                return insn.address and insn.address == self.ctx.stopped.addr
             end)
-
-            local row = range[self.ctx.stopped.addr]
 
             if row then
                 local lines = vim.iter(insns)
@@ -417,12 +410,17 @@ function Gdb:code(window, breakpoint)
                 window:set(bufid, row)
 
                 self.ctx.cache = self.ctx.cache or Cache.new()
-                self.ctx.cache:set(bufid, range)
+
+                vim.iter(insns):enumerate():each(function(row, insn)
+                    if insn.address then
+                        self.ctx.cache:set(insn.address, bufid, row)
+                    end
+                end)
 
                 vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
-                    local row = range[bkpt.addr]
+                    local temp, row = self.ctx.cache:getPosition(bkpt.addr)
 
-                    if row then
+                    if bufid == temp then
                         breakpoint:create(bufid, row, bkpt.enabled)
                     end
                 end)
