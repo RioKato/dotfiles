@@ -638,7 +638,27 @@ function Breakpoint:clear()
 end
 
 ---------------------------------------------------------------------------------------------------
-local Ui = {}
+local Ui = {
+    default = {
+        template = {
+            gdb = {
+                command = { "gdb", "-i=mi" },
+                executable = "gdb",
+            },
+
+            rr = {
+                command = { "rr", "replay", "-i=mi" },
+                executable = "rr",
+            },
+        },
+        window = {
+            split = "right",
+            win = -1,
+            style = "minimal",
+        },
+        notification = true,
+    },
+}
 
 function Ui.setup()
     Window.setup()
@@ -646,7 +666,7 @@ function Ui.setup()
 end
 
 function Ui.new(opts)
-    local self = { opts = opts }
+    local self = { opts = vim.tbl_deep_extend("force", Ui.default, opts or {}) }
     setmetatable(self, { __index = Ui })
     return self
 end
@@ -740,49 +760,22 @@ local M = {
     Ui = Ui,
 }
 
-local default = {
-    template = {
-        gdb = {
-            command = { "gdb", "-i=mi" },
-            executable = "gdb",
-        },
-
-        rr = {
-            command = { "rr", "replay", "-i=mi" },
-            executable = "rr",
-        },
-    },
-    window = {
-        split = "right",
-        win = -1,
-        style = "minimal",
-    },
-    notification = true,
-    keymap = true,
-}
-
 function M.setup(opts)
-    opts = vim.tbl_deep_extend("force", default, opts or {})
     Ui.setup()
-
     local ui = Ui.new(opts)
 
-    local items = {
-        { "GdbOpen", "<leader>do" },
-        { "GdbClose", "<leader>dO" },
-        { "GdbInterrupt", "<leader>di" },
-        { "GdbToggleBreakpoint", "<leader>db" },
-        { "GdbToggleEnableBreakpoint", "<leader>dB" },
+    local cmds = {
+        "GdbOpen",
+        "GdbClose",
+        "GdbInterrupt",
+        "GdbToggleBreakpoint",
+        "GdbToggleEnableBreakpoint",
     }
 
-    vim.iter(items):each(function(item)
-        vim.api.nvim_create_user_command(item[1], function()
-            ui[item[1]](ui)
+    vim.iter(cmds):each(function(cmd)
+        vim.api.nvim_create_user_command(cmd, function()
+            ui[cmd](ui)
         end, {})
-
-        if opts.keymap then
-            vim.keymap.set("n", item[2], ("<cmd>%s<cr>"):format(item[1]))
-        end
     end)
 end
 
