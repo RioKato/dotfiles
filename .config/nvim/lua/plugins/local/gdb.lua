@@ -40,14 +40,14 @@ local function parser()
     end
 
     local function norm(data)
-        local special = { "bkpt" }
+        local dupkey = { "bkpt" }
 
         return vim.iter(data):fold({}, function(left, right)
             if right.pair then
                 local key = right[1]
                 local value = right[2]
 
-                if vim.tbl_contains(special, key) then
+                if vim.tbl_contains(dupkey, key) then
                     left[key] = left[key] or {}
                     table.insert(left[key], value)
                 else
@@ -430,13 +430,15 @@ function Gdb:viwer(window, breakpoint)
                     end
                 end)
 
-                vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
-                    local temp, row = self.ctx.cache:getPosition(bkpt.addr)
+                if self.ctx.bkpts then
+                    vim.iter(pairs(self.ctx.bkpts)):each(function(_, bkpt)
+                        local temp, row = self.ctx.cache:getPosition(bkpt.addr)
 
-                    if bufid == temp then
-                        breakpoint:create(bufid, row, bkpt.enabled)
-                    end
-                end)
+                        if bufid == temp then
+                            breakpoint:create(bufid, row, bkpt.enabled)
+                        end
+                    end)
+                end
             end
         end
     end)
@@ -711,7 +713,7 @@ function Ui:GdbSyncBreakpoint()
 end
 
 function Ui:GdbToggleBreakpoint()
-    if self.gdb then
+    if self.gdb and self.gdb.ctx.bkpts then
         local winid = vim.api.nvim_get_current_win()
         local bufid = vim.api.nvim_win_get_buf(winid)
         local cursor = vim.api.nvim_win_get_cursor(winid)
@@ -720,7 +722,7 @@ function Ui:GdbToggleBreakpoint()
 
         if path ~= "" then
             local base = vim.fs.basename(path)
-            local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+            local found = vim.iter(pairs(self.gdb.ctx.bkpts)):find(function(_, bkpt)
                 return bkpt.file == base and bkpt.line == cursor[1]
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
@@ -728,7 +730,7 @@ function Ui:GdbToggleBreakpoint()
             local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
 
             if addr then
-                local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+                local found = vim.iter(pairs(self.gdb.ctx.bkpts)):find(function(_, bkpt)
                     return bkpt.addr == addr
                 end)
                 cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
@@ -742,8 +744,8 @@ function Ui:GdbToggleBreakpoint()
 end
 
 function Ui:GdbToggleEnableBreakpoint()
-    if self.gdb then
-        local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts or {}))
+    if self.gdb and self.gdb.ctx.bkpts then
+        local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts))
             :map(function(_, bkpt)
                 return bkpt
             end)
