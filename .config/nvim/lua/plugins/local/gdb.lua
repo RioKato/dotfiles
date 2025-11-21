@@ -143,14 +143,14 @@ function Gdb:send(cmd)
     end
 end
 
-function Gdb:signal(name)
+function Gdb:kill(name)
     if self.job then
         self.job:kill(name)
     end
 end
 
 function Gdb:close()
-    self:signal("sigterm")
+    self:kill("sigterm")
     self.ctx = {}
 end
 
@@ -165,7 +165,7 @@ function Gdb:on(events, callback)
 end
 
 function Gdb:interrupt()
-    self:signal("sigint")
+    self:kill("sigint")
 end
 
 function Gdb:disassembleFunction()
