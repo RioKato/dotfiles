@@ -101,50 +101,56 @@ function Gdb.new()
 end
 
 function Gdb:open(cmd)
-    if not self.jobid then
+    if not self.job then
         local buf = ""
 
-        self.jobid = vim.fn.jobstart(cmd, {
-            on_stdout = function(_, lines, _)
-                assert(#lines > 0)
-                lines[1] = buf .. lines[1]
-                buf = table.remove(lines)
+        self.job = vim.system(cmd, {
+            text = true,
+            stdin = true,
+            stdout = function(_, text)
+                if text then
+                    local lines = vim.split(buf .. text, "\n")
+                    assert(#lines > 0)
+                    buf = table.remove(lines)
 
-                vim.iter(lines):each(function(line)
-                    local result = MI.parse(line) or {}
-                    result.text = line
-                    local event = result[1] or ""
+                    vim.iter(lines):each(function(line)
+                        local result = MI.parse(line) or {}
+                        result.text = line
+                        local event = result[1]
 
-                    vim.iter(self.listener[event] or {}):each(function(callback)
-                        callback(result, event)
+                        vim.iter(self.listener[event] or {}):each(function(callback)
+                            vim.schedule(function()
+                                callback(result, event)
+                            end)
+                        end)
                     end)
-                end)
-            end,
-            on_stderr = function(_, lines, _)
-                local text = vim.iter(lines):join("\n")
-
-                if text ~= "" then
-                    vim.notify(text)
                 end
             end,
-            on_exit = function()
-                self.jobid = nil
+            stderr = function(_, text)
+                vim.schedule(function()
+                    vim.notify(text)
+                end)
             end,
-        })
+        }, function()
+            self.job = nil
+        end)
     end
 end
 
 function Gdb:send(cmd)
-    if self.jobid then
-        vim.fn.chansend(self.jobid, cmd .. "\n")
+    if self.job then
+        self.job:write(cmd .. "\n")
+    end
+end
+
+function Gdb:signal(name)
+    if self.job then
+        self.job:kill(name)
     end
 end
 
 function Gdb:close()
-    if self.jobid then
-        vim.fn.jobstop(self.jobid)
-    end
-
+    self:signal("sigterm")
     self.ctx = {}
 end
 
@@ -158,28 +164,8 @@ function Gdb:on(events, callback)
     end)
 end
 
-function Gdb:run()
-    self:send("-exec-run")
-end
-
-function Gdb:step()
-    self:send("-exec-step")
-end
-
-function Gdb:next()
-    self:send("-exec-next")
-end
-
-function Gdb:finish()
-    self:send("-exec-finish")
-end
-
-function Gdb:continue()
-    self:send("-exec-continue")
-end
-
 function Gdb:interrupt()
-    self:send("-exec-interrupt")
+    self:signal("sigint")
 end
 
 function Gdb:disassembleFunction()
@@ -726,36 +712,6 @@ function Ui:GdbClose()
     end
 end
 
-function Ui:GdbRun()
-    if self.gdb then
-        self.gdb:run()
-    end
-end
-
-function Ui:GdbStep()
-    if self.gdb then
-        self.gdb:step()
-    end
-end
-
-function Ui:GdbNext()
-    if self.gdb then
-        self.gdb:next()
-    end
-end
-
-function Ui:GdbFinish()
-    if self.gdb then
-        self.gdb:finish()
-    end
-end
-
-function Ui:GdbContinue()
-    if self.gdb then
-        self.gdb:continue()
-    end
-end
-
 function Ui:GdbInterrupt()
     if self.gdb then
         self.gdb:interrupt()
@@ -813,11 +769,6 @@ function M.setup(opts)
     local items = {
         { "GdbOpen", "<leader>do" },
         { "GdbClose", "<leader>dO" },
-        { "GdbRun", "<leader>dr" },
-        { "GdbStep", "<leader>ds" },
-        { "GdbNext", "<leader>dn" },
-        { "GdbFinish", "<leader>df" },
-        { "GdbContinue", "<leader>dc" },
         { "GdbInterrupt", "<leader>di" },
         { "GdbToggleBreakpoint", "<leader>db" },
         { "GdbToggleEnableBreakpoint", "<leader>dB" },
