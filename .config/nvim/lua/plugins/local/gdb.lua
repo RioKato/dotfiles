@@ -251,12 +251,10 @@ function Gdb:onReceiveInsns(callback)
 end
 
 function Gdb:onChangeBkpts(callback)
-    local rename = {
-        ["=breakpoint-created"] = "create",
-        ["=breakpoint-modified"] = "modify",
-        ["=breakpoint-deleted"] = "delete",
-        ["^done"] = "sync",
-    }
+    local create = callback.create
+    local modify = callback.modify
+    local delete = callback.delete
+    local sync = callback.sync
 
     local function dict(bkpts)
         return vim.iter(bkpts):fold({}, function(left, right)
@@ -268,13 +266,8 @@ function Gdb:onChangeBkpts(callback)
         end)
     end
 
-    local create = callback.create
-    local modify = callback.modify
-    local delete = callback.delete
-    local sync = callback.sync
-
     if create then
-        self:on({ "=breakpoint-created" }, function(data, event)
+        self:on({ "=breakpoint-created" }, function(data)
             if data.bkpt then
                 local bkpts = dict(data.bkpt)
                 create(bkpts)
@@ -288,7 +281,7 @@ function Gdb:onChangeBkpts(callback)
     end
 
     if modify then
-        self:on({ "=breakpoint-modified" }, function(data, event)
+        self:on({ "=breakpoint-modified" }, function(data)
             if data.bkpt then
                 local bkpts = dict(data.bkpt)
                 modify(bkpts)
@@ -302,7 +295,7 @@ function Gdb:onChangeBkpts(callback)
     end
 
     if delete then
-        self:on({ "=breakpoint-deleted" }, function(data, event)
+        self:on({ "=breakpoint-deleted" }, function(data)
             local id = data.id
 
             if id then
@@ -314,7 +307,7 @@ function Gdb:onChangeBkpts(callback)
     end
 
     if sync then
-        self:on({ "^done" }, function(data, event)
+        self:on({ "^done" }, function(data)
             if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
                 local bkpts = dict(data.BreakpointTable.body.bkpt)
                 sync(bkpts)
