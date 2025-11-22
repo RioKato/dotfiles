@@ -742,6 +742,10 @@ function Ui:GdbToggleEnableBreakpoint()
         end)
         :totable()
 
+    table.sort(bkpts, function(left, right)
+        return left.number > right.number
+    end)
+
     vim.ui.select(bkpts, {
         format_item = function(item)
             local enabled = nil
