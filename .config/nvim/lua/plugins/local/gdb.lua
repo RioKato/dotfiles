@@ -611,7 +611,7 @@ end
 ---------------------------------------------------------------------------------------------------
 local Ui = {
     default = {
-        template = {
+        launch = {
             gdb = {
                 command = { "gdb", "-i=mi" },
                 executable = "gdb",
@@ -655,19 +655,19 @@ end
 function Ui:GdbOpen()
     if not self.opened then
         local window = Window.new()
-        local template = vim.iter(self.opts.template)
+        local items = vim.iter(self.opts.launch)
             :filter(function(key, value)
                 return not value.executable or vim.fn.executable(value.executable) == 1
             end)
             :totable()
 
-        vim.ui.select(template, {
+        vim.ui.select(items, {
             format_item = function(item)
                 return item[1]
             end,
         }, function(item)
             if item then
-                local opts = item[2]
+                local launch = item[2]
                 self.gdb:viwer(window, Breakpoint.new())
                 local stderr = nil
 
@@ -686,7 +686,7 @@ function Ui:GdbOpen()
                 local bufid = self.gdb:prompt()
                 local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
 
-                self.gdb:open(opts.command, {
+                self.gdb:open(launch.command, {
                     stderr = stderr,
                     exit = function()
                         vim.schedule(function()
@@ -703,9 +703,9 @@ function Ui:GdbOpen()
                             self.opened = false
                         end)
                     end,
-                    cwd = opts.cwd,
-                    env = opts.env,
-                    detach = opts.detach,
+                    cwd = launch.cwd,
+                    env = launch.env,
+                    detach = launch.detach,
                 })
 
                 self.opened = true
@@ -728,6 +728,7 @@ end
 
 function Ui:GdbToggleBreakpoint()
     if self.gdb.ctx then
+        local bkpts = self.gdb.ctx.bkpts or {}
         local winid = vim.api.nvim_get_current_win()
         local bufid = vim.api.nvim_win_get_buf(winid)
         local cursor = vim.api.nvim_win_get_cursor(winid)
@@ -736,7 +737,7 @@ function Ui:GdbToggleBreakpoint()
 
         if path ~= "" then
             local base = vim.fs.basename(path)
-            local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+            local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
                 return bkpt.file == base and bkpt.line == cursor[1]
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
@@ -744,7 +745,7 @@ function Ui:GdbToggleBreakpoint()
             local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
 
             if addr then
-                local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+                local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
                     return bkpt.addr == addr
                 end)
                 cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
@@ -759,17 +760,18 @@ end
 
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb.ctx then
-        local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts or {}))
+        local bkpts = self.gdb.ctx.bkpts or {}
+        local items = vim.iter(pairs(bkpts))
             :map(function(_, bkpt)
                 return bkpt
             end)
             :totable()
 
-        table.sort(bkpts, function(left, right)
+        table.sort(items, function(left, right)
             return left.number > right.number
         end)
 
-        vim.ui.select(bkpts, {
+        vim.ui.select(items, {
             format_item = function(item)
                 local enabled = nil
 
