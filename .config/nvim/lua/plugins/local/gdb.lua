@@ -661,6 +661,7 @@ function Ui:GdbOpen()
         end,
     }, function(item)
         if item then
+            local opts = item[2]
             self.gdb:viwer(window, Breakpoint.new())
             local stderr = nil
 
@@ -679,7 +680,7 @@ function Ui:GdbOpen()
             local bufid = self.gdb:prompt()
             local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
 
-            self.gdb:open(item[2].command, {
+            self.gdb:open(opts.command, {
                 stderr = stderr,
                 exit = function()
                     vim.schedule(function()
@@ -695,9 +696,9 @@ function Ui:GdbOpen()
                         self.gdb = Gdb.new()
                     end)
                 end,
-                cwd = item[2].cwd,
-                env = item[2].env,
-                detach = item[2].detach,
+                cwd = opts.cwd,
+                env = opts.env,
+                detach = opts.detach,
             })
         end
     end)
