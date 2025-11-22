@@ -95,7 +95,7 @@ local MI = { parse = parser() }
 local Gdb = {}
 
 function Gdb.new()
-    local self = { listener = {}, ctx = {} }
+    local self = { listener = {} }
     setmetatable(self, { __index = Gdb })
     return self
 end
@@ -104,6 +104,7 @@ function Gdb:open(cmd, opts)
     if not self.job then
         local buf = ""
 
+        self.ctx = {}
         self.job = vim.system(cmd, {
             text = true,
             stdin = true,
@@ -132,7 +133,7 @@ function Gdb:open(cmd, opts)
             detach = opts.detach,
         }, function()
             self.job = nil
-            self.ctx = {}
+            self.ctx = nil
 
             if opts.exit then
                 opts.exit()
@@ -723,65 +724,69 @@ function Ui:GdbSyncBreakpoint()
 end
 
 function Ui:GdbToggleBreakpoint()
-    local winid = vim.api.nvim_get_current_win()
-    local bufid = vim.api.nvim_win_get_buf(winid)
-    local cursor = vim.api.nvim_win_get_cursor(winid)
-    local path = vim.api.nvim_buf_get_name(bufid)
-    local cmd = nil
+    if self.gdb.ctx then
+        local winid = vim.api.nvim_get_current_win()
+        local bufid = vim.api.nvim_win_get_buf(winid)
+        local cursor = vim.api.nvim_win_get_cursor(winid)
+        local path = vim.api.nvim_buf_get_name(bufid)
+        local cmd = nil
 
-    if path ~= "" then
-        local base = vim.fs.basename(path)
-        local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
-            return bkpt.file == base and bkpt.line == cursor[1]
-        end)
-        cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-    elseif self.gdb.ctx.cache then
-        local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
-
-        if addr then
+        if path ~= "" then
+            local base = vim.fs.basename(path)
             local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
-                return bkpt.addr == addr
+                return bkpt.file == base and bkpt.line == cursor[1]
             end)
-            cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
-        end
-    end
+            cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
+        elseif self.gdb.ctx.cache then
+            local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
 
-    if cmd then
-        self.gdb:send(cmd)
+            if addr then
+                local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+                    return bkpt.addr == addr
+                end)
+                cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
+            end
+        end
+
+        if cmd then
+            self.gdb:send(cmd)
+        end
     end
 end
 
 function Ui:GdbToggleEnableBreakpoint()
-    local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts or {}))
-        :map(function(_, bkpt)
-            return bkpt
+    if self.gdb.ctx then
+        local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts or {}))
+            :map(function(_, bkpt)
+                return bkpt
+            end)
+            :totable()
+
+        table.sort(bkpts, function(left, right)
+            return left.number > right.number
         end)
-        :totable()
 
-    table.sort(bkpts, function(left, right)
-        return left.number > right.number
-    end)
+        vim.ui.select(bkpts, {
+            format_item = function(item)
+                local enabled = nil
 
-    vim.ui.select(bkpts, {
-        format_item = function(item)
-            local enabled = nil
+                if item.enabled ~= nil then
+                    enabled = item.enabled and "E" or "D"
+                else
+                    enabled = " "
+                end
 
-            if item.enabled ~= nil then
-                enabled = item.enabled and "E" or "D"
-            else
-                enabled = " "
+                local addr = item.addr or 0
+                local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
+                return ("%s 0x%x │ %s"):format(enabled, addr, location)
+            end,
+        }, function(item)
+            if item and item.enabled ~= nil then
+                local cmd = ("%s %d"):format(item.enabled and "disable" or "enable", item.number)
+                self.gdb:send(cmd)
             end
-
-            local addr = item.addr or 0
-            local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
-            return ("%s 0x%x │ %s"):format(enabled, addr, location)
-        end,
-    }, function(item)
-        if item and item.enabled ~= nil then
-            local cmd = ("%s %d"):format(item.enabled and "disable" or "enable", item.number)
-            self.gdb:send(cmd)
-        end
-    end)
+        end)
+    end
 end
 
 ---------------------------------------------------------------------------------------------------
