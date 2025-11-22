@@ -619,7 +619,6 @@ local Ui = {
                 env = nil,
                 detach = nil,
             },
-
             rr = {
                 command = { "rr", "replay", "-i=mi" },
                 executable = "rr",
