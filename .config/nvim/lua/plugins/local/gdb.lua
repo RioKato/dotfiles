@@ -403,43 +403,37 @@ function Gdb:viwer(window, breakpoint)
     end)
 
     self:onReceiveInstructions(function(insns)
-        local ok = not self.ctx.cache or vim.iter(insns):any(function(insn)
-            return not self.ctx.cache:getPosition(insn.address)
+        local lines = vim.iter(insns)
+            :map(function(insn)
+                local addr = insn.address or -1
+                local func = insn["func-name"]
+                local offset = insn.offset
+                local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
+                local inst = insn.inst or ""
+                return ("0x%x%s │ %s"):format(addr, label, inst)
+            end)
+            :totable()
+
+        local bufid = vim.api.nvim_create_buf(false, true)
+        vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+        vim.bo[bufid].modifiable = false
+        vim.bo[bufid].filetype = "asm"
+
+        self.ctx.cache = self.ctx.cache or Cache.new()
+
+        vim.iter(insns):enumerate():each(function(row, insn)
+            if insn.address then
+                self.ctx.cache:set(insn.address, bufid, row)
+            end
         end)
 
-        if ok then
-            local lines = vim.iter(insns)
-                :map(function(insn)
-                    local addr = insn.address or -1
-                    local func = insn["func-name"]
-                    local offset = insn.offset
-                    local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
-                    local inst = insn.inst or ""
-                    return ("0x%x%s │ %s"):format(addr, label, inst)
-                end)
-                :totable()
+        vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
+            local temp, row = self.ctx.cache:getPosition(bkpt.addr)
 
-            local bufid = vim.api.nvim_create_buf(false, true)
-            vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
-            vim.bo[bufid].modifiable = false
-            vim.bo[bufid].filetype = "asm"
-
-            self.ctx.cache = self.ctx.cache or Cache.new()
-
-            vim.iter(insns):enumerate():each(function(row, insn)
-                if insn.address then
-                    self.ctx.cache:set(insn.address, bufid, row)
-                end
-            end)
-
-            vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
-                local temp, row = self.ctx.cache:getPosition(bkpt.addr)
-
-                if bufid == temp then
-                    breakpoint:create(bufid, row, bkpt.enabled)
-                end
-            end)
-        end
+            if bufid == temp then
+                breakpoint:create(bufid, row, bkpt.enabled)
+            end
+        end)
 
         if self.ctx.stopped then
             local bufid, row = self.ctx.cache:getPosition(self.ctx.stopped.addr)
