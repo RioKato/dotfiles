@@ -772,7 +772,8 @@ function Ui:GdbToggleEnableBreakpoint()
         end,
     }, function(item)
         if item and item.enabled ~= nil then
-            self.gdb:send(("%s %d"):format(item.enabled and "disable" or "enable", item.number))
+            local cmd = ("%s %d"):format(item.enabled and "disable" or "enable", item.number)
+            self.gdb:send(cmd)
         end
     end)
 end
