@@ -132,6 +132,7 @@ function Gdb:open(cmd, opts)
             detach = opts.detach,
         }, function()
             self.job = nil
+            self.ctx = {}
 
             if opts.exit then
                 opts.exit()
@@ -154,7 +155,6 @@ end
 
 function Gdb:close()
     self:kill("sigterm")
-    self.ctx = {}
 end
 
 function Gdb:on(events, callback)
