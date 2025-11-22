@@ -633,144 +633,134 @@ function Ui.setup()
 end
 
 function Ui.new(opts)
-    local self = { opts = vim.tbl_deep_extend("force", Ui.default, opts or {}) }
+    local self = {
+        opts = vim.tbl_deep_extend("force", Ui.default, opts or {}),
+        gdb = Gdb.new(),
+    }
     setmetatable(self, { __index = Ui })
     return self
 end
 
 function Ui:GdbOpen()
-    if not self.gdb then
-        local window = Window.new()
-        self.gdb = Gdb.new()
-        self.gdb:viwer(window, Breakpoint.new())
-        local stderr = nil
+    local window = Window.new()
+    self.gdb:viwer(window, Breakpoint.new())
+    local stderr = nil
 
-        if self.opts.notification then
-            self.gdb:notify()
+    if self.opts.notification then
+        self.gdb:notify()
 
-            stderr = function(_, text)
-                if text then
-                    vim.schedule(function()
-                        vim.notify(text)
-                    end)
-                end
+        stderr = function(_, text)
+            if text then
+                vim.schedule(function()
+                    vim.notify(text)
+                end)
             end
         end
-
-        local template = vim.iter(self.opts.template)
-            :filter(function(key, value)
-                return not value.executable or vim.fn.executable(value.executable) == 1
-            end)
-            :totable()
-
-        vim.ui.select(template, {
-            format_item = function(item)
-                return item[1]
-            end,
-        }, function(item)
-            if item then
-                local bufid = self.gdb:prompt()
-                local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
-
-                self.gdb:open(item[2].command, {
-                    stderr = stderr,
-                    exit = function()
-                        vim.schedule(function()
-                            if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
-                                vim.api.nvim_win_close(winid, true)
-                            end
-
-                            if vim.api.nvim_buf_is_valid(bufid) then
-                                vim.api.nvim_buf_delete(bufid, { force = true })
-                            end
-
-                            window:fallback()
-                            self.gdb = nil
-                        end)
-                    end,
-                })
-            end
-        end)
     end
+
+    local template = vim.iter(self.opts.template)
+        :filter(function(key, value)
+            return not value.executable or vim.fn.executable(value.executable) == 1
+        end)
+        :totable()
+
+    vim.ui.select(template, {
+        format_item = function(item)
+            return item[1]
+        end,
+    }, function(item)
+        if item then
+            local bufid = self.gdb:prompt()
+            local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
+
+            self.gdb:open(item[2].command, {
+                stderr = stderr,
+                exit = function()
+                    vim.schedule(function()
+                        if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
+                            vim.api.nvim_win_close(winid, true)
+                        end
+
+                        if vim.api.nvim_buf_is_valid(bufid) then
+                            vim.api.nvim_buf_delete(bufid, { force = true })
+                        end
+
+                        window:fallback()
+                        self.gdb = Gdb.new()
+                    end)
+                end,
+            })
+        end
+    end)
 end
 
 function Ui:GdbClose()
-    if self.gdb then
-        self.gdb:close()
-    end
+    self.gdb:close()
 end
 
 function Ui:GdbInterrupt()
-    if self.gdb then
-        self.gdb:interrupt()
-    end
+    self.gdb:interrupt()
 end
 
 function Ui:GdbSyncBreakpoint()
-    if self.gdb then
-        self.gdb:breakList()
-    end
+    self.gdb:breakList()
 end
 
 function Ui:GdbToggleBreakpoint()
-    if self.gdb and self.gdb.ctx.bkpts then
-        local winid = vim.api.nvim_get_current_win()
-        local bufid = vim.api.nvim_win_get_buf(winid)
-        local cursor = vim.api.nvim_win_get_cursor(winid)
-        local path = vim.api.nvim_buf_get_name(bufid)
-        local cmd = nil
+    local winid = vim.api.nvim_get_current_win()
+    local bufid = vim.api.nvim_win_get_buf(winid)
+    local cursor = vim.api.nvim_win_get_cursor(winid)
+    local path = vim.api.nvim_buf_get_name(bufid)
+    local cmd = nil
 
-        if path ~= "" then
-            local base = vim.fs.basename(path)
-            local found = vim.iter(pairs(self.gdb.ctx.bkpts)):find(function(_, bkpt)
-                return bkpt.file == base and bkpt.line == cursor[1]
+    if path ~= "" then
+        local base = vim.fs.basename(path)
+        local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+            return bkpt.file == base and bkpt.line == cursor[1]
+        end)
+        cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
+    elseif self.gdb.ctx.cache then
+        local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
+
+        if addr then
+            local found = vim.iter(pairs(self.gdb.ctx.bkpts or {})):find(function(_, bkpt)
+                return bkpt.addr == addr
             end)
-            cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-        elseif self.gdb.ctx.cache then
-            local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
-
-            if addr then
-                local found = vim.iter(pairs(self.gdb.ctx.bkpts)):find(function(_, bkpt)
-                    return bkpt.addr == addr
-                end)
-                cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
-            end
+            cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(addr)
         end
+    end
 
-        if cmd then
-            self.gdb:send(cmd)
-        end
+    if cmd then
+        self.gdb:send(cmd)
     end
 end
 
 function Ui:GdbToggleEnableBreakpoint()
-    if self.gdb and self.gdb.ctx.bkpts then
-        local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts))
-            :map(function(_, bkpt)
-                return bkpt
-            end)
-            :totable()
-
-        vim.ui.select(bkpts, {
-            format_item = function(item)
-                local enabled = nil
-
-                if item.enabled ~= nil then
-                    enabled = item.enabled and "E" or "D"
-                else
-                    enabled = " "
-                end
-
-                local addr = item.addr or 0
-                local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
-                return ("%s 0x%x │ %s"):format(enabled, addr, location)
-            end,
-        }, function(item)
-            if item and item.enabled ~= nil then
-                self.gdb:send(("%s %d"):format(item.enabled and "disable" or "enable", item.number))
-            end
+    local bkpts = vim.iter(pairs(self.gdb.ctx.bkpts or {}))
+        :map(function(_, bkpt)
+            return bkpt
         end)
-    end
+        :totable()
+
+    vim.ui.select(bkpts, {
+        format_item = function(item)
+            local enabled = nil
+
+            if item.enabled ~= nil then
+                enabled = item.enabled and "E" or "D"
+            else
+                enabled = " "
+            end
+
+            local addr = item.addr or 0
+            local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
+            return ("%s 0x%x │ %s"):format(enabled, addr, location)
+        end,
+    }, function(item)
+        if item and item.enabled ~= nil then
+            self.gdb:send(("%s %d"):format(item.enabled and "disable" or "enable", item.number))
+        end
+    end)
 end
 
 ---------------------------------------------------------------------------------------------------
