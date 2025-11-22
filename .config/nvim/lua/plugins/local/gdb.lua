@@ -649,21 +649,6 @@ end
 
 function Ui:GdbOpen()
     local window = Window.new()
-    self.gdb:viwer(window, Breakpoint.new())
-    local stderr = nil
-
-    if self.opts.notification then
-        self.gdb:notify()
-
-        stderr = function(_, text)
-            if text then
-                vim.schedule(function()
-                    vim.notify(text)
-                end)
-            end
-        end
-    end
-
     local template = vim.iter(self.opts.template)
         :filter(function(key, value)
             return not value.executable or vim.fn.executable(value.executable) == 1
@@ -676,6 +661,21 @@ function Ui:GdbOpen()
         end,
     }, function(item)
         if item then
+            self.gdb:viwer(window, Breakpoint.new())
+            local stderr = nil
+
+            if self.opts.notification then
+                self.gdb:notify()
+
+                stderr = function(_, text)
+                    if text then
+                        vim.schedule(function()
+                            vim.notify(text)
+                        end)
+                    end
+                end
+            end
+
             local bufid = self.gdb:prompt()
             local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
 
