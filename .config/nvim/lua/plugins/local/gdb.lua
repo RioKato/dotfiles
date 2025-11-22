@@ -172,17 +172,17 @@ function Gdb:interrupt()
     self:kill("sigint")
 end
 
-function Gdb:disassembleFunction()
-    self:send("-data-disassemble -a $pc -- 0")
-end
+local miCmds = {
+    disassembleFunction = "-data-disassemble -a $pc -- 0",
+    disassemblePC = "-data-disassemble -s $pc -e $pc+0x100 -- 0",
+    breakList = "-break-list",
+}
 
-function Gdb:disassemblePC()
-    self:send("-data-disassemble -s $pc -e $pc+0x100 -- 0")
-end
-
-function Gdb:breakList()
-    self:send("-break-list")
-end
+vim.iter(miCmds):each(function(name, cmd)
+    Gdb[name] = function(self)
+        self:send(cmd)
+    end
+end)
 
 function Gdb:onReceiveMessage(callback)
     self:on({ "~" }, function(data)
