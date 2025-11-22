@@ -611,11 +611,17 @@ local Ui = {
             gdb = {
                 command = { "gdb", "-i=mi" },
                 executable = "gdb",
+                cwd = nil,
+                env = nil,
+                detach = nil,
             },
 
             rr = {
                 command = { "rr", "replay", "-i=mi" },
                 executable = "rr",
+                cwd = nil,
+                env = nil,
+                detach = nil,
             },
         },
         window = {
@@ -689,6 +695,9 @@ function Ui:GdbOpen()
                         self.gdb = Gdb.new()
                     end)
                 end,
+                cwd = item[2].cwd,
+                env = item[2].env,
+                detach = item[2].detach,
             })
         end
     end)
