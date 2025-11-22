@@ -17,7 +17,7 @@ function init.gdb()
         GdbOpen = "<leader>do",
         GdbClose = "<leader>dc",
         GdbInterrupt = "<leader>di",
-        GdbSyncBreakpoint = "<leader>ds",
+        GdbSyncBreakpoints = "<leader>ds",
         GdbToggleBreakpoint = "<leader>db",
         GdbToggleEnableBreakpoint = "<leader>dB",
     }
