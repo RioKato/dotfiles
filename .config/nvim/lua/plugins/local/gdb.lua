@@ -142,12 +142,6 @@ function Gdb:open(cmd, opts)
     end
 end
 
-function Gdb:send(cmd)
-    if self.job then
-        self.job:write(cmd .. "\n")
-    end
-end
-
 function Gdb:kill(name)
     if self.job then
         self.job:kill(name)
@@ -158,18 +152,14 @@ function Gdb:close()
     self:kill("sigterm")
 end
 
-function Gdb:on(events, callback)
-    vim.iter(events):each(function(event)
-        if not self.listener[event] then
-            self.listener[event] = {}
-        end
-
-        table.insert(self.listener[event], callback)
-    end)
-end
-
 function Gdb:interrupt()
     self:kill("sigint")
+end
+
+function Gdb:send(cmd)
+    if self.job then
+        self.job:write(cmd .. "\n")
+    end
 end
 
 local miCmds = {
@@ -183,6 +173,16 @@ vim.iter(miCmds):each(function(name, cmd)
         self:send(cmd)
     end
 end)
+
+function Gdb:on(events, callback)
+    vim.iter(events):each(function(event)
+        if not self.listener[event] then
+            self.listener[event] = {}
+        end
+
+        table.insert(self.listener[event], callback)
+    end)
+end
 
 function Gdb:onReceiveMessage(callback)
     self:on({ "~" }, function(data)
