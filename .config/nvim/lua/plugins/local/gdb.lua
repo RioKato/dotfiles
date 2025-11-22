@@ -153,9 +153,9 @@ local sigfns = {
     interrupt = "sigint",
 }
 
-vim.iter(sigfns):each(function(name, cmd)
+vim.iter(sigfns):each(function(name, sig)
     Gdb[name] = function(self)
-        self:kill(cmd)
+        self:kill(sig)
     end
 end)
 
