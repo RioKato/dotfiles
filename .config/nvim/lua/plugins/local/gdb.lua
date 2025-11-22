@@ -148,13 +148,16 @@ function Gdb:kill(name)
     end
 end
 
-function Gdb:close()
-    self:kill("sigterm")
-end
+local sigfns = {
+    close = "sigterm",
+    interrupt = "sigint",
+}
 
-function Gdb:interrupt()
-    self:kill("sigint")
-end
+vim.iter(sigfns):each(function(name, cmd)
+    Gdb[name] = function(self)
+        self:kill(cmd)
+    end
+end)
 
 function Gdb:send(cmd)
     if self.job then
@@ -162,13 +165,13 @@ function Gdb:send(cmd)
     end
 end
 
-local miCmds = {
+local mifns = {
     disassembleFunction = "-data-disassemble -a $pc -- 0",
     disassemblePC = "-data-disassemble -s $pc -e $pc+0x100 -- 0",
     breakList = "-break-list",
 }
 
-vim.iter(miCmds):each(function(name, cmd)
+vim.iter(mifns):each(function(name, cmd)
     Gdb[name] = function(self)
         self:send(cmd)
     end
