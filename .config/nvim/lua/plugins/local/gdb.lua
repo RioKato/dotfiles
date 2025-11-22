@@ -168,7 +168,7 @@ end
 local mifuns = {
     disassembleFunction = "-data-disassemble -a $pc -- 0",
     disassemblePC = "-data-disassemble -s $pc -e $pc+0x100 -- 0",
-    breakList = "-break-list",
+    listBreakpoints = "-break-list",
 }
 
 vim.iter(mifuns):each(function(name, cmd)
@@ -244,7 +244,7 @@ function Gdb:onReceiveSignal(callback)
     end)
 end
 
-function Gdb:onReceiveInsns(callback)
+function Gdb:onReceiveInstructions(callback)
     self:on({ "^done" }, function(data)
         local insns = data.asm_insns
 
@@ -254,7 +254,7 @@ function Gdb:onReceiveInsns(callback)
     end)
 end
 
-function Gdb:onChangeBkpts(callback)
+function Gdb:onChangeBreakpoints(callback)
     local create = callback.create
     local modify = callback.modify
     local delete = callback.delete
@@ -402,7 +402,7 @@ function Gdb:viwer(window, breakpoint)
         end
     end)
 
-    self:onReceiveInsns(function(insns)
+    self:onReceiveInstructions(function(insns)
         if self.ctx.stopped then
             local row = vim.iter(insns):enumerate():find(function(_, insn)
                 return insn.address and insn.address == self.ctx.stopped.addr
@@ -452,7 +452,7 @@ function Gdb:viwer(window, breakpoint)
         window:fallback()
     end)
 
-    self:onChangeBkpts({
+    self:onChangeBreakpoints({
         create = function(bkpts)
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
@@ -721,8 +721,8 @@ function Ui:GdbInterrupt()
     self.gdb:interrupt()
 end
 
-function Ui:GdbSyncBreakpoint()
-    self.gdb:breakList()
+function Ui:GdbSyncBreakpoints()
+    self.gdb:listBreakpoints()
 end
 
 function Ui:GdbToggleBreakpoint()
@@ -811,7 +811,7 @@ function M.setup(opts)
         "GdbOpen",
         "GdbClose",
         "GdbInterrupt",
-        "GdbSyncBreakpoint",
+        "GdbSyncBreakpoints",
         "GdbToggleBreakpoint",
         "GdbToggleEnableBreakpoint",
     }
