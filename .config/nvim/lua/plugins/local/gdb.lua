@@ -729,6 +729,7 @@ end
 function Ui:GdbToggleBreakpoint()
     if self.gdb.ctx then
         local bkpts = self.gdb.ctx.bkpts or {}
+        local cache = self.gdb.ctx.cache
         local winid = vim.api.nvim_get_current_win()
         local bufid = vim.api.nvim_win_get_buf(winid)
         local cursor = vim.api.nvim_win_get_cursor(winid)
@@ -741,8 +742,8 @@ function Ui:GdbToggleBreakpoint()
                 return bkpt.file == base and bkpt.line == cursor[1]
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-        elseif self.gdb.ctx.cache then
-            local addr = self.gdb.ctx.cache:getAddress(bufid, cursor[1])
+        elseif cache then
+            local addr = cache:getAddress(bufid, cursor[1])
 
             if addr then
                 local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
