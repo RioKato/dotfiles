@@ -642,66 +642,72 @@ function Ui.new(opts)
     local self = {
         opts = vim.tbl_deep_extend("force", Ui.default, opts or {}),
         gdb = Gdb.new(),
+        opened = false,
     }
     setmetatable(self, { __index = Ui })
     return self
 end
 
 function Ui:GdbOpen()
-    local window = Window.new()
-    local template = vim.iter(self.opts.template)
-        :filter(function(key, value)
-            return not value.executable or vim.fn.executable(value.executable) == 1
-        end)
-        :totable()
+    if not self.opened then
+        local window = Window.new()
+        local template = vim.iter(self.opts.template)
+            :filter(function(key, value)
+                return not value.executable or vim.fn.executable(value.executable) == 1
+            end)
+            :totable()
 
-    vim.ui.select(template, {
-        format_item = function(item)
-            return item[1]
-        end,
-    }, function(item)
-        if item then
-            local opts = item[2]
-            self.gdb:viwer(window, Breakpoint.new())
-            local stderr = nil
+        vim.ui.select(template, {
+            format_item = function(item)
+                return item[1]
+            end,
+        }, function(item)
+            if item then
+                local opts = item[2]
+                self.gdb:viwer(window, Breakpoint.new())
+                local stderr = nil
 
-            if self.opts.notification then
-                self.gdb:notify()
+                if self.opts.notification then
+                    self.gdb:notify()
 
-                stderr = function(_, text)
-                    if text then
-                        vim.schedule(function()
-                            vim.notify(text)
-                        end)
+                    stderr = function(_, text)
+                        if text then
+                            vim.schedule(function()
+                                vim.notify(text)
+                            end)
+                        end
                     end
                 end
+
+                local bufid = self.gdb:prompt()
+                local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
+
+                self.gdb:open(opts.command, {
+                    stderr = stderr,
+                    exit = function()
+                        vim.schedule(function()
+                            if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
+                                vim.api.nvim_win_close(winid, true)
+                            end
+
+                            if vim.api.nvim_buf_is_valid(bufid) then
+                                vim.api.nvim_buf_delete(bufid, { force = true })
+                            end
+
+                            window:fallback()
+                            self.gdb = Gdb.new()
+                            self.opened = false
+                        end)
+                    end,
+                    cwd = opts.cwd,
+                    env = opts.env,
+                    detach = opts.detach,
+                })
+
+                self.opened = true
             end
-
-            local bufid = self.gdb:prompt()
-            local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
-
-            self.gdb:open(opts.command, {
-                stderr = stderr,
-                exit = function()
-                    vim.schedule(function()
-                        if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
-                            vim.api.nvim_win_close(winid, true)
-                        end
-
-                        if vim.api.nvim_buf_is_valid(bufid) then
-                            vim.api.nvim_buf_delete(bufid, { force = true })
-                        end
-
-                        window:fallback()
-                        self.gdb = Gdb.new()
-                    end)
-                end,
-                cwd = opts.cwd,
-                env = opts.env,
-                detach = opts.detach,
-            })
-        end
-    end)
+        end)
+    end
 end
 
 function Ui:GdbClose()
