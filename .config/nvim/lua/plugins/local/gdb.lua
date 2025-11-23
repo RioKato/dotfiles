@@ -36,6 +36,8 @@ local function parser()
         elseif data[1] == "func" then
             local unknowns = { "??", "" }
             data[2] = not vim.tbl_contains(unknowns, data[2]) and data[2] or nil
+        elseif data[1] == "func-name" then
+            data[2] = data[2] ~= "" and data[2] or nil
         end
 
         data.pair = true
@@ -457,7 +459,7 @@ function Gdb:viwer(window, breakpoint)
 
     self:onExit(function()
         self.ctx.cache = nil
-        window:fallback()
+        window:restore()
     end)
 
     -- self:onChangeBreakpoints({
@@ -544,7 +546,7 @@ function Window.new()
     return self
 end
 
-function Window:fallback()
+function Window:restore()
     if vim.api.nvim_buf_is_valid(self.bufid) and vim.api.nvim_win_is_valid(self.winid) then
         vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
         vim.api.nvim_win_set_buf(self.winid, self.bufid)
@@ -705,7 +707,7 @@ function Ui:GdbOpen()
                                 vim.api.nvim_buf_delete(bufid, { force = true })
                             end
 
-                            window:fallback()
+                            window:restore()
                             self.gdb = Gdb.new()
                             self.opened = false
                         end)
