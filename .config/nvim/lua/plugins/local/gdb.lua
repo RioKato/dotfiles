@@ -349,36 +349,27 @@ function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
-        local self = { insns = {} }
+        local self = { func = {} }
         setmetatable(self, { __index = Cache })
         return self
     end
 
     function Cache:update(insn)
         if insn.address then
-            local func = insn["func-name"] or ""
-            local insns = self.insns[func] or {}
-            insns[insn.address] = insn
-            self.insns[func] = insns
+            local name = insn["func-name"] or ""
+            local func = self.func[name] or { insns = {} }
+            func.insns[insn.address] = insn
+            func.update = true
+            self.func[name] = func
         end
     end
 
     function Cache:get(frame)
-        local func = frame.func or ""
-        local insns = self.insns[func]
+        local name = frame.func or ""
+        local func = self.func[name]
 
-        if insns and insns[frame.addr] then
-            local insns = vim.iter(pairs(insns))
-                :map(function(_, insn)
-                    return insn
-                end)
-                :totable()
-
-            table.sort(insns, function(left, right)
-                return left.address < right.address
-            end)
-
-            return insns
+        if func and func.insns[frame.addr] then
+            return func
         end
     end
 
@@ -400,9 +391,19 @@ function Gdb:viwer(window, breakpoint)
             vim.bo[bufid].buflisted = false
             row = frame.line
         elseif cache then
-            local insns = cache:get(frame)
+            local func = cache:get(frame)
 
-            if insns then
+            if func then
+                local insns = vim.iter(pairs(func.insns))
+                    :map(function(_, insn)
+                        return insn
+                    end)
+                    :totable()
+
+                table.sort(insns, function(left, right)
+                    return left.address < right.address
+                end)
+
                 local lines = vim.iter(insns)
                     :map(function(insn)
                         local addr = insn.address
