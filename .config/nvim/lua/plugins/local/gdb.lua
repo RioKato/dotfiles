@@ -436,14 +436,13 @@ function Gdb:viwer(window, breakpoint)
                 assert(row)
 
                 if func.updated then
-                    local bkpts = {}
-
-                    vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
-                        bkpts[bkpt.addr] = true
+                    local exists = vim.iter(pairs(self.ctx.bkpts or {})):fold({}, function(exists, _, bkpt)
+                        exists[bkpt.addr] = true
+                        return exists
                     end)
 
                     vim.iter(insns):enumerate():each(function(row, insn)
-                        if bkpts[insn.address] then
+                        if exists[insn.address] then
                             breakpoint:create(bufid, row)
                         end
                     end)
