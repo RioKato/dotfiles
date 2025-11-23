@@ -414,8 +414,6 @@ function Gdb:viwer(window, breakpoint)
                 end)
 
                 if func.updated then
-                    func.updated = false
-
                     local lines = vim.iter(insns)
                         :map(function(insn)
                             local addr = insn.address
@@ -436,6 +434,22 @@ function Gdb:viwer(window, breakpoint)
                     return insn.address == frame.addr
                 end)
                 assert(row)
+
+                if func.updated then
+                    local bkpts = {}
+
+                    vim.iter(pairs(self.ctx.bkpts or {})):each(function(_, bkpt)
+                        bkpts[bkpt.addr] = true
+                    end)
+
+                    vim.iter(insns):enumerate():each(function(row, insn)
+                        if bkpts[insn.address] then
+                            breakpoint:create(bufid, row)
+                        end
+                    end)
+                end
+
+                func.updated = false
             end
         end
 
