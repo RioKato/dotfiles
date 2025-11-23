@@ -359,7 +359,7 @@ function Gdb:viwer(window, breakpoint)
             local name = insn["func-name"] or ""
             local func = self.func[name] or { insns = {} }
             func.insns[insn.address] = insn
-            func.update = true
+            func.updated = true
             self.func[name] = func
         end
     end
@@ -394,6 +394,15 @@ function Gdb:viwer(window, breakpoint)
             local func = cache:get(frame)
 
             if func then
+                if not func.bufid or not vim.api.nvim_buf_is_valid(func.bufid) then
+                    func.bufid = vim.api.nvim_create_buf(false, true)
+                    vim.bo[func.bufid].modifiable = false
+                    vim.bo[func.bufid].filetype = "asm"
+                    func.updated = true
+                end
+
+                bufid = func.bufid
+
                 local insns = vim.iter(pairs(func.insns))
                     :map(function(_, insn)
                         return insn
@@ -404,26 +413,29 @@ function Gdb:viwer(window, breakpoint)
                     return left.address < right.address
                 end)
 
-                local lines = vim.iter(insns)
-                    :map(function(insn)
-                        local addr = insn.address
-                        local func = insn["func-name"]
-                        local offset = insn.offset
-                        local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
-                        local inst = insn.inst or ""
-                        return ("0x%x%s │ %s"):format(addr, label, inst)
-                    end)
-                    :totable()
+                if func.updated then
+                    func.updated = false
+
+                    local lines = vim.iter(insns)
+                        :map(function(insn)
+                            local addr = insn.address
+                            local func = insn["func-name"]
+                            local offset = insn.offset
+                            local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
+                            local inst = insn.inst or ""
+                            return ("0x%x%s │ %s"):format(addr, label, inst)
+                        end)
+                        :totable()
+
+                    vim.bo[bufid].modifiable = true
+                    vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+                    vim.bo[bufid].modifiable = false
+                end
 
                 row = vim.iter(insns):enumerate():find(function(_, insn)
                     return insn.address == frame.addr
                 end)
                 assert(row)
-
-                bufid = vim.api.nvim_create_buf(false, true)
-                vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
-                vim.bo[bufid].modifiable = false
-                vim.bo[bufid].filetype = "asm"
             end
         end
 
