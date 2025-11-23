@@ -459,12 +459,12 @@ function Gdb:viwer(window, breakpoint)
     self:onStop(function()
         local bufid, row = load(self.ctx.cache, self.ctx.stopped)
 
-        if not bufid or not window:set(bufid, row) then
-            if self.ctx.stopped.func then
-                self:disassembleFunction()
-            else
-                self:disassemblePC()
-            end
+        if bufid then
+            window:set(bufid, row)
+        elseif self.ctx.stopped.func then
+            self:disassembleFunction()
+        else
+            self:disassemblePC()
         end
     end)
 
@@ -578,9 +578,6 @@ function Window:restore()
         vim.fn.sign_unplace(self.sign.group, { id = self.sign.id })
         vim.api.nvim_win_set_buf(self.winid, self.bufid)
         vim.api.nvim_win_set_cursor(self.winid, self.cursor)
-        return true
-    else
-        return false
     end
 end
 
@@ -590,9 +587,6 @@ function Window:set(bufid, row)
         vim.fn.sign_place(self.sign.id, self.sign.group, self.sign.name, bufid, { lnum = row })
         vim.api.nvim_win_set_buf(self.winid, bufid)
         vim.api.nvim_win_set_cursor(self.winid, { row, 0 })
-        return true
-    else
-        return false
     end
 end
 
