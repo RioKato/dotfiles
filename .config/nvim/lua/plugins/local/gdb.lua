@@ -349,7 +349,7 @@ function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
-        local self = { func = {} }
+        local self = { func = {}, range = {} }
         setmetatable(self, { __index = Cache })
         return self
     end
@@ -361,16 +361,12 @@ function Gdb:viwer(window, breakpoint)
             func.insns[insn.address] = insn
             func.updated = true
             self.func[name] = func
+            self.range[insn.address] = func
         end
     end
 
     function Cache:get(frame)
-        local name = frame.func or ""
-        local func = self.func[name]
-
-        if func and func.insns[frame.addr] then
-            return func
-        end
+        return self.range[frame.addr]
     end
 
     local function load(cache, frame)
