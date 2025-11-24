@@ -349,7 +349,7 @@ function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
-        local self = { insns = {}, func = {} }
+        local self = { insns = {}, funcs = {} }
         setmetatable(self, { __index = Cache })
         return self
     end
@@ -360,7 +360,7 @@ function Gdb:viwer(window, breakpoint)
         if insn then
             self.insns[address] = nil
             local name = insn["func-name"] or ""
-            local func = assert(self.func[name])
+            local func = assert(self.funcs[name])
             func.addrs[address] = nil
             func.updated = true
 
@@ -368,7 +368,7 @@ function Gdb:viwer(window, breakpoint)
                 func = nil
             end
 
-            self.func[name] = func
+            self.funcs[name] = func
         end
     end
 
@@ -379,10 +379,10 @@ function Gdb:viwer(window, breakpoint)
             self:remove(address)
             self.insns[address] = insn
             local name = insn["func-name"] or ""
-            local func = self.func[name] or { addrs = {} }
+            local func = self.funcs[name] or { addrs = {} }
             func.addrs[address] = true
             func.updated = true
-            self.func[name] = func
+            self.funcs[name] = func
         end
     end
 
@@ -394,9 +394,15 @@ function Gdb:viwer(window, breakpoint)
 
             if insn then
                 local name = insn["func-name"] or ""
-                return assert(self.func[name])
+                return assert(self.funcs[name])
             end
         end
+    end
+
+    function Cache:from(bufid)
+        return vim.iter(self.funcs):find(function(func)
+            return func.bufid == bufid
+        end)
     end
 
     local function load(cache, frame)
@@ -466,6 +472,8 @@ function Gdb:viwer(window, breakpoint)
                         exists[bkpt.addr] = true
                         return exists
                     end)
+
+                    breakpoint:clear(bufid)
 
                     vim.iter(insns):enumerate():each(function(row, insn)
                         if exists[insn.address] then
@@ -660,8 +668,9 @@ function Breakpoint:delete(bufid, row)
     end
 end
 
-function Breakpoint:clear()
-    vim.fn.sign_unplace(self.sign.group)
+function Breakpoint:clear(bufid)
+    local args = bufid and { self.sign.group, { buffer = bufid } } or { self.sign.group }
+    vim.fn.sign_unplace(unpack(args))
 end
 
 ---------------------------------------------------------------------------------------------------
@@ -798,7 +807,8 @@ function Ui:GdbToggleBreakpoint()
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
         elseif cache then
-            local addr = cache:getAddress(bufid, cursor[1])
+            local func = cache:from(bufid)
+            local row = cursor[1]
 
             if addr then
                 local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
