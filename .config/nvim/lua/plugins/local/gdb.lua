@@ -349,28 +349,52 @@ function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
-        local self = { func = {}, range = {} }
+        local self = { insns = {}, func = {} }
         setmetatable(self, { __index = Cache })
         return self
     end
 
-    function Cache:update(insn)
-        if insn.address then
+    function Cache:remove(address)
+        local insn = self.insns[address]
+
+        if insn then
+            self.insns[address] = nil
             local name = insn["func-name"] or ""
-            local func = self.func[name] or { insns = {} }
-            func.insns[insn.address] = insn
+            local func = assert(self.func[name])
+            func.addrs[address] = nil
+            func.updated = true
+        end
+    end
+
+    function Cache:update(insn)
+        local address = insn.address
+
+        if address then
+            self:remove(address)
+            self.insns[address] = insn
+            local name = insn["func-name"] or ""
+            local func = self.func[name] or { addrs = {} }
+            func.addrs[address] = true
             func.updated = true
             self.func[name] = func
-            self.range[insn.address] = func
         end
     end
 
     function Cache:get(frame)
-        return self.range[frame.addr]
+        local address = frame.addr
+
+        if address then
+            local insn = self.insns[address]
+
+            if insn then
+                local name = insn["func-name"] or ""
+                return assert(self.func[name])
+            end
+        end
     end
 
     local function load(cache, frame)
-        local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
+        local found = vim.iter({}):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
@@ -399,9 +423,9 @@ function Gdb:viwer(window, breakpoint)
 
                 bufid = func.bufid
 
-                local insns = vim.iter(pairs(func.insns))
-                    :map(function(_, insn)
-                        return insn
+                local insns = vim.iter(pairs(func.addrs))
+                    :map(function(addr)
+                        return assert(cache.insns[addr])
                     end)
                     :totable()
 
