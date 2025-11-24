@@ -363,6 +363,12 @@ function Gdb:viwer(window, breakpoint)
             local func = assert(self.func[name])
             func.addrs[address] = nil
             func.updated = true
+
+            if vim.tbl_isempty(func.addrs) then
+                func = nil
+            end
+
+            self.func[name] = func
         end
     end
 
@@ -394,7 +400,7 @@ function Gdb:viwer(window, breakpoint)
     end
 
     local function load(cache, frame)
-        local found = vim.iter({}):find(function(file)
+        local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
             local stat = vim.uv.fs_stat(file)
             return stat and stat.type == "file"
         end)
