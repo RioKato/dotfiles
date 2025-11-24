@@ -671,7 +671,12 @@ function Breakpoint:delete(bufid, row)
 end
 
 function Breakpoint:clear(bufid)
-    local args = bufid and { self.sign.group, { buffer = bufid } } or { self.sign.group }
+    local args = { self.sign.group }
+
+    if bufid then
+        table.insert(args, { buffer = bufid })
+    end
+
     vim.fn.sign_unplace(unpack(args))
 end
 
