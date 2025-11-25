@@ -354,6 +354,19 @@ function Gdb:viwer(window, breakpoint)
         return self
     end
 
+    function Cache:insert(insn)
+        local address = insn.address
+
+        if address then
+            self.insns[address] = insn
+            local name = insn["func-name"] or ""
+            local func = self.funcs[name] or { addrs = {} }
+            func.addrs[address] = true
+            func.updated = true
+            self.funcs[name] = func
+        end
+    end
+
     function Cache:remove(address)
         local insn = self.insns[address]
 
@@ -373,17 +386,8 @@ function Gdb:viwer(window, breakpoint)
     end
 
     function Cache:update(insn)
-        local address = insn.address
-
-        if address then
-            self:remove(address)
-            self.insns[address] = insn
-            local name = insn["func-name"] or ""
-            local func = self.funcs[name] or { addrs = {} }
-            func.addrs[address] = true
-            func.updated = true
-            self.funcs[name] = func
-        end
+        self:remove(insn.address)
+        self:insert(insn)
     end
 
     function Cache:get(frame)
