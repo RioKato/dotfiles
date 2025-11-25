@@ -399,14 +399,6 @@ function Gdb:viwer(window, breakpoint)
         end
     end
 
-    function Cache:from(bufid)
-        local name = vim.iter(self.funcs):find(function(_, func)
-            return func.bufid == bufid
-        end)
-
-        return self.funcs[name]
-    end
-
     local function load(cache, frame)
         local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -814,7 +806,10 @@ function Ui:GdbToggleBreakpoint()
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
         elseif cache then
-            local func = cache:from(bufid)
+            local name = vim.iter(cache.funcs):find(function(_, func)
+                return func.bufid == bufid
+            end)
+            local func = cache.funcs[name]
 
             if func then
                 local insns = vim.iter(pairs(func.addrs))
