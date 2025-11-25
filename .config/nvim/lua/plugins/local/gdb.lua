@@ -439,6 +439,11 @@ function Gdb:viwer(window, breakpoint)
                     return left.address < right.address
                 end)
 
+                row = vim.iter(insns):enumerate():find(function(_, insn)
+                    return insn.address == frame.addr
+                end)
+                assert(row)
+
                 if func.updated then
                     local lines = vim.iter(insns)
                         :map(function(insn)
@@ -470,11 +475,6 @@ function Gdb:viwer(window, breakpoint)
 
                     func.updated = false
                 end
-
-                row = vim.iter(insns):enumerate():find(function(_, insn)
-                    return insn.address == frame.addr
-                end)
-                assert(row)
             end
         end
 
