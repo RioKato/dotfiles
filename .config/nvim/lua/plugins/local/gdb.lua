@@ -399,6 +399,20 @@ function Gdb:viwer(window, breakpoint)
         end
     end
 
+    function Cache:disass(func)
+        local insns = vim.iter(pairs(func.addrs))
+            :map(function(addr)
+                return assert(self.insns[addr])
+            end)
+            :totable()
+
+        table.sort(insns, function(left, right)
+            return left.address < right.address
+        end)
+
+        return insns
+    end
+
     local function load(cache, frame)
         local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -420,6 +434,8 @@ function Gdb:viwer(window, breakpoint)
             local func = cache:get(frame.addr)
 
             if func then
+                local insns = cache:disass(func)
+
                 if not func.bufid or not vim.api.nvim_buf_is_valid(func.bufid) then
                     func.bufid = vim.api.nvim_create_buf(false, true)
                     vim.bo[func.bufid].modifiable = false
@@ -428,17 +444,6 @@ function Gdb:viwer(window, breakpoint)
                 end
 
                 bufid = func.bufid
-
-                local insns = vim.iter(pairs(func.addrs))
-                    :map(function(addr)
-                        return assert(cache.insns[addr])
-                    end)
-                    :totable()
-
-                table.sort(insns, function(left, right)
-                    return left.address < right.address
-                end)
-
                 row = vim.iter(insns):enumerate():find(function(_, insn)
                     return insn.address == frame.addr
                 end)
@@ -825,16 +830,7 @@ function Ui:GdbToggleBreakpoint()
             local func = cache.funcs[name]
 
             if func then
-                local insns = vim.iter(pairs(func.addrs))
-                    :map(function(addr)
-                        return assert(cache.insns[addr])
-                    end)
-                    :totable()
-
-                table.sort(insns, function(left, right)
-                    return left.address < right.address
-                end)
-
+                local insns = cache:disass(func)
                 local insn = insns[cursor[1]]
 
                 if insn then
