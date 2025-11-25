@@ -390,16 +390,12 @@ function Gdb:viwer(window, breakpoint)
         self:insert(insn)
     end
 
-    function Cache:get(frame)
-        local address = frame.addr
+    function Cache:get(address)
+        local insn = self.insns[address]
 
-        if address then
-            local insn = self.insns[address]
-
-            if insn then
-                local name = insn["func-name"] or ""
-                return assert(self.funcs[name])
-            end
+        if insn then
+            local name = insn["func-name"] or ""
+            return assert(self.funcs[name])
         end
     end
 
@@ -421,7 +417,7 @@ function Gdb:viwer(window, breakpoint)
             vim.bo[bufid].buflisted = false
             row = frame.line
         elseif cache then
-            local func = cache:get(frame)
+            local func = cache:get(frame.addr)
 
             if func then
                 if not func.bufid or not vim.api.nvim_buf_is_valid(func.bufid) then
