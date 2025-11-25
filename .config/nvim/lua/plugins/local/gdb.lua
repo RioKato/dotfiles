@@ -803,7 +803,7 @@ function Ui:GdbToggleBreakpoint()
                 return bkpt.file == base and bkpt.line == cursor[1]
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
-        elseif cache then
+        elseif cache and cache.insns and cache.funcs then
             local name = vim.iter(cache.funcs):find(function(_, func)
                 return func.bufid == bufid
             end)
