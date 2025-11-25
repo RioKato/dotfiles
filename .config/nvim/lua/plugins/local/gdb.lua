@@ -1,24 +1,18 @@
 ---------------------------------------------------------------------------------------------------
 local function parser()
-    local function toStr(chars)
-        local escmap = {
+    local function toChar(esc)
+        local map = {
             ["\\n"] = "\n",
             ["\\t"] = "\t",
             ["\\e"] = string.char(0x1b),
             ['\\"'] = '"',
         }
 
-        return vim.iter(chars)
-            :map(function(char)
-                if escmap[char] then
-                    return escmap[char]
-                elseif vim.startswith(char, "\\") then
-                    return ""
-                else
-                    return char
-                end
-            end)
-            :join("")
+        return map[esc] or ""
+    end
+
+    local function toStr(chars)
+        return vim.iter(chars):join("")
     end
 
     local function toPair(data)
@@ -88,8 +82,8 @@ local function parser()
 
     local mi = lpeg.P({
         begin,
-        esc = lpeg.P("\\") * digit * digit * digit + lpeg.P("\\") * any,
-        str = lpeg.Ct(lpeg.P('"') * lpeg.C(esc + (any - lpeg.P('"'))) ^ 0 * lpeg.P('"')) / toStr,
+        esc = lpeg.C(lpeg.P("\\") * (digit * digit * digit + any)) / toChar,
+        str = lpeg.Ct(lpeg.P('"') * (esc + lpeg.C(any - lpeg.P('"'))) ^ 0 * lpeg.P('"')) / toStr,
         pair = lpeg.Ct(lpeg.C((any - lpeg.P("=")) ^ 1) * lpeg.P("=") * obj) / toPair,
         dict = lpeg.Ct(lpeg.P("{") * (lpeg.P("}") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("}"))) / norm,
         list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("]"))) / norm,
