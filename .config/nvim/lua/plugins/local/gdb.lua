@@ -695,6 +695,12 @@ local Ui = {
             style = "minimal",
         },
         notification = true,
+        debuginfod = {
+            path = "~/.cache/debuginfod_client",
+            resolve = function(path)
+                return path:match("#([^#]+)$")
+            end,
+        },
     },
 }
 
@@ -798,11 +804,20 @@ function Ui:GdbToggleBreakpoint()
         local cmd = nil
 
         if path ~= "" then
-            local base = vim.fs.basename(path)
+            local file = vim.fs.basename(path)
+
+            if self.opts.debuginfod then
+                local home = vim.fs.abspath(self.opts.debuginfod.path)
+
+                if vim.fs.relpath(home, path) then
+                    file = self.opts.debuginfod.resolve(path) or file
+                end
+            end
+
             local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
-                return bkpt.file == base and bkpt.line == cursor[1]
+                return bkpt.file == file and bkpt.line == cursor[1]
             end)
-            cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(base, cursor[1])
+            cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(file, cursor[1])
         elseif cache and cache.insns and cache.funcs then
             local name = vim.iter(cache.funcs):find(function(_, func)
                 return func.bufid == bufid
