@@ -345,6 +345,27 @@ function Gdb:prompt()
     return bufid
 end
 
+function Gdb:term()
+    local bufid = vim.api.nvim_create_buf(true, true)
+    local chan = vim.api.nvim_open_term(bufid, {})
+
+    self:onReceiveMessage(function(msg)
+        if vim.api.nvim_buf_is_valid(bufid) then
+            vim.api.nvim_chan_send(chan, msg)
+        end
+    end)
+
+    vim.keymap.set("n", "<cr>", function()
+        vim.ui.input({ prompt = "gdb: " }, function(line)
+            if line then
+                self:send(line)
+            end
+        end)
+    end, { buffer = bufid })
+
+    return bufid
+end
+
 function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
@@ -755,7 +776,8 @@ function Ui:GdbOpen()
                     end
                 end
 
-                local bufid = self.gdb:prompt()
+                -- local bufid = self.gdb:prompt()
+                local bufid = self.gdb:term()
                 local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
 
                 self.gdb:open(launch.command, {
