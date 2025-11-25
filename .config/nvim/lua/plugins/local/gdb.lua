@@ -454,14 +454,7 @@ function Gdb:viwer(window, breakpoint)
                     vim.bo[bufid].modifiable = true
                     vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                     vim.bo[bufid].modifiable = false
-                end
 
-                row = vim.iter(insns):enumerate():find(function(_, insn)
-                    return insn.address == frame.addr
-                end)
-                assert(row)
-
-                if func.updated then
                     local exists = vim.iter(pairs(self.ctx.bkpts or {})):fold({}, function(exists, _, bkpt)
                         exists[bkpt.addr] = true
                         return exists
@@ -474,9 +467,14 @@ function Gdb:viwer(window, breakpoint)
                             breakpoint:create(bufid, row)
                         end
                     end)
+
+                    func.updated = false
                 end
 
-                func.updated = false
+                row = vim.iter(insns):enumerate():find(function(_, insn)
+                    return insn.address == frame.addr
+                end)
+                assert(row)
             end
         end
 
