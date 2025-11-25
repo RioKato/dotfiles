@@ -6,20 +6,17 @@ local function parser()
             ["\\t"] = "\t",
             ["\\e"] = string.char(0x1b),
             ['\\"'] = '"',
-            ["\\001"] = string.char(1),
-            ["\\002"] = string.char(2),
-            ["\\200"] = "",
-            ["\\202"] = "",
-            ["\\206"] = "",
-            ["\\220"] = "",
-            ["\\222"] = "",
-            ["\\224"] = "",
-            ["\\342"] = "",
         }
 
         return vim.iter(chars)
             :map(function(char)
-                return escmap[char] or char
+                if escmap[char] then
+                    return escmap[char]
+                elseif vim.startswith(char, "\\") then
+                    return ""
+                else
+                    return char
+                end
             end)
             :join("")
     end
