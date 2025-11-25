@@ -1,15 +1,25 @@
 ---------------------------------------------------------------------------------------------------
 local function parser()
     local function toStr(chars)
-        local map = {
+        local escmap = {
             ["\\n"] = "\n",
             ["\\t"] = "\t",
+            ["\\e"] = string.char(0x1b),
             ['\\"'] = '"',
+            ["\\001"] = string.char(1),
+            ["\\002"] = string.char(2),
+            ["\\200"] = "",
+            ["\\202"] = "",
+            ["\\206"] = "",
+            ["\\220"] = "",
+            ["\\222"] = "",
+            ["\\224"] = "",
+            ["\\342"] = "",
         }
 
         return vim.iter(chars)
             :map(function(char)
-                return map[char] or char
+                return escmap[char] or char
             end)
             :join("")
     end
@@ -31,8 +41,8 @@ local function parser()
         if vim.tbl_contains(intkey, data[1]) then
             data[2] = tonumber(data[2])
         elseif vim.tbl_contains(boolkey, data[1]) then
-            local map = { y = true, n = false }
-            data[2] = map[data[2]]
+            local yn = { y = true, n = false }
+            data[2] = yn[data[2]]
         elseif data[1] == "func" then
             local unknowns = { "??", "" }
             data[2] = not vim.tbl_contains(unknowns, data[2]) and data[2] or nil
@@ -68,6 +78,8 @@ local function parser()
 
     local lpeg = vim.lpeg
     local any = lpeg.P(1)
+    local digit = lpeg.R("09")
+    local esc = lpeg.V("esc")
     local str = lpeg.V("str")
     local pair = lpeg.V("pair")
     local dict = lpeg.V("dict")
@@ -79,7 +91,8 @@ local function parser()
 
     local mi = lpeg.P({
         begin,
-        str = lpeg.Ct(lpeg.P('"') * lpeg.C(lpeg.P("\\") * any + (any - lpeg.P('"'))) ^ 0 * lpeg.P('"')) / toStr,
+        esc = lpeg.P("\\") * digit * digit * digit + lpeg.P("\\") * any,
+        str = lpeg.Ct(lpeg.P('"') * lpeg.C(esc + (any - lpeg.P('"'))) ^ 0 * lpeg.P('"')) / toStr,
         pair = lpeg.Ct(lpeg.C((any - lpeg.P("=")) ^ 1) * lpeg.P("=") * obj) / toPair,
         dict = lpeg.Ct(lpeg.P("{") * (lpeg.P("}") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("}"))) / norm,
         list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("]"))) / norm,
