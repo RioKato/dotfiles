@@ -496,7 +496,7 @@ function Gdb:viwer(window, breakpoint)
     self:onReceiveInstructions(function(insns)
         self.ctx.cache = self.ctx.cache or Cache.new()
 
-        vim.iter(insns):enumerate():each(function(row, insn)
+        vim.iter(insns):each(function(insn)
             self.ctx.cache:update(insn)
         end)
 
