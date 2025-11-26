@@ -375,6 +375,8 @@ function Gdb:term()
                     end)
                 elseif char == "\r" then
                     send()
+                elseif char == "\3" then
+                    self:interrupt()
                 end
             end
         end,
