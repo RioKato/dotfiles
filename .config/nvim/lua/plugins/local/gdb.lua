@@ -25,8 +25,12 @@ local function parser()
             line = tonumber,
             address = tonumber,
             offset = tonumber,
-            number = tonumber,
             id = tonumber,
+            number = function(data)
+                local decimal = lpeg.C(lpeg.R("09") ^ 1) / tonumber
+                local pattern = lpeg.Ct(decimal * (lpeg.P(".") * decimal) ^ -1)
+                return lpeg.match(pattern, data)
+            end,
             enabled = function(data)
                 local yn = { y = true, n = false }
                 return yn[data]
@@ -281,10 +285,25 @@ function Gdb:onChangeBreakpoints(callback)
     local delete = callback.delete
     local sync = callback.sync
 
-    local function dict(bkpts)
+    local function dict(bkpts, id)
         return vim.iter(bkpts):fold({}, function(left, right)
+            local number = nil
+
             if right.number then
-                left[right.number] = right
+                if id == nil then
+                    number = right.number[1]
+                elseif id == right.number[1] then
+                    number = right.number[2]
+                end
+            end
+
+            if number then
+                if not id and right.locations then
+                    right = vim.deepcopy(right)
+                    right.locations = dict(right.locations, number)
+                end
+
+                left[number] = right
             end
 
             return left
