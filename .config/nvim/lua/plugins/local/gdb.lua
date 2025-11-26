@@ -939,11 +939,22 @@ end
 
 function Ui:GdbPrintCWord()
     if self.gdb then
+        local path = vim.fn.expand("%:p")
         local cword = vim.fn.expand("<cword>")
-        local items = {
-            ("print %s"):format(cword),
-            ("print *%s"):format(cword),
-        }
+        local items = {}
+
+        if path ~= "" then
+            items = {
+                ("print %s"):format(cword),
+                ("print *%s"):format(cword),
+            }
+        else
+            items = {
+                ("print $%s"):format(cword),
+                ("x/s $%s"):format(cword),
+                ("telescope $%s"):format(cword),
+            }
+        end
 
         vim.ui.select(items, {}, function(item)
             if item then
