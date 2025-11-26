@@ -1,14 +1,18 @@
 ---------------------------------------------------------------------------------------------------
 local function parser()
-    local function toChar(esc)
-        local map = {
-            ["\\n"] = "\n",
-            ["\\t"] = "\t",
-            ["\\e"] = string.char(0x1b),
-            ['\\"'] = '"',
-        }
+    local bs = {
+        ["\\n"] = "\n",
+        ["\\t"] = "\t",
+        ["\\e"] = string.char(0x1b),
+        ['\\"'] = '"',
+    }
 
-        return map[esc] or ""
+    for i = 0, 255 do
+        bs[("\\%03o"):format(i)] = string.char(i)
+    end
+
+    local function toChar(esc)
+        return bs[esc] or esc
     end
 
     local function toStr(chars)
