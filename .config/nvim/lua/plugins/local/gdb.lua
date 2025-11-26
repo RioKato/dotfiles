@@ -49,7 +49,7 @@ local function parser()
         return data
     end
 
-    local function norm(data)
+    local function toObj(data)
         local dupkey = { "bkpt" }
 
         return vim.iter(data):fold({}, function(left, right)
@@ -89,10 +89,10 @@ local function parser()
         esc = lpeg.C(lpeg.P("\\") * (digit * digit * digit + any)) / toChar,
         str = lpeg.Ct(lpeg.P('"') * (esc + lpeg.C(any - lpeg.P('"'))) ^ 0 * lpeg.P('"')) / toStr,
         pair = lpeg.Ct(lpeg.C((any - lpeg.P("=")) ^ 1) * lpeg.P("=") * obj) / toPair,
-        dict = lpeg.Ct(lpeg.P("{") * (lpeg.P("}") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("}"))) / norm,
-        list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("]"))) / norm,
+        dict = lpeg.Ct(lpeg.P("{") * (lpeg.P("}") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("}"))) / toObj,
+        list = lpeg.Ct(lpeg.P("[") * (lpeg.P("]") + (obj + pair) * (lpeg.P(",") * (obj + pair)) ^ 0 * lpeg.P("]"))) / toObj,
         obj = str + dict + list,
-        info = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 1) * (lpeg.P(",") * pair) ^ 0) / norm,
+        info = lpeg.Ct(lpeg.C(lpeg.S("=*^") * (any - lpeg.P(",")) ^ 1) * (lpeg.P(",") * pair) ^ 0) / toObj,
         msg = lpeg.Ct(lpeg.C(lpeg.P("~")) * str),
         begin = info + msg,
     })
