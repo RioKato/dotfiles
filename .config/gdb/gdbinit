@@ -26,6 +26,9 @@ define init-gef
   gef config context.nb_lines_backtrace 4
   gef config context.nb_lines_code 5
   gef config gef.disable_target_remote_overwrite True
+
+  gef config context.clear_screen False
+  gef config context.layout "regs stack code args memory threads trace"
 end
 
 # init-gef
