@@ -358,14 +358,25 @@ function Gdb:term()
     local last = ""
 
     local chan = vim.api.nvim_open_term(bufid, {
-        on_input = function(_, chan, _, data)
-            vim.ui.input({ prompt = "(gdb) ", default = data }, function(line)
-                if line then
-                    last = line ~= "" and line or last
-                    vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
-                    self:send(line)
+        on_input = function(_, chan, _, char)
+            if char:len() == 1 then
+                local function send()
+                    local echo = string.format("(gdb) %s\n", last)
+                    vim.api.nvim_chan_send(chan, echo)
+                    self:send(last)
                 end
-            end)
+
+                if " " <= char and "~" >= char then
+                    vim.ui.input({ prompt = "(gdb) ", default = char }, function(line)
+                        if line then
+                            last = line ~= "" and line or last
+                            send()
+                        end
+                    end)
+                elseif char == "\r" then
+                    send()
+                end
+            end
         end,
     })
 
@@ -374,11 +385,6 @@ function Gdb:term()
             vim.api.nvim_chan_send(chan, msg)
         end
     end)
-
-    vim.keymap.set("n", "<cr>", function()
-        vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
-        self:send(last)
-    end, { buffer = bufid })
 
     return bufid
 end
