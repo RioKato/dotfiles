@@ -63,7 +63,20 @@ local function parser()
         local handler = {
             bkpt = function(left, right)
                 left = left or {}
-                table.insert(left, right)
+
+                if right.number then
+                    left[right.number[1]] = right
+                end
+
+                return left
+            end,
+            locations = function(left, right)
+                left = left or {}
+
+                if right.number and right.number[2] then
+                    left[right.number[2]] = right
+                end
+
                 return left
             end,
         }
@@ -285,39 +298,13 @@ function Gdb:onChangeBreakpoints(callback)
     local delete = callback.delete
     local sync = callback.sync
 
-    local function dict(bkpts, id)
-        return vim.iter(bkpts):fold({}, function(left, right)
-            local number = nil
-
-            if right.number then
-                if id == nil then
-                    number = right.number[1]
-                elseif id == right.number[1] then
-                    number = right.number[2]
-                end
-            end
-
-            if number then
-                if not id and right.locations then
-                    right = vim.deepcopy(right)
-                    right.locations = dict(right.locations, number)
-                end
-
-                left[number] = right
-            end
-
-            return left
-        end)
-    end
-
     if create then
         self:on({ "=breakpoint-created" }, function(data)
             if data.bkpt then
-                local bkpts = dict(data.bkpt)
-                create(bkpts)
+                create(data.bkpt)
                 self.ctx.bkpts = self.ctx.bkpts or {}
 
-                vim.iter(pairs(bkpts)):each(function(id, bkpt)
+                vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
                     self.ctx.bkpts[id] = bkpt
                 end)
             end
@@ -327,11 +314,10 @@ function Gdb:onChangeBreakpoints(callback)
     if modify then
         self:on({ "=breakpoint-modified" }, function(data)
             if data.bkpt then
-                local bkpts = dict(data.bkpt)
-                modify(bkpts)
+                modify(data.bkpt)
                 self.ctx.bkpts = self.ctx.bkpts or {}
 
-                vim.iter(pairs(bkpts)):each(function(id, bkpt)
+                vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
                     self.ctx.bkpts[id] = bkpt
                 end)
             end
@@ -353,9 +339,8 @@ function Gdb:onChangeBreakpoints(callback)
     if sync then
         self:on({ "^done" }, function(data)
             if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
-                local bkpts = dict(data.BreakpointTable.body.bkpt)
-                sync(bkpts)
-                self.ctx.bkpts = bkpts
+                sync(data.BreakpointTable.body.bkpt)
+                self.ctx.bkpts = data.BreakpointTable.body.bkpt
             end
         end)
     end
