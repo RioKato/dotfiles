@@ -341,6 +341,10 @@ function Gdb:prompt()
         self:send(last)
     end)
 
+    vim.fn.prompt_setinterrupt(bufid, function()
+        self:interrupt()
+    end)
+
     self:onReceiveMessage(function(msg)
         if vim.api.nvim_buf_is_valid(bufid) then
             local lines = vim.split(msg, "\n")
@@ -726,17 +730,17 @@ local Ui = {
     default = {
         launch = {
             gdb = {
-                console = "term",
                 command = { "gdb", "-i=mi" },
                 executable = "gdb",
+                prompt = false,
                 cwd = nil,
                 env = nil,
                 detach = nil,
             },
             rr = {
-                console = "term",
                 command = { "rr", "replay", "-i=mi" },
                 executable = "rr",
+                prompt = false,
                 cwd = nil,
                 env = nil,
                 detach = nil,
@@ -802,7 +806,7 @@ function Ui:GdbOpen()
                 end
             end
 
-            local bufid = launch.console == "term" and self.gdb:term() or self.gdb:prompt()
+            local bufid = launch.prompt and self.gdb:prompt() or self.gdb:term()
             local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
 
             self.gdb:open(launch.command, {
