@@ -355,20 +355,11 @@ end
 
 function Gdb:term()
     local bufid = vim.api.nvim_create_buf(true, true)
-    local chan = vim.api.nvim_open_term(bufid, {})
     local last = ""
 
-    self:onReceiveMessage(function(msg)
-        if vim.api.nvim_buf_is_valid(bufid) then
-            vim.api.nvim_chan_send(chan, msg)
-        end
-    end)
-
-    vim.api.nvim_create_autocmd("TermEnter", {
-        buffer = bufid,
-        callback = function()
-            vim.cmd.stopinsert()
-            vim.ui.input({ prompt = "(gdb) " }, function(line)
+    local chan = vim.api.nvim_open_term(bufid, {
+        on_input = function(_, chan, _, data)
+            vim.ui.input({ prompt = "(gdb) ", default = data }, function(line)
                 if line then
                     last = line ~= "" and line or last
                     vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
@@ -378,11 +369,15 @@ function Gdb:term()
         end,
     })
 
-    vim.keymap.set("n", "<cr>", function()
-        if last ~= "" then
-            vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
-            self:send(last)
+    self:onReceiveMessage(function(msg)
+        if vim.api.nvim_buf_is_valid(bufid) then
+            vim.api.nvim_chan_send(chan, msg)
         end
+    end)
+
+    vim.keymap.set("n", "<cr>", function()
+        vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
+        self:send(last)
     end, { buffer = bufid })
 
     return bufid
