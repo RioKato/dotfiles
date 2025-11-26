@@ -364,9 +364,10 @@ function Gdb:term()
         buffer = bufid,
         callback = function()
             vim.cmd.stopinsert()
-            vim.ui.input({ prompt = "gdb: " }, function(line)
+            vim.ui.input({ prompt = "(gdb) " }, function(line)
                 if line then
                     last = line ~= "" and line or last
+                    vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
                     self:send(line)
                 end
             end)
@@ -375,6 +376,7 @@ function Gdb:term()
 
     vim.keymap.set("n", "<cr>", function()
         if last ~= "" then
+            vim.api.nvim_chan_send(chan, string.format("(gdb) %s\n", last))
             self:send(last)
         end
     end, { buffer = bufid })
