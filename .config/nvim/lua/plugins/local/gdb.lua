@@ -516,7 +516,10 @@ function Gdb:viwer(window, breakpoint)
                     vim.bo[bufid].modifiable = false
 
                     local exists = vim.iter(pairs(self.ctx.bkpts or {})):fold({}, function(exists, _, bkpt)
-                        exists[bkpt.addr] = true
+                        if bkpt.addr then
+                            exists[bkpt.addr] = true
+                        end
+
                         return exists
                     end)
 
