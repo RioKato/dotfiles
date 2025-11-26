@@ -20,29 +20,35 @@ local function parser()
     end
 
     local function toPair(data)
-        local intkey = {
-            "addr",
-            "line",
-            "address",
-            "offset",
-            "number",
-            "id",
+        local handler = {
+            addr = tonumber,
+            line = tonumber,
+            address = tonumber,
+            offset = tonumber,
+            number = tonumber,
+            id = tonumber,
+            enabled = function(data)
+                local yn = { y = true, n = false }
+                return yn[data]
+            end,
+            func = function(data)
+                local unknowns = { "??", "" }
+                if not vim.tbl_contains(unknowns, data) then
+                    return data
+                end
+            end,
+            ["func-name"] = function(data)
+                if data ~= "" then
+                    return data
+                end
+            end,
         }
 
-        local boolkey = {
-            "enabled",
-        }
+        local key = data[1]
+        local value = data[2]
 
-        if vim.tbl_contains(intkey, data[1]) then
-            data[2] = tonumber(data[2])
-        elseif vim.tbl_contains(boolkey, data[1]) then
-            local yn = { y = true, n = false }
-            data[2] = yn[data[2]]
-        elseif data[1] == "func" then
-            local unknowns = { "??", "" }
-            data[2] = not vim.tbl_contains(unknowns, data[2]) and data[2] or nil
-        elseif data[1] == "func-name" then
-            data[2] = data[2] ~= "" and data[2] or nil
+        if handler[key] then
+            data[2] = handler[key](value)
         end
 
         data.pair = true
@@ -50,19 +56,24 @@ local function parser()
     end
 
     local function toObj(data)
-        local dupkey = { "bkpt" }
+        local handler = {
+            bkpt = function(left, right)
+                left = left or {}
+                table.insert(left, right)
+                return left
+            end,
+        }
 
         return vim.iter(data):fold({}, function(left, right)
             if right.pair then
                 local key = right[1]
                 local value = right[2]
 
-                if vim.tbl_contains(dupkey, key) then
-                    left[key] = left[key] or {}
-                    table.insert(left[key], value)
-                else
-                    left[key] = value
+                if handler[key] then
+                    value = handler[key](left[key], value)
                 end
+
+                left[key] = value
             else
                 table.insert(left, right)
             end
