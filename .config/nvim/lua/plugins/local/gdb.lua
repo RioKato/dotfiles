@@ -947,6 +947,7 @@ function Ui:GdbPrintCWord()
             items = {
                 ("print %s"):format(cword),
                 ("print *%s"):format(cword),
+                ("telescope %s"):format(cword),
             }
         else
             items = {
