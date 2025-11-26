@@ -937,6 +937,22 @@ function Ui:GdbToggleEnableBreakpoint()
     end
 end
 
+function Ui:GdbPrintCWord()
+    if self.gdb then
+        local cword = vim.fn.expand("<cword>")
+        local items = {
+            ("print %s"):format(cword),
+            ("print *%s"):format(cword),
+        }
+
+        vim.ui.select(items, {}, function(item)
+            if item then
+                self.gdb:send(item)
+            end
+        end)
+    end
+end
+
 ---------------------------------------------------------------------------------------------------
 local M = {
     Mi = Mi,
@@ -957,6 +973,7 @@ function M.setup(opts)
         "GdbSyncBreakpoints",
         "GdbToggleBreakpoint",
         "GdbToggleEnableBreakpoint",
+        "GdbPrintCWord",
     }
 
     vim.iter(cmds):each(function(cmd)
