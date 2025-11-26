@@ -719,6 +719,7 @@ local Ui = {
     default = {
         launch = {
             gdb = {
+                console = "term",
                 command = { "gdb", "-i=mi" },
                 executable = "gdb",
                 cwd = nil,
@@ -726,6 +727,7 @@ local Ui = {
                 detach = nil,
             },
             rr = {
+                console = "term",
                 command = { "rr", "replay", "-i=mi" },
                 executable = "rr",
                 cwd = nil,
@@ -794,8 +796,7 @@ function Ui:GdbOpen()
                     end
                 end
 
-                -- local bufid = self.gdb:prompt()
-                local bufid = self.gdb:term()
+                local bufid = launch.console == "term" and self.gdb:term() or self.gdb:prompt()
                 local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
 
                 self.gdb:open(launch.command, {
