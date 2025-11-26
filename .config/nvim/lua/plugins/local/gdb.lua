@@ -763,89 +763,90 @@ end
 function Ui.new(opts)
     local self = {
         opts = vim.tbl_deep_extend("force", Ui.default, opts or {}),
-        gdb = Gdb.new(),
-        opened = false,
     }
     setmetatable(self, { __index = Ui })
     return self
 end
 
 function Ui:GdbOpen()
-    if not self.opened then
-        local window = Window.new()
-        local items = vim.iter(self.opts.launch)
-            :filter(function(key, value)
-                return not value.executable or vim.fn.executable(value.executable) == 1
-            end)
-            :totable()
+    local window = Window.new()
+    local items = vim.iter(self.opts.launch)
+        :filter(function(key, value)
+            return not value.executable or vim.fn.executable(value.executable) == 1
+        end)
+        :totable()
 
-        vim.ui.select(items, {
-            format_item = function(item)
-                return item[1]
-            end,
-        }, function(item)
-            if item then
-                local launch = item[2]
-                self.gdb:viwer(window, Breakpoint.new())
-                local stderr = nil
+    vim.ui.select(items, {
+        format_item = function(item)
+            return item[1]
+        end,
+    }, function(item)
+        if item and not self.gdb then
+            local launch = item[2]
 
-                if self.opts.notification then
-                    self.gdb:notify()
+            self.gdb = Gdb.new()
+            self.gdb:viwer(window, Breakpoint.new())
+            local stderr = nil
 
-                    stderr = function(_, text)
-                        if text then
-                            vim.schedule(function()
-                                vim.notify(text)
-                            end)
-                        end
+            if self.opts.notification then
+                self.gdb:notify()
+
+                stderr = function(_, text)
+                    if text then
+                        vim.schedule(function()
+                            vim.notify(text)
+                        end)
                     end
                 end
-
-                local bufid = launch.console == "term" and self.gdb:term() or self.gdb:prompt()
-                local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
-
-                self.gdb:open(launch.command, {
-                    stderr = stderr,
-                    exit = function()
-                        vim.schedule(function()
-                            if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
-                                vim.api.nvim_win_close(winid, true)
-                            end
-
-                            if vim.api.nvim_buf_is_valid(bufid) then
-                                vim.api.nvim_buf_delete(bufid, { force = true })
-                            end
-
-                            window:restore()
-                            self.gdb = Gdb.new()
-                            self.opened = false
-                        end)
-                    end,
-                    cwd = launch.cwd,
-                    env = launch.env,
-                    detach = launch.detach,
-                })
-
-                self.opened = true
             end
-        end)
-    end
+
+            local bufid = launch.console == "term" and self.gdb:term() or self.gdb:prompt()
+            local winid = vim.api.nvim_open_win(bufid, false, self.opts.window)
+
+            self.gdb:open(launch.command, {
+                stderr = stderr,
+                exit = function()
+                    vim.schedule(function()
+                        if vim.api.nvim_win_is_valid(winid) and #vim.api.nvim_list_wins() > 1 then
+                            vim.api.nvim_win_close(winid, true)
+                        end
+
+                        if vim.api.nvim_buf_is_valid(bufid) then
+                            vim.api.nvim_buf_delete(bufid, { force = true })
+                        end
+
+                        self.gdb = nil
+                        window:restore()
+                    end)
+                end,
+                cwd = launch.cwd,
+                env = launch.env,
+                detach = launch.detach,
+            })
+        end
+    end)
 end
 
 function Ui:GdbClose()
-    self.gdb:close()
+    if self.gdb then
+        self.gdb:close()
+    end
 end
 
 function Ui:GdbInterrupt()
-    self.gdb:interrupt()
+    if self.gdb then
+        self.gdb:interrupt()
+    end
 end
 
 function Ui:GdbSyncBreakpoints()
-    self.gdb:listBreakpoints()
+    if self.gdb then
+        self.gdb:listBreakpoints()
+    end
 end
 
 function Ui:GdbToggleBreakpoint()
-    if self.gdb.ctx then
+    if self.gdb and self.gdb.ctx then
         local bkpts = self.gdb.ctx.bkpts or {}
         local cache = self.gdb.ctx.cache
         local winid = vim.api.nvim_get_current_win()
@@ -895,7 +896,7 @@ function Ui:GdbToggleBreakpoint()
 end
 
 function Ui:GdbToggleEnableBreakpoint()
-    if self.gdb.ctx then
+    if self.gdb and self.gdb.ctx then
         local bkpts = self.gdb.ctx.bkpts or {}
         local items = vim.iter(pairs(bkpts))
             :map(function(_, bkpt)
