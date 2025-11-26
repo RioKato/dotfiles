@@ -756,7 +756,7 @@ local Ui = {
         },
         notification = true,
         debuginfod = {
-            path = "~/.cache/debuginfod_client",
+            root = "~/.cache/debuginfod_client",
             resolve = function(path)
                 return path:match("#([^#]+)$")
             end,
@@ -868,9 +868,9 @@ function Ui:GdbToggleBreakpoint()
             local file = vim.fs.basename(path)
 
             if self.opts.debuginfod then
-                local home = vim.fs.abspath(self.opts.debuginfod.path)
+                local root = vim.fs.abspath(self.opts.debuginfod.root)
 
-                if vim.fs.relpath(home, path) then
+                if vim.fs.relpath(root, path) then
                     file = self.opts.debuginfod.resolve(path) or file
                 end
             end
