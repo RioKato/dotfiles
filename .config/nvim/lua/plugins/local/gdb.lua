@@ -465,6 +465,16 @@ function Gdb:viwer(window, breakpoint)
         return insns
     end
 
+    local function tolocs(bkpt)
+        local locs = vim.iter(pairs(bkpt.locations or {}))
+            :map(function(_, loc)
+                return loc
+            end)
+            :totable()
+        table.insert(locs, bkpt)
+        return locs
+    end
+
     local function load(cache, frame)
         local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
             local stat = vim.uv.fs_stat(file)
@@ -518,9 +528,11 @@ function Gdb:viwer(window, breakpoint)
                     vim.bo[bufid].modifiable = false
 
                     local exists = vim.iter(pairs(self.ctx.bkpts or {})):fold({}, function(exists, _, bkpt)
-                        if bkpt.addr then
-                            exists[bkpt.addr] = true
-                        end
+                        vim.iter(tolocs(bkpt)):each(function(loc)
+                            if loc.addr then
+                                exists[loc.addr] = true
+                            end
+                        end)
 
                         return exists
                     end)
@@ -573,16 +585,6 @@ function Gdb:viwer(window, breakpoint)
         self.ctx.cache = nil
         window:restore()
     end)
-
-    local function tolocs(bkpt)
-        local locs = vim.iter(pairs(bkpt.locations or {}))
-            :map(function(_, loc)
-                return loc
-            end)
-            :totable()
-        table.insert(locs, bkpt)
-        return locs
-    end
 
     self:onChangeBreakpoints({
         create = function(bkpts)
