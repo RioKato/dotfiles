@@ -293,57 +293,44 @@ function Gdb:onReceiveInstructions(callback)
 end
 
 function Gdb:onChangeBreakpoints(callback)
-    local create = callback.create
-    local modify = callback.modify
-    local delete = callback.delete
-    local sync = callback.sync
+    self:on({ "=breakpoint-created" }, function(data)
+        if data.bkpt then
+            callback.create(data.bkpt)
+            self.ctx.bkpts = self.ctx.bkpts or {}
 
-    if create then
-        self:on({ "=breakpoint-created" }, function(data)
-            if data.bkpt then
-                create(data.bkpt)
-                self.ctx.bkpts = self.ctx.bkpts or {}
+            vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
+                self.ctx.bkpts[id] = bkpt
+            end)
+        end
+    end)
 
-                vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
-                    self.ctx.bkpts[id] = bkpt
-                end)
-            end
-        end)
-    end
+    self:on({ "=breakpoint-modified" }, function(data)
+        if data.bkpt then
+            callback.modify(data.bkpt)
+            self.ctx.bkpts = self.ctx.bkpts or {}
 
-    if modify then
-        self:on({ "=breakpoint-modified" }, function(data)
-            if data.bkpt then
-                modify(data.bkpt)
-                self.ctx.bkpts = self.ctx.bkpts or {}
+            vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
+                self.ctx.bkpts[id] = bkpt
+            end)
+        end
+    end)
 
-                vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
-                    self.ctx.bkpts[id] = bkpt
-                end)
-            end
-        end)
-    end
+    self:on({ "=breakpoint-deleted" }, function(data)
+        local id = data.id
 
-    if delete then
-        self:on({ "=breakpoint-deleted" }, function(data)
-            local id = data.id
+        if id then
+            callback.delete(id)
+            self.ctx.bkpts = self.ctx.bkpts or {}
+            self.ctx.bkpts[id] = nil
+        end
+    end)
 
-            if id then
-                delete(id)
-                self.ctx.bkpts = self.ctx.bkpts or {}
-                self.ctx.bkpts[id] = nil
-            end
-        end)
-    end
-
-    if sync then
-        self:on({ "^done" }, function(data)
-            if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
-                sync(data.BreakpointTable.body.bkpt)
-                self.ctx.bkpts = data.BreakpointTable.body.bkpt
-            end
-        end)
-    end
+    self:on({ "^done" }, function(data)
+        if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
+            callback.sync(data.BreakpointTable.body.bkpt)
+            self.ctx.bkpts = data.BreakpointTable.body.bkpt
+        end
+    end)
 end
 
 function Gdb:prompt()
