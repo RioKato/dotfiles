@@ -916,7 +916,15 @@ function Ui:GdbToggleBreakpoint()
             end
 
             local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
-                return bkpt.file == file and bkpt.line == cursor[1]
+                if bkpt.file == file and bkpt.line == cursor[1] then
+                    return true
+                end
+
+                for _, loc in pairs(bkpt.locations or {}) do
+                    if bkpt.file == file and bkpt.line == cursor[1] then
+                        return true
+                    end
+                end
             end)
             cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(file, cursor[1])
         elseif cache then
@@ -931,7 +939,15 @@ function Ui:GdbToggleBreakpoint()
 
                 if insn then
                     local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
-                        return bkpt.addr == insn.address
+                        if bkpt.addr == insn.address then
+                            return true
+                        end
+
+                        for _, loc in pairs(bkpt.locations or {}) do
+                            if bkpt.addr == insn.address then
+                                return true
+                            end
+                        end
                     end)
                     cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(insn.address)
                 end
@@ -948,32 +964,39 @@ function Ui:GdbToggleEnableBreakpoint()
     if self.gdb and self.gdb.ctx then
         local bkpts = self.gdb.ctx.bkpts or {}
         local items = vim.iter(pairs(bkpts))
-            :map(function(_, bkpt)
-                return bkpt
+            :map(function(id, bkpt)
+                local locs = {
+                    { ("%d"):format(id), bkpt },
+                }
+
+                vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
+                    table.insert(locs, { ("%d.%d"):format(id, subid), locs })
+                end)
+
+                return locs
             end)
             :totable()
 
-        table.sort(items, function(left, right)
-            return left.number > right.number
-        end)
+        items = vim.iter(items):flatten():totable()
 
         vim.ui.select(items, {
             format_item = function(item)
+                local number = item[1]
                 local enabled = nil
 
-                if item.enabled ~= nil then
-                    enabled = item.enabled and "E" or "D"
+                if item[2].enabled ~= nil then
+                    enabled = item[2].enabled and "E" or "D"
                 else
                     enabled = " "
                 end
 
-                local addr = item.addr or 0
-                local location = item.file and item.line and ("%s %d"):format(item.file, item.line) or ""
-                return ("%s 0x%x │ %s"):format(enabled, addr, location)
+                local addr = item[2].addr or 0
+                local location = item[2].file and item[2].line and ("%s %d"):format(item[2].file, item[2].line) or ""
+                return ("%s %s 0x%x │ %s"):format(number, enabled, addr, location)
             end,
         }, function(item)
-            if item and item.enabled ~= nil then
-                local cmd = ("%s %d"):format(item.enabled and "disable" or "enable", item.number)
+            if item and item[2].enabled ~= nil then
+                local cmd = ("%s %d"):format(item[2].enabled and "disable" or "enable", item[1])
                 self.gdb:send(cmd)
             end
         end)
