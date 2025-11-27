@@ -574,24 +574,38 @@ function Gdb:viwer(window, breakpoint)
         window:restore()
     end)
 
+    local function tolocs(bkpt)
+        local locs = vim.iter(pairs(bkpt.locations or {}))
+            :map(function(_, loc)
+                return loc
+            end)
+            :totable()
+        table.insert(locs, bkpt)
+        return locs
+    end
+
     self:onChangeBreakpoints({
         create = function(bkpts)
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
-                local bufid, row = load(self.ctx.cache, bkpt)
+                vim.iter(tolocs(bkpt)):each(function(loc)
+                    local bufid, row = load(self.ctx.cache, loc)
 
-                if bufid then
-                    breakpoint:create(bufid, row, bkpt.enabled)
-                end
+                    if bufid then
+                        breakpoint:create(bufid, row, bkpt.enabled)
+                    end
+                end)
             end)
         end,
 
         modify = function(bkpts)
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
-                local bufid, row = load(self.ctx.cache, bkpt)
+                vim.iter(tolocs(bkpt)):each(function(loc)
+                    local bufid, row = load(self.ctx.cache, loc)
 
-                if bufid then
-                    breakpoint:modify(bufid, row, bkpt.enabled)
-                end
+                    if bufid then
+                        breakpoint:modify(bufid, row, bkpt.enabled)
+                    end
+                end)
             end)
         end,
 
@@ -599,11 +613,13 @@ function Gdb:viwer(window, breakpoint)
             local bkpt = self.ctx.bkpts and self.ctx.bkpts[id]
 
             if bkpt then
-                local bufid, row = load(self.ctx.cache, bkpt)
+                vim.iter(tolocs(bkpt)):each(function(loc)
+                    local bufid, row = load(self.ctx.cache, loc)
 
-                if bufid then
-                    breakpoint:delete(bufid, row)
-                end
+                    if bufid then
+                        breakpoint:delete(bufid, row, bkpt.enabled)
+                    end
+                end)
             end
         end,
 
@@ -611,11 +627,13 @@ function Gdb:viwer(window, breakpoint)
             breakpoint:clear()
 
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
-                local bufid, row = load(self.ctx.cache, bkpt)
+                vim.iter(tolocs(bkpt)):each(function(loc)
+                    local bufid, row = load(self.ctx.cache, loc)
 
-                if bufid then
-                    breakpoint:create(bufid, row, bkpt.enabled)
-                end
+                    if bufid then
+                        breakpoint:create(bufid, row, bkpt.enabled)
+                    end
+                end)
             end)
         end,
     })
