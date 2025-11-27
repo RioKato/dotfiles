@@ -46,6 +46,15 @@ local function parser()
                     return data
                 end
             end,
+            locations = function(data)
+                return vim.iter(data):fold({}, function(left, right)
+                    if right.number and right.number[2] then
+                        left[right.number[2]] = right
+                    end
+
+                    return left
+                end)
+            end,
         }
 
         local key = data[1]
@@ -66,15 +75,6 @@ local function parser()
 
                 if right.number then
                     left[right.number[1]] = right
-                end
-
-                return left
-            end,
-            locations = function(left, right)
-                left = left or {}
-
-                if right.number and right.number[2] then
-                    left[right.number[2]] = right
                 end
 
                 return left
