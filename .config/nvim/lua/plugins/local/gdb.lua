@@ -594,7 +594,7 @@ function Gdb:viwer(window, breakpoint)
                     local bufid, row = load(self.ctx.cache, loc)
 
                     if bufid then
-                        breakpoint:create(bufid, row, bkpt.enabled)
+                        breakpoint:create(bufid, row, bkpt.enabled and loc.enabled)
                     end
                 end)
             end)
@@ -606,7 +606,7 @@ function Gdb:viwer(window, breakpoint)
                     local bufid, row = load(self.ctx.cache, loc)
 
                     if bufid then
-                        breakpoint:modify(bufid, row, bkpt.enabled)
+                        breakpoint:modify(bufid, row, bkpt.enabled and loc.enabled)
                     end
                 end)
             end)
@@ -620,7 +620,7 @@ function Gdb:viwer(window, breakpoint)
                     local bufid, row = load(self.ctx.cache, loc)
 
                     if bufid then
-                        breakpoint:delete(bufid, row, bkpt.enabled)
+                        breakpoint:delete(bufid, row)
                     end
                 end)
             end
@@ -634,7 +634,7 @@ function Gdb:viwer(window, breakpoint)
                     local bufid, row = load(self.ctx.cache, loc)
 
                     if bufid then
-                        breakpoint:create(bufid, row, bkpt.enabled)
+                        breakpoint:create(bufid, row, bkpt.enabled and loc.enabled)
                     end
                 end)
             end)
