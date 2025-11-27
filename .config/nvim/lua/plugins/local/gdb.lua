@@ -466,13 +466,14 @@ function Gdb:viwer(window, breakpoint)
     end
 
     local function tolocs(bkpt)
-        local locs = vim.iter(pairs(bkpt.locations or {}))
+        return vim.iter(pairs(bkpt.locations or {}))
             :map(function(_, loc)
                 return loc
             end)
-            :totable()
-        table.insert(locs, bkpt)
-        return locs
+            :fold({ bkpt }, function(left, right)
+                table.insert(left, right)
+                return left
+            end)
     end
 
     local function load(cache, frame)
