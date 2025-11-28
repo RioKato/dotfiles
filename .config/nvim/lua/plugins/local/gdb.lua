@@ -789,12 +789,6 @@ local Ui = {
             style = "minimal",
         },
         notification = true,
-        debuginfod = {
-            root = "~/.cache/debuginfod_client",
-            resolve = function(path)
-                return path:match("#([^#]+)$")
-            end,
-        },
     },
 }
 
