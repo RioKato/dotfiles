@@ -296,10 +296,10 @@ function Gdb:onChangeBreakpoints(callback)
     self:on({ "=breakpoint-created" }, function(data)
         if data.bkpt then
             callback.create(data.bkpt)
-            self.ctx.bkpts = self.ctx.bkpts or {}
+            self.ctx.bkpt = self.ctx.bkpt or {}
 
             vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
-                self.ctx.bkpts[id] = bkpt
+                self.ctx.bkpt[id] = bkpt
             end)
         end
     end)
@@ -307,10 +307,10 @@ function Gdb:onChangeBreakpoints(callback)
     self:on({ "=breakpoint-modified" }, function(data)
         if data.bkpt then
             callback.modify(data.bkpt)
-            self.ctx.bkpts = self.ctx.bkpts or {}
+            self.ctx.bkpt = self.ctx.bkpt or {}
 
             vim.iter(pairs(data.bkpt)):each(function(id, bkpt)
-                self.ctx.bkpts[id] = bkpt
+                self.ctx.bkpt[id] = bkpt
             end)
         end
     end)
@@ -320,15 +320,15 @@ function Gdb:onChangeBreakpoints(callback)
 
         if id then
             callback.delete(id)
-            self.ctx.bkpts = self.ctx.bkpts or {}
-            self.ctx.bkpts[id] = nil
+            self.ctx.bkpt = self.ctx.bkpt or {}
+            self.ctx.bkpt[id] = nil
         end
     end)
 
     self:on({ "^done" }, function(data)
         if data.BreakpointTable and data.BreakpointTable.body and data.BreakpointTable.body.bkpt then
             callback.sync(data.BreakpointTable.body.bkpt)
-            self.ctx.bkpts = data.BreakpointTable.body.bkpt
+            self.ctx.bkpt = data.BreakpointTable.body.bkpt
         end
     end)
 end
@@ -517,7 +517,7 @@ function Gdb:viwer(window, breakpoint)
                     vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
                     vim.bo[bufid].modifiable = false
 
-                    local enabled = vim.iter(pairs(self.ctx.bkpts or {})):fold({}, function(enabled, _, bkpt)
+                    local enabled = vim.iter(pairs(self.ctx.bkpt or {})):fold({}, function(enabled, _, bkpt)
                         if bkpt.addr and bkpt.enabled ~= nil then
                             enabled[bkpt.addr] = bkpt.enabled
                         end
@@ -581,8 +581,8 @@ function Gdb:viwer(window, breakpoint)
     end)
 
     self:onChangeBreakpoints({
-        create = function(bkpts)
-            vim.iter(pairs(bkpts)):each(function(_, bkpt)
+        create = function(bkpt)
+            vim.iter(pairs(bkpt)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid and bkpt.enabled ~= nil then
@@ -599,8 +599,8 @@ function Gdb:viwer(window, breakpoint)
             end)
         end,
 
-        modify = function(bkpts)
-            vim.iter(pairs(bkpts)):each(function(_, bkpt)
+        modify = function(bkpt)
+            vim.iter(pairs(bkpt)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid and bkpt.enabled ~= nil then
@@ -618,7 +618,7 @@ function Gdb:viwer(window, breakpoint)
         end,
 
         delete = function(id)
-            local bkpt = self.ctx.bkpts and self.ctx.bkpts[id]
+            local bkpt = self.ctx.bkpt and self.ctx.bkpt[id]
 
             if bkpt then
                 local bufid, row = load(self.ctx.cache, bkpt)
@@ -637,10 +637,10 @@ function Gdb:viwer(window, breakpoint)
             end
         end,
 
-        sync = function(bkpts)
+        sync = function(bkpt)
             breakpoint:clear()
 
-            vim.iter(pairs(bkpts)):each(function(_, bkpt)
+            vim.iter(pairs(bkpt)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
                 if bufid and bkpt.enabled ~= nil then
@@ -896,7 +896,7 @@ end
 
 function Ui:GdbToggleBreakpoint()
     if self.gdb and self.gdb.ctx then
-        local bkpts = self.gdb.ctx.bkpts or {}
+        local bkpt = self.gdb.ctx.bkpt or {}
         local cache = self.gdb.ctx.cache
         local winid = vim.api.nvim_get_current_win()
         local bufid = vim.api.nvim_win_get_buf(winid)
@@ -915,7 +915,7 @@ function Ui:GdbToggleBreakpoint()
                 end
             end
 
-            local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
+            local found = vim.iter(pairs(bkpt)):find(function(_, bkpt)
                 if vim.fs.basename(bkpt.file) == file and bkpt.line == cursor[1] then
                     return true
                 end
@@ -938,7 +938,7 @@ function Ui:GdbToggleBreakpoint()
                 local insn = insns[cursor[1]]
 
                 if insn then
-                    local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
+                    local found = vim.iter(pairs(bkpt)):find(function(_, bkpt)
                         if bkpt.addr == insn.address then
                             return true
                         end
@@ -962,8 +962,8 @@ end
 
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb and self.gdb.ctx then
-        local bkpts = self.gdb.ctx.bkpts or {}
-        local items = vim.iter(pairs(bkpts)):fold({}, function(items, id, bkpt)
+        local bkpt = self.gdb.ctx.bkpt or {}
+        local items = vim.iter(pairs(bkpt)):fold({}, function(items, id, bkpt)
             table.insert(items, { ("%d"):format(id), bkpt })
 
             vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
