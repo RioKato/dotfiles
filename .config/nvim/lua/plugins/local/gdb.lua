@@ -963,21 +963,15 @@ end
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb and self.gdb.ctx then
         local bkpts = self.gdb.ctx.bkpts or {}
-        local items = vim.iter(pairs(bkpts))
-            :map(function(id, bkpt)
-                local locs = {
-                    { ("%d"):format(id), bkpt },
-                }
+        local items = vim.iter(pairs(bkpts)):fold({}, function(items, id, bkpt)
+            table.insert(items, { ("%d"):format(id), bkpt })
 
-                vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
-                    table.insert(locs, { ("%d.%d"):format(id, subid), loc })
-                end)
-
-                return locs
+            vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
+                table.insert(items, { ("%d.%d"):format(id, subid), loc })
             end)
-            :totable()
 
-        items = vim.iter(items):flatten():totable()
+            return items
+        end)
 
         vim.ui.select(items, {
             format_item = function(item)
@@ -997,7 +991,7 @@ function Ui:GdbToggleEnableBreakpoint()
             end,
         }, function(item)
             if item and item[2].enabled ~= nil then
-                local cmd = ("%s %d"):format(item[2].enabled and "disable" or "enable", item[1])
+                local cmd = ("%s %s"):format(item[2].enabled and "disable" or "enable", item[1])
                 self.gdb:send(cmd)
             end
         end)
