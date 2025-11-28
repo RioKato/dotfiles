@@ -894,70 +894,6 @@ function Ui:GdbSyncBreakpoints()
     end
 end
 
-function Ui:GdbToggleBreakpoint()
-    if self.gdb and self.gdb.ctx then
-        local winid = vim.api.nvim_get_current_win()
-        local bufid = vim.api.nvim_win_get_buf(winid)
-        local cursor = vim.api.nvim_win_get_cursor(winid)
-        local path = vim.api.nvim_buf_get_name(bufid)
-        local cmd = nil
-
-        if path ~= "" then
-            local file = vim.fs.basename(path)
-
-            if self.opts.debuginfod then
-                local root = vim.fs.abspath(self.opts.debuginfod.root)
-
-                if vim.fs.relpath(root, path) then
-                    file = self.opts.debuginfod.resolve(path) or file
-                end
-            end
-
-            local found = vim.iter(pairs(self.gdb.ctx.bkpt or {})):find(function(_, bkpt)
-                if vim.fs.basename(bkpt.file) == file and bkpt.line == cursor[1] then
-                    return true
-                end
-
-                for _, loc in pairs(bkpt.locations or {}) do
-                    if vim.fs.basename(loc.file) == file and loc.line == cursor[1] then
-                        return true
-                    end
-                end
-            end)
-            cmd = found and ("delete %d"):format(found) or ("break %s:%d"):format(file, cursor[1])
-        elseif self.gdb.ctx.cache then
-            local name = vim.iter(self.gdb.ctx.cache.funcs):find(function(_, func)
-                return func.bufid == bufid
-            end)
-            local func = self.gdb.ctx.cache.funcs[name]
-
-            if func then
-                local insns = self.gdb.ctx.cache:disass(func)
-                local insn = insns[cursor[1]]
-
-                if insn then
-                    local found = vim.iter(pairs(self.gdb.ctx.bkpt or {})):find(function(_, bkpt)
-                        if bkpt.addr == insn.address then
-                            return true
-                        end
-
-                        for _, loc in pairs(bkpt.locations or {}) do
-                            if loc.addr == insn.address then
-                                return true
-                            end
-                        end
-                    end)
-                    cmd = found and ("delete %d"):format(found) or ("break *0x%x"):format(insn.address)
-                end
-            end
-        end
-
-        if cmd then
-            self.gdb:send(cmd)
-        end
-    end
-end
-
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb and self.gdb.ctx then
         local items = vim.iter(pairs(self.gdb.ctx.bkpt or {})):fold({}, function(items, id, bkpt)
@@ -1017,7 +953,6 @@ function M.setup(opts)
         "GdbClose",
         "GdbInterrupt",
         "GdbSyncBreakpoints",
-        "GdbToggleBreakpoint",
         "GdbToggleEnableBreakpoint",
     }
 
