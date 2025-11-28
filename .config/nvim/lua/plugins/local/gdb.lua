@@ -518,12 +518,12 @@ function Gdb:viwer(window, breakpoint)
                     vim.bo[bufid].modifiable = false
 
                     local enabled = vim.iter(pairs(self.ctx.bkpts or {})):fold({}, function(enabled, _, bkpt)
-                        if bkpt.addr then
+                        if bkpt.addr and bkpt.enabled ~= nil then
                             enabled[bkpt.addr] = bkpt.enabled
                         end
 
                         vim.iter(pairs(bkpt.locations or {})):each(function(_, loc)
-                            if loc.addr then
+                            if loc.addr and bkpt.enabled ~= nil and loc.enabled ~= nil then
                                 enabled[loc.addr] = bkpt.enabled and loc.enabled
                             end
                         end)
@@ -585,14 +585,14 @@ function Gdb:viwer(window, breakpoint)
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
-                if bufid then
+                if bufid and bkpt.enabled ~= nil then
                     breakpoint:create(bufid, row, bkpt.enabled)
                 end
 
                 vim.iter(pairs(bkpt.locations or {})):each(function(_, loc)
                     local bufid, row = load(self.ctx.cache, loc)
 
-                    if bufid then
+                    if bufid and bkpt.enabled ~= nil and loc.enabled ~= nil then
                         breakpoint:create(bufid, row, bkpt.enabled and loc.enabled)
                     end
                 end)
@@ -603,14 +603,14 @@ function Gdb:viwer(window, breakpoint)
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
-                if bufid then
+                if bufid and bkpt.enabled ~= nil then
                     breakpoint:modify(bufid, row, bkpt.enabled)
                 end
 
                 vim.iter(pairs(bkpt.locations or {})):each(function(_, loc)
                     local bufid, row = load(self.ctx.cache, loc)
 
-                    if bufid then
+                    if bufid and bkpt.enabled ~= nil and loc.enabled ~= nil then
                         breakpoint:modify(bufid, row, bkpt.enabled and loc.enabled)
                     end
                 end)
@@ -643,14 +643,14 @@ function Gdb:viwer(window, breakpoint)
             vim.iter(pairs(bkpts)):each(function(_, bkpt)
                 local bufid, row = load(self.ctx.cache, bkpt)
 
-                if bufid then
+                if bufid and bkpt.enabled ~= nil then
                     breakpoint:create(bufid, row, bkpt.enabled)
                 end
 
                 vim.iter(pairs(bkpt.locations or {})):each(function(_, loc)
                     local bufid, row = load(self.ctx.cache, loc)
 
-                    if bufid then
+                    if bufid and bkpt.enabled ~= nil and loc.enabled ~= nil then
                         breakpoint:create(bufid, row, bkpt.enabled and loc.enabled)
                     end
                 end)
