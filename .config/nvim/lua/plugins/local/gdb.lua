@@ -309,6 +309,10 @@ function Gdb:onChangeBreakpoints(callback)
         ctx.bkpt = {}
     end)
 
+    self:onExit(function()
+        self.ctx.bkpt = {}
+    end)
+
     self:on({ "=breakpoint-created" }, function(data)
         if data.bkpt then
             callback.create(data.bkpt)
@@ -559,6 +563,11 @@ function Gdb:viwer(window, breakpoint)
         ctx.cache = Cache.new()
     end)
 
+    self:onExit(function()
+        self.ctx.cache = Cache.new()
+        window:restore()
+    end)
+
     self:onStop(function()
         local bufid, row = self.ctx.cache:load(self.ctx.stopped, self.ctx.bkpt)
 
@@ -583,11 +592,6 @@ function Gdb:viwer(window, breakpoint)
                 window:set(bufid, row)
             end
         end
-    end)
-
-    self:onExit(function()
-        self.ctx.cache = Cache.new()
-        window:restore()
     end)
 
     self:onChangeBreakpoints({
