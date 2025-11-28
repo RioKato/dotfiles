@@ -415,7 +415,7 @@ function Gdb:viwer(window, breakpoint)
 
     function Cache.new()
         local self = {
-            insns = {},
+            insn = {},
             func = {},
             file = {},
         }
@@ -427,7 +427,7 @@ function Gdb:viwer(window, breakpoint)
         local address = insn.address
 
         if address then
-            self.insns[address] = insn
+            self.insn[address] = insn
             local name = insn["func-name"] or ""
             local func = self.func[name] or { addrs = {} }
             func.addrs[address] = true
@@ -437,10 +437,10 @@ function Gdb:viwer(window, breakpoint)
     end
 
     function Cache:remove(address)
-        local insn = self.insns[address]
+        local insn = self.insn[address]
 
         if insn then
-            self.insns[address] = nil
+            self.insn[address] = nil
             local name = insn["func-name"] or ""
             local func = assert(self.func[name])
             func.addrs[address] = nil
@@ -460,7 +460,7 @@ function Gdb:viwer(window, breakpoint)
     end
 
     function Cache:get(address)
-        local insn = self.insns[address]
+        local insn = self.insn[address]
 
         if insn then
             local name = insn["func-name"] or ""
@@ -488,7 +488,7 @@ function Gdb:viwer(window, breakpoint)
             if func then
                 local insns = vim.iter(pairs(func.addrs))
                     :map(function(addr)
-                        return assert(self.insns[addr])
+                        return assert(self.insn[addr])
                     end)
                     :totable()
 
