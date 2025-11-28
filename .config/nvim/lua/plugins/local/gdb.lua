@@ -701,7 +701,6 @@ function Window.new()
         bufid = vim.api.nvim_win_get_buf(winid),
         cursor = vim.api.nvim_win_get_cursor(winid),
     }
-
     setmetatable(self, { __index = Window })
     return self
 end
