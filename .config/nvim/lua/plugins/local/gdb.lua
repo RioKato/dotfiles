@@ -452,15 +452,11 @@ function Gdb:viwer(window, breakpoint)
     end
 
     local function load(cache, frame)
-        local found = vim.iter({ frame.file, frame.fullname }):find(function(file)
-            local stat = vim.uv.fs_stat(file)
-            return stat and stat.type == "file"
-        end)
-
         local bufid, row = nil, nil
+        local stat = vim.uv.fs_stat(frame.fullname)
 
-        if found and frame.line then
-            bufid = vim.fn.bufadd(found)
+        if stat and stat.type == "file" and frame.line then
+            bufid = vim.fn.bufadd(frame.fullname)
             vim.fn.bufload(bufid)
             vim.bo[bufid].buftype = "nofile"
             vim.bo[bufid].bufhidden = "hide"
