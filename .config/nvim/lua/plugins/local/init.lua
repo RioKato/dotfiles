@@ -20,7 +20,6 @@ function init.gdb()
         GdbSyncBreakpoints = "<leader>ds",
         GdbToggleBreakpoint = "<leader>db",
         GdbToggleEnableBreakpoint = "<leader>dB",
-        GdbPrintCWord = "<leader>dp",
     }
 
     vim.iter(cmds):each(function(cmd, key)
