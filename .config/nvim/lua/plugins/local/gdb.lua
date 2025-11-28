@@ -876,6 +876,16 @@ function Ui:GdbInterrupt()
     end
 end
 
+function Ui:GdbSend()
+    if self.gdb then
+        vim.ui.input({ prompt = "(gdb) " }, function(line)
+            if line then
+                self.gdb:send(line)
+            end
+        end)
+    end
+end
+
 function Ui:GdbSyncBreakpoints()
     if self.gdb then
         self.gdb:listBreakpoints()
@@ -940,6 +950,7 @@ function M.setup(opts)
         "GdbOpen",
         "GdbClose",
         "GdbInterrupt",
+        "GdbSend",
         "GdbSyncBreakpoints",
         "GdbToggleEnableBreakpoint",
     }

@@ -17,8 +17,9 @@ function init.gdb()
         GdbOpen = "<leader>do",
         GdbClose = "<leader>dc",
         GdbInterrupt = "<leader>di",
+        GdbSend = "<leader>dd",
         GdbSyncBreakpoints = "<leader>ds",
-        GdbToggleEnableBreakpoint = "<leader>dB",
+        GdbToggleEnableBreakpoint = "<leader>db",
     }
 
     vim.iter(cmds):each(function(cmd, key)
