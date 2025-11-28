@@ -916,12 +916,12 @@ function Ui:GdbToggleBreakpoint()
             end
 
             local found = vim.iter(pairs(bkpts)):find(function(_, bkpt)
-                if bkpt.file == file and bkpt.line == cursor[1] then
+                if vim.fs.basename(bkpt.file) == file and bkpt.line == cursor[1] then
                     return true
                 end
 
                 for _, loc in pairs(bkpt.locations or {}) do
-                    if bkpt.file == file and bkpt.line == cursor[1] then
+                    if vim.fs.basename(loc.file) == file and loc.line == cursor[1] then
                         return true
                     end
                 end
@@ -944,7 +944,7 @@ function Ui:GdbToggleBreakpoint()
                         end
 
                         for _, loc in pairs(bkpt.locations or {}) do
-                            if bkpt.addr == insn.address then
+                            if loc.addr == insn.address then
                                 return true
                             end
                         end
