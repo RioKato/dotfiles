@@ -737,7 +737,7 @@ end
 
 function Breakpoint:create(bufid, row, enabled)
     if vim.api.nvim_buf_is_valid(bufid) then
-        local name = self.sign.name[enabled or enabled == nil]
+        local name = self.sign.name[enabled]
         vim.fn.sign_place(0, self.sign.group, name, bufid, { lnum = row })
     end
 end
@@ -970,7 +970,7 @@ function Ui:GdbToggleEnableBreakpoint()
                 }
 
                 vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
-                    table.insert(locs, { ("%d.%d"):format(id, subid), locs })
+                    table.insert(locs, { ("%d.%d"):format(id, subid), loc })
                 end)
 
                 return locs
@@ -990,9 +990,10 @@ function Ui:GdbToggleEnableBreakpoint()
                     enabled = " "
                 end
 
-                local addr = item[2].addr or 0
-                local location = item[2].file and item[2].line and ("%s %d"):format(item[2].file, item[2].line) or ""
-                return ("%s %s 0x%x │ %s"):format(number, enabled, addr, location)
+                local addr = item[2].addr and ("0x%x"):format(item[2].addr) or ""
+                local file = item[2].file and item[2].file or ""
+                local line = item[2].line and ("%d"):format(item[2].line) or ""
+                return vim.iter({ number, enabled, "│", addr, file, line }):join(" ")
             end,
         }, function(item)
             if item and item[2].enabled ~= nil then
