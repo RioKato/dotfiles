@@ -416,8 +416,8 @@ function Gdb:viwer(window, breakpoint)
     function Cache.new()
         local self = {
             insns = {},
-            funcs = {},
-            path = {},
+            func = {},
+            file = {},
         }
         setmetatable(self, { __index = Cache })
         return self
@@ -429,10 +429,10 @@ function Gdb:viwer(window, breakpoint)
         if address then
             self.insns[address] = insn
             local name = insn["func-name"] or ""
-            local func = self.funcs[name] or { addrs = {} }
+            local func = self.func[name] or { addrs = {} }
             func.addrs[address] = true
             func.updated = true
-            self.funcs[name] = func
+            self.func[name] = func
         end
     end
 
@@ -442,7 +442,7 @@ function Gdb:viwer(window, breakpoint)
         if insn then
             self.insns[address] = nil
             local name = insn["func-name"] or ""
-            local func = assert(self.funcs[name])
+            local func = assert(self.func[name])
             func.addrs[address] = nil
             func.updated = true
 
@@ -450,7 +450,7 @@ function Gdb:viwer(window, breakpoint)
                 func = nil
             end
 
-            self.funcs[name] = func
+            self.func[name] = func
         end
     end
 
@@ -464,7 +464,7 @@ function Gdb:viwer(window, breakpoint)
 
         if insn then
             local name = insn["func-name"] or ""
-            return assert(self.funcs[name])
+            return assert(self.func[name])
         end
     end
 
@@ -473,7 +473,6 @@ function Gdb:viwer(window, breakpoint)
         local stat = frame.fullname and vim.uv.fs_stat(frame.fullname)
 
         if stat and stat.type == "file" and frame.line then
-            self.path[frame.fullname] = frame.file
             bufid = vim.fn.bufadd(frame.fullname)
             vim.fn.bufload(bufid)
             vim.bo[bufid].buftype = "nofile"
@@ -482,6 +481,7 @@ function Gdb:viwer(window, breakpoint)
             vim.bo[bufid].modifiable = false
             vim.bo[bufid].buflisted = false
             row = frame.line
+            self.file[bufid] = frame.file
         elseif frame.addr then
             local func = self:get(frame.addr)
 
