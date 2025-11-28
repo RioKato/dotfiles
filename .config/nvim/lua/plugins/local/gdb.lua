@@ -972,24 +972,28 @@ function Ui:GdbToggleEnableBreakpoint()
 
         vim.ui.select(items, {
             format_item = function(item)
-                local number = item[1]
+                local number, bkpt = unpack(item)
                 local enabled = nil
 
-                if item[2].enabled ~= nil then
-                    enabled = item[2].enabled and "E" or "D"
+                if bkpt.enabled ~= nil then
+                    enabled = bkpt.enabled and "E" or "D"
                 else
                     enabled = " "
                 end
 
-                local addr = item[2].addr and ("0x%x"):format(item[2].addr) or ""
-                local file = item[2].file and item[2].file or ""
-                local line = item[2].line and ("%d"):format(item[2].line) or ""
+                local addr = bkpt.addr and ("0x%x"):format(bkpt.addr) or ""
+                local file = bkpt.file and bkpt.file or ""
+                local line = bkpt.line and ("%d"):format(bkpt.line) or ""
                 return vim.iter({ number, enabled, "│", addr, file, line }):join(" ")
             end,
         }, function(item)
-            if item and item[2].enabled ~= nil then
-                local cmd = ("%s %s"):format(item[2].enabled and "disable" or "enable", item[1])
-                self.gdb:send(cmd)
+            if item then
+                local number, bkpt = unpack(item)
+
+                if bkpt.enabled ~= nil then
+                    local cmd = ("%s %s"):format(bkpt.enabled and "disable" or "enable", number)
+                    self.gdb:send(cmd)
+                end
             end
         end)
     end
