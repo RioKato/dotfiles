@@ -453,7 +453,7 @@ function Gdb:viwer(window, breakpoint)
 
     local function load(cache, frame)
         local bufid, row = nil, nil
-        local stat = vim.uv.fs_stat(frame.fullname)
+        local stat = frame.fullname and vim.uv.fs_stat(frame.fullname)
 
         if stat and stat.type == "file" and frame.line then
             bufid = vim.fn.bufadd(frame.fullname)
