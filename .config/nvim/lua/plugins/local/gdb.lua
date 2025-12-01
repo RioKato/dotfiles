@@ -421,7 +421,7 @@ function Gdb:viwer(window, breakpoint)
         local self = {
             insn = {},
             func = {},
-            file = {},
+            buf = {},
         }
         setmetatable(self, { __index = Cache })
         return self
@@ -433,8 +433,8 @@ function Gdb:viwer(window, breakpoint)
         if address then
             self.insn[address] = insn
             local name = insn["func-name"] or ""
-            local func = self.func[name] or { addrs = {} }
-            func.addrs[address] = true
+            local func = self.func[name] or { insn = {} }
+            func.insn[address] = insn
             func.updated = true
             self.func[name] = func
         end
@@ -446,11 +446,11 @@ function Gdb:viwer(window, breakpoint)
         if insn then
             self.insn[address] = nil
             local name = insn["func-name"] or ""
-            local func = assert(self.func[name])
-            func.addrs[address] = nil
+            local func = self.func[name]
+            func.insn[address] = nil
             func.updated = true
 
-            if vim.tbl_isempty(func.addrs) then
+            if not next(func.insn) then
                 func = nil
             end
 
@@ -485,14 +485,14 @@ function Gdb:viwer(window, breakpoint)
             vim.bo[bufid].modifiable = false
             vim.bo[bufid].buflisted = false
             row = frame.line
-            self.file[bufid] = frame.file
+            -- self.file[bufid] = frame.file
         elseif frame.addr then
             local func = self:get(frame.addr)
 
             if func then
-                local insns = vim.iter(pairs(func.addrs))
-                    :map(function(addr)
-                        return assert(self.insn[addr])
+                local insns = vim.iter(pairs(func.insn))
+                    :map(function(addr, insn)
+                        return insn
                     end)
                     :totable()
 
