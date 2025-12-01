@@ -421,7 +421,6 @@ function Gdb:viwer(window, breakpoint)
         local self = {
             insn = {},
             func = {},
-            buf = {},
         }
         setmetatable(self, { __index = Cache })
         return self
@@ -484,8 +483,8 @@ function Gdb:viwer(window, breakpoint)
             vim.bo[bufid].swapfile = false
             vim.bo[bufid].modifiable = false
             vim.bo[bufid].buflisted = false
+            vim.b[bufid].__file = frame.file
             row = frame.line
-            -- self.file[bufid] = frame.file
         elseif frame.addr then
             local func = self:get(frame.addr)
 
