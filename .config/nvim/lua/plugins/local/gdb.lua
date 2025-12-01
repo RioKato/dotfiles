@@ -226,7 +226,7 @@ vim.iter(mifuns):each(function(name, cmd)
     end
 end)
 
-function Gdb:init(callback)
+function Gdb:onInitialize(callback)
     table.insert(self.initializer, callback)
 end
 
@@ -305,7 +305,7 @@ function Gdb:onReceiveInstructions(callback)
 end
 
 function Gdb:onChangeBreakpoints(callback)
-    self:init(function(ctx)
+    self:onInitialize(function(ctx)
         ctx.bkpt = {}
     end)
 
@@ -559,7 +559,7 @@ function Gdb:viwer(window, breakpoint)
         return bufid, row
     end
 
-    self:init(function(ctx)
+    self:onInitialize(function(ctx)
         ctx.cache = Cache.new()
     end)
 
