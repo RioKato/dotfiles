@@ -912,7 +912,7 @@ function Ui:GdbToggleCreateBreakpoint()
                 local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
                     return bkpt.addr == insn.address
                 end)
-                cmd = id and ("delete %d"):format(id) or ("break *0x%x"):format(addr)
+                cmd = id and ("delete %d"):format(id) or ("break *0x%x"):format(insn.address)
             end
         end
 
