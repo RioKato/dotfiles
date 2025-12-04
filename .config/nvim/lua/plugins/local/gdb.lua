@@ -907,12 +907,16 @@ function Ui:GdbToggleCreateBreakpoint()
         elseif vim.b[bufid].__func and self.gdb.ctx.cache then
             local insns = self.gdb.ctx.cache:getFunction(vim.b[bufid].__func)
             local insn = insns[cursor[1]]
-            local addr = insn and insn.address
-            local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
-                return bkpt.addr == addr
-            end)
-            cmd = id and ("delete %d"):format(id) or ("break *0x%x"):format(addr)
-        else
+
+            if insn then
+                local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
+                    return bkpt.addr == insn.address
+                end)
+                cmd = id and ("delete %d"):format(id) or ("break *0x%x"):format(addr)
+            end
+        end
+
+        if not cmd then
             local fullname = vim.api.nvim_buf_get_name(bufid)
             local row = cursor[1]
             local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
