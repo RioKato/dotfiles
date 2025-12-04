@@ -882,6 +882,36 @@ function Ui:GdbSyncBreakpoints()
     end
 end
 
+function Ui:GdbToggleCreateBreakpoint()
+    if self.gdb and self.gdb.ctx.bkpt then
+        local winid = vim.api.nvim_get_current_win()
+        local bufid = vim.api.nvim_win_get_buf(winid)
+        local cursor = vim.api.nvim_win_get_cursor(winid)
+        local cmd = nil
+
+        if vim.b[bufid].__file then
+            local file = vim.b[bufid].__file
+            local row = cursor[1]
+            local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
+                return bkpt.file == file and bkpt.line == row
+            end)
+            cmd = id and ("delete %d"):format(id) or ("break %s:%d"):format(file, row)
+        elseif vim.b[bufid].__func and self.gdb.ctx.cache then
+            local insns = self.gdb.ctx.cache:get(vim.b[bufid].__func)
+            local insn = insns[cursor[1]]
+            local addr = insn and insn.address
+            local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
+                return bkpt.addr == addr
+            end)
+            cmd = id and ("delete %d"):format(id) or ("break *0x%x"):format(addr)
+        end
+
+        if cmd then
+            self.gdb:send(cmd)
+        end
+    end
+end
+
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb and self.gdb.ctx then
         local items = vim.iter(pairs(self.gdb.ctx.bkpt or {})):fold({}, function(items, id, bkpt)
@@ -942,6 +972,7 @@ function M.setup(opts)
         "GdbInterrupt",
         "GdbSend",
         "GdbSyncBreakpoints",
+        "GdbToggleCreateBreakpoint",
         "GdbToggleEnableBreakpoint",
     }
 
