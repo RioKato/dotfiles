@@ -476,25 +476,19 @@ function Gdb:viwer(window, breakpoint)
             local insn = self:getInstruction(frame.addr)
 
             if insn then
-                local name = insn["func-name"] or ""
-
-                bufid = vim.iter(vim.api.nvim_list_bufs()):find(function(bufid)
-                    return vim.b[bufid].__func == name
-                end)
-
-                if not bufid then
-                    bufid = vim.api.nvim_create_buf(false, true)
-                    vim.bo[bufid].modifiable = false
-                    vim.bo[bufid].filetype = "asm"
-                    vim.b[bufid].__func = name
+                if not self.bufid or not vim.api.nvim_buf_is_valid(self.bufid) then
+                    self.bufid = vim.api.nvim_create_buf(false, true)
+                    vim.bo[self.bufid].modifiable = false
+                    vim.bo[self.bufid].filetype = "asm"
                 end
 
+                bufid = self.bufid
+                local name = insn["func-name"] or ""
+                vim.b[bufid].__func = name
                 local insns = self:getFunction(name)
-
                 row = vim.iter(insns):enumerate():find(function(_, insn)
                     return insn.address == frame.addr
                 end)
-                assert(row)
 
                 local lines = vim.iter(insns)
                     :map(function(insn)
