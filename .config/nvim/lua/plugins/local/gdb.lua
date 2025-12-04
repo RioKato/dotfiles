@@ -483,9 +483,8 @@ function Gdb:viwer(window, breakpoint)
                 end
 
                 bufid = self.bufid
-                local name = insn["func-name"] or ""
-                vim.b[bufid].__func = name
-                local insns = self:getFunction(name)
+                vim.b[bufid].__func = insn["func-name"] or ""
+                local insns = self:getFunction(vim.b[bufid].__func)
                 row = vim.iter(insns):enumerate():find(function(_, insn)
                     return insn.address == frame.addr
                 end)
