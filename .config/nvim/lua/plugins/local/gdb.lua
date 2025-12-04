@@ -911,14 +911,19 @@ function Ui:GdbToggleCreateBreakpoint()
 
         if not cmd then
             local fullname = vim.api.nvim_buf_get_name(bufid)
-            local row = cursor[1]
-            local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
-                return bkpt.fullname == fullname and bkpt.line == row
-            end)
-            cmd = id and ("delete %d"):format(id) or ("break %s:%d"):format(file, row)
+
+            if fullname ~= "" then
+                local row = cursor[1]
+                local id = vim.iter(pairs(self.gdb.ctx.bkpt)):find(function(_, bkpt)
+                    return bkpt.fullname == fullname and bkpt.line == row
+                end)
+                cmd = id and ("delete %d"):format(id) or ("break %s:%d"):format(file, row)
+            end
         end
 
-        self.gdb:send(cmd)
+        if cmd then
+            self.gdb:send(cmd)
+        end
     end
 end
 
