@@ -418,20 +418,30 @@ function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
-        local self = { insn = {} }
+        local self = {
+            insn = {},
+            func = {},
+        }
         setmetatable(self, { __index = Cache })
         return self
     end
 
     function Cache:update(insn)
-        self.insn[insn.address] = insn
+        if self.insn[insn.address] then
+            local insn = self.insn[insn.address][insn.address]
+            local name = insn["func-name"] or ""
+            self.func[name][insn.address] = nil
+            self.func[name] = next(self.func[name]) and self.func[name]
+        end
+
+        local name = insn["func-name"] or ""
+        self.func[name] = self.func[name] or {}
+        self.func[name][insn.address] = insn
+        self.insn[insn.address] = self.func[name]
     end
 
-    function Cache:get(func)
-        local insns = vim.iter(pairs(self.insn))
-            :filter(function(_, insn)
-                return (insn["func-name"] or "") == func
-            end)
+    function Cache:get(name)
+        local insns = vim.iter(pairs(self.func[name] or {}))
             :map(function(_, insn)
                 return insn
             end)
@@ -459,19 +469,20 @@ function Gdb:viwer(window, breakpoint)
             vim.b[bufid].__file = frame.file
             row = frame.line
         elseif frame.addr and self.insn[frame.addr] then
-            local func = self.insn[frame.addr]["func-name"] or ""
-            local insns = self:get(func)
+            local name = self.insn[frame.addr][frame.addr]["func-name"] or ""
 
             bufid = vim.iter(vim.api.nvim_list_bufs()):find(function(bufid)
-                return vim.b[bufid].__func == func
+                return vim.b[bufid].__func == name
             end)
 
             if not bufid then
                 bufid = vim.api.nvim_create_buf(false, true)
                 vim.bo[bufid].modifiable = false
                 vim.bo[bufid].filetype = "asm"
-                vim.b[bufid].__func = func
+                vim.b[bufid].__func = name
             end
+
+            local insns = self:get(name)
 
             row = vim.iter(insns):enumerate():find(function(_, insn)
                 return insn.address == frame.addr
