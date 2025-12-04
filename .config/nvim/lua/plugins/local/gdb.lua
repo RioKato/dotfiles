@@ -418,57 +418,30 @@ function Gdb:viwer(window, breakpoint)
     local Cache = {}
 
     function Cache.new()
-        local self = {
-            insn = {},
-            func = {},
-        }
+        local self = { insn = {} }
         setmetatable(self, { __index = Cache })
         return self
     end
 
-    function Cache:insert(insn)
-        local address = insn.address
-
-        if address then
-            self.insn[address] = insn
-            local name = insn["func-name"] or ""
-            local func = self.func[name] or { insn = {} }
-            func.insn[address] = insn
-            func.updated = true
-            self.func[name] = func
-        end
-    end
-
-    function Cache:remove(address)
-        local insn = self.insn[address]
-
-        if insn then
-            self.insn[address] = nil
-            local name = insn["func-name"] or ""
-            local func = self.func[name]
-            func.insn[address] = nil
-            func.updated = true
-
-            if not next(func.insn) then
-                func = nil
-            end
-
-            self.func[name] = func
-        end
-    end
-
     function Cache:update(insn)
-        self:remove(insn.address)
-        self:insert(insn)
+        self.insn[insn.address] = insn
     end
 
-    function Cache:get(address)
-        local insn = self.insn[address]
+    function Cache:get(func)
+        local insns = vim.iter(pairs(self.insn))
+            :filter(function(_, insn)
+                return (insn["func-name"] or "") == func
+            end)
+            :map(function(_, insn)
+                return insn
+            end)
+            :totable()
 
-        if insn then
-            local name = insn["func-name"] or ""
-            return assert(self.func[name])
-        end
+        table.sort(insns, function(left, right)
+            return left.address < right.address
+        end)
+
+        return insns
     end
 
     function Cache:load(frame, bkpt)
@@ -485,74 +458,62 @@ function Gdb:viwer(window, breakpoint)
             vim.bo[bufid].buflisted = false
             vim.b[bufid].__file = frame.file
             row = frame.line
-        elseif frame.addr then
-            local func = self:get(frame.addr)
+        elseif frame.addr and self.insn[frame.addr] then
+            local func = self.insn[frame.addr]["func-name"] or ""
+            local insns = self:get(func)
 
-            if func then
-                local insns = vim.iter(pairs(func.insn))
-                    :map(function(addr, insn)
-                        return insn
-                    end)
-                    :totable()
+            bufid = vim.iter(vim.api.nvim_list_bufs()):find(function(bufid)
+                return vim.b[bufid].__func == func
+            end)
 
-                table.sort(insns, function(left, right)
-                    return left.address < right.address
-                end)
-
-                if not func.bufid or not vim.api.nvim_buf_is_valid(func.bufid) then
-                    func.bufid = vim.api.nvim_create_buf(false, true)
-                    vim.bo[func.bufid].modifiable = false
-                    vim.bo[func.bufid].filetype = "asm"
-                    func.updated = true
-                end
-
-                bufid = func.bufid
-                row = vim.iter(insns):enumerate():find(function(_, insn)
-                    return insn.address == frame.addr
-                end)
-                assert(row)
-
-                if func.updated then
-                    local lines = vim.iter(insns)
-                        :map(function(insn)
-                            local addr = insn.address
-                            local func = insn["func-name"]
-                            local offset = insn.offset
-                            local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
-                            local inst = insn.inst or ""
-                            return ("0x%x%s │ %s"):format(addr, label, inst)
-                        end)
-                        :totable()
-
-                    vim.bo[bufid].modifiable = true
-                    vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
-                    vim.bo[bufid].modifiable = false
-
-                    local enabled = vim.iter(pairs(bkpt or {})):fold({}, function(enabled, _, bkpt)
-                        if bkpt.addr and bkpt.enabled ~= nil then
-                            enabled[bkpt.addr] = bkpt.enabled
-                        end
-
-                        vim.iter(pairs(bkpt.locations or {})):each(function(_, loc)
-                            if loc.addr and bkpt.enabled ~= nil and loc.enabled ~= nil then
-                                enabled[loc.addr] = bkpt.enabled and loc.enabled
-                            end
-                        end)
-
-                        return enabled
-                    end)
-
-                    breakpoint:clear(bufid)
-
-                    vim.iter(insns):enumerate():each(function(row, insn)
-                        if enabled[insn.address] ~= nil then
-                            breakpoint:create(bufid, row, enabled[insn.address])
-                        end
-                    end)
-
-                    func.updated = false
-                end
+            if not bufid then
+                bufid = vim.api.nvim_create_buf(false, true)
+                vim.bo[bufid].modifiable = false
+                vim.bo[bufid].filetype = "asm"
+                vim.b[bufid].__func = func
             end
+
+            row = vim.iter(insns):enumerate():find(function(_, insn)
+                return insn.address == frame.addr
+            end)
+            assert(row)
+
+            local lines = vim.iter(insns)
+                :map(function(insn)
+                    local addr = insn.address
+                    local func = insn["func-name"]
+                    local offset = insn.offset
+                    local label = func and offset and ("<%s+%04d>"):format(func, offset) or ""
+                    local inst = insn.inst or ""
+                    return ("0x%x%s │ %s"):format(addr, label, inst)
+                end)
+                :totable()
+
+            vim.bo[bufid].modifiable = true
+            vim.api.nvim_buf_set_lines(bufid, 0, -1, true, lines)
+            vim.bo[bufid].modifiable = false
+
+            local enabled = vim.iter(pairs(bkpt or {})):fold({}, function(enabled, _, bkpt)
+                if bkpt.addr and bkpt.enabled ~= nil then
+                    enabled[bkpt.addr] = bkpt.enabled
+                end
+
+                vim.iter(pairs(bkpt.locations or {})):each(function(_, loc)
+                    if loc.addr and bkpt.enabled ~= nil and loc.enabled ~= nil then
+                        enabled[loc.addr] = bkpt.enabled and loc.enabled
+                    end
+                end)
+
+                return enabled
+            end)
+
+            breakpoint:clear(bufid)
+
+            vim.iter(insns):enumerate():each(function(row, insn)
+                if enabled[insn.address] ~= nil then
+                    breakpoint:create(bufid, row, enabled[insn.address])
+                end
+            end)
         end
 
         return bufid, row
