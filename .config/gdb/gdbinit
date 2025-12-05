@@ -31,4 +31,4 @@ define init-gef
   gef config context.layout "regs stack code args memory threads trace"
 end
 
-# init-gef
+init-gef
