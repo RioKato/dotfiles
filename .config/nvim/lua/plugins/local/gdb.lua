@@ -393,10 +393,8 @@ function Gdb:term()
                 if " " <= char and "~" >= char then
                     vim.ui.input({ prompt = "(gdb) ", default = char }, function(line)
                         if line then
-                            if line ~= "" then
-                                local echo = string.format("(gdb) %s\n", line)
-                                vim.api.nvim_chan_send(chan, echo)
-                            end
+                            local echo = string.format("(gdb) %s\n", line)
+                            vim.api.nvim_chan_send(chan, echo)
                             self:sendUser(line)
                         end
                     end)
