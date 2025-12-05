@@ -389,20 +389,18 @@ function Gdb:term()
 
     local chan = vim.api.nvim_open_term(bufid, {
         on_input = function(_, chan, _, char)
-            if char:len() == 1 then
-                if " " <= char and "~" >= char then
-                    vim.ui.input({ prompt = "(gdb) ", default = char }, function(line)
-                        if line then
-                            local echo = string.format("(gdb) %s\n", line)
-                            vim.api.nvim_chan_send(chan, echo)
-                            self:sendUser(line)
-                        end
-                    end)
-                elseif char == "\r" then
-                    self:sendUser("")
-                elseif char == "\3" then
-                    self:interrupt()
-                end
+            if (char:len() == 1 and " " <= char and "~" >= char) or char == "\16" then
+                vim.ui.input({ prompt = "(gdb) ", default = char }, function(line)
+                    if line then
+                        local echo = string.format("(gdb) %s\n", line)
+                        vim.api.nvim_chan_send(chan, echo)
+                        self:sendUser(line)
+                    end
+                end)
+            elseif char == "\r" then
+                self:sendUser("")
+            elseif char == "\3" then
+                self:interrupt()
             end
         end,
     })
