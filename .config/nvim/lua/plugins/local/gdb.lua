@@ -1,9 +1,7 @@
 ---------------------------------------------------------------------------------------------------
 local MI = {}
 
-function MI.init()
-    MI.init = nil
-
+local function parser()
     local bs = {
         ["\\n"] = "\n",
         ["\\t"] = "\t",
@@ -129,12 +127,12 @@ function MI.init()
         begin = info + msg,
     })
 
-    function MI.parse(text)
+    return function(text)
         return lpeg.match(mi, text)
     end
 end
 
-MI.init()
+MI.parse = parser()
 
 ---------------------------------------------------------------------------------------------------
 local Gdb = {}
