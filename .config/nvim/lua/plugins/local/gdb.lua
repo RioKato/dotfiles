@@ -428,10 +428,7 @@ function Gdb:viwer(window, breakpoint)
 
     function Cache:update(insn)
         if self.insn[insn.address] then
-            local insn = self.insn[insn.address][insn.address]
-            local name = insn["func-name"] or ""
-            self.func[name][insn.address] = nil
-            self.func[name] = next(self.func[name]) and self.func[name]
+            self.insn[insn.address][insn.address] = nil
         end
 
         local name = insn["func-name"] or ""
