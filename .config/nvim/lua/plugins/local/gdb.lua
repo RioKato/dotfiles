@@ -437,11 +437,13 @@ function Gdb:viwer(window, breakpoint)
         self.insn[insn.address] = self.func[name]
     end
 
-    function Cache:getInstruction(addr)
-        return self.insn[addr] and self.insn[addr][addr]
+    function Cache:getName(addr)
+        if self.insn[addr] then
+            return self.insn[addr][addr]["func-name"] or ""
+        end
     end
 
-    function Cache:getFunction(name)
+    function Cache:getInstructions(name)
         local insns = vim.iter(pairs(self.func[name] or {}))
             :map(function(_, insn)
                 return insn
@@ -470,9 +472,9 @@ function Gdb:viwer(window, breakpoint)
             vim.b[bufid].__file = frame.file
             row = frame.line
         elseif frame.addr then
-            local insn = self:getInstruction(frame.addr)
+            local name = self:getName(frame.addr)
 
-            if insn then
+            if name then
                 bufid = vim.iter(vim.api.nvim_list_bufs()):find(function(bufid)
                     return vim.b[bufid].__func
                 end)
@@ -483,8 +485,8 @@ function Gdb:viwer(window, breakpoint)
                     vim.bo[bufid].filetype = "asm"
                 end
 
-                vim.b[bufid].__func = insn["func-name"] or ""
-                local insns = self:getFunction(vim.b[bufid].__func)
+                vim.b[bufid].__func = name
+                local insns = self:getInstructions(vim.b[bufid].__func)
                 row = vim.iter(insns):enumerate():find(function(_, insn)
                     return insn.address == frame.addr
                 end)
@@ -898,7 +900,7 @@ function Ui:GdbToggleCreateBreakpoint()
             end)
             cmd = id and ("delete %d"):format(id) or ("break %s:%d"):format(file, row)
         elseif vim.b[bufid].__func and self.gdb.ctx.cache then
-            local insns = self.gdb.ctx.cache:getFunction(vim.b[bufid].__func)
+            local insns = self.gdb.ctx.cache:getInstructions(vim.b[bufid].__func)
             local insn = insns[cursor[1]]
 
             if insn then
