@@ -881,6 +881,10 @@ function Ui:GdbSend()
     end
 end
 
+function Ui:GdbRepeat()
+    self.gdb:sendUser("")
+end
+
 function Ui:GdbSyncBreakpoints()
     if self.gdb then
         self.gdb:listBreakpoints()
@@ -984,6 +988,7 @@ function M.setup(opts)
         "GdbClose",
         "GdbInterrupt",
         "GdbSend",
+        "GdbRepeat",
         "GdbSyncBreakpoints",
         "GdbToggleCreateBreakpoint",
         "GdbToggleEnableBreakpoint",
