@@ -352,14 +352,20 @@ function Gdb:onChangeBreakpoints(callback)
     end)
 end
 
+function Gdb:sendUser(cmd)
+    self.lastcmd = cmd == "" and self.lastcmd or cmd
+
+    if self.lastcmd then
+        self:send(self.lastcmd)
+    end
+end
+
 function Gdb:prompt()
     local bufid = vim.api.nvim_create_buf(true, true)
     vim.bo[bufid].buftype = "prompt"
-    local last = ""
 
     vim.fn.prompt_setcallback(bufid, function(line)
-        last = line ~= "" and line or last
-        self:send(last)
+        self:sendUser(line)
     end)
 
     vim.fn.prompt_setinterrupt(bufid, function()
@@ -380,26 +386,22 @@ end
 
 function Gdb:term()
     local bufid = vim.api.nvim_create_buf(true, true)
-    local last = ""
 
     local chan = vim.api.nvim_open_term(bufid, {
         on_input = function(_, chan, _, char)
             if char:len() == 1 then
-                local function send()
-                    local echo = string.format("(gdb) %s\n", last)
-                    vim.api.nvim_chan_send(chan, echo)
-                    self:send(last)
-                end
-
                 if " " <= char and "~" >= char then
                     vim.ui.input({ prompt = "(gdb) ", default = char }, function(line)
                         if line then
-                            last = line ~= "" and line or last
-                            send()
+                            if line ~= "" then
+                                local echo = string.format("(gdb) %s\n", line)
+                                vim.api.nvim_chan_send(chan, echo)
+                            end
+                            self:sendUser(line)
                         end
                     end)
                 elseif char == "\r" then
-                    send()
+                    self:sendUser("")
                 elseif char == "\3" then
                     self:interrupt()
                 end
@@ -875,7 +877,7 @@ function Ui:GdbSend()
     if self.gdb then
         vim.ui.input({ prompt = "(gdb) " }, function(line)
             if line then
-                self.gdb:send(line)
+                self.gdb:sendUser(line)
             end
         end)
     end
