@@ -931,27 +931,24 @@ end
 
 function Ui:GdbToggleEnableBreakpoint()
     if self.gdb and self.gdb.ctx.bkpt then
-        local items = vim.iter(pairs(self.gdb.ctx.bkpt)):fold({}, function(items, id, bkpt)
-            table.insert(items, { ("%d"):format(id), bkpt })
-
-            vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
-                table.insert(items, { ("%d.%d"):format(id, subid), loc })
+        local items = vim.iter(pairs(self.gdb.ctx.bkpt))
+            :filter(function(_, bkpt)
+                return bkpt.enabled ~= nil
             end)
+            :fold({}, function(items, id, bkpt)
+                table.insert(items, { ("%d"):format(id), bkpt })
 
-            return items
-        end)
+                vim.iter(pairs(bkpt.locations or {})):each(function(subid, loc)
+                    table.insert(items, { ("%d.%d"):format(id, subid), loc })
+                end)
+
+                return items
+            end)
 
         vim.ui.select(items, {
             format_item = function(item)
                 local number, bkpt = unpack(item)
-                local enabled = nil
-
-                if bkpt.enabled ~= nil then
-                    enabled = bkpt.enabled and "E" or "D"
-                else
-                    enabled = " "
-                end
-
+                local enabled = bkpt.enabled and "E" or "D"
                 local addr = bkpt.addr and ("0x%x"):format(bkpt.addr) or ""
                 local file = bkpt.file and bkpt.file or ""
                 local line = bkpt.line and ("%d"):format(bkpt.line) or ""
@@ -960,11 +957,8 @@ function Ui:GdbToggleEnableBreakpoint()
         }, function(item)
             if item then
                 local number, bkpt = unpack(item)
-
-                if bkpt.enabled ~= nil then
-                    local cmd = ("%s %s"):format(bkpt.enabled and "disable" or "enable", number)
-                    self.gdb:send(cmd)
-                end
+                local cmd = ("%s %s"):format(bkpt.enabled and "disable" or "enable", number)
+                self.gdb:send(cmd)
             end
         end)
     end
