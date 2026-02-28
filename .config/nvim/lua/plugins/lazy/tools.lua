@@ -54,7 +54,7 @@ return {
                         end,
                     }, function(item)
                         if item then
-                            overseer.run_action(item, "open float")
+                            item:open_output("float")
                         end
                     end)
                 end,
