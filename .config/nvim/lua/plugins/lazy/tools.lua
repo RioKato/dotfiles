@@ -45,7 +45,7 @@ return {
                 "R",
                 function()
                     local overseer = require("overseer")
-                    local tasks = vim.iter(overseer.list_tasks()):rev():totable()
+                    local tasks = vim.iter(overseer.list_tasks()):totable()
 
                     vim.ui.select(tasks, {
                         prompt = "Tasks",
