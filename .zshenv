@@ -1,5 +1,6 @@
 export PATH=$PATH:~/bin
 export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.local/share/go/bin
 export PATH=$PATH:~/binaryninja
 export PATH=$PATH:/opt/idapro-8.2
 export PATH=$PATH:~/.npm-global/bin
