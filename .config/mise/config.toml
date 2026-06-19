@@ -1,5 +1,5 @@
 [tools]
-'asdf:neovim' = 'nightly'
+neovim = "latest"
 fzf = 'latest'
 rg = 'latest'
 fd = 'latest'
