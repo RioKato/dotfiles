@@ -1,14 +1,11 @@
 return {
     {
-        "nvim-treesitter/nvim-treesitter",
-        branch = "main",
-        lazy = false,
-        build = ":TSUpdate",
+        "romus204/tree-sitter-manager.nvim",
+        config = {},
     },
 
     {
         "nvim-treesitter/nvim-treesitter-context",
-        dependencies = { "nvim-treesitter/nvim-treesitter" },
 
         config = function()
             require("treesitter-context").setup({
