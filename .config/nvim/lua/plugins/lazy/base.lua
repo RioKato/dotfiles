@@ -6,7 +6,12 @@ return {
             vim.cmd.colorscheme("sonokai")
         end,
     },
-
+    {
+        "tadaa/vimade",
+        opts = {
+            fadelevel = 0.7,
+        },
+    },
     {
         "neovim/nvim-lspconfig",
 
