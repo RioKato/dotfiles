@@ -75,9 +75,25 @@ function init.editor()
     })
 
     vim.api.nvim_create_autocmd("FileType", {
+        callback = function(args)
+            local lang = vim.treesitter.language.get_lang(args.match)
+            if not lang then
+                return
+            end
+
+            local parser = vim.treesitter.get_parser(args.buf, lang)
+            if not parser then
+                return
+            end
+
+            vim.treesitter.start(args.buf, lang)
+        end,
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
         pattern = { "markdown", "make" },
-        callback = function(ev)
-            vim.bo[ev.buf].expandtab = false
+        callback = function(args)
+            vim.bo[args.buf].expandtab = false
         end,
     })
 end
