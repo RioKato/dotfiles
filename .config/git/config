@@ -1,3 +1,5 @@
 [user]
 	email = rio@kato.com
 	name = rio
+[credential]
+	helper = store
