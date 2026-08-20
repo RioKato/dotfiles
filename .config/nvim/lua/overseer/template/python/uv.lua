@@ -4,7 +4,6 @@ return {
     builder = function()
         local file = vim.fn.expand("%:p")
 
-        print(file)
         return {
             cmd = { "uv" },
             args = { "run", file },
