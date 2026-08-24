@@ -1,0 +1,4 @@
+#!/bin/sh
+
+docker exec -it "$(docker ps -q --filter ancestor=neo4j | head -n1)" \
+  cypher-shell -u neo4j -p password "$@"
