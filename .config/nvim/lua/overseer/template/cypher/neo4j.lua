@@ -1,11 +1,11 @@
 return {
-    name = "lbug",
+    name = "cypher-shell",
 
     builder = function()
         local file = vim.fn.expand("%:p")
 
         return {
-            cmd = string.format("lbug < %s", vim.fn.shellescape(file)),
+            cmd = string.format("cipher-pipe < %s", vim.fn.shellescape(file)),
         }
     end,
 

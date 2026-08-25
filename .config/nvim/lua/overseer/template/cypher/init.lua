@@ -1,4 +1,3 @@
 return {
-    "cypher.lbug",
-    "cypher.lbug_lbdb",
+    "cypher.neo4j",
 }
