@@ -5,7 +5,7 @@ return {
         local file = vim.fn.expand("%:p")
 
         return {
-            cmd = string.format("cipher-pipe < %s", vim.fn.shellescape(file)),
+            cmd = string.format("cypher-pipe < %s", vim.fn.shellescape(file)),
         }
     end,
 
