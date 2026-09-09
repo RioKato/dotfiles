@@ -8,10 +8,18 @@ return {
         opts = {
             interactions = {
                 chat = {
-                    adapter = "anthropic",
+                    -- adapter = "anthropic",
+                    adapter = {
+                        name = "deepseek",
+                        model = "deepseek-v4-pro",
+                    },
                 },
                 inline = {
-                    adapter = "anthropic",
+                    -- adapter = "anthropic",
+                    adapter = {
+                        name = "deepseek",
+                        model = "deepseek-v4-pro",
+                    },
                 },
             },
             mcp = {
