@@ -13,6 +13,15 @@ return {
                         name = "deepseek",
                         model = "deepseek-v4-pro",
                     },
+
+                    keymaps = {
+                        close = {
+                            modes = {
+                                n = "Q",
+                                i = "<Nop>",
+                            },
+                        },
+                    },
                 },
                 inline = {
                     -- adapter = "anthropic",
