@@ -4,6 +4,7 @@ export PATH=$PATH:~/.local/share/go/bin
 export PATH=$PATH:~/binaryninja
 export PATH=$PATH:/opt/idapro-8.2
 export PATH=$PATH:~/.npm-global/bin
+export PATH=$PATH:~/Documents/ida-pro-9.4
 
 ###############################################################################################
 export PATH=$PATH:"/mnt/c/Windows/System32"
