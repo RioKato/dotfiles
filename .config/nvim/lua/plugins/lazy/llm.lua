@@ -35,12 +35,17 @@ return {
                 servers = {
                     ida = {
                         cmd = {
-                            vim.fn.expand("~/.local/bin/ida-pro-mcp"),
+                            -- vim.fn.expand("~/.local/bin/ida-pro-mcp"),
+                            vim.fn.expand("~/.local/bin/idalib-mcp"),
+                            "--stdio",
                         },
                     },
                 },
                 opts = {
                     default_servers = { "ida" },
+                    opts = {
+                        language = "Japanese",
+                    },
                 },
             },
         },
