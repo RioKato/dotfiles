@@ -191,6 +191,8 @@ function init.lsp()
     }
 
     util.assign_keys(keys)
+
+    vim.lsp.enable({ "pyright", "gopls" })
 end
 
 function init.plugins()
