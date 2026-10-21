@@ -6,14 +6,25 @@ return {
             "nvim-treesitter/nvim-treesitter",
         },
         opts = {
+            adapters = {
+                http = {
+                    local_llm = function()
+                        return require("codecompanion.adapters").extend("openai_compatible", {
+                            env = {
+                                url = "LOCAL_LLM_URL",
+                                api_key = "LOCAL_LLM_API_KEY",
+                            },
+                            schema = {
+                                model = {
+                                    default = "LOCAL_LLM_MODEL",
+                                },
+                            },
+                        })
+                    end,
+                },
+            },
             interactions = {
                 chat = {
-                    -- adapter = "anthropic",
-                    adapter = {
-                        name = "deepseek",
-                        model = "deepseek-v4-pro",
-                    },
-
                     keymaps = {
                         close = {
                             modes = {
@@ -22,9 +33,12 @@ return {
                             },
                         },
                     },
+                    adapter = {
+                        name = "deepseek",
+                        model = "deepseek-v4-pro",
+                    },
                 },
                 inline = {
-                    -- adapter = "anthropic",
                     adapter = {
                         name = "deepseek",
                         model = "deepseek-v4-pro",
@@ -35,14 +49,18 @@ return {
                 servers = {
                     ida = {
                         cmd = {
-                            -- vim.fn.expand("~/.local/bin/ida-pro-mcp"),
+                            vim.fn.expand("~/.local/bin/ida-pro-mcp"),
                             vim.fn.expand("~/.local/bin/idalib-mcp"),
                             "--stdio",
                         },
                     },
+                    idalsp = {
+                        cmd = {
+                            vim.fn.expand("~/.local/bin/idalsp-mcp"),
+                        },
+                    },
                 },
                 opts = {
-                    default_servers = { "ida" },
                     opts = {
                         language = "Japanese",
                     },
