@@ -66,6 +66,19 @@ return {
                     },
                 },
             },
+            prompt_library = {
+                ["IDA Analysis"] = {
+                    interaction = "chat",
+                    description = "Start a chat with idalsp MCP",
+                    mcp_servers = { "idalsp" },
+                    prompts = {
+                        {
+                            role = "system",
+                            content = "You are a reverse engineering assistant. Use the idalsp MCP tools to inspect the IDA database.",
+                        },
+                    },
+                },
+            },
         },
     },
 }
