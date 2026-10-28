@@ -54,11 +54,6 @@ return {
                             "--stdio",
                         },
                     },
-                    idalsp = {
-                        cmd = {
-                            vim.fn.expand("~/.local/bin/idalsp-mcp"),
-                        },
-                    },
                 },
                 opts = {
                     opts = {
