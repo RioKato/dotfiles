@@ -25,7 +25,6 @@ return {
                     return vim.fn.input("Executable: ", default, "file")
                 end,
                 cwd = vim.fn.getcwd,
-                stopAtBeginningOfMainSubprogram = true,
             }
             dap.configurations.ida_c = { launch }
             dap.configurations.ida_asm = { launch }
