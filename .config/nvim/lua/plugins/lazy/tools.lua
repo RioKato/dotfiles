@@ -4,8 +4,17 @@ return {
 
         opts = {
             formatters_by_ft = {
-                python = { "black" },
+                python = {
+                    "ruff_fix",
+                    "ruff_format",
+                    "ruff_organize_imports",
+                },
                 markdown = { "prettier" },
+            },
+            formatters = {
+                ruff_format = {
+                    append_args = { "--line-length", "120" },
+                },
             },
             default_format_opts = {
                 lsp_format = "fallback",
