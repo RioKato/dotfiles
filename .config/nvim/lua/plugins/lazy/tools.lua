@@ -13,7 +13,7 @@ return {
             },
             formatters = {
                 ruff_format = {
-                    append_args = { "--line-length", "120" },
+                    append_args = { "--line-length", "200" },
                 },
             },
             default_format_opts = {
