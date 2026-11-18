@@ -4,8 +4,12 @@ return {
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
+            "RioKato/nvim-qf-mcp",
         },
         opts = {
+            extensions = {
+                nvim_qf_mcp = {},
+            },
             adapters = {
                 http = {
                     local_llm = function()
@@ -13,11 +17,6 @@ return {
                             env = {
                                 url = "LOCAL_LLM_URL",
                                 api_key = "LOCAL_LLM_API_KEY",
-                            },
-                            schema = {
-                                model = {
-                                    default = "LOCAL_LLM_MODEL",
-                                },
                             },
                         })
                     end,
@@ -33,16 +32,10 @@ return {
                             },
                         },
                     },
-                    adapter = {
-                        name = "deepseek",
-                        model = "deepseek-v4-pro",
-                    },
+                    adapter = "deepseek",
                 },
                 inline = {
-                    adapter = {
-                        name = "deepseek",
-                        model = "deepseek-v4-pro",
-                    },
+                    adapter = "deepseek",
                 },
             },
             mcp = {
@@ -62,14 +55,18 @@ return {
                 },
             },
             prompt_library = {
-                ["IDA Analysis"] = {
+                ["Source Analysis"] = {
                     interaction = "chat",
-                    description = "Start a chat with idalsp MCP",
-                    mcp_servers = { "idalsp" },
+                    description = "Analyze source code with evidence references",
+                    mcp_servers = { "nvim-qf-mcp" },
+                    tools = { "run_command" },
+                    opts = {
+                        approval_mode = "yolo",
+                    },
                     prompts = {
                         {
                             role = "system",
-                            content = "You are a reverse engineering assistant. Use the idalsp MCP tools to inspect the IDA database.",
+                            content = "You are a source-code analysis assistant. Use the evidence tool to present source-code locations supporting your findings. Obtain line numbers from source inspection tools; do not guess them.",
                         },
                     },
                 },
