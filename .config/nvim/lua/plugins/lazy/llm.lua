@@ -48,11 +48,6 @@ return {
                         },
                     },
                 },
-                opts = {
-                    opts = {
-                        language = "Japanese",
-                    },
-                },
             },
             prompt_library = {
                 ["Source Analysis"] = {
@@ -66,7 +61,23 @@ return {
                     prompts = {
                         {
                             role = "system",
-                            content = "You are a source-code analysis assistant. Use the evidence tool to present source-code locations supporting your findings. Obtain line numbers from source inspection tools; do not guess them.",
+                            content = [[
+You are a source-code analysis assistant.
+
+When reporting findings about source code, call the
+`evidence` tool to register the relevant source locations.
+
+Collect all relevant locations into a single call.
+Use actual file paths and 1-based line numbers.
+Never guess line numbers.
+
+Do not mention the evidence tool in your response
+unless necessary.
+
+Respond to the user in Japanese.
+You may reason and investigate in English.
+Keep source-code identifiers and technical terms unchanged.
+]],
                         },
                     },
                 },
