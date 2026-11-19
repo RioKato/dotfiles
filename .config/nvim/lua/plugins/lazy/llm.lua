@@ -18,6 +18,21 @@ return {
                                 url = "LOCAL_LLM_URL",
                                 api_key = "LOCAL_LLM_API_KEY",
                             },
+                            handlers = {
+                                form_tools = function(self, tools)
+                                    local result = require("codecompanion.adapters.http.openai_legacy").handlers.form_tools(self, tools)
+
+                                    if result and result.tools then
+                                        for _, tool in ipairs(result.tools) do
+                                            if tool.type == "function" then
+                                                tool["function"].strict = false
+                                            end
+                                        end
+                                    end
+
+                                    return result
+                                end,
+                            },
                         })
                     end,
                 },
