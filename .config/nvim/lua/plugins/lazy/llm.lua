@@ -17,6 +17,13 @@ return {
                             env = {
                                 url = "LOCAL_LLM_URL",
                                 api_key = "LOCAL_LLM_API_KEY",
+                                chat_url = "/chat/completions",
+                            },
+                            schema = {
+                                model = {
+                                    default = "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+                                    choices = { "deepseek-ai/DeepSeek-V4.1-Flash-1017" },
+                                },
                             },
                             handlers = {
                                 form_tools = function(self, tools)
